@@ -61,6 +61,12 @@ Its original failure and nine captures are retained; recovery binds only the
 owned Xvfb lifetime and exclusive output descriptors, then stops only its Gradle
 registry. Verified recovery does **not** relabel that observer as PASS.
 
+A corrected, fresh-profile observer at exact `703b9875` then completes the
+English catalog → Settings → Arabic catalog journey, with ten inspected public
+captures. The app exits naturally with code0; its exclusively owned Xvfb and
+private Gradle registry retire successfully. Source/head/tree remain unchanged.
+This successful second observer does not replace the first failed receipt.
+
 Inspection also confirms that catalog hover feedback paints a rectangular
 overlay outside rounded corners. The supplied `clickable` precedes
 `ParlorCard`'s internal clip, so that clip cannot constrain the outer indication.
@@ -90,7 +96,12 @@ acceptance remain separate outstanding gates.
 The first full check exposed the unchanged real-Gradle fixture's partial PID
 publication race. Its [#279 correction and sensitivity test](2026-10-28-GRADLE-MARKER-PUBLICATION.md)
 are a separate non-shipping prerequisite; the failed aggregate is retained.
-The corrected33afe534 check passes1,827Desktop,652Android cases perDebug/Release
-variant,112GitHub-test cases and750release controls, with the existing documented
-skips. That result predates the rounded-feedback correction; the newest source
-needs its own full check and hosted qualification, not the earlier cached claim.
+The complete strict check at `703b9875` (including rounded-feedback correction)
+passes **1,828 Desktop**, **652 Android Debug +652 Release**,112GitHub-test
+cases and750release controls; only three existing LAN skips and the known Linux
+release-control skip remain. Detekt/lint/R8/unsigned AAB and inventory/shell gates
+pass. Source/head/tree are unchanged and the scoped Gradle stop exits0.
+Full log SHA256: `f56a95784422a2443c676aa3fcc5eb6227645ad7ddd2d093840d5c60c94f3e87`.
+Valid up-to-date outputs are disclosed in the full log; this is not native Apple
+execution. Documentation/inventory follow-up needs its own committed-source
+check before publication; fresh hosted and merged-main qualification remain.

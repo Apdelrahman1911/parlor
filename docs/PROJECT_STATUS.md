@@ -1,6 +1,6 @@
 # Project status — 2026-10-28
 
-## Latest protected integration and catalog follow-up (14:43 UTC)
+## Latest protected integration and catalog follow-up (14:52 UTC)
 
 [PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as
 `66702a77532a5e3a0c5f370d4ce8c903742569c3`. Its fresh
@@ -15,25 +15,29 @@ this is not the original #267 failed iOS26.2 runtime or a physical-device result
 
 A separate [catalog artwork implementation](audits/2026-10-28-CATALOG-ARTWORK.md)
 adds six binding-selected lightweight motifs, without color-based game dispatch.
-Four focused methods and three independently restored mutation controls pass;
-24 EN/AR light/dark Desktop rasters are generated and reviewed. Committed-source
-full checks, fresh hosted qualification and protected integration are still
-required. This extends #259, not completion of the whole UI/game overhaul.
+Five focused methods and three independently restored artwork mutation controls
+pass;24 EN/AR light/dark Desktop rasters are generated and reviewed. Actual
+catalog inspection also reproduces rounded-card hover feedback overflow; clipping
+before indication fixes it with eight narrow/200%-text locale/theme/accent
+regressions. The corrected fresh-profile actual Desktop English→Settings→Arabic
+observer at703b9875 passes with ten inspected public captures, natural app exit0,
+owned cleanup and unchanged source. Its predecessor's cleanup-import failure and
+identified-resource recovery remain retained, not relabeled as PASS.
 
 The candidate's first full strict check at3944c0a0 **failed** in the unchanged
-real-Gradle fixture: file existence preceded PID content publication. Application
-tests and Release build gates passed, but the aggregate did not qualify.
+real-Gradle fixture: file existence preceded PID content publication.
 [#279's atomic publication correction](audits/2026-10-28-GRADLE-MARKER-PUBLICATION.md)
-and real-Gradle write/publish barrier test pass locally, including a restored
+and real-Gradle write/publish barrier regression pass, including a restored
 premature-publication negative control. Original timeout, scoped stop and
-unrelated-registry checks are unchanged; new committed-source full checks remain.
-The corrected33afe534 full strict check passes1,827Desktop cases,652Android
-cases perDebug/Release variant,112GitHub-test cases and750release controls,
-with the existing documented skips. Actual public catalog inspection then
-reproduces rectangular hover feedback outside rounded corners. A fifth UI
-method fails on original wiring and passes eight EN/AR light/dark accent
-scenarios after clipping before indication. This newer source still needs
-its own committed-source full/hosted/actual-main qualification.
+unrelated-registry checks are unchanged. The complete strict check at703b9875
+passes1,828Desktop cases (three existing LAN skips),652Android cases per
+Debug/Release variant,112GitHub-test cases,750release controls (one known Linux
+skip),Detekt/lint/R8/unsigned AAB and inventory/shell gates. Source unchanged;
+scoped Gradle stop0. Full log SHA256:
+`f56a95784422a2443c676aa3fcc5eb6227645ad7ddd2d093840d5c60c94f3e87`.
+Documentation/inventory follow-up needs its own committed-source check;
+fresh hosted, protected integration and actual-main qualification remain.
+This extends#259, **not completion of the whole UI/game overhaul**.
 
 Eight acceptance Issues remain open: #230/#251/#252/#253/#258/#259/#260/#267.
 New confirmed CI-fixture Issue#279 remains open pending integration acceptance.

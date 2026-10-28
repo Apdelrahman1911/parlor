@@ -49,8 +49,12 @@ python3 -B -m unittest scripts.release.tests.test_gradle_daemon_registry -v
 
 ## Required qualification
 
-The corrected source needs a fresh full strict check, existing hosted gates,
-protected integration and automatic merged-main qualification. The original
+The full strict check at `703b9875` passes750release controls (one known Linux
+skip),1,828Desktop cases (three existing LAN skips),652Android cases per
+Debug/Release variant and112GitHub-test cases, plus Detekt/lint/R8/unsigned AAB.
+Source remains unchanged and scoped Gradle stop exits0. Documentation follow-up,
+existing hosted gates, protected integration and automatic merged-main
+qualification remain required before closing#279. The original
 failure is retained and no blind rerun is used. Linux fixture execution is not
 macOS/Windows filesystem, mobile cleanup, physical-device or Store evidence.
 All existing platform, dependency-verification and Release gates remain intact.
