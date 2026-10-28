@@ -165,7 +165,9 @@ fun MafiaPeerLobbyFlow(
         joinError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession()
+                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                    HostedGameProtocol(MafiaIds.GameId, MafiaHostRoomBridge.GAME_VERSION),
+                )
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
                     code = code,
                     displayName = peerName,

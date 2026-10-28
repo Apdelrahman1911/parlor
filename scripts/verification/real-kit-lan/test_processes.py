@@ -25,10 +25,20 @@ if role=='host':
     else: time.sleep(.7)
     print('AUTHENTICATED_ACTOR_PASS',flush=True)
     print('PEER_DISCONNECT_PASS',flush=True)
+    if mode=='resume':
+        print('FROZEN_ROSTER_PASS',flush=True)
+        print('PHYSICAL_CLOSE_PASS',flush=True)
+        print('REJOIN_SAME_SEAT_PASS',flush=True)
+        time.sleep(.5)
 else:
     if sys.stdin.readline().strip()!='AAAAAA': sys.exit(2)
     if mode=='overflow': print('x'*2097152,flush=True)
     if mode=='stall': time.sleep(60)
+    if mode=='resume':
+        if sys.stdin.readline().strip()!='CLOSE_OBSERVED': sys.exit(3)
+        for marker in ('SELECTED_GAME_REJECTION_PASS','SELECTED_VERSION_REJECTION_PASS',
+                       'SAME_SEAT_RESUME_PASS','ROTATED_CREDENTIAL_PASS','REVOKED_MEMBERSHIP_PASS'):
+            print(marker,flush=True)
     print('BIDIRECTIONAL_PASS',flush=True)
 print('ENDPOINT_PASS',flush=True)
 if mode!='missing-teardown': print('TEARDOWN_PASS',flush=True)
@@ -48,6 +58,23 @@ class ProcessPreconditionTest(unittest.TestCase):
                 with self.subTest(count=count), self.assertRaises(SystemExit):
                     probe.main(['--allow-local-lan', '--iterations', count])
             environment.assert_not_called()
+
+    def test_scenario_selects_only_allowlisted_compiled_endpoints(self):
+        for scenario, endpoint in probe.SCENARIOS.items():
+            command = probe.endpoint_command('peer', '0' * 32, 'classpath', scenario)
+            self.assertEqual(command, ['java', '-Xmx512m', '-cp', 'classpath',
+                                      'com.parlor.transport.p2p.' + endpoint, 'peer', '0' * 32])
+        with self.assertRaisesRegex(RuntimeError, 'Unsupported'):
+            probe.endpoint_command('peer', '0' * 32, 'classpath', 'untrusted-class')
+
+    def test_invalid_scenario_never_prepares_or_spawns(self):
+        with patch.object(probe, 'prepare') as prepare, patch.object(probe.subprocess, 'Popen') as spawn:
+            with self.assertRaises(SystemExit):
+                probe.main(['--allow-local-lan', '--scenario', 'untrusted-class'])
+            with self.assertRaisesRegex(RuntimeError, 'Unsupported'):
+                probe.run_pair('', Path('/unused'), time.monotonic() + 10, 'untrusted-class')
+            prepare.assert_not_called()
+            spawn.assert_not_called()
 
     def test_missing_or_ambiguous_advertisement_is_not_accepted(self):
         self.assertIsNone(probe.advertised_code(b'not a room code\n'))
@@ -95,7 +122,7 @@ class ProcessPreconditionTest(unittest.TestCase):
 
 @unittest.skipUnless(os.name == 'posix', 'POSIX ownership fixtures; opt-in runtime is Linux-only')
 class OwnedProcessPairTest(unittest.TestCase):
-    def exercise(self, mode, *, budget=5, expected_error=None, interrupt=False, hash_error=False):
+    def exercise(self, mode, *, budget=5, expected_error=None, interrupt=False, hash_error=False, scenario='admission'):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             endpoint = root / 'endpoint.py'
@@ -106,7 +133,7 @@ class OwnedProcessPairTest(unittest.TestCase):
                 result = original_spawn(*args, **kwargs)
                 processes.append(result)
                 return result
-            command = lambda role, namespace, classpath: [sys.executable, str(endpoint), role, mode]
+            command = lambda role, namespace, classpath, selected='admission': [sys.executable, str(endpoint), role, mode]
             with patch.object(probe, 'endpoint_command', side_effect=command), patch.object(probe.subprocess, 'Popen', side_effect=spawn):
                 sampler = patch.object(probe.probe, 'sample_process', side_effect=KeyboardInterrupt()) if interrupt else patch.object(probe.probe, 'sample_process')
                 with sampler:
@@ -114,9 +141,9 @@ class OwnedProcessPairTest(unittest.TestCase):
                     with hashing:
                         if expected_error:
                             with self.assertRaises(expected_error):
-                                probe.run_pair('', root / 'pair', time.monotonic() + budget)
+                                probe.run_pair('', root / 'pair', time.monotonic() + budget, scenario)
                         else:
-                            receipt = probe.run_pair('', root / 'pair', time.monotonic() + budget)
+                            receipt = probe.run_pair('', root / 'pair', time.monotonic() + budget, scenario)
                             self.assertEqual(receipt['status'], 'passed')
             self.assertTrue(processes)
             self.assertTrue(all(p.poll() is not None and p.stdin.closed for p in processes))
@@ -130,6 +157,18 @@ class OwnedProcessPairTest(unittest.TestCase):
         self.assertEqual(len(children), 2)
         self.assertNotEqual(children[0].pid, children[1].pid)
         self.assertTrue(all(row['natural_exit'] and row['final_exit_code'] == 0 and row['cleanup_completed'] for row in receipt['roles'].values()))
+
+    def test_resume_requires_host_observed_close_and_all_resume_assertions(self):
+        receipt, children = self.exercise('resume', scenario='resume')
+        self.assertEqual(receipt['scenario'], 'resume')
+        self.assertEqual(len(children), 2)
+        self.assertTrue(all(row['natural_exit'] and row['exit_code'] == 0 for row in receipt['roles'].values()))
+
+    def test_admission_success_cannot_qualify_a_resume_pair(self):
+        retained, children = self.exercise('success', scenario='resume', expected_error=RuntimeError)
+        self.assertEqual(retained['scenario'], 'resume')
+        self.assertEqual(len(children), 2)
+        self.assertTrue(all(row['cleanup_completed'] for row in retained['roles'].values()))
 
     def test_missing_teardown_is_failure_not_a_pass(self):
         self.exercise('missing-teardown', expected_error=RuntimeError)

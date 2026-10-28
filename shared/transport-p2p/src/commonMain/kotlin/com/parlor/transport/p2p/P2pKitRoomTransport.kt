@@ -729,11 +729,23 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         }
     }
 
+    override suspend fun resumeLastSession(): Result<LocalRoom, NetError> = resumeMembership(null)
+
+    override suspend fun resumeLastSession(
+        expectedGameProtocol: HostedGameProtocol,
+    ): Result<LocalRoom, NetError> = resumeMembership(expectedGameProtocol)
+
     @Suppress("LongMethod") // One transactional resume path owns kit cleanup on every exit.
-    override suspend fun resumeLastSession(): Result<LocalRoom, NetError> {
+    private suspend fun resumeMembership(expectedGameProtocol: HostedGameProtocol?): Result<LocalRoom, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
             is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
             is Result.Success -> loaded.data ?: return Result.Failure(NetError.NotConnected)
+        }
+        if (expectedGameProtocol != null && (
+            credential.gameId != expectedGameProtocol.gameId.raw ||
+                credential.gameVersion != expectedGameProtocol.gameVersion
+            )) {
+            return Result.Failure(NetError.IncompatibleProtocol)
         }
         if (credential.expiresAtEpochMillis <= nowMillis()) {
             if (

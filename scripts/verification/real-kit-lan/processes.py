@@ -26,6 +26,8 @@ HELPERS = (
     'scripts/verification/real-kit-lan/run.py',
     'scripts/verification/real-kit-lan/classpath.init.gradle',
     'shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/MultiProcessEndpoint.kt',
+    'shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ResumeProcessEndpoint.kt',
+    'shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt',
 )
 
 
@@ -62,8 +64,17 @@ def prepare(out, deadline):
     return cp.read_text()
 
 
-def endpoint_command(role, namespace, classpath):
-    return ['java', '-Xmx512m', '-cp', classpath, 'com.parlor.transport.p2p.MultiProcessEndpoint', role, namespace]
+SCENARIOS = {'admission': 'MultiProcessEndpoint', 'resume': 'ResumeProcessEndpoint'}
+RESUME_MARKERS = {
+    'host': (b'FROZEN_ROSTER_PASS\n', b'PHYSICAL_CLOSE_PASS\n', b'REJOIN_SAME_SEAT_PASS\n'),
+    'peer': (b'SELECTED_GAME_REJECTION_PASS\n', b'SELECTED_VERSION_REJECTION_PASS\n',
+             b'SAME_SEAT_RESUME_PASS\n', b'ROTATED_CREDENTIAL_PASS\n', b'REVOKED_MEMBERSHIP_PASS\n'),
+}
+
+
+def endpoint_command(role, namespace, classpath, scenario='admission'):
+    probe.require(scenario in SCENARIOS, 'Unsupported process scenario')
+    return ['java', '-Xmx512m', '-cp', classpath, 'com.parlor.transport.p2p.' + SCENARIOS[scenario], role, namespace]
 
 
 def bounded_log(path):
@@ -79,7 +90,8 @@ def advertised_code(data):
     return matches[0] if matches else None
 
 
-def run_pair(classpath, directory, deadline):
+def run_pair(classpath, directory, deadline, scenario='admission'):
+    probe.require(scenario in SCENARIOS, 'Unsupported process scenario')
     probe.remaining(deadline, PAIR_TIMEOUT)
     directory.mkdir(mode=0o700)
     namespace = uuid.uuid4().hex
@@ -94,7 +106,8 @@ def run_pair(classpath, directory, deadline):
         def spawn(role):
             stream = (directory / (role + '.log')).open('xb', buffering=0)
             streams[role] = stream
-            process = subprocess.Popen(endpoint_command(role, namespace, classpath), cwd=ROOT,
+            command = endpoint_command(role, namespace, classpath) if scenario == 'admission' else endpoint_command(role, namespace, classpath, scenario)
+            process = subprocess.Popen(command, cwd=ROOT,
                                        stdin=subprocess.PIPE, stdout=stream, stderr=subprocess.STDOUT,
                                        start_new_session=True)
             processes[role] = process
@@ -116,9 +129,16 @@ def run_pair(classpath, directory, deadline):
         probe.require(host.pid != peer.pid, 'Host and peer must have distinct processes')
         peer.stdin.write(code + b'\n')
         peer.stdin.flush()
-        peer.stdin.close()
+        if scenario == 'admission':
+            peer.stdin.close()
         host.stdin.close()
+        close_observed = False
         while any(process.poll() is None for process in processes.values()):
+            if scenario == 'resume' and not close_observed and b'PHYSICAL_CLOSE_PASS\n' in bounded_log(directory / 'host.log'):
+                peer.stdin.write(b'CLOSE_OBSERVED\n')
+                peer.stdin.flush()
+                peer.stdin.close()
+                close_observed = True
             probe.require(time.monotonic() < deadline, 'Pair deadline exceeded')
             for role, process in processes.items():
                 probe.require(os.fstat(streams[role].fileno()).st_size <= LOG_LIMIT, 'Endpoint output bound exceeded')
@@ -133,6 +153,8 @@ def run_pair(classpath, directory, deadline):
                           'Endpoint or teardown failed')
             expected = (b'AUTHENTICATED_ACTOR_PASS\n', b'PEER_DISCONNECT_PASS\n') if role == 'host' else (b'BIDIRECTIONAL_PASS\n',)
             probe.require(all(marker in data for marker in expected), 'Required endpoint assertions missing')
+            if scenario == 'resume':
+                probe.require(all(marker in data for marker in RESUME_MARKERS[role]), 'Required resume assertions missing')
         successful = True
     except BaseException as failure:
         failure_type = type(failure).__name__
@@ -163,10 +185,10 @@ def run_pair(classpath, directory, deadline):
                 roles[role]['evidence_failure_type'] = type(evidence_failure).__name__
         cleaned = all(row.get('cleanup_completed') and row.get('output_within_bound') and row.get('log_sha256')
                       and not row.get('stream_close_failure_type') for row in roles.values())
-        receipt = dict(status='passed' if successful and cleaned else 'failed', failure_type=failure_type,
+        receipt = dict(status='passed' if successful and cleaned else 'failed', failure_type=failure_type, scenario=scenario,
                        started_at=started_at, finished_at=datetime.now(timezone.utc).isoformat(),
                        elapsed_seconds=round(time.monotonic() - started, 3), roles=roles,
-                       scope='Distinct same-machine Linux JVMs: discovery, approval, actor binding, direct response and graceful peer disconnect; NOT game/physical/mobile/process-death recovery.')
+                       scope='Distinct same-machine Linux JVMs: discovery/approval/actor binding and direct response; resume additionally closes/reopens physical rooms, preserves a frozen seat, rotates/revokes in-memory credentials and rejects mismatched game/version. NOT game, physical/mobile, OS storage, background or process-death recovery.')
         (directory / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
         if failure_type is None:
             probe.require(cleaned, 'Owned endpoint cleanup not verified')
@@ -177,6 +199,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--allow-local-lan', action='store_true')
     parser.add_argument('--iterations', type=int, choices=(1, 2, 3), default=3)
+    parser.add_argument('--scenario', choices=tuple(SCENARIOS), default='admission')
     args = parser.parse_args(argv)
     deadline = time.monotonic() + TOTAL_TIMEOUT
     environment = probe.check_environment(args.allow_local_lan, args.iterations, deadline)
@@ -184,7 +207,7 @@ def main(argv=None):
     helpers = helper_hashes(deadline)
     out = ROOT / 'build/real-kit-processes' / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8])
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
-    receipt = dict(status='running', source=before, helper_sources=helpers, environment=environment, cases=[],
+    receipt = dict(status='running', source=before, helper_sources=helpers, environment=environment, cases=[], scenario=args.scenario,
                    started_at=datetime.now(timezone.utc).isoformat(),
                    scope='Opt-in synthetic Linux separate-process experiment; NOT normal CI, physical/mobile performance, background recovery or release qualification.')
     try:
@@ -195,7 +218,7 @@ def main(argv=None):
         receipt['runtime_artifacts'] = artifacts
         for i in range(args.iterations):
             probe.remaining(deadline, PAIR_TIMEOUT)
-            case = run_pair(classpath, out / ('pair-' + str(i + 1)), deadline)
+            case = run_pair(classpath, out / ('pair-' + str(i + 1)), deadline, args.scenario)
             probe.require(case['status'] == 'passed', 'Pair did not qualify')
             receipt['cases'].append(case)
         probe.require_same_source(before, deadline)

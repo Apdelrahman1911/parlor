@@ -48,11 +48,40 @@ Each JVM is limited to512MiB, each pair to110seconds and the whole invocation
 to900seconds including preparation/hashing. Logs are bounded1MiB per endpoint;
 cleanup retires both owned process groups before fallible evidence hashing.
 Its private Gradle registry stop is separately bounded60seconds. Receipts under
-`build/real-kit-processes/` bind the clean source, four helper sources and executed
+`build/real-kit-processes/` bind the clean source, six helper sources and executed
 runtime bytes before/after. Role-specific socket/CPU/RSS/thread samples describe
 whole synthetic JVMs, not action latency or per-phone cost. This adds process
 separation, **not physical LAN, mobile background/process-death recovery,
 gameplay, long-session, battery/thermal or RPC-comparison qualification**.
+
+## Selected-game Resume through real LAN
+
+```bash
+python3 scripts/verification/real-kit-lan/processes.py --allow-local-lan --scenario resume
+```
+
+This separate opt-in scenario joins the registered synthetic game/version, freezes
+the host roster, closes the peer's physical room **without** a permanent Leave,
+and resumes through the selected-game overload. The host independently observes
+the physical disconnect before the runner permits Resume; this is an explicit
+fixture barrier, not a slower/replayed user gesture, command retry or changed
+shipping recovery deadline. It then verifies the same authenticated seat without
+reopening initial admission. Wrong game/version must return `IncompatibleProtocol`
+without another real-kit creation attempt or changing the stored credential.
+Correct Resume must rotate the credential; validated terminal delivery must revoke
+it. All additional role-specific assertions, teardown and natural exit0 are required.
+
+The same original110-second pair,900-second invocation and512MiB JVM bounds apply.
+Six exact helper sources and executed runtime bytes are bound before/after; both
+owned process groups and the private Gradle registry are retired on failure too.
+The existing admission scenario remains the default. Python regression controls
+require the separate resume assertions and host-close barrier; an admission-only
+pass cannot qualify Resume.
+
+This uses **in-memory synthetic credentials in a surviving Linux peer process**.
+It does not restart/kill that process, run game reducers, validate Android/iOS
+protected storage, exercise mobile OS lifecycle/suspension, measure phone energy,
+or qualify physical LAN/Store readiness. Samples describe the whole JVM.
 
 ## Single-process fixture runner (`run.py`)
 

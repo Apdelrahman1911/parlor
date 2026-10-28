@@ -66,7 +66,9 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> PeerGameLobby(
                     code = code, displayName = name,
                     expectedGameProtocol = HostedGameProtocol(spec.definition.id, spec.version),
                 ))
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession()
+                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                    HostedGameProtocol(spec.definition.id, spec.version),
+                )
                 MultiplayerOpenMode.Host -> error("Peer route cannot host")
             }
         }) {

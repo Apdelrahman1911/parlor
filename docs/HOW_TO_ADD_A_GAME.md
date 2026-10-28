@@ -70,6 +70,12 @@ The game UI talks to `SessionController`; it never imports
 - advances one canonical revision at a time; and
 - publishes a public projection plus only the recipient's private projection.
 
+Shipping Join and Resume flows must supply their selected `HostedGameProtocol`
+(game ID and host protocol version). Use `resumeLastSession(expectedGameProtocol)`;
+never validate an earlier Home summary and then call unbound Resume. The
+transport compares the same protected credential used for authentication and
+must preserve a mismatched membership rather than deleting it.
+
 A game supplies only its payload codec, action-authority policy, state
 projection, and snapshot codec. Adding a game must not change room admission,
 ordering/deduplication, heartbeat, reconnect, or transport framing.

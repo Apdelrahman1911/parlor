@@ -151,7 +151,9 @@ fun LastLightPeerLobbyFlow(
         joinError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession()
+                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                    HostedGameProtocol(LastLightIds.GameId, LastLightHostRoomBridge.GAME_VERSION),
+                )
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
                     code = code,
                     displayName = peerName,

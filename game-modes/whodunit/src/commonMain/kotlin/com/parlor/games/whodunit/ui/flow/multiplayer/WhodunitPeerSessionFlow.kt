@@ -196,7 +196,9 @@ fun WhodunitPeerSessionFlow(
         leaveError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession()
+                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                    HostedGameProtocol(WhodunitIds.GameId, WhodunitHostRoomBridge.GAME_VERSION),
+                )
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
                     code = code,
                     displayName = peerName,
