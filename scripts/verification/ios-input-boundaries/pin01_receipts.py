@@ -61,7 +61,7 @@ def decode(raw):
 
 def public_boundaries(raw, control):
     report = decode(raw)
-    require(control in (1, 2), 'Exactly one public action required')
+    require(type(control) is int and control in (1, 2), 'Exactly one public action required')
     # Caller must separately validate exact source/run/native custody. These
     # booleans are receipt observations, never a lost-event/root-cause diagnosis.
     rows = report['rows']

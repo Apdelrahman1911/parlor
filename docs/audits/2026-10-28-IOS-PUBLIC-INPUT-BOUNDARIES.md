@@ -11,7 +11,7 @@ Implemented `scripts/verification/ios-input-boundaries/`: an exact-source,
 **pure transformation planner**, copied Kotlin numeric recorder/bridge, passive
 UIKit recognizer template, five copied Desktop controls, numeric receipt decoder
 and complete three-arm public-outcome comparison controls. Routine readiness
-discovery reuses the ten Python controls and, on macOS, typechecks the standalone
+discovery reuses the eleven Python controls and, on macOS, typechecks the standalone
 Swift observer against the actual Simulator SDK. No workflow is changed.
 
 The planner writes nothing. A separate, manifest-owned diagnostic copy is required;
@@ -76,6 +76,27 @@ Custody SHA256s (not substitutes for hosted acceptance):
 | Instrumented six methods | `c14b34de376e34b56c1dc5ebf9f63d64c94054454230d46b18a0a7685e7916fc` |
 | Executed three mutations | `f7fc9c81e5c0683b7fb423af0adf8e97ca04aa22a6bc9e2c20a9e3c4dd0243bc` |
 | Six policy mutations | `d0c569c624f1ba5ecee2d935d09c3d9bc1a625d28f3ebde8aa0e74634608bbb4` |
+
+## Committed-source local verification
+
+At `38703e2225cd9f0636e8d04ffbe98ee07384ff9c`, the complete strict
+`productionCheck allTests --dependency-verification=strict --continue --no-daemon`
+passes:1,867Desktop (three existing LAN skips),671Android Debug+671Release,
+120GitHub-test, Detekt/lint/R8/unsigned AAB and every release/security/inventory/
+shell gate. Source unchanged; private Gradle stop0. The199.6-second observation
+includes898 executed,663 valid cache and107 up-to-date tasks; this is a local
+check, not a comparative hosted/mobile benchmark. Full log SHA256:
+`0467f94bc36d4d0130bb6fdec7bc8fa2d38bb5e37ca2736920b15ca7d800e6d4`.
+
+The separate clean ordinary readiness suite at that stage passes369 controls,
+with four explicit Linux Apple/platform skips (including the new native Swift
+SDK compile). A later construction-stage Python action-selector regression
+reproduces acceptance of `True` and `1.0` as Host because Python numeric equality
+ignores type. Explicit integer checking fixes it; the eleven-control suite must
+pass with that regression before freezing a follow-up. The preceding failed
+wrong-working-directory invocation is retained separately and is not red runtime
+evidence. These latest tool/documentation/inventory edits require their own
+committed-source check; the38703e22 result is not substituted for it.
 
 ## Remaining qualification / implementation
 

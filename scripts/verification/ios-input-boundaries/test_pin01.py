@@ -140,6 +140,12 @@ class ReceiptControls(unittest.TestCase):
         self.assertNotIn('root_cause', observed)
         self.decode(fixture(0))
 
+    def test_action_selection_rejects_boolean_float_missing_and_unknown_controls(self):
+        raw = json.dumps(fixture()).encode()
+        for control in (True, False, 1.0, None, 0, 3, '1'):
+            with self.subTest(control=control), self.assertRaises(ValueError):
+                receipts.public_boundaries(raw, control)
+
     def test_rejects_unknown_private_duplicate_boolean_nonfinite_and_oversize_data(self):
         for raw in (b'', b'x' * (receipts.MAX_BYTES + 1), b'{"schema":1,"schema":1}',
                     json.dumps(fixture()).replace('"nativeMode": 1', '"nativeMode": true').encode(),
