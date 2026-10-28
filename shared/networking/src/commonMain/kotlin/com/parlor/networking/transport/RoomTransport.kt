@@ -50,6 +50,16 @@ interface RoomTransport {
         Result.Failure(NetError.NotConnected)
 
     /**
+     * Resume only a membership belonging to the selected shipping game/version.
+     * Implementations must check the same credential used to authenticate the
+     * connection, before LAN startup, without deleting a mismatched membership.
+     * A metadata read followed by unbound resume is not an atomic substitute.
+     * Transports without this capability fail closed; shipping flows use this overload.
+     */
+    suspend fun resumeLastSession(expectedGameProtocol: HostedGameProtocol): Result<LocalRoom, NetError> =
+        Result.Failure(NetError.IncompatibleProtocol)
+
+    /**
      * Permanently discards the protected membership returned by
      * [resumableSession], even when no [LocalRoom] could be reconstructed.
      * Implementations must use an ownership-checked transaction so a stale

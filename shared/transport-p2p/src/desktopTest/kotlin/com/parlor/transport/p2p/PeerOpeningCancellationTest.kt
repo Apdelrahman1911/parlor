@@ -11,6 +11,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
+import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.storage.secure.InMemorySecureKeyValueBacking
 import com.parlor.storage.secure.PlatformKeyedSecureStorage
 import dev.p2pkit.core.AppId
@@ -93,6 +94,90 @@ class PeerOpeningCancellationTest {
                 RoomMessageCodec().decode(it.bytes) is PeerMessage.AdmissionConfirmed
             })
             fixture.assertReleased()
+        } finally {
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
+    @Test
+    fun crossGameResumeRejectsBeforeKitCreationAndPreservesCredential() = runTest {
+        verifySelectedResumeRejected(HostedGameProtocol(GameId("different-game"), 1))
+    }
+
+    @Test
+    fun mismatchedResumeVersionRejectsBeforeKitCreationAndPreservesCredential() = runTest {
+        verifySelectedResumeRejected(HostedGameProtocol(GameId("fixture-game"), 2))
+    }
+
+    @Test
+    fun missingResumeGameRejectsBeforeKitCreationAndPreservesCredential() = runTest {
+        verifySelectedResumeRejected(HostedGameProtocol(GameId("fixture-game"), 1), missingGame = true)
+    }
+
+    @Test
+    fun matchingSelectedResumeAuthenticatesAndRotatesWithoutChangingSeat() = runTest {
+        val fixture = OpeningFixture(backgroundScope, resume = true)
+        fixture.prepare()
+        val before = fixture.committedCredential()
+        var room: LocalRoom? = null
+        try {
+            room = assertIs<Result.Success<LocalRoom>>(fixture.transport.resumeLastSession(
+                HostedGameProtocol(GameId("fixture-game"), 1),
+            )).data
+            assertEquals(1, fixture.createCalls)
+            assertEquals(1, fixture.connectCalls)
+            val rotated = fixture.committedCredential()
+            assertEquals(before.playerId, rotated.playerId)
+            assertEquals(before.membershipId, rotated.membershipId)
+            assertEquals(before.gameId, rotated.gameId)
+            assertEquals(before.gameVersion, rotated.gameVersion)
+            assertEquals(fixture.offer.generation, rotated.generation)
+            assertEquals(Result.Success(Unit), room.closeForRetry())
+            fixture.assertReleased()
+        } finally {
+            room?.closeForRetry()
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
+    @Test
+    fun replacedGameMetadataBetweenSummaryAndResumeIsCheckedOnTheUsedCredential() = runTest {
+        val fixture = OpeningFixture(backgroundScope, resume = true)
+        fixture.prepare()
+        val summary = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            fixture.transport.resumableSession(),
+        ).data)
+        assertEquals(GameId("fixture-game"), summary.gameId)
+        assertEquals(Result.Success(Unit), fixture.store.updateGame("different-game", 2))
+        val replaced = fixture.committedCredential()
+        try {
+            assertEquals(Result.Failure(NetError.IncompatibleProtocol), fixture.transport.resumeLastSession(
+                HostedGameProtocol(summary.gameId, summary.gameVersion),
+            ))
+            assertEquals(0, fixture.createCalls)
+            assertEquals(0, fixture.connectCalls)
+            assertTrue(fixture.session.sent.isEmpty())
+            assertEquals(replaced, fixture.committedCredential())
+        } finally {
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
+    private suspend fun TestScope.verifySelectedResumeRejected(
+        expected: HostedGameProtocol,
+        missingGame: Boolean = false,
+    ) {
+        val fixture = OpeningFixture(backgroundScope, resume = true, missingGame = missingGame)
+        fixture.prepare()
+        val before = fixture.committedCredential()
+        try {
+            assertEquals(Result.Failure(NetError.IncompatibleProtocol), fixture.transport.resumeLastSession(expected))
+            assertEquals(0, fixture.createCalls)
+            assertEquals(0, fixture.connectCalls)
+            assertEquals(0, fixture.stopAttempts)
+            assertEquals(0, fixture.session.closeCalls)
+            assertTrue(fixture.session.sent.isEmpty())
+            assertEquals(before, fixture.committedCredential())
         } finally {
             fixture.stopFakeIfNeeded()
         }
@@ -338,6 +423,8 @@ private class OpeningFixture(
     val store = ResumableCredentialStore(storage)
     var onPeerMessage: suspend (PeerMessage) -> Unit = {}
     var onBackground: () -> Unit = {}
+    var createCalls = 0
+        private set
     var connectCalls = 0
         private set
     var stopAttempts = 0
@@ -358,7 +445,10 @@ private class OpeningFixture(
         deviceName = "synthetic-peer",
         scope = scope,
         kitFactory = object : P2pKitFactory {
-            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
+                createCalls++
+                return kit
+            }
         },
         secureStorage = storage,
     )
@@ -419,7 +509,8 @@ private class OpeningFixture(
     }
 
     suspend fun open(): Result<LocalRoom, NetError> =
-        if (resume) transport.resumeLastSession() else transport.join("ABCDEF", "Alice")
+        if (resume) transport.resumeLastSession(HostedGameProtocol(GameId("fixture-game"), 1))
+        else transport.join("ABCDEF", "Alice")
 
     suspend fun committedCredential(): ResumableSessionCredential = assertNotNull(
         assertIs<Result.Success<ResumableSessionCredential?>>(store.loadResumeCandidate()).data,
