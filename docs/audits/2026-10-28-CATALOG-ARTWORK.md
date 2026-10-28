@@ -24,7 +24,7 @@ font, dependency, protocol, persistence or release-workflow change. The
 
 ## Executed regressions and sensitivity controls
 
-Four new methods execute under strict dependency verification:
+Four artwork methods execute under strict dependency verification:
 
 - The common test checks six cached, uniquely named, nonmirrored vectors with
   the reviewed viewport. Android and Apple execution must qualify separately.
@@ -49,6 +49,31 @@ Failed XML/logs, source/test hashes and restored receipts are retained under
   --tests '*HomeCatalogArtworkTest*' --dependency-verification=strict
 ```
 
+## Actual catalog inspection and rounded-feedback correction
+
+A task-owned 420×840 Desktop application with fresh private preferences renders
+all six motifs in the public English catalog and Arabic/RTL after Settings.
+Each retained capture is inspected at its actual boundary; filenames are not
+destination assertions. No room, private player information or gameplay starts.
+Skiko's software fallback is recorded, not a mobile GPU/performance result.
+The first observer fails in a cleanup-helper import after closing the app.
+Its original failure and nine captures are retained; recovery binds only the
+owned Xvfb lifetime and exclusive output descriptors, then stops only its Gradle
+registry. Verified recovery does **not** relabel that observer as PASS.
+
+Inspection also confirms that catalog hover feedback paints a rectangular
+overlay outside rounded corners. The supplied `clickable` precedes
+`ParlorCard`'s internal clip, so that clip cannot constrain the outer indication.
+Home now clips before `clickable`, using the same existing elevated radius;
+labels, callbacks and navigation remain unchanged.
+
+A fifth method reproduces the unchanged corner-pixel failure, then passes
+**eight** real Compose Desktop mouse-feedback scenarios: EN/AR, light/dark,
+Amber/Crimson,320dp and200% text. It requires feedback to visibly change the
+card **and** leave the four outside-corner pixels unchanged. Thus suppressing
+feedback entirely cannot satisfy the test. This extends #259's catalog scope;
+Android/iOS touch/ripple and native accessibility remain separate acceptance.
+
 ## Acceptance limits
 
 The generated Desktop rasters are visual evidence, not UIKit/Android rendering,
@@ -65,3 +90,7 @@ acceptance remain separate outstanding gates.
 The first full check exposed the unchanged real-Gradle fixture's partial PID
 publication race. Its [#279 correction and sensitivity test](2026-10-28-GRADLE-MARKER-PUBLICATION.md)
 are a separate non-shipping prerequisite; the failed aggregate is retained.
+The corrected33afe534 check passes1,827Desktop,652Android cases perDebug/Release
+variant,112GitHub-test cases and750release controls, with the existing documented
+skips. That result predates the rounded-feedback correction; the newest source
+needs its own full check and hosted qualification, not the earlier cached claim.

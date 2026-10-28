@@ -1,6 +1,6 @@
 # Project status — 2026-10-28
 
-## Latest protected integration and catalog follow-up (14:27 UTC)
+## Latest protected integration and catalog follow-up (14:43 UTC)
 
 [PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as
 `66702a77532a5e3a0c5f370d4ce8c903742569c3`. Its fresh
@@ -27,6 +27,13 @@ tests and Release build gates passed, but the aggregate did not qualify.
 and real-Gradle write/publish barrier test pass locally, including a restored
 premature-publication negative control. Original timeout, scoped stop and
 unrelated-registry checks are unchanged; new committed-source full checks remain.
+The corrected33afe534 full strict check passes1,827Desktop cases,652Android
+cases perDebug/Release variant,112GitHub-test cases and750release controls,
+with the existing documented skips. Actual public catalog inspection then
+reproduces rectangular hover feedback outside rounded corners. A fifth UI
+method fails on original wiring and passes eight EN/AR light/dark accent
+scenarios after clipping before indication. This newer source still needs
+its own committed-source full/hosted/actual-main qualification.
 
 Eight acceptance Issues remain open: #230/#251/#252/#253/#258/#259/#260/#267.
 New confirmed CI-fixture Issue#279 remains open pending integration acceptance.

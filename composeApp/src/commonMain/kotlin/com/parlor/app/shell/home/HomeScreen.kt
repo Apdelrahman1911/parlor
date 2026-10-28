@@ -442,6 +442,7 @@ private fun GameHeroCard(
         ParlorCard(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
                 .semantics { contentDescription = presentation.openContentDescription }
                 .clickable(role = Role.Button, onClick = onOpen),
             cornerRadius = ParlorTheme.radii.elevated,
