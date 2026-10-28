@@ -65,8 +65,24 @@ forgotten navigation decision, removed foreground predicate, replayed failed
 opening and omitted App startup wiring. All original source bytes are restored;
 all private Gradle stops exit0. Combined sensitivity receipt SHA256:
 `b16780d8bb9f1f14871fe917de5019f82b944a016fb0fea696ba27cc17260d39`.
-Fresh full committed-source verification remains pending; the final foreground
-journey also counts both local snapshot and transport metadata probes.
+The final foreground journey counts both local snapshot and transport metadata
+probes. Complete strict `productionCheck allTests` at frozen`ef9dfd91` passes
+**1,867 Desktop** cases (three existing LAN skips), **671 Android Debug + 671
+Release** and **120 GitHub-test**, with no failures/errors. Detekt/lint/R8/unsigned
+AAB and all release/inventory/shell gates pass; source unchanged, private-registry
+stop0. The312.9s log exposes968executed/588cache/112up-to-date tasks; this local
+compiler duration is not a mobile performance measurement. Full logSHA256:
+`e2ddc8b05cce30a7af9c00f7156efd0b2ed29710406f9570b7be09aed1e6f07d`.
+
+A fresh selected-Resume real-LAN run at that same frozen head independently
+passes **three distinct Linux host/peer pairs**, all six JVMs naturally exit0.
+Invocation`20261028T181440Z-db6c0cc3`, original receiptSHA256:
+`177bd2970fa2cf22018802758d25def7a4edd5445bf58a8b95ec338e286f4059`. Source/helper/runtime/logs and owned cleanup recheck.
+The14.428/14.688/14.676s complete synthetic pair durations are not phone latency.
+This proves authenticated selected-seat transport/rotation/terminal revocation,
+not Compose/native cold startup, protected storage or gameplay-reducer execution.
+A later documentation/inventory head still requires its own complete strict
+check; older passing evidence does not qualify newer source.
 
 ## Acceptance limits
 

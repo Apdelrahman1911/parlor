@@ -13,10 +13,13 @@ This accepts the scoped catalog/card-feedback/atomic-fixture change, not the
 full physical/native UX or Store overhaul. #279 was automatically closed on
 normal merge; its verification update must not claim a later duplicate close.
 
-The selected-game Resume branch has normally integrated that accepted base;
-its fresh full local check is running before publication. Its original local
-preparation stopped because an already-current regenerated inventory did not
-change; the completed merge was retained, not replayed, and full gates remain.
+The selected-game Resume branch has normally integrated that accepted base.
+Its original preparation incorrectly expected an already-current regenerated
+inventory to change. After the documentation commit, fresh full9a859798 correctly
+fails only the now-stale inventory gate (all module tests pass); regeneration
+therefore occurs after the commit, in separate007abae2. Its fresh full strict
+check is running before publication. Original failures remain retained; no merge
+is replayed and no gate is weakened.
 
 A [selected-membership follow-up](audits/2026-10-28-RESUME-SELECTED-MEMBERSHIP.md)
 at742b9e1b passes complete strict local checks1,851Desktop/662Android perDebug+
@@ -26,9 +29,13 @@ The [stacked cold-start follow-up](audits/2026-10-28-COLD-MULTIPLAYER-STARTUP.md
 adds foreground-only metadata lookup, one process startup selection and explicit
 Retry after failed peer opening. Actual registered Desktop Mafia root recreation
 reproduces two openings instead of one; corrected six-game EN/AR200%-text journeys
-and restored guard-removal controls pass. Fresh full new-head checks, accepted
-Resume-base integration, hosted/native qualification, protected merge and fresh
-actual-main verification remain required. Neither local follow-up is accepted
+and restored guard-removal controls pass. Frozenef9dfd91 complete strict checks
+pass1,867Desktop/671Android perDebug+Release/120GitHub-test, and a fresh three-pair
+Linux LAN run has all six natural exit0. These are scoped synthetic/local passes,
+not native cold-storage/process-death/gameplay or mobile performance proof.
+Fresh documentation/new-head checks, accepted Resume-base integration, hosted/
+native qualification, protected merge and fresh actual-main verification remain
+required. Neither local follow-up is accepted
 main. No additional agents, paid runners, workflow relaxation or Store release.
 
 #251/#252 stay open for physical/native admission and recovery, #267 for the
