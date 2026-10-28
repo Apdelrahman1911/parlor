@@ -59,7 +59,50 @@ public outcome matrix, exact frames/runtime and unchanged outcomes. Its syntheti
 controls and equal outcomes cannot certify native timing, source custody or the
 original iOS26.2 cause. An external app-host capture adapter and real native
 three-arm execution remain required; the normal production UITest driver is
-intentionally unchanged.
+intentionally unchanged. `pin02_capture.render` now supplies a separate exact-source
+plan for a **copied** app-host exporter and original copied XCTest driver (below).
+This is an adapter implementation, not its native application acceptance.
+
+## PIN02 — post-failure capture adapter
+
+`PIN02Capture.swift.in` installs a single, Debug-Simulator-only Darwin notification
+observer in the copied container. A caller must explicitly bind the Debug bundle,
+Simulator UUID and fresh opaque request token. The main run loop must be running:
+this cannot wake a suspended/terminated app. No production observer, app timer,
+polling, thread, UI query, networking, preference or permission change is added.
+
+The copied driver sends one request **only after its original single-tap transition
+and unchanged ten-second predicate have failed**. Its successful path gains no
+observation or wait. At most three seconds of post-failure ACK waiting precedes the
+original failure assertion; neither an ACK nor a timeout changes that original
+result. Existing screenshot/geometry evidence is preserved. There is no tap replay,
+fallback launch, longer gesture, different selector or retry.
+
+The app calls the copied Kotlin numeric bridge once, validates public numeric
+shape, and exclusively creates `tmp/parlor-pin02-<token>/capture.json` with no
+overwrite or deletion. File contents are flushed before ACK. The envelope includes
+only ownership UUIDs, exact Debug bundle, process ID/boot UUID, monotonic times and
+the public numeric buffer. These identifiers are **diagnostic custody**, never
+player/session identities or authentication credentials. Unknown/private payloads
+reject without exporting exception descriptions or raw bridge data.
+
+`pin02_capture.retain_file` reads only the caller's explicitly bound sandbox file;
+it rejects symlinks, hardlinks, directories, FIFOs, changing/oversized/private data,
+foreign owners and existing destinations. It hashes preserved bytes. An ACK,
+file presence or successful decoder alone does not establish actual source,
+product/runtime, native input delivery or cleanup. Overflow/invalid/empty numeric
+buffers may be retained but never qualify. Exporter installation time is not app
+boot; valid earlier Compose rows must not be discarded.
+
+Ten additional readiness controls exercise exact-driver restoration, failed-only
+wiring, parser/retention adversaries and source mutations. On macOS they also
+typecheck the actual copied XCTest driver/exporter against the Simulator SDK and
+execute the real exporter over cross-process Darwin IPC with a **synthetic** buffer,
+one-shot duplicate rejection and observer disposal. The latter is macOS Foundation
+behavior, not Kotlin Native linkage or iOS application/touch execution. A complete
+manifest-owned app-copy runner, actual bridge/product linkage, post-failure native
+export/retention custody and the original/Compose/native journey matrix remain
+required. Do not install these plans directly in shipping files.
 
 ## Official API basis
 
