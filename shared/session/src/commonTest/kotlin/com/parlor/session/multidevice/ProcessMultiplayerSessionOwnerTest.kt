@@ -42,6 +42,40 @@ import kotlin.test.assertFailsWith
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProcessMultiplayerSessionOwnerTest {
     @Test
+    fun failedOpeningRestoresItsErrorUnlessRetryIsExplicit() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = MultiplayerSessionRoute.peer(GameId("fixture-peer"), "", "", resumeExistingSession = true)
+        var opens = 0
+        suspend fun open(mode: MultiplayerOpenMode): Result<LocalRoom, NetError> {
+            assertThat(mode).isEqualTo(MultiplayerOpenMode.Resume)
+            opens++
+            return Result.Failure(NetError.Timeout)
+        }
+        val first = owner.acquire(route, retryFailedOpen = false, openRoom = ::open)
+        repeat(16) {
+            assertThat(owner.acquire(route, retryFailedOpen = false, openRoom = ::open)).isEqualTo(first)
+        }
+        assertThat(opens).isEqualTo(1)
+        assertThat(owner.acquire(route, retryFailedOpen = true, openRoom = ::open)).isEqualTo(first)
+        assertThat(opens).isEqualTo(2)
+    }
+
+    @Test
+    fun restoreOnlyAcquireStillReattachesLiveRoomsAndRejectsDifferentFailedRoutes() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val first = owner.acquire(route, retryFailedOpen = false) { Result.Success(FakeRoom(isHost = false)) }
+        val restored = owner.acquire(route, retryFailedOpen = false) { error("An active room cannot reopen") }
+        assertThat((restored as Result.Success).data).isSameInstanceAs((first as Result.Success).data)
+
+        val failedOwner = ProcessMultiplayerSessionOwner(backgroundScope)
+        failedOwner.acquire(route, retryFailedOpen = false) { Result.Failure(NetError.Timeout) }
+        val otherRoute = MultiplayerSessionRoute.peer(GameId("another-game"), "Peer", "A23456")
+        val conflict = failedOwner.acquire(otherRoute, retryFailedOpen = false) { error("Another route cannot open") }
+        assertThat(conflict).isEqualTo(Result.Failure(NetError.AlreadyConnected))
+    }
+
+    @Test
     fun multiplayerRoutesRejectNonCanonicalUserInputAtTheOwnershipBoundary() {
         listOf("", " Host", "Host\nAdmin", "A".repeat(33)).forEach { invalidName ->
             assertFailsWith<IllegalArgumentException> {

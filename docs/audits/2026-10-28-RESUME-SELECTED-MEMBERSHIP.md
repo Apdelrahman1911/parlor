@@ -51,9 +51,25 @@ large Resume transaction rather than raising its complexity threshold. The first
 full check at `0dcc607d` remains **FAIL**: three mechanically generated inventory
 rows still name the predecessor commits. All1,851Desktop/662Android perDebug and
 Release/113GitHub-test cases pass, but that does not qualify the failed gate.
-The inventory is regenerated only after source commits. Fresh full exact-head
-verification and opt-in separate-process real-LAN selected-Resume execution are
-pending; the earlier pipeline aborts before LAN because this gate failed.
+The inventory is regenerated only after source commits. At frozen `742b9e1b`,
+the complete strict `productionCheck allTests` passes **1,851 Desktop** cases
+(three existing LAN skips), **662 Android Debug + 662 Release** and **113 GitHub-test**
+cases; Detekt/lint/R8/unsigned AAB/release/inventory/shell gates pass. Source is
+unchanged, private-registry stop0; valid cache reuse is exposed in the139.1s log.
+Full log SHA256:
+`9091bece1cf3c19d4a2603f6dcd8f877abc4b774e21a0f974d8920b17491c1fb`.
+
+The fresh opt-in separate-process selected-membership LAN run at this same head
+also passes **three separate host/peer pairs**, all six JVMs naturally exit0.
+The selected game/version rejects before another kit; authenticated Resume
+retains the authoritative seat, rotation works, and validated terminal revocation
+rejects a later selected request without another kit. Source/helpers/runtime/logs
+and owned cleanup are independently rechecked. Invocation
+`20261028T173212Z-dc7b2679`, original receipt SHA256:
+`1eee198cbc3b2f4a2b3ca4bd838ea0fdba06bf5aa660072c669d5810f152e557`.
+Pair14.344/14.555/14.619s durations cover complete synthetic pairs, not mobile
+latency. The first failed full check and its pre-LAN abort remain retained.
+These results certify that frozen local scope, not a newer stacked checkout.
 
 ## Remaining qualification
 
@@ -63,7 +79,9 @@ runtime/source/cleanup custody, accepted-base integration, fresh free-hosted
 architectures/optimized Release lanes, protected merge and automatic actual-main
 verification remain required. No workflow/dependency/Store-policy change.
 
-The original iOS26.2 input cause, automatic cold-peer startup, native protected
-storage, process death, physical host/client/gameplay/accessibility and measured
+[Automatic cold-peer startup](2026-10-28-COLD-MULTIPLAYER-STARTUP.md) is a separate
+stacked local follow-up, not qualified by these older results. The original
+iOS26.2 input cause, native protected storage, process death, physical
+host/client/gameplay/accessibility and measured
 mobile battery/thermal matrices remain separate unfinished work. Existing
 #251/#252/#258/#267 and Store/signing gates remain open. AGENTS is byte-identical.

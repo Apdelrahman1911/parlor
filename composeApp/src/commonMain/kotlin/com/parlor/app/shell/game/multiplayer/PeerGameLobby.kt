@@ -64,7 +64,7 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> PeerGameLobby(
     val access by transport.localNetworkAccess.collectAsState()
     LaunchedEffect(transport, route, attempt) {
         error = null
-        when (val result = owner.acquire(route) { mode ->
+        when (val result = owner.acquire(route, retryFailedOpen = attempt > 0) { mode ->
             when (mode) {
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
                     code = code, displayName = name,

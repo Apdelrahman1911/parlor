@@ -1,5 +1,43 @@
 # Project status — 2026-10-28
 
+## Catalog main accepted; selected-membership and cold-recovery follow-ups
+
+Catalog [PR#280](https://github.com/Apdelrahman1911/parlor/pull/280) is normally
+merged as `0bb8d5a59d2a4f7b1849d188e312aef178593005`. Its fresh automatic
+[main40731239367](https://github.com/Apdelrahman1911/parlor/actions/runs/40731239367)
+independently qualifies all eight producers plus the original Apple join,
+20Swift/678KMP Simulator cases and exact source/artifact/native/output custody.
+Qualification SHA256:
+`40d95be16d3259b22177f2a033384365a5f9e7dfeaab37c2c59db8fba1cc606d`.
+This accepts the scoped catalog/card-feedback/atomic-fixture change, not the
+full physical/native UX or Store overhaul. #279 was automatically closed on
+normal merge; its verification update must not claim a later duplicate close.
+
+The selected-game Resume branch has normally integrated that accepted base;
+its fresh full local check is running before publication. Its original local
+preparation stopped because an already-current regenerated inventory did not
+change; the completed merge was retained, not replayed, and full gates remain.
+
+A [selected-membership follow-up](audits/2026-10-28-RESUME-SELECTED-MEMBERSHIP.md)
+at742b9e1b passes complete strict local checks1,851Desktop/662Android perDebug+
+Release/113GitHub-test and three separate real-LAN pairs with all six natural
+exit0. This is frozen synthetic Linux proof, not a phone/persistence/energy test.
+The [stacked cold-start follow-up](audits/2026-10-28-COLD-MULTIPLAYER-STARTUP.md)
+adds foreground-only metadata lookup, one process startup selection and explicit
+Retry after failed peer opening. Actual registered Desktop Mafia root recreation
+reproduces two openings instead of one; corrected six-game EN/AR200%-text journeys
+and restored guard-removal controls pass. Fresh full new-head checks, accepted
+Resume-base integration, hosted/native qualification, protected merge and fresh
+actual-main verification remain required. Neither local follow-up is accepted
+main. No additional agents, paid runners, workflow relaxation or Store release.
+
+#251/#252 stay open for physical/native admission and recovery, #267 for the
+original iOS26.2 input-event cause, #258 for strict0PASS/6FAIL protection; physical
+six-game host/client/accessibility/power/thermal matrices and Store ownership/
+signing/external approvals remain unexecuted or blocked.
+
+The checkpoints below are retained historical evidence, not current-head proof.
+
 ## Verified main and selected-resume follow-up (15:21 UTC)
 
 Automatic [main40701195587](https://github.com/Apdelrahman1911/parlor/actions/runs/40701195587)

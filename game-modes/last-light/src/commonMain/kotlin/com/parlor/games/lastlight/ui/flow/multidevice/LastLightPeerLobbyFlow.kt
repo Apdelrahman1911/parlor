@@ -152,7 +152,7 @@ fun LastLightPeerLobbyFlow(
     LaunchedEffect(transport, route, joinAttempt) {
         acquireError = null
         joinError = null
-        val result = sessionOwner.acquire(route) { mode ->
+        val result = sessionOwner.acquire(route, retryFailedOpen = joinAttempt > 0) { mode ->
             when (mode) {
                 MultiplayerOpenMode.Resume -> route.resumeSelection?.let { selection ->
                     transport.resumeLastSession(

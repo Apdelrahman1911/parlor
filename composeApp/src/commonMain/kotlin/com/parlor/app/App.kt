@@ -11,12 +11,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
+import com.parlor.session.multidevice.ProcessMultiplayerState
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_resume_open_failed
 import com.parlor.app.resources.local_resume_failure_discard_failed
@@ -28,7 +29,6 @@ import com.parlor.app.shell.home.ResumeDeletionDialog
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.home.HomeRecoveryAvailability
 import com.parlor.app.shell.home.LocalResumeFailureScreen
-import com.parlor.app.shell.home.loadHomeRecoveryAvailability
 import com.parlor.app.shell.home.rememberHomeCatalogScrollState
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
@@ -75,6 +75,9 @@ internal fun App(settings: SettingsStore) {
     val snapshotStore: SnapshotStore = koinInject()
     val roomTransport: RoomTransport = koinInject()
     val multiplayerSessionOwner: ProcessMultiplayerSessionOwner = koinInject()
+    val startupRecoveryGate: StartupMultiplayerRecoveryGate = koinInject()
+    val lifecycle: AppLifecycleCoordinator = koinInject()
+    val visibility by lifecycle.visibility.collectAsState()
     val gameShellRegistry: GameShellRegistry = koinInject()
     val gameShellRouter = remember(gameShellRegistry) { GameShellRouter(gameShellRegistry) }
     val multiplayerOwnerState by multiplayerSessionOwner.state.collectAsState()
@@ -135,31 +138,36 @@ internal fun App(settings: SettingsStore) {
                     mutableStateOf(GameShellBackRequest.Initial)
                 }
 
-                val homeRecovery by produceState<HomeRecoveryAvailability>(
-                    initialValue = HomeRecoveryAvailability.Loading,
-                    key1 = currentRoute,
-                    key2 = unfinishedRefreshKey,
-                ) {
-                    if (currentRoute != AppRoute.Home) return@produceState
-                    value = HomeRecoveryAvailability.Loading
-                    value = loadHomeRecoveryAvailability(
-                        store = snapshotStore,
-                        loadMultiplayer = roomTransport::resumableSession,
-                        supportsLocalResume = { entry ->
-                            entry.gameId?.let { gameId ->
-                                gameShellRouter.resumeLocal(gameId, entry.sessionId)
-                            } != null
-                        },
-                        supportsMultiplayerResume = { info ->
-                            gameShellRouter.resumeMultiplayer(
-                                gameId = info.gameId,
-                                gameVersion = info.gameVersion,
-                                displayName = info.displayName,
-                                selection = info.deletionSelection,
-                            ) != null
-                        },
-                    )
-                }
+                val homeRecovery by rememberAppHomeRecovery(
+                    currentRoute = currentRoute,
+                    refreshKey = unfinishedRefreshKey,
+                    visibility = visibility.appVisibility,
+                    store = snapshotStore,
+                    transport = roomTransport,
+                    router = gameShellRouter,
+                )
+
+                AttemptStartupMultiplayerRecovery(
+                    recovery = homeRecovery,
+                    visibility = visibility.appVisibility,
+                    gate = startupRecoveryGate,
+                    canNavigate = {
+                        permitsStartupMultiplayerRecovery(
+                            visibility = lifecycle.visibility.value.appVisibility,
+                            navigationUntouched = navigator.permitsStartupRecovery,
+                            ownerIdle = multiplayerSessionOwner.state.value is ProcessMultiplayerState.Idle,
+                            actionsBlocked = localResumeCoordinator.busy.value || resumeDeletion.state.value.request != null,
+                        )
+                    },
+                    navigate = { info ->
+                        gameShellRouter.resumeMultiplayer(
+                            gameId = info.gameId,
+                            gameVersion = info.gameVersion,
+                            displayName = info.displayName,
+                            selection = info.deletionSelection,
+                        )?.let(navigator::openGame)
+                    },
+                )
 
                 val backToHome: (AppRoute) -> Unit = { expectedRoute ->
                     if (

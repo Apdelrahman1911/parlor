@@ -430,9 +430,14 @@ class ProcessMultiplayerSessionOwner(
     private var retainedRetryRoom: RetainedRetryRoom? = null
     private var closing: ClosingAttempt? = null
 
+    /**
+     * Reattaches a matching live/in-flight room. UI entry uses [retryFailedOpen] = false;
+     * only its explicit Retry sets true. Direct intentional callers retain the existing default.
+     */
     suspend fun acquire(
         route: MultiplayerSessionRoute,
         hostSeed: Long? = null,
+        retryFailedOpen: Boolean = true,
         openRoom: suspend (MultiplayerOpenMode) -> Result<LocalRoom, NetError>,
     ): Result<ProcessMultiplayerSession, NetError> {
         require((route.role == MultiplayerSessionRole.Host) == (hostSeed != null)) {
@@ -461,6 +466,12 @@ class ProcessMultiplayerSessionOwner(
             val currentRoute = _state.value.routeOrNull
             if (currentRoute != null && currentRoute != route) {
                 return@withLock completed(Result.Failure(NetError.AlreadyConnected))
+            }
+
+            // Recreated UI restores a failed opening; only an explicit Retry may reopen it.
+            val failed = _state.value as? ProcessMultiplayerState.Failed
+            if (failed != null && !retryFailedOpen) {
+                return@withLock completed(Result.Failure(failed.error))
             }
 
             val mode = nextOpenMode(route)

@@ -84,6 +84,12 @@ internal class AppNavigator(initialGameLaunch: GameShellLaunch? = null) {
     private val settingsBackStack = NavBackStack<AppRoute>(AppRoute.Settings)
     private var selectedState by mutableStateOf(AppTopLevelDestination.Games)
     private var nextGameEntryId = 0L
+    private var startupNavigationInteracted = false
+
+    /** Returning to Games never makes a delayed startup lookup eligible again. */
+    val permitsStartupRecovery: Boolean
+        get() = !startupNavigationInteracted && currentRoute == AppRoute.Home
+
     private var activeGameLaunch: Pair<AppRoute.Game, GameShellLaunch>? = null
 
     init {
@@ -103,12 +109,14 @@ internal class AppNavigator(initialGameLaunch: GameShellLaunch? = null) {
 
     fun selectTopLevel(destination: AppTopLevelDestination): AppNavigationMutation {
         if (!currentRoute.isTopLevel) return AppNavigationMutation.RejectedActiveFlow
+        startupNavigationInteracted = true
         if (selectedState == destination) return AppNavigationMutation.NoChange
         selectedState = destination
         return AppNavigationMutation.Applied
     }
 
     fun openGame(launch: GameShellLaunch): AppRoute.Game {
+        startupNavigationInteracted = true
         resetGamesStack()
         selectedState = AppTopLevelDestination.Games
         val route = AppRoute.Game(
@@ -121,6 +129,7 @@ internal class AppNavigator(initialGameLaunch: GameShellLaunch? = null) {
     }
 
     fun showLocalResumeFailure(sessionId: SessionId) {
+        startupNavigationInteracted = true
         resetGamesStack()
         selectedState = AppTopLevelDestination.Games
         gamesBackStack += AppRoute.LocalResumeFailure(sessionId)
