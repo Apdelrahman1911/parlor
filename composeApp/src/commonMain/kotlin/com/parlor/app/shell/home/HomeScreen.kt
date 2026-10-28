@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -105,12 +104,19 @@ internal fun HomeScreen(
     onDiscardLocal: (SessionId, String) -> Unit = { _, _ -> },
     onDiscardMultiplayer: (String) -> Unit = {},
     recoveryActionsEnabled: Boolean = true,
-    scrollState: LazyListState = rememberLazyListState(),
+    catalogScrollState: HomeCatalogScrollState = rememberHomeCatalogScrollState(),
 ) {
     var selectedFilter by rememberSaveable { mutableStateOf(HomeCatalogFilter.All) }
+    val filteredGames = games.filter { selectedFilter.accepts(it.capabilities) }
+    val itemKeys = homeCatalogItemKeys(
+        filteredGames, unfinishedSessions, hasResumableMultiplayer, recoveryLoading, recoveryUnavailable,
+    )
+    LaunchedEffect(catalogScrollState, recoveryLoading, itemKeys) {
+        if (!recoveryLoading) catalogScrollState.restoreAfterRecovery(itemKeys)
+    }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         LazyColumn(
-            state = scrollState,
+            state = catalogScrollState.listState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = parlorSafeContentPaddingValues(
                 horizontal = ParlorTheme.spacing.l,
@@ -170,12 +176,15 @@ internal fun HomeScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     SectionHeading(
                         label = stringResource(Res.string.home_games_label),
-                        detail = catalogGameCount(games.count { selectedFilter.accepts(it.capabilities) }),
+                        detail = catalogGameCount(filteredGames.size),
                     )
-                    CatalogFilters(selectedFilter) { selectedFilter = it }
+                    CatalogFilters(selectedFilter) {
+                        catalogScrollState.cancelPendingRestoration()
+                        selectedFilter = it
+                    }
                 }
             }
-            if (games.none { selectedFilter.accepts(it.capabilities) }) {
+            if (filteredGames.isEmpty()) {
                 item(key = "catalog-empty") {
                     EmptyState(
                         title = stringResource(Res.string.catalog_empty_title),
@@ -184,7 +193,7 @@ internal fun HomeScreen(
                 }
             }
             items(
-                items = games.filter { selectedFilter.accepts(it.capabilities) },
+                items = filteredGames,
                 key = { game -> "game:${game.definition.id.raw}" },
             ) { game ->
                 val presentation = game.catalogPresentation()
@@ -195,7 +204,10 @@ internal fun HomeScreen(
                         ?: game.definition.supportedPlayerCounts,
                     supportsLan = game.capabilities.supportsNearbyPlay(),
                     supportsLocal = game.capabilities.supportsLocalPlay(),
-                    onOpen = { onGameSelected(game.definition.id) },
+                    onOpen = {
+                        catalogScrollState.cancelPendingRestoration()
+                        onGameSelected(game.definition.id)
+                    },
                 )
             }
         }

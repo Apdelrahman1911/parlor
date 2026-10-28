@@ -2,7 +2,6 @@ package com.parlor.app.shell.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
@@ -69,13 +68,13 @@ class HomeCatalogRestorationTest {
                 ProvideAppLanguage(language) {
                     ParlorTheme(reducedMotion = true) {
                         val entries = rememberSaveableStateHolder()
-                        val catalogScrollState = rememberLazyListState()
+                        val catalogScrollState = rememberHomeCatalogScrollState()
                         Box(Modifier.size(402.dp, 740.dp)) {
                             if (visible.value) {
                                 entries.SaveableStateProvider("home") {
                                     HomeScreen(
                                         games = games,
-                                        scrollState = catalogScrollState,
+                                        catalogScrollState = catalogScrollState,
                                         recoveryLoading = loading.value,
                                         onGameSelected = { selections += it; visible.value = false },
                                     )

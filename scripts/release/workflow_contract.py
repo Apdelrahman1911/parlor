@@ -191,7 +191,7 @@ def verify_current_verification_artifacts(text: str) -> None:
                      FULL_VERIFICATION_FINALIZER if job.startswith("ios") else "always()")
         if (re.findall(r"(?m)^        ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
                 ("id", "verification_artifact"), ("if", condition),
-                ("uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"), ("with", "")] or
+                ("uses", "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2"), ("with", "")] or
                 re.findall(r"(?m)^          ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
                     ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
                 re.findall(r"(?m)^            (\S.*)$", block) != current_verification_artifact_paths(job)):
@@ -389,7 +389,7 @@ def verify_linux_process_probe(job: str) -> None:
 def verify_verification_jdk(job: str) -> None:
     java = validation_step(job, "Set up JDK 21")
     if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", java) != [
-            ("uses", "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0"), ("with", "")] or
+            ("uses", "actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0"), ("with", "")] or
             re.findall(r"(?m)^          ([a-z-]+): (.*)$", java) != [
                 ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false")]):
         fail("verification scope Apple jobs require pinned JDK 21 for builds and mandatory Gradle stops")
@@ -601,7 +601,7 @@ def verify_protection_probe(job: str) -> None:
         block = validation_step(job, name)
         if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", block) != [
                 ("id", step_id), ("if", "always()"),
-                ("uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"), ("with", "")] or
+                ("uses", "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2"), ("with", "")] or
                 re.findall(r"(?m)^          ([a-z-]+): (.*)$", block) != [
                     ("name", artifact + "-${{ github.run_id }}-${{ github.run_attempt }}"),
                     ("if-no-files-found", "error"), ("retention-days", "14"), ("path", prefix + path)]):
@@ -709,14 +709,14 @@ def verify_free_ci_dependency_cache(text: str) -> None:
     key = "parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}"
     expected = ('        if: ' + FULL_VERIFICATION_SCOPE + '\n'
                 '        id: dependency_cache\n'
-                '        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
+                '        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
                 '        with:\n'
                 '          path: |\n'
                 '            ~/.gradle/caches/modules-2\n'
                 '            ~/.gradle/wrapper/dists\n'
                 '          key: ' + key)
     save = ("        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'\n"
-            '        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
+            '        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
             '        with:\n'
             '          path: |\n'
             '            ~/.gradle/caches/modules-2\n'
@@ -766,7 +766,7 @@ DARWIN_CAPABILITY_JOB = """    if: github.event_name == 'workflow_dispatch' && i
         run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability
       - name: Preserve native capability receipt
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: darwin-host-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}
           if-no-files-found: error

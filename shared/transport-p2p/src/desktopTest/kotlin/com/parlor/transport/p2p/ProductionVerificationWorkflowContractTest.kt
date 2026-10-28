@@ -94,21 +94,61 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun public_ios_exact_value_observer_handles_only_the_identified_late_keyboard_tutorial() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val observer = swift.substringAfter("private func assertTextValue(")
+            .substringBefore("private func fullKeyboardTop(")
+        val code = observer.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        listOf(
+            "if let introduction", "dismissKeyboardIntroduction(app, dismissal: introduction)",
+            "return field.exists && (field.value as? String) == expected",
+            "XCTWaiter.wait(for: [committed], timeout: 10)",
+            "XCTAssertEqual(field.value as? String, expected",
+            "guard !dismissal.hasDismissed", "guard tutorial.exists", "guard button.exists",
+            "Speed up your typing by sliding your finger across the letters to compose a word.",
+            "app.buttons[\"Continue\"]", "buttonFrame: button.frame", "hittable: button.isHittable",
+        ).forEach { assertContains(code, it) }
+        assertEquals(1, Regex(Regex.escape("button.tap()")).findAll(code).count())
+        listOf(".typeText", "sleep(", "press(forDuration", "while ", "app.debugDescription",
+            "addUIInterruptionMonitor").forEach { assertFalse(it in code) }
+        val journey = swift.substringAfter("private func verifyAdditionalGamesSetup(")
+            .substringBefore("func testLastLightLocalPlayerFields")
+        assertEquals(1, Regex(Regex.escape("name.typeText(\"Table Test\")")).findAll(journey).count())
+        assertContains(journey, "assertTextValue(name, in: app, equals: \"Table Test\", introduction: introduction)")
+        listOf(
+            "testLateIntroductionAfterInitialAbsenceCanBeDismissedExactlyOnce",
+            "testGenericContinueWithoutIdentifiedTutorialNeverAdmitsATap",
+            "testNonhittableIntroductionDoesNotConsumeTheSingleDismissal",
+            "testMissingInvalidOffscreenOrUpperScreenButtonCannotBeDismissed",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
     fun catalog_scroll_anchor_is_owned_above_navigation_entry_restoration() {
         val app = read("composeApp/src/commonMain/kotlin/com/parlor/app/App.kt")
-        assertContains(app, "val homeScrollState = rememberLazyListState()")
-        assertTrue(app.indexOf("val homeScrollState = rememberLazyListState()") < app.indexOf("AppNavDisplay("))
-        assertContains(app.substringAfter("homeContent = {"), "scrollState = homeScrollState")
+        assertContains(app, "val homeScrollState = rememberHomeCatalogScrollState()")
+        assertTrue(app.indexOf("val homeScrollState = rememberHomeCatalogScrollState()") < app.indexOf("AppNavDisplay("))
+        assertContains(app.substringAfter("homeContent = {"), "catalogScrollState = homeScrollState")
         val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
-        assertContains(home, "scrollState: LazyListState = rememberLazyListState()")
-        assertContains(home.substringAfter("LazyColumn("), "state = scrollState")
+        assertContains(home, "catalogScrollState: HomeCatalogScrollState = rememberHomeCatalogScrollState()")
+        assertContains(home.substringAfter("LazyColumn("), "state = catalogScrollState.listState")
+        assertContains(home, "if (!recoveryLoading) catalogScrollState.restoreAfterRecovery(itemKeys)")
+        val state = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeCatalogScrollState.kt")
+        assertContains(state, "rememberSaveable(saver = HomeCatalogScrollState.saver)")
+        assertContains(state, "pendingAnchor?.let { return it }")
+        assertContains(state, "snapshotFlow { state.listState.isScrollInProgress }")
         val regression = read(
             "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/HomeCatalogRestorationTest.kt",
         )
-        listOf("rememberSaveableStateHolder()", "scrollState = catalogScrollState", "loading.value = true",
+        listOf("rememberSaveableStateHolder()", "catalogScrollState = catalogScrollState", "loading.value = true",
             "loading.value = false", "repeat(2)", "assertEquals(before, after",
             "verifyRestoration(AppLanguage.Arabic, 2f)",
         ).forEach { assertContains(regression, it) }
+        val cold = read("composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/HomeCatalogColdRestorationTest.kt")
+        listOf("registry.value.performSave()", "SaveableStateRegistry(saved)", "visible.value = false",
+            "loading.value = true", "loading.value = false", "assertEquals(before, after",
+            "verifyRootRestoration(AppLanguage.Arabic, 2f)",
+        ).forEach { assertContains(cold, it) }
     }
 
     @Test
@@ -288,8 +328,8 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         val expectedPins = listOf(
             "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
-            "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0",
-            "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1",
+            "actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0",
+            "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2",
         )
         expectedPins.forEach { assertContains(workflow, it) }
 
