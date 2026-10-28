@@ -44,6 +44,9 @@ The domain package remains pure Kotlin. It may depend on `:shared:core` and
    it supplies the catalog card, setup/lobby route, local snapshot/resume
    route, and any game-specific multiplayer start flow. The binding owns the
    game's Compose content; it is the shell adapter, not a navigation graph.
+   Supply localized `GameCatalogPresentation` copy and an explicit
+   `ParlorArtwork` motif; accent color must never choose game identity. Artwork
+   is decorative: the card retains one localized accessible label and action.
 6. Export one Koin module containing the definition and game-local
    dependencies. Keep the shell binding in the app-shell module so game
    modules remain independent of app navigation and transport wiring.

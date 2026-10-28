@@ -6,6 +6,7 @@ import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.engine.definition.GameDefinition
 import com.parlor.engine.definition.GameMetadata
+import com.parlor.designsystem.icons.ParlorArtwork
 import com.parlor.designsystem.theme.ParlorAccent
 import com.parlor.session.PlayMode
 import com.parlor.session.multidevice.MultiplayerSessionRole
@@ -86,6 +87,7 @@ internal data class GameCatalogPresentation(
     val openContentDescription: String,
     val kicker: String = title,
     val accent: ParlorAccent = ParlorAccent.Amber,
+    val artwork: ParlorArtwork = ParlorArtwork.CaseFile,
 )
 
 /**

@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.parlor.core.ids.CaseId
@@ -57,6 +58,7 @@ internal class WordImpostorGameShellBinding(override val definition: WordImposto
         title = stringResource(Res.string.wi_title), subtitle = stringResource(Res.string.wi_subtitle),
         tagline = stringResource(Res.string.wi_tagline), openLabel = stringResource(Res.string.wi_open),
         openContentDescription = stringResource(Res.string.wi_open_description),
+        artwork = ParlorArtwork.Conversation,
     )
 
     @Composable

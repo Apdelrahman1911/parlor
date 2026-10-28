@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.parlor.core.ids.CaseId
@@ -57,6 +58,7 @@ internal class DominoGameShellBinding(override val definition: DominoDefinition)
         title = stringResource(Res.string.dom_title), subtitle = stringResource(Res.string.dom_subtitle),
         tagline = stringResource(Res.string.dom_tagline), openLabel = stringResource(Res.string.dom_open),
         openContentDescription = stringResource(Res.string.dom_open_description),
+        artwork = ParlorArtwork.Tiles,
     )
 
     @Composable

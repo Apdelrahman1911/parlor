@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -64,6 +65,7 @@ internal class LastLightGameShellBinding(
         openContentDescription = stringResource(Res.string.home_lastlight_open_description),
         kicker = stringResource(Res.string.home_lastlight_kicker),
         accent = ParlorAccent.Amber,
+        artwork = ParlorArtwork.Cards,
     )
 
     @Composable

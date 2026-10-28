@@ -1,6 +1,30 @@
 # Project status — 2026-10-28
 
-## Latest accepted main and ongoing input investigation (12:35 UTC)
+## Latest protected integration and catalog follow-up (14:13 UTC)
+
+[PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as
+`66702a77532a5e3a0c5f370d4ce8c903742569c3`. Its fresh
+[PR40689534651](https://github.com/Apdelrahman1911/parlor/actions/runs/40689534651)
+independently qualifies all eight producers plus the original Apple join,
+20 Swift methods,677 KMP Simulator cases, the15-case Whodunit matrix and
+six setup-pointer methods in every Desktop lane, with exact custody checks.
+[Automatic actual-main40701195587](https://github.com/Apdelrahman1911/parlor/actions/runs/40701195587)
+is still running, **not post-merge qualified** at this checkpoint.
+The actual public UIKit/XCTest Simulator was iOS18.5/iPhone16Pro on Xcode26.3;
+this is not the original #267 failed iOS26.2 runtime or a physical-device result.
+
+A separate [catalog artwork implementation](audits/2026-10-28-CATALOG-ARTWORK.md)
+adds six binding-selected lightweight motifs, without color-based game dispatch.
+Four focused methods and three independently restored mutation controls pass;
+24 EN/AR light/dark Desktop rasters are generated and reviewed. Committed-source
+full checks, fresh hosted qualification and protected integration are still
+required. This extends #259, not completion of the whole UI/game overhaul.
+
+Eight acceptance Issues remain open: #230/#251/#252/#253/#258/#259/#260/#267.
+No physical-device, strict protection, signing, RPC migration or Store-readiness
+claim is added. No Store workflow, paid runner or additional agent is used.
+
+## Previous accepted main and input investigation (12:35 UTC)
 
 [PR #275](https://github.com/Apdelrahman1911/parlor/pull/275) is merged as
 `02402e42024231aef7e946b4628eab4a7179eeaf`. Its fresh PR40651633206 and

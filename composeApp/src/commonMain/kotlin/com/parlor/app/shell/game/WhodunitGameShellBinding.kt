@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -66,6 +67,7 @@ internal class WhodunitGameShellBinding(
         openContentDescription = stringResource(Res.string.home_whodunit_open_description),
         kicker = stringResource(Res.string.home_whodunit_kicker),
         accent = ParlorAccent.Amber,
+        artwork = ParlorArtwork.CaseFile,
     )
 
     @Composable
