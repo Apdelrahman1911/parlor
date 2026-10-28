@@ -222,7 +222,7 @@ jobs:
           subject-path: build/release-promotion/external-android-receipt.json
 
       - name: Upload immutable external Android promotion receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-external-${{ needs.preflight.outputs.candidate_sha }}-android-receipt-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -316,7 +316,7 @@ jobs:
           subject-path: build/release-promotion/external-ios-receipt.json
 
       - name: Upload immutable external iOS promotion receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-external-${{ needs.preflight.outputs.candidate_sha }}-ios-receipt-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -421,7 +421,7 @@ jobs:
           subject-path: build/release-promotion/external-evidence.json
 
       - name: Upload immutable external-testing evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-external-evidence-${{ needs.preflight.outputs.candidate_sha }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
