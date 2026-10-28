@@ -41,8 +41,22 @@ billing setting, cache cap or shipping dependency changes. Standard public-repo
 runners remain free; no larger/paid infrastructure is introduced. Disabled Store
 candidate/promotion gates remain disabled and no release is authorized.
 
-The branch includes PR277's public-recovery candidate for testing, but277 is
-still awaiting native qualification. Local focused/full verification, eventual
-qualified277 integration, new exact-source hosted checks and protected merge
-are required before accepting275. This report does not claim a successful run,
-merge, security-policy decision, mobile-device result or benchmark winner.
+PR #277 is now normally merged as `aea0e47f610d30cce0adbb3294c9428ac3015648`.
+Its fresh PR run40624827444 independently qualifies all eight producers, final
+join,20 Swift methods,677 KMP Simulator cases and source/artifact/native/output
+custody. Fresh main40634650927 is still pending; the passing PR is not its result.
+The action-update candidate incorporates this actual qualified merge locally.
+
+At previous clean action candidate `7d27d1e2`, complete strict
+`productionCheck allTests --dependency-verification=strict --continue --no-daemon`
+passes in3m14s including owned stop:1,817 Desktop cases (three existing LAN
+skips),651 Android Debug +651 Release +112 GitHub-test cases,zero failures/errors;
+749 release/Python controls (one known Linux environment skip),Detekt/lint/R8,
+unsigned AAB and pinned shell tools pass. Valid reviewed caches are reused.
+Log SHA256 `1937e33deb99710d144c6f02e5ea2413b8ef80bf1a20894689caa76924c8d57d`.
+This is local engineering evidence, not Apple/device execution.
+
+The new merge/documentation source still requires affected strict/full checks,
+new exact-source hosted qualification and protected integration before275 is
+accepted. No action-update hosted pass, security-policy approval, mobile-device
+result, benchmark winner or Store release is claimed by this checkpoint.
