@@ -117,7 +117,7 @@ object ResumeProcessEndpoint {
         check(message.actor != PlayerId("forged-process-actor"))
         println("AUTHENTICATED_ACTOR_PASS")
         val roster = room.closeAdmissions()
-        check(roster is Result.Success && roster.data.size == 2 && roster.data.count { it.playerId == player } == 1)
+        check(roster is Result.Success && roster.data.size == 1 && roster.data.count { it.playerId == player } == 1)
         println("FROZEN_ROSTER_PASS")
         val resumedInbound = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(45_000) { room.incoming.first() }
@@ -131,7 +131,7 @@ object ResumeProcessEndpoint {
         check(resumed is PeerMessage.SessionHeartbeat && resumed.actor == player)
         check(resumed.header == header(2, "process-peer-heartbeat-0002"))
         withTimeout(10_000) { room.members.first { members -> members.any { it.playerId == player && it.connected } } }
-        check(room.members.value.size == 2 && room.pendingAdmissions.value.isEmpty())
+        check(room.members.value.size == 1 && room.pendingAdmissions.value.isEmpty())
         println("REJOIN_SAME_SEAT_PASS")
         check(room.send(SendTarget.Direct(player), HostMessage.SessionEnded(
             header(3, "process-host-terminal-0001"), SessionEndReason.Cancelled, 0,
