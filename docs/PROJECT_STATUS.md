@@ -1,5 +1,22 @@
 # Project status — 2026-10-28
 
+## Latest accepted main and ongoing input investigation (12:35 UTC)
+
+[PR #275](https://github.com/Apdelrahman1911/parlor/pull/275) is merged as
+`02402e42024231aef7e946b4628eab4a7179eeaf`. Its fresh PR40651633206 and
+[actual-main40663766638](https://github.com/Apdelrahman1911/parlor/actions/runs/40663766638)
+independently qualify all eight producers plus the required Apple join,20 Swift
+methods,677 KMP Simulator cases and exact source/artifact/resource/output custody.
+Main takes61.07 minutes including queues; the qualified same-source selection
+below still favors free standard ARM64 runners, not a guaranteed fixed duration.
+
+The [new shared setup pointer regressions](audits/2026-10-28-SETUP-POINTER-BOUNDARIES.md)
+pass60 local EN/AR200%-text journeys and callback-removal negative controls.
+These non-shipping tests do not resolve#267's original UIKit event cause;
+their integration requires fresh qualification. Eight acceptance Issues remain
+open: #230/#251/#252/#253/#258/#259/#260/#267. No physical-device, strict
+protection, signing, RPC migration or Store-readiness claim is added.
+
 ## Verified baseline and CI repair (October 28, 07:36 UTC)
 
 [PR #277](https://github.com/Apdelrahman1911/parlor/pull/277) is **MERGED** as
