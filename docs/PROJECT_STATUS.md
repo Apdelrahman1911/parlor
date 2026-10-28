@@ -1,6 +1,50 @@
 # Project status — 2026-10-28
 
-## Latest accepted main and ongoing input investigation (12:35 UTC)
+## Latest protected integration and catalog follow-up (14:52 UTC)
+
+[PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as
+`66702a77532a5e3a0c5f370d4ce8c903742569c3`. Its fresh
+[PR40689534651](https://github.com/Apdelrahman1911/parlor/actions/runs/40689534651)
+independently qualifies all eight producers plus the original Apple join,
+20 Swift methods,677 KMP Simulator cases, the15-case Whodunit matrix and
+six setup-pointer methods in every Desktop lane, with exact custody checks.
+[Automatic actual-main40701195587](https://github.com/Apdelrahman1911/parlor/actions/runs/40701195587)
+is still running, **not post-merge qualified** at this checkpoint.
+The actual public UIKit/XCTest Simulator was iOS18.5/iPhone16Pro on Xcode26.3;
+this is not the original #267 failed iOS26.2 runtime or a physical-device result.
+
+A separate [catalog artwork implementation](audits/2026-10-28-CATALOG-ARTWORK.md)
+adds six binding-selected lightweight motifs, without color-based game dispatch.
+Five focused methods and three independently restored artwork mutation controls
+pass;24 EN/AR light/dark Desktop rasters are generated and reviewed. Actual
+catalog inspection also reproduces rounded-card hover feedback overflow; clipping
+before indication fixes it with eight narrow/200%-text locale/theme/accent
+regressions. The corrected fresh-profile actual Desktop English→Settings→Arabic
+observer at703b9875 passes with ten inspected public captures, natural app exit0,
+owned cleanup and unchanged source. Its predecessor's cleanup-import failure and
+identified-resource recovery remain retained, not relabeled as PASS.
+
+The candidate's first full strict check at3944c0a0 **failed** in the unchanged
+real-Gradle fixture: file existence preceded PID content publication.
+[#279's atomic publication correction](audits/2026-10-28-GRADLE-MARKER-PUBLICATION.md)
+and real-Gradle write/publish barrier regression pass, including a restored
+premature-publication negative control. Original timeout, scoped stop and
+unrelated-registry checks are unchanged. The complete strict check at703b9875
+passes1,828Desktop cases (three existing LAN skips),652Android cases per
+Debug/Release variant,112GitHub-test cases,750release controls (one known Linux
+skip),Detekt/lint/R8/unsigned AAB and inventory/shell gates. Source unchanged;
+scoped Gradle stop0. Full log SHA256:
+`f56a95784422a2443c676aa3fcc5eb6227645ad7ddd2d093840d5c60c94f3e87`.
+Documentation/inventory follow-up needs its own committed-source check;
+fresh hosted, protected integration and actual-main qualification remain.
+This extends#259, **not completion of the whole UI/game overhaul**.
+
+Eight acceptance Issues remain open: #230/#251/#252/#253/#258/#259/#260/#267.
+New confirmed CI-fixture Issue#279 remains open pending integration acceptance.
+No physical-device, strict protection, signing, RPC migration or Store-readiness
+claim is added. No Store workflow, paid runner or additional agent is used.
+
+## Previous accepted main and input investigation (12:35 UTC)
 
 [PR #275](https://github.com/Apdelrahman1911/parlor/pull/275) is merged as
 `02402e42024231aef7e946b4628eab4a7179eeaf`. Its fresh PR40651633206 and

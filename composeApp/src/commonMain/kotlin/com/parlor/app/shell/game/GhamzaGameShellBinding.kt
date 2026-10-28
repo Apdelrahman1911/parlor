@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.parlor.core.ids.CaseId
@@ -57,6 +58,7 @@ internal class GhamzaGameShellBinding(override val definition: GhamzaDefinition)
         title = stringResource(Res.string.gh_title), subtitle = stringResource(Res.string.gh_subtitle),
         tagline = stringResource(Res.string.gh_tagline), openLabel = stringResource(Res.string.gh_open),
         openContentDescription = stringResource(Res.string.gh_open_description),
+        artwork = ParlorArtwork.Wink,
     )
 
     @Composable

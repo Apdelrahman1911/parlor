@@ -1,5 +1,6 @@
 package com.parlor.app.shell.game
 
+import com.parlor.designsystem.icons.ParlorArtwork
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +59,7 @@ internal class MafiaGameShellBinding(
         openContentDescription = stringResource(Res.string.home_mafia_open_description),
         kicker = stringResource(Res.string.home_mafia_kicker),
         accent = ParlorAccent.Crimson,
+        artwork = ParlorArtwork.Moon,
     )
 
     @Composable

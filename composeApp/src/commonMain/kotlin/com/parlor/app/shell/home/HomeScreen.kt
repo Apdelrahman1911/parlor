@@ -1,6 +1,5 @@
 package com.parlor.app.shell.home
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -75,6 +73,7 @@ import com.parlor.app.shell.game.GameShellBinding
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.CatalogArtworkBadge
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.EmptyState
 import com.parlor.designsystem.components.ParlorButton
@@ -82,7 +81,6 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorMark
 import com.parlor.designsystem.components.parlorSafeContentPaddingValues
 import com.parlor.designsystem.icons.ParlorIcons
-import com.parlor.designsystem.theme.ParlorAccent
 import com.parlor.designsystem.theme.ParlorAccentScope
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.pluralStringResource
@@ -444,6 +442,7 @@ private fun GameHeroCard(
         ParlorCard(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
                 .semantics { contentDescription = presentation.openContentDescription }
                 .clickable(role = Role.Button, onClick = onOpen),
             cornerRadius = ParlorTheme.radii.elevated,
@@ -456,7 +455,7 @@ private fun GameHeroCard(
                     horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    GameCardArt(presentation.accent)
+                    CatalogArtworkBadge(presentation.artwork)
                     Column(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
@@ -565,55 +564,6 @@ private fun DirectionalArrow(accent: Boolean = false) {
     }
 }
 
-@Composable
-private fun GameCardArt(accent: ParlorAccent) {
-    val colors = ParlorTheme.colors
-    Canvas(
-        modifier = Modifier
-            .size(ParlorTheme.spacing.xxxl)
-            .clearAndSetSemantics { },
-    ) {
-        drawCircle(colors.accentEmber.copy(alpha = CARD_ART_HALO_ALPHA))
-        if (accent == ParlorAccent.Crimson) {
-            drawCircle(
-                color = colors.accentEmber,
-                radius = size.minDimension * 0.28f,
-            )
-            drawCircle(
-                color = colors.surfaceHero,
-                radius = size.minDimension * 0.24f,
-                center = center.copy(
-                    x = center.x + size.width * 0.12f,
-                    y = center.y - size.height * 0.08f,
-                ),
-            )
-        } else {
-            val stroke = size.minDimension * CARD_ART_STROKE_RATIO
-            drawCircle(
-                color = colors.accentEmber,
-                radius = size.minDimension * 0.27f,
-                style = androidx.compose.ui.graphics.drawscope.Stroke(width = stroke),
-            )
-            drawLine(
-                color = colors.accentEmber,
-                start = center.copy(y = center.y - size.height * 0.22f),
-                end = center.copy(y = center.y + size.height * 0.22f),
-                strokeWidth = stroke,
-                cap = StrokeCap.Round,
-            )
-            drawLine(
-                color = colors.accentEmber,
-                start = center.copy(x = center.x - size.width * 0.22f),
-                end = center.copy(x = center.x + size.width * 0.22f),
-                strokeWidth = stroke,
-                cap = StrokeCap.Round,
-            )
-        }
-    }
-}
-
 private const val HOME_COMPACT_INTRODUCTION_FONT_SCALE = 1.5f
 private const val CARD_ACCENT_ALPHA = 0.14f
-private const val CARD_ART_HALO_ALPHA = 0.10f
-private const val CARD_ART_STROKE_RATIO = 0.035f
 private const val HOME_BRAND_TEST_TAG = "parlor-home-brand"

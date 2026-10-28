@@ -21,7 +21,11 @@ from scripts.release import github_distribution as dist
 
 
 SCRIPT = '''tasks.register('markDaemon') { doLast {
-    new File(rootDir, 'started.pid').text = ProcessHandle.current().pid().toString()
+    def pending = new File(rootDir, 'started.pending')
+    pending.text = ProcessHandle.current().pid().toString()
+    // PID write complete; publish readiness only by an atomic same-directory move.
+    java.nio.file.Files.move(pending.toPath(), new File(rootDir, 'started.pid').toPath(),
+        java.nio.file.StandardCopyOption.ATOMIC_MOVE)
 } }
 tasks.register('holdOwned') {
     dependsOn('markDaemon')
@@ -66,6 +70,60 @@ def running(pid: int) -> bool:
 
 
 class GradleDaemonRegistryTest(unittest.TestCase):
+    def test_pid_marker_is_not_visible_before_completed_write_is_published(self):
+        root = Path(tempfile.mkdtemp(prefix='parlor-gradle-marker-test-'))
+        registry = root / 'registry'
+        registry.mkdir(mode=0o700)
+        wrapper = str(packages.ROOT / ('gradlew.bat' if os.name == 'nt' else 'gradlew'))
+        anchor = '    // PID write complete; publish readiness only by an atomic same-directory move.'
+        self.assertEqual(SCRIPT.count(anchor), 1)
+        barrier = '''    long deadline = System.nanoTime() + 30000000000L
+    while (!new File(rootDir, 'release-marker').isFile()) {
+        if (System.nanoTime() >= deadline) throw new GradleException('Marker barrier expired')
+        Thread.sleep(10)
+    }
+'''
+        (root / 'settings.gradle').write_text("rootProject.name='daemon-marker-fixture'\n")
+        (root / 'build.gradle').write_text(SCRIPT.replace(anchor, barrier + anchor))
+        process = None
+        pid = None
+        try:
+            with (root / 'build.log').open('wb') as log:
+                process = subprocess.Popen([wrapper, '-p', str(root), 'markDaemon', '--daemon', '--offline',
+                    '--max-workers=1', '--console=plain', '--dependency-verification=strict',
+                    '-Dorg.gradle.jvmargs=-Xmx256m', '-Dorg.gradle.daemon.registry.base=' + str(registry)],
+                    stdout=log, stderr=subprocess.STDOUT, cwd=packages.ROOT, start_new_session=os.name != 'nt')
+                deadline = time.monotonic() + 60
+                pending = root / 'started.pending'
+                value = ''
+                while process.poll() is None and time.monotonic() < deadline:
+                    value = pending.read_text() if pending.is_file() else ''
+                    if value.isascii() and value.isdecimal():
+                        break
+                    time.sleep(.1)
+                self.assertTrue(value.isascii() and value.isdecimal(), 'Actual Gradle must complete the staged PID')
+                pid = int(value)
+                self.assertGreater(pid, 0)
+                self.assertTrue(running(pid))
+                self.assertFalse((root / 'started.pid').exists(), 'Readiness must remain absent at the write/publish barrier')
+                (root / 'release-marker').touch()
+                self.assertEqual(process.wait(timeout=30), 0)
+                self.assertEqual((root / 'started.pid').read_text(), value)
+                self.assertFalse(pending.exists(), 'Atomic publication must consume the staged marker')
+                self.assertTrue(running(pid), 'Real detached daemon must be alive before its scoped stop')
+        finally:
+            if process is not None:
+                dist._stop_owned_command(process)
+            code = dist.run_logged([wrapper, '--stop', '-Dorg.gradle.daemon.registry.base=' + str(registry),
+                                    '--console=plain'], registry / 'final-stop.log', timeout=30, output_limit=1024 * 1024)
+            deadline = time.monotonic() + 5
+            while pid is not None and running(pid) and time.monotonic() < deadline:
+                time.sleep(.1)
+            if code == 0 and (pid is None or not running(pid)):
+                shutil.rmtree(root)
+            else:
+                raise RuntimeError('Owned marker fixture cleanup incomplete; private evidence retained')
+
     def test_single_use_timeout_retires_only_its_registry(self):
         root = Path(tempfile.mkdtemp(prefix='parlor-gradle-registry-test-'))
         wrapper = str(packages.ROOT / ('gradlew.bat' if os.name == 'nt' else 'gradlew'))
