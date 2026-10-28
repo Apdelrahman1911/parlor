@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +29,7 @@ import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.home.HomeRecoveryAvailability
 import com.parlor.app.shell.home.LocalResumeFailureScreen
 import com.parlor.app.shell.home.loadHomeRecoveryAvailability
+import com.parlor.app.shell.home.rememberHomeCatalogScrollState
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.components.LocalParlorToastState
@@ -82,10 +82,9 @@ internal fun App(settings: SettingsStore) {
 
     val toastState = remember { ParlorToastState() }
     val appScope = rememberCoroutineScope()
-    // Keep the live key anchor across Nav3 entry disposal. The index-only
-    // LazyListState Saver otherwise restores against the transient loading
-    // card on Back and anchors the preceding game when that card disappears.
-    val homeScrollState = rememberLazyListState()
+    // Keep the live anchor across Nav3 disposal and a public keyed anchor across
+    // root saved-state recreation, without persisting recovery/session identities.
+    val homeScrollState = rememberHomeCatalogScrollState()
 
     ProvideAppLanguage(language = language) {
         ParlorTheme(
@@ -238,7 +237,7 @@ internal fun App(settings: SettingsStore) {
                             homeContent = {
                                 HomeScreen(
                                     games = gameShellRegistry.all,
-                                    scrollState = homeScrollState,
+                                    catalogScrollState = homeScrollState,
                                     onGameSelected = { gameId ->
                                         resumeDeletion.invalidate()
                                         localResumeCoordinator.invalidate()
