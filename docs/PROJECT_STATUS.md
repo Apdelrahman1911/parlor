@@ -1,5 +1,29 @@
 # Project status — 2026-10-28
 
+## Catalog accepted; Resume safeguard awaiting fresh integration qualification
+
+Catalog [PR#280](https://github.com/Apdelrahman1911/parlor/pull/280) is merged as
+`0bb8d5a59d2a4f7b1849d188e312aef178593005`. Its automatic
+[main40731239367](https://github.com/Apdelrahman1911/parlor/actions/runs/40731239367)
+independently qualifies eight producers plus the original Apple join,20Swift
+methods,678KMP Simulator cases, all15Whodunit/pointer6/artwork5 methods in every
+Desktop lane and exact source/artifact/native/output custody. This accepts the
+six-game cached-vector catalog, real rounded-card feedback containment and
+atomic Gradle-fixture readiness repair, not complete mobile UX/Store acceptance.
+
+The [selected-game Resume safeguard](audits/2026-10-28-RESUME-GAME-BINDING.md)
+is integrated locally with that verified base, but remains unmerged/unpublished.
+At frozen09578533, its full strict local check passes1,840Desktop cases,
+653Android perDebug/Release,112GitHub-test and750release controls, including28
+focused methods and sensitivity controls. These older exact-head results do
+not qualify the new documentation/integration source. Fresh full local/hosted
+checks, normal protected integration and automatic actual-main verification
+remain mandatory. #251/#252 physical recovery, same-game selection binding,
+#267 native input causality, #258 strict protection and Store/signing gates stay
+open. No physical-device, RPC performance, battery/thermal or Store claim.
+
+The checkpoints below are retained historical evidence, not current-head proof.
+
 ## Verified main and selected-resume follow-up (15:21 UTC)
 
 Automatic [main40701195587](https://github.com/Apdelrahman1911/parlor/actions/runs/40701195587)

@@ -80,12 +80,23 @@ private registry stop0. Full log SHA256:
 981tasks execute,553 valid cached outputs and134up-to-date outputs are exposed
 in the full log. Linux Native klibrary compilation is not Apple linkage/runtime.
 
-This local candidate is stacked on draft catalog PR#280's frozenaf088df5, not
-accepted main. Documentation follow-up, accepted-base integration, all existing
-hosted architectures/optimized Release lanes, protected integration and fresh
-actual main remain mandatory. Older main or catalog passes do not certify it.
-AGENTS remains byte-identical; no release gate, signing bypass, Store publication
-or paid runner is introduced.
+The documentation/inventory follow-up at `09578533` also passes the complete
+strict check with the same1,840/653/653/112 module totals,750release controls,
+unchanged source and private-registry stop0; valid cache reuse is exposed.
+Its full log SHA256 is
+`53d1ec1d8ebf381b14ce94e52e18fb25b6cc01f4306c8102ce0305ef6aaac6b5`.
+
+This unpublished Resume branch is now normally integrated with independently
+verified catalog [PR#280](https://github.com/Apdelrahman1911/parlor/pull/280)
+main `0bb8d5a59d2a4f7b1849d188e312aef178593005`. Fresh
+[actual-main40731239367](https://github.com/Apdelrahman1911/parlor/actions/runs/40731239367)
+qualifies all eight producers plus the original Apple join,20Swift/678KMP
+Simulator cases and the exact source/artifact/native/output custody. That
+qualifies catalog integration only; the Resume source still requires its own
+full new-head check, fresh hosted architectures/optimized Release lanes, normal
+protected merge and independently qualified automatic actual-main run.
+AGENTS remains byte-identical; no verification gate, signing bypass, Store
+publication or paid infrastructure is introduced.
 
 #251's actual mobile cross-game/recovery matrix remains open. This does not bind
 a particular same-game room/credential generation to the public Home selection,
