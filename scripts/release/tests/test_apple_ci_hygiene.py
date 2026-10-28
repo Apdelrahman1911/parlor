@@ -302,6 +302,69 @@ class NativeParsingAndSignalTest(unittest.TestCase):
         self.assertEqual(backend.lib.task_name_for_pid.call_count, 1)
 
 
+class NativeHostAbiTest(unittest.TestCase):
+    """Synthetic LP64 layouts; not evidence of a real macOS capability."""
+
+    def setUp(self):
+        # Windows is LLP64: explicitly emulate Darwin's long for these controls.
+        self.sizeof = ctypes.sizeof
+        self.scalar_patch = patch.object(native.ctypes, "sizeof", side_effect=lambda kind:
+                                         8 if kind is ctypes.c_long else self.sizeof(kind))
+        self.scalar_patch.start()
+        self.addCleanup(self.scalar_patch.stop)
+        host = patch.object(native.platform, "system", return_value="Darwin")
+        host.start()
+        self.addCleanup(host.stop)
+
+    def test_both_reviewed_architectures_require_the_complete_lp64_layout(self):
+        for architecture in ("arm64", "x86_64"):
+            with self.subTest(architecture=architecture), \
+                    patch.object(native.platform, "machine", return_value=architecture):
+                abi = native.validate_host_abi()
+                self.assertEqual(abi["architecture"], architecture)
+                self.assertEqual(abi["bsd_info_bytes"], 136)
+                self.assertEqual(abi["audit_token_bytes"], 32)
+                self.assertEqual(abi["audit_token_count"], 8)
+                self.assertEqual(len(abi["bsd_field_offsets"]), len(native.ProcBsdInfo._fields_))
+                self.assertEqual(abi["bsd_field_offsets"]["start_usec"], 128)
+
+    def test_unsupported_system_or_architecture_fails_before_library_loading(self):
+        for system, architecture in (("Linux", "arm64"), ("Windows", "x86_64"),
+                                     ("Darwin", "aarch64"), ("Darwin", "i386"), ("Darwin", "unknown")):
+            with self.subTest(system=system, architecture=architecture), \
+                    patch.object(native.platform, "system", return_value=system), \
+                    patch.object(native.platform, "machine", return_value=architecture), \
+                    patch.object(native.ctypes, "CDLL") as load:
+                with self.assertRaisesRegex(RuntimeError, "reviewed"):
+                    native.DarwinWorkerBackend()
+                load.assert_not_called()
+
+    def test_scalar_bsd_and_audit_size_mutations_fail_before_library_loading(self):
+        kinds = (ctypes.c_void_p, ctypes.c_long, ctypes.c_size_t, ctypes.c_int,
+                 ctypes.c_uint32, ctypes.c_uint64, native.ProcBsdInfo, ctypes.c_uint32 * 8)
+        for target in kinds:
+            with self.subTest(kind=target), patch.object(native.platform, "machine", return_value="x86_64"), \
+                    patch.object(native.ctypes, "sizeof", side_effect=lambda kind:
+                                 1 if kind is target else 8 if kind is ctypes.c_long else self.sizeof(kind)), \
+                    patch.object(native.ctypes, "CDLL") as load:
+                with self.assertRaisesRegex(RuntimeError, "ABI"):
+                    native.DarwinWorkerBackend()
+                load.assert_not_called()
+
+    def test_bsd_alignment_every_field_offset_and_argc_mutation_fail_closed(self):
+        mutations = [patch.object(native.ctypes, "alignment", return_value=4),
+                     patch.object(native, "ARGC_BYTES", 8)]
+        mutations += [patch.object(native.ProcBsdInfo, name, Mock(offset=999))
+                      for name, _ in native.ProcBsdInfo._fields_]
+        for index, mutation in enumerate(mutations):
+            with self.subTest(mutation=index), mutation, \
+                    patch.object(native.platform, "machine", return_value="arm64"), \
+                    patch.object(native.ctypes, "CDLL") as load:
+                with self.assertRaisesRegex(RuntimeError, "ABI"):
+                    native.DarwinWorkerBackend()
+                load.assert_not_called()
+
+
 class NativeInventoryAndBasicInfoTest(unittest.TestCase):
     """Exercise actual ctypes-facing methods without loading native libraries."""
 
@@ -348,19 +411,44 @@ class NativeInventoryAndBasicInfoTest(unittest.TestCase):
         proc = Mock(spec=("proc_pidinfo", "proc_pidpath", "proc_listpids", "proc_signal_with_audittoken"))
         lib = Mock()
         value = native.ProcessIdentity(self.self_pid, self.uid, (2, 0), "/synthetic/python", (0,) * 5 + (self.self_pid, 0, 1))
-        with patch.object(native.platform, "system", return_value="Darwin"), \
-                patch.object(native.platform, "machine", return_value="arm64"), \
-                patch.object(native.ctypes, "CDLL", side_effect=[lib, proc]) as load, \
-                patch.object(native.ctypes.c_uint32, "in_dll", return_value=ctypes.c_uint32(123)), \
-                patch.object(native.os, "sysconf", return_value=1024 * 1024, create=True), \
-                patch.object(native.DarwinWorkerBackend, "read", return_value=value):
-            backend = native.DarwinWorkerBackend()
-        self.assertIs(backend.proc, proc)
-        self.assertEqual(load.call_count, 2)
-        self.assertEqual(proc.proc_listpids.argtypes,
-                         [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_int])
-        self.assertIs(proc.proc_listpids.restype, ctypes.c_int)
-        proc.proc_listpids.assert_not_called()
+        sizeof = ctypes.sizeof
+        for architecture in ("arm64", "x86_64"):
+            with self.subTest(architecture=architecture), \
+                    patch.object(native.platform, "system", return_value="Darwin"), \
+                    patch.object(native.platform, "machine", return_value=architecture), \
+                    patch.object(native.ctypes, "sizeof", side_effect=lambda kind:
+                                 8 if kind is ctypes.c_long else sizeof(kind)), \
+                    patch.object(native.ctypes, "CDLL", side_effect=[lib, proc]) as load, \
+                    patch.object(native.ctypes.c_uint32, "in_dll", return_value=ctypes.c_uint32(123)), \
+                    patch.object(native.os, "sysconf", return_value=1024 * 1024, create=True), \
+                    patch.object(native.DarwinWorkerBackend, "read", return_value=value) as read:
+                backend = native.DarwinWorkerBackend()
+                self.assertIs(backend.proc, proc)
+                self.assertEqual(backend.host_abi["architecture"], architecture)
+                self.assertEqual(load.call_count, 2)
+                self.assertEqual(proc.proc_listpids.argtypes,
+                                 [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_int])
+                self.assertIs(proc.proc_listpids.restype, ctypes.c_int)
+                proc.proc_listpids.assert_not_called()
+                read.assert_called_once_with(self.self_pid)
+
+    def test_valid_layout_cannot_replace_the_actual_self_capability_check(self):
+        sizeof = ctypes.sizeof
+        values = (None, native.ProcessIdentity(self.self_pid, 999, (2, 0), "/synthetic/python", (0,) * 8),
+                  native.ProcessIdentity(self.self_pid, self.uid, (2, 0), "/synthetic/python", (0,) * 8))
+        for architecture in ("arm64", "x86_64"):
+            for value in values:
+                with self.subTest(architecture=architecture, identity=value), \
+                        patch.object(native.platform, "system", return_value="Darwin"), \
+                        patch.object(native.platform, "machine", return_value=architecture), \
+                        patch.object(native.ctypes, "sizeof", side_effect=lambda kind:
+                                     8 if kind is ctypes.c_long else sizeof(kind)), \
+                        patch.object(native.ctypes, "CDLL", return_value=Mock()), \
+                        patch.object(native.ctypes.c_uint32, "in_dll", return_value=ctypes.c_uint32(123)), \
+                        patch.object(native.os, "sysconf", return_value=1024 * 1024, create=True), \
+                        patch.object(native.DarwinWorkerBackend, "read", return_value=value):
+                    with self.assertRaisesRegex(RuntimeError, "capability check failed"):
+                        native.DarwinWorkerBackend()
 
     def test_inventory_uses_effective_uid_and_byte_count_not_global_scan(self):
         native.os.getuid.return_value = 777  # Selector is effective, not real UID.
@@ -723,7 +811,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         for change in ({"workers": {"result": "FAIL"}}, {"source": {**self.source, "head": "d" * 40}},
                        {"claim_sha256": "e" * 64}, {"simulator": {"result": "NOT_CREATED"}},
                        {"gradle_stop": {"exit_code": 1}}, {"result": "NOT_RUN"},
-                       {"task": {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}}):
+                       {"task": {**self.task, "GITHUB_JOB": "ios-release-simulator" if self.JOB == "ios" else "ios"}}):
             path.write_text(json.dumps({**original, **change}))
             receipt = self.cleanup_outputs(outcomes)
             self.assertEqual(receipt["result"], "FAIL", change)
@@ -731,7 +819,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual((self.root / "build/test.xml").read_text(), "preserve required evidence")
 
     def test_wrong_jobs_cycles_and_simulator_commands_never_admit_native_resources(self):
-        cases = (("ios", "apple-wrapper"), ("ios-release", "apple-ui"), (self.JOB, "unknown-cycle"),
+        cases = (("ios", "apple-wrapper"), ("ios-release-simulator", "apple-ui"), (self.JOB, "unknown-cycle"),
                  ("ios-other", "apple-aggregate"), ("ios-protection-probe", "apple-aggregate"), ("desktop-macos-x64", "apple-aggregate"))
         for job, cycle in cases:
             task = {**TASK, "GITHUB_JOB": job}
@@ -758,7 +846,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
                     self.assertIn("Unknown Apple verification job", result["errors"][0]["error"])
                     self.assertEqual(result["removed"], [])
         for job, cycle in (("ios", "apple-aggregate"), ("ios", "apple-wrapper"),
-                           ("ios-release", "apple-aggregate"), ("ios-release", "apple-wrapper"), ("ios-release", "apple-ui")):
+                           ("ios-release-simulator", "apple-aggregate"), ("ios-release-simulator", "apple-wrapper"), ("ios-release-simulator", "apple-ui")):
             with self.subTest(create_job=job, cycle=cycle), \
                     patch.object(hygiene, "context", return_value=(self.root, self.prefix, {**TASK, "GITHUB_JOB": job})), \
                     patch.object(sys, "argv", ["apple_verification_hygiene.py", "create-simulator", cycle]), \
@@ -791,7 +879,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual(receipt["removed"], [])
             self.assertEqual(path.read_text(), "unassigned cycle evidence")
             path.unlink()
-        other_task = {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}
+        other_task = {**self.task, "GITHUB_JOB": "ios-release-simulator" if self.JOB == "ios" else "ios"}
         with self.assertRaisesRegex(RuntimeError, "ownership changed"):
             apple.validate_claim(self.root, apple.cycle_prefix(self.prefix, "apple-aggregate"), other_task, "apple-aggregate", self.config)
         result = hygiene.cleanup(self.root, self.claim_path, self.task, {**self.upload, "outcome": "failure"}, "success", outcomes)
@@ -802,7 +890,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
 
 class AppleReleaseCycleAndOutputGateTest(AppleCycleAndOutputGateTest):
     """Run the same destructive-cleanup and native-ownership controls for the new job."""
-    JOB = "ios-release"
+    JOB = "ios-release-simulator"
 
 
 class AppleWorkflowOwnershipTest(unittest.TestCase):
@@ -811,7 +899,9 @@ class AppleWorkflowOwnershipTest(unittest.TestCase):
         jobs = {block.split(":\n", 1)[0]: block for block in
                 re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]}
         self.assertEqual(hygiene.APPLE_JOB_CYCLES, {"ios": ("apple-aggregate", "apple-ui"),
-                                                   "ios-release": ("apple-aggregate", "apple-wrapper")})
+                                                   "ios-release-simulator": ("apple-aggregate", "apple-wrapper"),
+                                                   "ios-release-device": ("apple-aggregate",),
+                                                   "ios-release-x64": ("apple-aggregate",)})
         for job, cycles in hygiene.APPLE_JOB_CYCLES.items():
             body = jobs[job]
             for cycle in apple.CYCLES:
@@ -830,7 +920,7 @@ class AppleWorkflowOwnershipTest(unittest.TestCase):
         self.assertIn("-parallel-testing-enabled NO", jobs["ios"])
         self.assertNotIn("rm -rf build/ci-evidence/ios-ui-tests.xcresult", jobs["ios"])
         self.assertNotIn("xcrun simctl list devices available", jobs["ios"])
-        self.assertNotIn("create-simulator", jobs["ios-release"])
+        self.assertNotIn("create-simulator", jobs["ios-release-simulator"])
 
 
 if __name__ == "__main__":

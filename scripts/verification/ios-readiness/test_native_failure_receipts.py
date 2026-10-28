@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -89,6 +90,7 @@ class NativeFailureReceiptTests(unittest.TestCase):
         for secret in ('localizedDescription', 'userInfo', 'failure.domain] ='):
             self.assertNotIn(secret, swift[swift.index('private func nativeReadinessFailureData'):])
 
+    @unittest.skipUnless(sys.platform == 'darwin', 'Requires actual Apple Foundation and xcrun; run in macOS CI')
     def test_actual_foundation_encoder_redacts_and_preserves_exact_known_codes(self):
         source = (HERE / 'NativeReadinessLaunch.swift.in').read_text()
         start = '// BEGIN BOUNDED FAILURE ENCODER (also executed with Foundation in host controls).'

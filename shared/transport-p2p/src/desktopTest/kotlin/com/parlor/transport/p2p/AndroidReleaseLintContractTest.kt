@@ -22,6 +22,23 @@ class AndroidReleaseLintContractTest {
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
 
     @Test
+    fun lint_partial_cache_is_checkout_owned_without_weakening_source_verification() {
+        val rootBuild = read("build.gradle.kts")
+        val appBuild = read("composeApp/build.gradle.kts")
+
+        assertContains(rootBuild, "val lintRepositoryRoot = rootProject.projectDir.canonicalPath")
+        assertContains(
+            rootBuild,
+            "tasks.withType<com.android.build.gradle.internal.lint.AndroidLintAnalysisTask>().configureEach",
+        )
+        assertContains(rootBuild, "inputs.property(\"parlor.lintRepositoryRoot\", lintRepositoryRoot)")
+        assertContains(appBuild, "check(source.startsWith(repositoryRoot))")
+        assertContains(appBuild, "points outside the repository")
+        assertContains(appBuild, "actual == expected")
+        assertContains(read("gradle.properties"), "org.gradle.caching=true")
+    }
+
+    @Test
     fun kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced() {
         val catalog = read("gradle/libs.versions.toml")
         val properties = read("gradle.properties")

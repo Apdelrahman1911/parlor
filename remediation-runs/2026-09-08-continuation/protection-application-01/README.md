@@ -29,6 +29,15 @@ unavailable SDK symbols, unsupported capabilities, syscall errors, and actual ra
 classes are retained, not translated into a protection success. Original equality
 is recorded separately; an error-bearing Complete value cannot be a strict PASS.
 
+After both decrypt roundtrips, Kotlin records the final directory identity and
+the app takes one additional read-only native directory sample. This does not
+replace or reclassify the original six strict comparisons. Directory entry count
+and size can change during file creation; the later host reader must match the
+post-overwrite sample, including its **full link count and size**, not an earlier
+empty-directory observation. Each sample retains all per-API before/after and
+closed-descriptor checks; the final directory remains bound to the original
+device/inode/owner/mode/type. Missing final evidence is rejected without fallback.
+
 After XCTest terminates the app, a separately compiled read-only **host macOS**
 helper samples the identical final directory/file inodes with the same native
 sampler. It binds its executable hash/UUID before and after execution, actual host

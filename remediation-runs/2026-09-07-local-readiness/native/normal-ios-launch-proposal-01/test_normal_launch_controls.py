@@ -280,7 +280,11 @@ class XCTestTests(unittest.TestCase):
 
 class ExternalProvenanceTests(unittest.TestCase):
     def test_exact_public_launch_pid_is_required(self):
+        self.assertEqual(provenance.APP_ID, 'me.parlor.ios.debug')
         self.assertEqual(PID, provenance.parse_launch_pid(f'{provenance.APP_ID}: {PID}\n'))
+        for identifier in ('com.parlor.app.debug', 'me.parlor.ios', 'me.parlor.android.debug'):
+            with self.subTest(bundle_id=identifier), self.assertRaises(RuntimeError):
+                provenance.parse_launch_pid(f'{identifier}: {PID}\n')
         for text in (f'other: {PID}\n', f'{provenance.APP_ID}: 0\n', f'{provenance.APP_ID}: {PID}\nextra',
                      f'{provenance.APP_ID}: 1\n', f' {provenance.APP_ID}: {PID}\n'):
             with self.subTest(text=text), self.assertRaises(RuntimeError):
@@ -390,8 +394,9 @@ class CopiedSourceTests(unittest.TestCase):
         self.root = Path(allocation.name).resolve()
         self.originals = {
             source_copy.UI_TEST: 'Original test\n',
-            source_copy.PROJECT: 'shellScript = "./gradlew :composeApp:embedAndSignAppleFrameworkForXcode";\n' +
-                '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)\n' * 2,
+            # Exercise the actual source-bound PBX wiring, not a one-line fake
+            # that omits the legitimate localized-metadata phase and targets.
+            source_copy.PROJECT: (Path(__file__).resolve().parents[4] / source_copy.PROJECT).read_text(),
             'iosApp/iosApp/iOSApp.swift': 'Original production entry\n',
             'composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt': 'Original production controller\n',
         }
@@ -413,6 +418,23 @@ class CopiedSourceTests(unittest.TestCase):
         rows = source_copy.inventory_copy(self.root, self.bindings, self.digest)
         changed = {row['path'] for row in rows if row['original_sha256'] != row['copied_sha256']}
         self.assertEqual(source_copy.CHANGED, changed)
+        original = self.originals[source_copy.PROJECT]
+        start, end = source_copy._kotlin_phase_span(original)
+        updated = (self.root / source_copy.PROJECT).read_text()
+        self.assertEqual(original[:start] + json.dumps('set -u\n./gradlew owned\n') + original[end:], updated)
+        _, before = source_copy._objects(original, 'PBXShellScriptBuildPhase')
+        _, after = source_copy._objects(updated, 'PBXShellScriptBuildPhase')
+        self.assertEqual(before[source_copy.METADATA_PHASE_ID][0], after[source_copy.METADATA_PHASE_ID][0])
+        for relative in set(self.originals) - source_copy.CHANGED:
+            self.assertEqual(self.originals[relative], (self.root / relative).read_text())
+
+    def reject_project(self, project):
+        (self.root / source_copy.PROJECT).write_text(project)
+        before = {relative: (self.root / relative).read_bytes() for relative in self.originals}
+        with self.assertRaises(RuntimeError):
+            self.transform()
+        self.assertEqual(before, {relative: (self.root / relative).read_bytes() for relative in self.originals},
+                         'Rejected wiring must not partially write the XCTest or project')
 
     def test_app_instrumentation_is_rejected(self):
         self.transform()
@@ -443,10 +465,71 @@ class CopiedSourceTests(unittest.TestCase):
             source_copy.inventory_copy(self.root, self.bindings, self.digest)
 
     def test_ambiguous_or_wrong_shell_phase_is_rejected(self):
-        path = self.root / source_copy.PROJECT
-        path.write_text(path.read_text() + 'shellScript = "other";\n')
-        with self.assertRaises(RuntimeError):
-            self.transform()
+        self.reject_project(self.originals[source_copy.PROJECT] + 'shellScript = "other";\n')
+
+    def test_missing_or_renamed_known_phase_is_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        _, phases = source_copy._objects(original, 'PBXShellScriptBuildPhase')
+        for phase_id in phases:
+            with self.subTest(phase_id=phase_id):
+                self.reject_project(original.replace(phases[phase_id][0], '', 1))
+                self.reject_project(original.replace(phase_id, 'E' * 24))
+        self.reject_project(original.replace('Compile Kotlin Framework', 'Other Kotlin Framework'))
+
+    def test_duplicate_phase_objects_are_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        _, phases = source_copy._objects(original, 'PBXShellScriptBuildPhase')
+        end = '/* End PBXShellScriptBuildPhase section */'
+        for phase_id, obj in phases.items():
+            with self.subTest(phase_id=phase_id):
+                self.reject_project(original.replace(end, obj[0] + '\n' + end))
+
+    def test_unknown_additional_phase_is_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        _, phases = source_copy._objects(original, 'PBXShellScriptBuildPhase')
+        unknown = phases[source_copy.METADATA_PHASE_ID][0].replace(source_copy.METADATA_PHASE_ID, 'E' * 24)
+        self.reject_project(original.replace('/* End PBXShellScriptBuildPhase section */',
+                                            unknown + '\n/* End PBXShellScriptBuildPhase section */'))
+
+    def test_metadata_or_compile_script_drift_is_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        for script in [source_copy.PRODUCTION_METADATA_PHASE, source_copy.PRODUCTION_KOTLIN_PHASE]:
+            with self.subTest(script=script.splitlines()[0]):
+                self.reject_project(original.replace(json.dumps(script), json.dumps(script + 'echo unexpected\n')))
+        self.reject_project(original.replace('shellPath = /bin/sh;', 'shellPath = /bin/bash;', 1))
+
+    def test_missing_duplicate_or_wrong_target_reference_is_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        for phase_id in [source_copy.KOTLIN_PHASE_ID, source_copy.METADATA_PHASE_ID]:
+            ref = next(line for line in original.splitlines() if phase_id in line and line.rstrip().endswith(','))
+            with self.subTest(phase_id=phase_id):
+                self.reject_project(original.replace(ref + '\n', '', 1))
+                self.reject_project(original.replace(ref, ref + '\n' + ref, 1))
+                moved = original.replace(ref + '\n', '', 1).replace(
+                    'B14500012C00000100000005 /* Sources */,',
+                    ref.strip() + '\n\t\t\t\tB14500012C00000100000005 /* Sources */,', 1)
+                self.reject_project(moved)
+        self.reject_project(original.replace(source_copy.APP_TARGET_ID, 'E' * 24))
+
+    def test_unknown_native_target_and_duplicate_fields_are_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        _, targets = source_copy._objects(original, 'PBXNativeTarget')
+        unknown = targets[source_copy.TEST_TARGET_ID][0].replace(source_copy.TEST_TARGET_ID, 'E' * 24)
+        self.reject_project(original.replace('/* End PBXNativeTarget section */',
+                                            unknown + '\n/* End PBXNativeTarget section */'))
+        self.reject_project(original.replace('name = "Compile Kotlin Framework";',
+                                            'name = "Compile Kotlin Framework";\n\t\t\tname = "Other";'))
+
+    def test_framework_search_or_section_drift_is_rejected(self):
+        original = self.originals[source_copy.PROJECT]
+        search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
+        self.reject_project(original.replace(search, '/unreviewed/framework', 1))
+        self.reject_project(original.replace('/* Begin PBXShellScriptBuildPhase section */', ''))
+        self.reject_project(original + '\n/* Begin PBXShellScriptBuildPhase section */\n')
+
+    def test_repeated_transformation_is_rejected_without_writes(self):
+        self.transform()
+        self.reject_project((self.root / source_copy.PROJECT).read_text())
 
 
 class RunnerGuards(unittest.TestCase):

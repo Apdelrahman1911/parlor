@@ -1,4 +1,61 @@
-# Project status — 2026-10-26
+# Project status — 2026-10-28
+
+## Latest CI recovery checkpoint (October 28; not merged)
+
+[Fresh PR run 40595428550](https://github.com/Apdelrahman1911/parlor/actions/runs/40595428550)
+at `1761ad2d` **failed**. The original macOS Desktop build/tests pass but evidence
+creation times out. One guarded specific-job retry restores upload/cleanup, then
+fails the exhaustive Whodunit trace's shared 60-second coroutine deadline.
+Seven other producers and the original join pass; independent partial checking
+verifies their source/artifact/native/output custody, 672 KMP Simulator cases and
+16 Swift methods, explicitly **not** the full failed run. Successful Release
+executions are carried over, not rebuilt. No additional blind retry or merge.
+
+[#274 and the regression report](audits/2026-10-28-WHODUNIT-TRACE-TIMEOUT.md)
+document the fix: 14 independently timed case/mode tests plus a coverage guard,
+retaining all 84 combinations, both full repetitions and every recovery assertion.
+Focused local execution passes 15 tests. Identical paced-workload control makes
+the old aggregate fail and the revised 15 tests pass with similar total duration.
+No timeout increase, narrower scenario set or new dependency. Complete strict
+local and fresh hosted qualification of committed source remain required.
+PR #266 stays draft; physical-device, strict protection and Store gates remain.
+
+## Preceding free-hosted CI checkpoint (October 27, 22:26 UTC; not merged)
+
+The ARM64 [full run 40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
+at frozen `711cc1ab` remains independently qualified: all eight producer lanes
+and the original required Apple join pass, with exact source/upload/native/output
+custody, 672 KMP Simulator cases and 16 Swift methods. Whole elapsed time including
+queues is 55.50 minutes versus the older successful 173.33-minute baseline
+(about 68% shorter in this observation, not a statistical/mobile benchmark).
+
+The identical-source [Intel run 40563194924](https://github.com/Apdelrahman1911/parlor/actions/runs/40563194924)
+**failed**: all three Intel Release jobs and the join pass, but the independent
+ARM64 Simulator runtime fails before tapping the reopened Ghamza catalog card.
+Seven of eight producer lanes pass. Failed elapsed time (47.12 minutes) does not
+qualify Intel as a winner. The stopped observer and failed artifacts are retained;
+no automatic rerun, paid runner, billing/cache-cap change or protection bypass.
+ARM64 remains the default; the older pass cannot qualify revised source.
+
+A related shared scroll-restoration bug is now independently reproduced and
+fixed in `5891de5b`: transient recovery loading makes an index-only restored Home
+anchor the preceding catalog card. Root-owned live list state preserves its key
+anchor. English and Arabic/200%-text Desktop regressions pass repeated return
+journeys with exact unchanged bounds. Numeric-only XCTest snapshot-error
+instrumentation preserves the original deadline, one-tap and privacy contracts.
+This is **not a confirmed fix for the native nil query or original Host-event loss**.
+See [#273 and the evidence report](audits/2026-10-27-CATALOG-RESTORATION.md),
+[the benchmark ledger](audits/2026-10-27-FREE-HOSTED-CI.md), and still-open #267.
+
+The separate final-integration branch also includes the [#272 inventory CLI fix](audits/2026-10-27-REVIEW-INVENTORY-CLI.md).
+Its older `97500656` strict local check passes with 3,187 current module report
+cases (three existing LAN skips), 749 release controls (one environment skip),
+lint/R8/unsigned AAB and pinned shell analysis; valid up-to-date outputs were reused.
+Those results do not certify the new scroll/diagnostic source: final strict
+local and fresh full hosted qualification remain required. PR #266 is still
+draft/unmerged. Cold process recreation, physical-device/native accessibility,
+strict protection, signing/legal and Store-release gates remain separate below.
+No new agent is used and no production release is authorized by CI results.
 
 ## October production overhaul checkpoint
 
@@ -26,7 +83,11 @@ error means #261's complete six-lane source/Apple-cycle recheck finished **after
 merge (23:21:29 UTC), not before; the detailed report preserves that ordering.
 
 Fresh [main run 40418964553](https://github.com/Apdelrahman1911/parlor/actions/runs/40418964553)
-is **in progress**, not yet post-merge qualification. At `ba0c1e43`, strict local
+**passed all six mandatory lanes** at `d72a0d83`. All six source/artifact/cleanup
+bindings and four Apple resource-retirement records were independently verified
+at October 27 01:51:44 UTC. This qualifies that merge, not subsequent source edits
+or physical-device/Store acceptance. Issue #257 is closed after this verification.
+At `ba0c1e43`, strict local
 `productionCheck allTests --continue` passed: 1,776 Desktop cases (three existing
 real-LAN skips), 646 Android unit cases per variant and 688 release Python cases
 (one local environment skip); valid unchanged-input up-to-date outputs were reused.
@@ -37,17 +98,139 @@ device acceptance.
 
 The [overhaul qualification report](audits/2026-10-26-OVERHAUL-QUALIFICATION.md) and
 [verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
-maps implementation, failures, fresh evidence and remaining acceptance gates.
+map implementation, failures, fresh evidence and remaining acceptance gates.
 RPC was evaluated and the existing published P2pKit `0.7.0-rc3` messaging retained;
 no measured mobile-host benefit justified a migration. Physical Android/iOS
 host/client interruption testing, power/thermal measurements, assistive-technology
 journeys, strict iOS protection, signing/account ownership and release approval
 remain outstanding. No Store release was performed.
 
-A guarded, standalone paired iOS storage diagnostic has been dispatched at the
-merged source as [run 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891).
-Collection and cleanup remain pending. It is not Parlor application execution,
+A guarded standalone paired iOS storage diagnostic at the merged source,
+[run 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891),
+passed source/control/artifact/collection/cleanup verification but strict synthetic
+Complete remained **0 PASS / 5 FAIL**. This is not Parlor application execution,
 physical lock/keybag verification or a replacement for A37's unresolved strict gate.
+The actual-app preflight built no app; subsequent confirmed diagnostic identity,
+copy-seam and fixture drift is tracked in [#265](https://github.com/Apdelrahman1911/parlor/issues/265).
+[The repair report](audits/2026-10-27-IOS-DIAGNOSTIC-CONTROLS.md) records fixes,
+local regression results and new fail-closed macOS control-suite enforcement.
+Revised controls require fresh exact-head CI and reviewed native preflight before
+application diagnostic execution. These repairs do not resolve #258.
+
+Fresh documentation-main [run 40466265136](https://github.com/Apdelrahman1911/parlor/actions/runs/40466265136)
+at `9d4f369d` is **not qualified**: the English additional-game XCTest failed
+when one native Ghamza Host tap did not advance the visible setup screen.
+Video, accessibility hierarchies and synthesized-event coordinates confirm the
+missed transition; its input-boundary cause remains unverified in
+[#267](https://github.com/Apdelrahman1911/parlor/issues/267).
+Other passing lanes do not replace the failed current-source UI check.
+
+The reviewed [actual-app diagnostic 40468931134](https://github.com/Apdelrahman1911/parlor/actions/runs/40468931134)
+at `116ed826` failed before any build, Simulator allocation, XCTest or storage
+observation: a copy helper assumed one Xcode shell script instead of the actual
+two. Its inner cleanup passed but the outer direct-lifecycle guard correctly
+retained custody; no protection result was produced. Draft
+[PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) repairs the actual
+PBX wiring guard and obsolete fixtures, and adds single-tap public-transition
+failure evidence without replay or slower taps. Local normal251/readiness345
+(three Linux platform skips)/application27 controls pass. Strict checks at
+`9f172dc3` and `c66debaf` pass; newer edits still require affected checks,
+fresh hosted CI, independently reviewed source/control preflight and native
+execution. #258, #265 and #267 remain open; no Store publication.
+The same 14 actual-PBX copy guards now run inside the routine readiness suite:
+local **359 cases pass** (three Linux platform skips), including those reused
+normal-copy cases. At `034de158`, the complete359 readiness and27 application
+controls executed on macOS without skips; the independently verified iOS lane
+also passed 672 KMP Simulator and ten Swift host/UI cases. Local strict
+`productionCheck allTests` passed at the same source, reusing valid unchanged
+outputs. Neither this lane nor the pending full run qualifies newer edits.
+
+Fresh reviewed [application run40474753238](https://github.com/Apdelrahman1911/parlor/actions/runs/40474753238)
+at `034de158` reached the actual copied Debug app's unchanged filesystem/Keychain,
+passed its one diagnostic XCTest and both synthetic decrypt roundtrips, but
+**failed overall** at the subsequent host-directory identity comparison.
+Original six raw comparisons independently revalidate **0 PASS / 6 FAIL**;
+strict protection and causality remain unresolved in #258. Source/artifact/62
+native-leaf hashes and inner/outer cleanup passed, not complete diagnostic capture.
+The host comparison incorrectly compares links2 before file creation with links3
+afterward at the same directory inode. #265's repair adds a final post-overwrite
+Kotlin/native directory observation while retaining all full host size/link-count
+and per-API/descriptor checks; it does not normalize old evidence or loosen the
+six original equalities. Two baseline regressions fail before repair; all36
+application controls pass locally afterward. These revised templates still need
+committed-source checks, all six current-head hosted lanes, fresh reviewed
+preflight and native execution. #265/#258/#267 remain open; no Store publication.
+
+## October 27 verification continuation (candidate, not integrated)
+
+The frozen [PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) head
+`3806921f4902f5d841da7239c70c6c358b374adf` is still a draft candidate at this
+checkpoint. [Full run 40482354118](https://github.com/Apdelrahman1911/parlor/actions/runs/40482354118)
+has five mandatory lanes passing; the iOS Release wrapper is still running.
+This is not six-lane qualification or permission to merge. Follow the PR's
+latest read-back status and source/artifact/cleanup verification, not this
+historical observation, for completion.
+
+Reviewed [actual copied-app diagnostic 40482816605](https://github.com/Apdelrahman1911/parlor/actions/runs/40482816605)
+at the same head completed its capture: filesystem/Keychain roundtrips and
+atomic replacement pass; final Kotlin/native/host directory size96/links3 agree.
+All 63 native-leaf hashes and inner/outer cleanup were verified. Original strict
+comparisons remain **0 PASS / 6 FAIL**. Evidence ZIP SHA256
+`a7865e4ea265e9a47f69346803106623644f871327caf9d715c9478c668c2c08`;
+cleanup ZIP `fc8b4c008b5435f5cd272096e11fecdc48f8a698bd5f48c7a3997aa0913e2a9c`.
+This is diagnostic capture, not strict protection, physical lock/keybag
+verification or a shipping security pass. #258/#267 remain open; #265 needs
+qualified integration and post-merge verification before closure.
+
+Three independently exercised verification improvements are now implemented:
+
+| Finding | Committed local evidence | Integration status |
+|---|---|---|
+| [#268](https://github.com/Apdelrahman1911/parlor/issues/268): current artifact selection includes historical reports | `90635ea4`: strict transport333 cases / release Python699; exact upload envelopes preserved | Pending |
+| [#269](https://github.com/Apdelrahman1911/parlor/issues/269): isolation scans classify ignored copies as shipping inputs | `c5259efa`: strict transport341 / release Python690; eight fault exercises retain real leak rejection | Pending |
+| [#6](https://github.com/Apdelrahman1911/parlor/issues/6): independent-participant real-transport boundary | `66c578b6`: 3/3 distinct host/peer JVM pairs; normal transport333 / release Python705; documentation checked at `04a62bb8` | Pending |
+
+Each transport receipt has three existing real-LAN JUnit skips; each local
+release Python receipt has one environment skip. They are repeated receipts,
+not unique behavior counts or physical-device evidence. Reports:
+[artifact scope](audits/2026-10-27-CI-ARTIFACT-SCOPE.md),
+[declared source scope](audits/2026-10-27-DECLARED-SOURCE-SCOPE.md), and
+[separate-process LAN](audits/2026-10-27-SEPARATE-PROCESS-LAN.md).
+
+A focused verification-boundaries integration preserves all three component
+histories, regenerates their combined inventory and reruns affected checks.
+It must join qualified `main` and pass fresh exact-head hosted checks before
+normal protected merge. No duplicated premature Apple runs are needed. Issues
+stay open pending their actual acceptance criteria; no Store publication,
+physical multiplayer/background, battery/thermal, RPC benefit or assistive-
+technology acceptance is claimed.
+
+### Independent progress while free-runner benchmarks execute
+
+The combined candidate's first full aggregate at `40720c4a` failed only because
+cached lint partial analysis retained another checkout's root-level source paths.
+[#271](https://github.com/Apdelrahman1911/parlor/issues/271) now tracks the
+producer-key fix, not a weakening of the correct outside-root rejection.
+At clean source `141408e0`, strict `productionCheck allTests --continue` passed
+in 3m4s: 714 Python cases (one environment skip), 3,185 current Desktop/Android
+report cases with zero failures/errors and three existing real-LAN skips.
+Unchanged-input outputs were reused; these are repeated platform/report counts,
+not wholly fresh execution or physical-device verification.
+
+Actual two-worktree lint exercises verify 31 different cross-root cache keys,
+all 37 exact current-root warnings, 222 unaffected cache restorations and
+same-root analysis reuse. Two injected outside-root report paths still fail;
+the original report and clean source were restored. The
+[cache-ownership report](audits/2026-10-27-LINT-CACHE-OWNERSHIP.md) records
+exact-source evidence. Documentation added afterward does not certify a newer
+head; affected checks must run again before publishing the candidate.
+
+The independently frozen free-hosted CI candidate for
+[#270](https://github.com/Apdelrahman1911/parlor/issues/270) is benchmarking at
+`b9d6f780` in [run 40510904388](https://github.com/Apdelrahman1911/parlor/actions/runs/40510904388).
+No speedup, winning runner, integration or post-merge qualification is claimed
+while it runs. Only standard free runner labels are permitted; no paid resources,
+billing/protection changes, extra agents or competing macOS runs are used.
 
 ## September checkpoint (historical)
 

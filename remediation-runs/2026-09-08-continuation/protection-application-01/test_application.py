@@ -10,7 +10,7 @@ import unittest
 
 import application_receipts as receipts
 from application_probe import (ApplicationLane, HOST_SDK_MACRO_NAMES, inspect_host_sampler_copy,
-                               parse_host_sdk_macros, write_host_sampler_copy)
+                               normal, parse_host_sdk_macros, write_host_sampler_copy)
 
 
 TOKEN = 'application-control-fixture'
@@ -51,7 +51,7 @@ def application():
     final = dict(schema_version=1, kind='protection-application', collection_status=receipts.COLLECTED,
                  recorded_samples=6, run_token=TOKEN, simulator_udid=DEVICE,
                  source_manifest_sha256=SOURCE, controls_sha256=CONTROLS,
-                 bundle_id='com.parlor.app.debug', runtime_version=[26, 2, 0],
+                 bundle_id='me.parlor.ios.debug', runtime_version=[26, 2, 0],
                  process_boot=DEVICE, container_id=DEVICE, process_id=123, uid=501,
                  hardware_protection_verified=False, l08_requirements_waived=False,
                  snapshot_validation_tested=False)
@@ -75,6 +75,8 @@ def application():
     final['kotlin'] = dict(kind='protection-application-kotlin', run_token=TOKEN,
                            status='OBSERVATIONS_COMPLETE', stage='complete', failure='none',
                            first_roundtrip=True, overwrite_roundtrip=True, samples=observed)
+    final['final_directory_native'] = native('directory', 10)
+    final['kotlin']['final_directory_identity'] = copy.deepcopy(observed[1]['identity_after'])
     return final, samples
 
 
@@ -215,6 +217,25 @@ class ApplicationHostCopyTests(unittest.TestCase):
 
 
 class ApplicationReceiptTests(unittest.TestCase):
+    def test_application_identity_matches_normal_lane_and_all_native_controls(self):
+        expected = 'me.parlor.ios.debug'
+        self.assertEqual(normal.APP_ID, expected)
+        controls = Path(__file__).resolve().parent
+        for name, count in {'application_probe.py': 1, 'application_receipts.py': 1,
+                            'ProtectionApplicationLaunch.swift.in': 2,
+                            'ProtectionApplicationUITest.swift.in': 1,
+                            'ProtectionApplicationProbe.kt.in': 1}.items():
+            with self.subTest(control=name):
+                source = (controls / name).read_text()
+                self.assertEqual(source.count(expected), count)
+                self.assertNotIn('com.parlor.app.debug', source)
+
+    def test_application_receipt_rejects_old_release_and_other_platform_identities(self):
+        final, samples = application()
+        for identifier in ('com.parlor.app.debug', 'me.parlor.ios', 'me.parlor.android.debug', ''):
+            with self.subTest(bundle_id=identifier), self.assertRaises(RuntimeError):
+                receipts.validate_application(dict(final, bundle_id=identifier), samples, **BINDINGS)
+
     def test_missing_is_collection_not_protection_pass(self):
         result = receipts.validate_application(*application(), **BINDINGS)
         self.assertEqual((result['collection_status'], result['strict_status'], result['strict_passed']),
@@ -305,6 +326,106 @@ class ApplicationReceiptTests(unittest.TestCase):
         self.assertTrue(all(row['same_inode'] for row in result['comparisons']))
         self.assertFalse(result['same_ios_process'])
         self.assertFalse(result['runtime_implementation_causality_proven'])
+
+    @staticmethod
+    def update_native_identity(value, **changes):
+        value['identity'].update(changes)
+        for read in value['reads']:
+            read['before'] = copy.deepcopy(value['identity'])
+            read['after'] = copy.deepcopy(value['identity'])
+
+    def test_post_write_directory_epoch_keeps_full_host_identity_validation(self):
+        final, samples = application()
+        value = host(final)
+        # Actual APFS execution observed links2/size64 before creating the
+        # ciphertext, then links3/size96 at the same directory inode afterward.
+        self.update_native_identity(final['final_directory_native'], links=3, size=96)
+        final['kotlin']['final_directory_identity'].update(links=3, bytes=96)
+        self.update_native_identity(value['samples'][0]['native'], links=3, size=96)
+        result = receipts.validate_host(value, final, samples)
+        self.assertTrue(all(row['same_inode'] for row in result['comparisons']))
+        strict = receipts.validate_application(final, samples, **BINDINGS)
+        self.assertEqual((strict['strict_passed'], strict['strict_total']), (0, 6))
+
+    def test_host_directory_size_mismatch_is_not_ignored(self):
+        final, samples = application()
+        value = host(final)
+        self.update_native_identity(value['samples'][0]['native'], size=96)
+        with self.assertRaises(RuntimeError):
+            receipts.validate_host(value, final, samples)
+
+    def test_missing_final_directory_observation_never_uses_pre_write_metadata(self):
+        for field in ('final_directory_native', 'final_directory_identity'):
+            final, samples = application()
+            if field == 'final_directory_native':
+                del final[field]
+            else:
+                del final['kotlin'][field]
+            with self.subTest(field=field), self.assertRaises(RuntimeError):
+                receipts.validate_application(final, samples, **BINDINGS)
+            with self.subTest(host_field=field), self.assertRaises(RuntimeError):
+                receipts.validate_host(host(final), final, samples)
+
+    def test_final_directory_cannot_change_its_original_inode_owner_mode_or_type(self):
+        for key, value in (('device', 2), ('inode', 11), ('uid', 502), ('mode', 0o40755), ('type', 'regular')):
+            final, samples = application()
+            self.update_native_identity(final['final_directory_native'], **{key: value})
+            with self.subTest(field=key), self.assertRaises(RuntimeError):
+                receipts.validate_application(final, samples, **BINDINGS)
+
+    def test_final_directory_requires_full_kotlin_native_identity(self):
+        for key in ('device', 'inode', 'uid', 'links', 'bytes', 'file_type'):
+            final, samples = application()
+            final['kotlin']['final_directory_identity'][key] += 1
+            with self.subTest(field=key), self.assertRaises(RuntimeError):
+                receipts.validate_application(final, samples, **BINDINGS)
+
+    def test_final_directory_retains_every_per_api_identity_and_descriptor_guard(self):
+        for key in ('device', 'inode', 'uid', 'mode', 'links', 'size'):
+            final, samples = application()
+            final['final_directory_native']['reads'][2]['after'][key] += 1
+            with self.subTest(field=key), self.assertRaises(RuntimeError):
+                receipts.validate_application(final, samples, **BINDINGS)
+        for key in ('descriptor_closed', 'descriptor_and_path_same_inode'):
+            final, samples = application()
+            native = final['final_directory_native']
+            target = native if key == 'descriptor_closed' else native['reads'][2]
+            target[key] = False
+            with self.subTest(guard=key), self.assertRaises(RuntimeError):
+                receipts.validate_application(final, samples, **BINDINGS)
+
+    def test_host_cannot_match_only_the_obsolete_pre_write_directory_epoch(self):
+        final, samples = application()
+        self.update_native_identity(final['final_directory_native'], links=3, size=96)
+        final['kotlin']['final_directory_identity'].update(links=3, bytes=96)
+        with self.assertRaises(RuntimeError):
+            receipts.validate_host(host(final), final, samples)
+
+    def test_host_retains_full_post_write_directory_link_count_and_size_checks(self):
+        for field in ('device', 'inode', 'uid', 'mode', 'links', 'size'):
+            final, samples = application()
+            value = host(final)
+            native = value['samples'][0]['native']
+            self.update_native_identity(native, **{field: native['identity'][field] + 1})
+            with self.subTest(field=field), self.assertRaises(RuntimeError):
+                receipts.validate_host(value, final, samples)
+
+    def test_copy_only_final_directory_observers_follow_real_roundtrips(self):
+        controls = Path(__file__).resolve().parent
+        hook = (controls / 'ProtectionApplicationProbe.kt.in').read_text()
+        swift = (controls / 'ProtectionApplicationLaunch.swift.in').read_text()
+        final_read = 'finalDirectoryIdentity = protectionIdentity(directory, "directory")'
+        self.assertEqual(hook.count(final_read), 1)
+        self.assertLess(hook.index('check(restored.contentEquals(second))'), hook.index(final_read))
+        self.assertLess(hook.index('check(rows.size == 6)'), hook.index(final_read))
+        self.assertIn('put("final_directory_identity", finalDirectoryIdentity)', hook)
+        sampler = 'let finalDirectoryNative = ParlorProtectionSample(directory)'
+        self.assertEqual(swift.count(sampler), 1)
+        self.assertLess(swift.index('guard recorded == 6'), swift.index(sampler))
+        self.assertLess(swift.index(sampler), swift.index('receipt["collection_status"] = "CAPTURED_NOT_PROTECTION_PASS"'))
+        self.assertIn('receipt["final_directory_native"] = finalDirectoryNative', swift)
+        self.assertIn('finalDirectoryNative["descriptor_closed"] as? Bool == true', swift)
+        self.assertIn('protectionApplicationSameIdentity(finalDirectoryIdentity, nativeIdentity)', swift)
 
     def test_host_dual_platform_getters_do_not_reclassify_strict_failure(self):
         final, samples = application()

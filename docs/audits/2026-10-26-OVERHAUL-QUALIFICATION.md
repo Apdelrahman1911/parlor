@@ -21,9 +21,14 @@ GitHub records all three PRs **MERGED** at 2026-10-26 23:19:28 UTC through
 `ba0c1e439d0632fd516dc9660256606e3caaedb4`; the merge tree equals the frozen
 aggregate tree below. No admin/protection bypass or Store publication occurred.
 
-**Fresh merged-main verification is pending:**
+**Fresh merged-main verification passed:**
 [run 40418964553](https://github.com/Apdelrahman1911/parlor/actions/runs/40418964553)
-executes `d72a0d83`. PR qualification is not a substitute for that execution.
+executed `d72a0d83`; all six mandatory jobs passed. At October 27 01:51:44 UTC,
+the read-only checker independently verified all six exact-source ownership,
+artifact digest and cleanup bindings, Android emulator absence, and four Apple
+resource-retirement claim/stop records. PR qualification was not substituted for
+this fresh merge execution. This does not certify subsequent diagnostic controls,
+physical-device behavior or a production release.
 
 ### Per-PR qualification and sequencing correction
 
@@ -142,11 +147,23 @@ The preserved `fix/local-readiness-2026-09-07` branch was **non-force fast-forwa
 to the merge, without changing its branch/source/ownership guards.
 
 [Run 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891)
-selects only the standalone paired same-inode Simulator/host diagnostic.
-**Collection, observations and cleanup are pending.** This selection is neither
-Parlor runtime nor physical protection proof; green collection cannot become a
-strict-protection PASS. The current writer remains unchanged. No causal correction
-has been identified; A37 and APP04 historical failures remain separate.
+selected only the standalone paired same-inode Simulator/host diagnostic.
+Source/control Git blobs, raw Simulator/host/setter reports, ZIP digests and
+cleanup were independently verified. Collection and cleanup PASS; strict
+synthetic Complete **0 PASS / 5 FAIL**. Simulator FileManager key was missing;
+same-inode host FileManager and file NSURL reported until-first-authentication.
+Raw class3 and unsupported APFS content protection were observed. The one-call
+host Complete setter returned false / Cocoa256 and retained class3; this fresh
+record does not establish historical H03's underlying POSIX22.
+
+This selection is neither Parlor runtime nor physical protection proof; green
+collection cannot become a strict-protection PASS. The writer remains unchanged;
+A37 and APP04 historical failures remain separate. Actual-app read-only preflight
+[40419989333](https://github.com/Apdelrahman1911/parlor/actions/runs/40419989333)
+verified source/control/artifact bindings but built no app. Later reproduced
+diagnostic identity/seam/fixture drift is separately tracked in #265 and the
+[repair report](2026-10-27-IOS-DIAGNOSTIC-CONTROLS.md). Revised controls require a
+fresh committed-source preflight and reviewed hashes before application execution.
 
 ## Issue disposition and outstanding acceptance
 
@@ -158,11 +175,12 @@ implementation evidence reuse existing issues where applicable:
 |---|---|---|
 | [#251](https://github.com/Apdelrahman1911/parlor/issues/251) | Game/version-bound admission and regression tests | Physical cross-game join and both platform directions |
 | [#253](https://github.com/Apdelrahman1911/parlor/issues/253) | Confirmed, ownership-safe Resume deletion | Native EN/AR/a11y relaunch and persistence journeys |
-| [#257](https://github.com/Apdelrahman1911/parlor/issues/257) | Scoped release supervision; native Windows and Linux fault tests | Fresh merged-main qualification and artifact/cleanup recheck before closure |
+| [#257](https://github.com/Apdelrahman1911/parlor/issues/257) | Scoped release supervision; native Windows/Linux fault tests and fresh merged-main source/artifact/cleanup verification | **CLOSED** after all acceptance criteria passed |
 | [#259](https://github.com/Apdelrahman1911/parlor/issues/259) | Catalog, shared flows and public/private guidance; enlarged-text fixes | Full native onboarding/create/join/recovery and screen-reader journeys |
 | [#260](https://github.com/Apdelrahman1911/parlor/issues/260) | Game privacy/actions/results/RTL; explicit EN/AR Light/Dark Desktop interaction tests | Native complete sessions, fairness/pacing playtests and fluent Arabic editorial review |
 | [#252](https://github.com/Apdelrahman1911/parlor/issues/252) / [#6](https://github.com/Apdelrahman1911/parlor/issues/6) | Lifecycle/fault tests and opt-in real-socket Linux fixtures | Android/iOS hosts/clients, mixed LAN, lock/calls/switching/Wi-Fi/Doze/force-quit/extended sessions |
 | [#258](https://github.com/Apdelrahman1911/parlor/issues/258) | Preserved A37/H03 evidence and unchanged strict controls | Historical A37 0/26 unresolved; causal diagnosis, current strict/functional rerun, physical protected-storage behavior |
+| [#265](https://github.com/Apdelrahman1911/parlor/issues/265) | Reproduced diagnostic seam/identity/fixture drift; regression repairs and macOS enforcement | Exact-head hosted verification and fresh reviewed application preflight; not A37 causality |
 | [#230](https://github.com/Apdelrahman1911/parlor/issues/230) | Replacement identifiers are implemented | Account ownership, signing, protected environments and owner/legal/content/privacy approval |
 
 CPU/RAM, allocation, threads, network latency, battery and thermal mobile-host

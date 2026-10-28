@@ -19,6 +19,99 @@ class ProductionVerificationWorkflowContractTest {
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
 
     @Test
+    fun public_ios_host_join_taps_require_an_observed_transition_without_replay() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val journey = swift.substringAfter("private func verifyAdditionalGamesSetup(")
+            .substringBefore("func testLastLightLocalPlayerFields")
+        listOf("host", "join").forEach { action ->
+            assertContains(journey, "try tapPublicSetupTransition(app, from: copy.$action, to: copy.permission)")
+        }
+        val observer = swift.substringAfter("private func tapPublicSetupTransition(")
+            .substringBefore("private func tapSettledControl(")
+        assertEquals(1, Regex("try tapSetupButton\\(app, prefix: from\\)").findAll(observer).count())
+        listOf(
+            "destination.exists && !source.exists",
+            "XCTWaiter.wait(for: [transitioned], timeout: 10)",
+            "if result != .completed",
+            "XCTAttachment(screenshot: app.screenshot())",
+            "screenshot.lifetime = .keepAlways",
+            "sourceExists ? source.isEnabled : false",
+            "sourceExists ? source.frame : .zero",
+            "XCTAssertEqual(result, .completed",
+        ).forEach { assertContains(observer, it) }
+        listOf(".tap()", "swipe", "for _", "while ", "app.debugDescription").forEach {
+            // Comments may explain why swiping/replay is disallowed; inspect
+            // executable lines, not documentation, for prohibited actions.
+            val code = observer.lineSequence().map { line -> line.substringBefore("//") }.joinToString("\n")
+            assertFalse(it in code, "Public transition observer must not replay or inspect arbitrary screens: $it")
+        }
+    }
+
+    @Test
+    fun public_ios_settlement_uses_coherent_adjacent_frames_and_never_taps_after_failure() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val helper = swift.substringAfter("private func tapSettledControl(")
+            .substringBefore("private func verifyKeyboardCycle(")
+        val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        assertEquals(1, Regex(Regex.escape("control.snapshot()")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
+        listOf(
+            "snapshot = try control.snapshot()",
+            "snapshot = nil",
+            "snapshotErrorCode = (error as NSError).code",
+            "snapshotErrorCode=",
+            "let frame = snapshot?.frame",
+            "let enabled = snapshot?.isEnabled == true",
+            "let hittable = stable ? control.isHittable : nil",
+            "if stable && hittable != true { frames.reset() }",
+            "XCTWaiter.wait(for: [settled], timeout: 10)",
+            "if samples.count < 12",
+            "if result != .completed",
+            "guard result == .completed else",
+            """throw NSError(domain: "PublicControlSettlement", code: 1)""",
+            "screenshot.lifetime = .keepAlways",
+        ).forEach { assertContains(code, it) }
+        assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
+        listOf("try? control.snapshot()", "control.exists", "control.frame", ".label", ".value",
+            ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
+            "press(forDuration", "swipe").forEach { assertFalse(it in code) }
+        val frameState = swift.substringAfter("private struct PublicControlFrames {")
+            .substringBefore("final class PublicControlFramesTests")
+        listOf("reset()", "return false", "previous = frame", "return previous == frame",
+            "!frame.isNull", "!frame.isInfinite", "!frame.isEmpty", "frame.origin.x", "frame.origin.y",
+            "frame.size.width", "frame.size.height", "frame.maxX", "frame.maxY",
+            "frame.size.width > 0", "frame.size.height > 0", "allSatisfy({ $0.isFinite })",
+        ).forEach { assertContains(frameState, it) }
+        listOf(
+            "testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes",
+            "testMotionIsNotRoundedIntoASettledFrame",
+            "testMissingSnapshotBreaksFrameAdjacency",
+            "testDisabledSnapshotBreaksFrameAdjacency",
+            "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
+            "testHittabilityInterruptionRequiresTwoFreshFrames",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun catalog_scroll_anchor_is_owned_above_navigation_entry_restoration() {
+        val app = read("composeApp/src/commonMain/kotlin/com/parlor/app/App.kt")
+        assertContains(app, "val homeScrollState = rememberLazyListState()")
+        assertTrue(app.indexOf("val homeScrollState = rememberLazyListState()") < app.indexOf("AppNavDisplay("))
+        assertContains(app.substringAfter("homeContent = {"), "scrollState = homeScrollState")
+        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
+        assertContains(home, "scrollState: LazyListState = rememberLazyListState()")
+        assertContains(home.substringAfter("LazyColumn("), "state = scrollState")
+        val regression = read(
+            "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/HomeCatalogRestorationTest.kt",
+        )
+        listOf("rememberSaveableStateHolder()", "scrollState = catalogScrollState", "loading.value = true",
+            "loading.value = false", "repeat(2)", "assertEquals(before, after",
+            "verifyRestoration(AppLanguage.Arabic, 2f)",
+        ).forEach { assertContains(regression, it) }
+    }
+
+    @Test
     fun linux_job_enforces_tests_analysis_android_release_and_artifact_inspection() {
         val workflow = read(".github/workflows/production-verification.yml")
         val rootBuild = read("build.gradle.kts")
@@ -298,8 +391,8 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
-        val releaseJob = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val releaseJob = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         assertContains(
             releaseJob.substringBefore("\n    steps:\n"),
             "timeout-minutes: 180",
@@ -353,12 +446,12 @@ class ProductionVerificationWorkflowContractTest {
             message = "The runtime job must run every executable KMP simulator test",
         )
         val appleReleaseStep = releaseJob
-            .substringAfter("- name: Run complete Apple static analysis and release linkage gates")
+            .substringAfter("- name: Run complete Apple static analysis")
             .substringBefore("\n      - name:")
         assertContains(
             appleReleaseStep,
-            "./gradlew productionAppleCheck --dependency-verification=strict --no-daemon",
-            message = "The release job must run complete Apple analysis and all three serial release links",
+            "./gradlew productionAppleStaticAnalysis --dependency-verification=strict --no-daemon",
+            message = "The simulator lane retains complete Apple analysis; the required join retains all Release architectures",
         )
         assertFalse(
             "./gradlew allTests" in runtimeJob || "./gradlew allTests" in releaseJob,
@@ -529,12 +622,12 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
-        val release = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val release = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         listOf(runtime to listOf("apple-aggregate", "apple-ui"), release to listOf("apple-aggregate", "apple-wrapper"))
             .forEach { (job, cycles) ->
                 val header = job.substringBefore("\n    steps:")
-                assertContains(header, "runs-on: macos-15")
+                assertContains(header, if (job == runtime) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
                 assertContains(header, "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer")
                 assertFalse("needs:" in header || "strategy:" in header)
                 listOf(
@@ -568,15 +661,16 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate() {
+    fun supplemental_native_diagnostics_do_not_replace_any_full_gate() {
         val workflow = read(".github/workflows/production-verification.yml")
         assertEquals(
             listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-                "ios", "ios-release", "ios-protection-probe"),
+                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+                "darwin-host-capability"),
             Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
                 .map { it.groupValues[1] }.toList(),
         )
-        val probe = workflow.substringAfter("\n  ios-protection-probe:\n")
+        val probe = workflow.substringAfter("\n  ios-protection-probe:\n").substringBefore("\n  darwin-host-capability:\n")
         assertContains(probe, "if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'ios-protection-probe'")
         assertContains(probe, "timeout-minutes: 20")
         assertContains(probe, "PARLOR_FROZEN_SOURCE_SHA: \${{ inputs.frozen_source_sha }}")
@@ -587,10 +681,36 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun darwin_capability_keeps_both_free_hosts_and_bounded_native_custody() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        val capability = workflow.substringAfter("\n  darwin-host-capability:\n")
+        listOf(
+            "if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'",
+            "runs-on: \${{ matrix.runner }}",
+            "timeout-minutes: 5",
+            "fail-fast: false",
+            "- runner: macos-15\n            architecture: arm64",
+            "- runner: macos-15-intel\n            architecture: x86_64",
+            "PARLOR_FROZEN_SOURCE_SHA: \${{ inputs.frozen_source_sha }}",
+            "PARLOR_EXPECTED_ARCHITECTURE: \${{ matrix.architecture }}",
+            "timeout-minutes: 2\n        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability",
+            "- name: Preserve native capability receipt\n        if: always()",
+            "if-no-files-found: error",
+            "path: \${{ runner.temp }}/parlor-darwin-capability-",
+            "persist-credentials: false",
+        ).forEach { assertContains(capability, it) }
+        assertEquals(3, Regex("(?m)^      - name:").findAll(capability).count())
+        listOf("./gradlew", "build/", "RUNNER_TRACKING_ID:", "self-hosted", "macos-latest", "|| true",
+            "continue-on-error", "github.token", "secrets.").forEach { assertFalse(it in capability) }
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        assertContains(runtime.substringBefore("\n    steps:"), "inputs.verification_scope != 'darwin-host-capability'")
+    }
+
+    @Test
     fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
         val jobs = listOf(
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release", "ios-protection-probe",
+            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
         )
         val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
         fun assertJobBoundaries(checkoutText: String) {
@@ -602,11 +722,11 @@ class ProductionVerificationWorkflowContractTest {
             )
             assertEquals(
                 "    name: ios",
-                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n"),
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n"),
             )
             assertEquals(
-                "    name: ios-release",
-                workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n"),
+                "    name: ios-release-simulator",
+                workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n"),
             )
             assertEquals(
                 "    name: ios-protection-probe\n",
@@ -617,7 +737,7 @@ class ProductionVerificationWorkflowContractTest {
             val checkoutText = lf.replace("\n", lineEnding)
             assertEquals(lf, normalizeContractText(checkoutText))
             assertJobBoundaries(checkoutText)
-            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release:\n", "\n  ios-protection-probe:\n")
+            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release-simulator:\n", "\n  ios-protection-probe:\n")
                 .forEach { marker ->
                     val missingBoundary = lf.replace(marker, "\n").replace("\n", lineEnding)
                     assertFailsWith<AssertionError> { assertJobBoundaries(missingBoundary) }

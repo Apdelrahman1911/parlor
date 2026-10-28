@@ -1,6 +1,61 @@
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import org.gradle.api.tasks.testing.Test
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+
 plugins {
     id("parlor.kmp.library")
     alias(libs.plugins.kotlin.serialization)
+}
+
+// Architecture tests inspect declared build files and Main Kotlin inputs, not
+// arbitrary copies below the checkout. FileTrees retain compiler include/exclude
+// patterns and include newly created source; the index is never a Git-only list.
+gradle.projectsEvaluated {
+    val checkout = rootProject.projectDir
+    val buildFiles = rootProject.allprojects.map { it.path to it.buildFile }
+    val mainSources = rootProject.allprojects.flatMap { candidate ->
+        candidate.extensions.findByType(KotlinMultiplatformExtension::class.java)
+            ?.sourceSets?.filter { it.name.endsWith("Main") }
+            ?.map { candidate.path to it.kotlin.asFileTree.matching { include("**/*.kt") } }
+            .orEmpty()
+    }
+    val index = layout.buildDirectory.file("source-contracts/declared-inputs.bin")
+    val export = tasks.register("exportArchitectureContractInputs") {
+        inputs.files(buildFiles.map { it.second }, mainSources.map { it.second })
+            .withPropertyName("declaredArchitectureInputs")
+        inputs.property("projectPaths", buildFiles.map { it.first })
+        outputs.file(index)
+        doLast {
+            val records = (
+                buildFiles.filter { it.second.isFile }.map { Triple('B', it.first, it.second) } +
+                    mainSources.flatMap { (owner, sources) -> sources.files.map { Triple('S', owner, it) } }
+                ).map { (kind, owner, file) ->
+                Triple(kind, owner, file.relativeTo(checkout).invariantSeparatorsPath)
+            }.distinct().sortedWith(compareBy({ it.first }, { it.second }, { it.third }))
+            check(records.size in 1..20_000) { "Declared architecture input count exceeds bound" }
+            val bytes = ByteArrayOutputStream()
+            DataOutputStream(bytes).use { stream ->
+                stream.writeInt(0x50535243)
+                stream.writeInt(1)
+                stream.writeInt(records.size)
+                records.forEach { (kind, owner, relative) ->
+                    stream.writeChar(kind.code)
+                    stream.writeUTF(owner)
+                    stream.writeUTF(relative)
+                }
+            }
+            check(bytes.size() <= 1_048_576) { "Declared architecture input bytes exceed bound" }
+            val output = index.get().asFile
+            check(output.parentFile.isDirectory || output.parentFile.mkdirs())
+            output.writeBytes(bytes.toByteArray())
+        }
+    }
+    tasks.withType<Test>().configureEach {
+        dependsOn(export)
+        inputs.file(index).withPropertyName("declaredArchitectureIndex")
+        systemProperty("parlor.contract.sourceIndex", index.get().asFile.absolutePath)
+    }
 }
 
 kotlin {

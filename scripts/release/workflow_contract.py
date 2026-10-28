@@ -21,12 +21,15 @@ EXPECTED = {
 }
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
+FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 ALLOWED_ACTIONS = {
     "actions/checkout",
     "actions/setup-java",
     "actions/upload-artifact",
     "actions/attest-build-provenance",
+    "actions/cache/restore",
+    "actions/cache/save",
 }
 DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
 FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'"
@@ -43,7 +46,8 @@ LINUX_PREREQUISITE_SCOPE = ("github.event_name == 'workflow_dispatch' && "
 IOS_VERIFICATION_SCOPE = ("github.event_name != 'workflow_dispatch' || "
                           "(inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe'"
                           " && inputs.verification_scope != 'android-cleanup-only'"
-                          " && inputs.verification_scope != 'ios-protection-probe')")
+                          " && inputs.verification_scope != 'ios-protection-probe'"
+                          " && inputs.verification_scope != 'darwin-host-capability')")
 NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
 PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
@@ -54,8 +58,12 @@ VERIFICATION_JOBS = {
     "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
     "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
     "ios": "iOS simulator runtime and Swift host",
+    "ios-release-simulator": "iOS Release simulator and Swift wrapper",
+    "ios-release-device": "iOS Release device arm64",
+    "ios-release-x64": "iOS Release simulator x64",
     "ios-release": "iOS release frameworks and Swift wrapper",
     "ios-protection-probe": "iOS strict protection diagnostic",
+    "darwin-host-capability": "Darwin native host capability (${{ matrix.architecture }})",
 }
 
 
@@ -134,6 +142,60 @@ def validation_job(text: str, name: str) -> str:
     if text.count(marker) != 1:
         fail(f"validation workflow requires exactly one job {name!r}")
     return re.split(r"(?m)^  [A-Za-z_][A-Za-z0-9_-]*:\n", text.split(marker, 1)[1], maxsplit=1)[0]
+
+
+def current_verification_artifact_paths(job: str) -> list[str]:
+    """Keep all current/dynamically added module reports and external custody."""
+    prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
+    reports = ["**/build/reports/tests/", "**/build/test-results/**/*.xml"]
+    custody = [prefix + "-ownership.json", prefix + "-stop-*.json"]
+    if job == "desktop-android":
+        paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + reports + custody + [
+            "**/build/reports/androidTests/managedDevice/",
+            "**/build/outputs/androidTest-results/managedDevice/",
+            "**/build/reports/lint-results-*",
+            "composeApp/build/outputs/mapping/release/",
+            "composeApp/build/outputs/bundle/release/*.aab",
+        ]
+    elif job in {"desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64"}:
+        paths = reports + custody
+    elif job == "ios":
+        paths = ["build/ci-evidence/"] + reports + custody + [
+            prefix + "-apple-*-ownership.json", prefix + "-apple-ui-simulator-*.json"]
+    elif job == "ios-release-simulator":
+        paths = ["build/ci-evidence/",
+                 "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
+                 "**/build/reports/detekt/"] + custody + [prefix + "-apple-*-ownership.json"]
+    elif job in {"ios-release-device", "ios-release-x64"}:
+        paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + custody + [prefix + "-apple-*-ownership.json"]
+    else:
+        fail("Unknown current verification artifact job")
+    # These trees remain immutable Git evidence, not outputs of this invocation.
+    return paths + ["!remediation-runs/**", "!docs/archives/**"]
+
+
+def verify_current_verification_artifacts(text: str) -> None:
+    uploads = {
+        "desktop-android": ("Upload verification reports, mappings, and unsigned AAB", "desktop-android-verification"),
+        "desktop-linux-arm64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "desktop-macos-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "desktop-windows-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "ios": ("Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        "ios-release-simulator": ("Upload Apple release verification evidence", "ios-release-verification"),
+        "ios-release-device": ("Upload IosArm64 release verification evidence", "ios-release-device-verification"),
+        "ios-release-x64": ("Upload IosX64 release verification evidence", "ios-release-x64-verification"),
+    }
+    for job, (name, artifact_name) in uploads.items():
+        block = validation_step(validation_job(text, job), name)
+        condition = (ANDROID_RUNTIME_FINALIZER if job == "desktop-android" else
+                     FULL_VERIFICATION_FINALIZER if job.startswith("ios") else "always()")
+        if (re.findall(r"(?m)^        ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
+                ("id", "verification_artifact"), ("if", condition),
+                ("uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"), ("with", "")] or
+                re.findall(r"(?m)^          ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
+                    ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
+                re.findall(r"(?m)^            (\S.*)$", block) != current_verification_artifact_paths(job)):
+            fail("current verification artifact must retain exact current reports/custody and only historical exclusions")
 
 
 def verify_owned_ios_app_launch(text: str) -> None:
@@ -249,9 +311,9 @@ def verify_linux_process_probe(job: str) -> None:
              "Upload Linux process-probe cleanup receipt")
     admission = "Validate Android cleanup source and controls"
     prerequisite = "Install Linux process-probe emulator package"
-    expected = ["Check out source", "Set up JDK 21", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
+    expected = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
                 full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
-    if (re.findall(r"(?m)^      - name: (.*)$", job) != expected or
+    if (re.findall(r"(?m)^      - name: (.*)$", job) != expected + ["Save dependencies from trusted main only"] or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [
                 "${{ inputs.verification_scope == 'linux-process-probe' && 10 || inputs.verification_scope == 'android-cleanup-only' && 45 || 90 }}"]):
@@ -336,7 +398,7 @@ def verify_verification_jdk(job: str) -> None:
 def verify_split_apple_scopes(text: str) -> None:
     """Two independent full jobs retain every gate and exactly their own cycles."""
     runtime_run = "Run all KMP iOS simulator runtime tests"
-    release_run = "Run complete Apple static analysis and release linkage gates"
+    release_run = "Run complete Apple static analysis"
     shared_start = ["Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
                     "Record Xcode toolchain and exact source"]
     shared_end = ["Clean only attested verification outputs", "Upload verification cleanup receipt"]
@@ -348,15 +410,15 @@ def verify_split_apple_scopes(text: str) -> None:
     prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
     for job_id, cycle, run, upload, artifact_name in (
         ("ios", "apple-ui", runtime_run, "Upload Apple runtime verification evidence", "ios-runtime-verification"),
-        ("ios-release", "apple-wrapper", release_run, "Upload Apple release verification evidence", "ios-release-verification"),
+        ("ios-release-simulator", "apple-wrapper", release_run, "Upload Apple release verification evidence", "ios-release-verification"),
     ):
         job = validation_job(text, job_id)
         header = job.split("\n    steps:\n", 1)[0]
-        if (re.findall(r"(?m)^    runs-on: (.*)$", header) != ["macos-15"] or
+        if (re.findall(r"(?m)^    runs-on: (.*)$", header) != ["macos-15" if job_id == "ios" else FREE_APPLE_RELEASE_RUNNER] or
                 re.search(r"(?m)^    (needs|strategy):", header) or
                 re.findall(r"(?m)^      DEVELOPER_DIR: (.*)$", header) != ["/Applications/Xcode_26.3.app/Contents/Developer"]):
             fail("verification scope Apple jobs require independent pinned macOS runners, not a dependency or matrix")
-        if job_id == "ios-release" and (
+        if job_id == "ios-release-simulator" and (
                 re.findall(r"(?m)^    if: (.*)$", header) != [FULL_VERIFICATION_SCOPE] or
                 re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["180"] or "permissions:" in header):
             fail("verification scope Apple release job must be full-only, bounded and inherit read-only contents permission")
@@ -377,16 +439,22 @@ def verify_split_apple_scopes(text: str) -> None:
         if job_id == "ios":
             full_steps += ["Verify effective Debug and Release application identities"]
         full_steps += [run_name, finish]
-        if job_id == "ios-release":
+        if job_id == "ios-release-simulator":
             full_steps += ["Inspect complete unsigned iOS Release package"]
         full_steps += [upload] + shared_end
+        if job_id == "ios-release-simulator":
+            full_steps += ["Publish qualified Apple lane identity"]
         expected_steps = (native_steps if job_id == "ios" else ["Check out source", "Set up JDK 21"]) + full_steps
+        expected_steps.insert(expected_steps.index("Set up JDK 21") + 1, "Restore reviewed Gradle dependencies")
+        expected_steps += ["Save dependencies from trusted main only"]
         if re.findall(r"(?m)^      - name: (.*)$", job) != expected_steps:
             fail("verification scope split Apple jobs require all full gates and immediate finalizers in reviewed order")
         for name in full_steps:
             required = FULL_VERIFICATION_SCOPE
             if name.startswith("Stop Gradle after ") or name in [upload] + shared_end:
                 required = FULL_VERIFICATION_FINALIZER
+            elif name == "Publish qualified Apple lane identity":
+                required = "success() && (" + FULL_VERIFICATION_SCOPE + ")"
             elif name == "Inspect complete unsigned iOS Release package":
                 required = ("success() && steps.apple_wrapper_run.outcome == 'success' && "
                             "steps.apple_wrapper_finish.outcome == 'success' && (" + FULL_VERIFICATION_SCOPE + ")")
@@ -444,13 +512,7 @@ def verify_split_apple_scopes(text: str) -> None:
                 ("PARLOR_VERIFICATION_ARTIFACT_DIGEST", "${{ steps.verification_artifact.outputs.artifact-digest }}")]:
             fail("verification scope Apple cleanup requires only its own two cycles and uploaded custody")
         evidence = validation_step(job, upload)
-        report_paths = (["**/build/reports/tests/", "**/build/test-results/**/*.xml"] if job_id == "ios" else
-                        ["build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
-                         "**/build/reports/detekt/"])
-        paths = ["build/ci-evidence/"] + report_paths + [prefix + suffix for suffix in (
-            "-ownership.json", "-stop-*.json", "-apple-*-ownership.json")]
-        if job_id == "ios":
-            paths.append(prefix + "-apple-ui-simulator-*.json")
+        paths = current_verification_artifact_paths(job_id)
         if (re.findall(r"(?m)^        id: (.*)$", evidence) != ["verification_artifact"] or
                 re.findall(r"(?m)^          (name|if-no-files-found|retention-days|path): (.*)$", evidence) != [
                     ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
@@ -548,13 +610,183 @@ def verify_protection_probe(job: str) -> None:
         fail("verification scope protection probe forbids tokens, app builds and unrelated cleanup helpers")
 
 
+def verify_apple_release_fanout(text: str) -> None:
+    """Preserve the required check; all architectures/custody must join successfully."""
+    simulator = validation_job(text, "ios-release-simulator")
+    output_fields = ("source_sha", "source_tree", "evidence_id", "evidence_sha256", "cleanup_sha256")
+    expected_outputs = [(field, "${{ steps.apple_lane.outputs." + field + " }}") for field in output_fields]
+    publish = validation_step(simulator, "Publish qualified Apple lane identity")
+    if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", publish) != [
+            ("if", "success() && (" + FULL_VERIFICATION_SCOPE + ")"), ("id", "apple_lane"),
+            ("shell", "bash"), ("run", "/usr/bin/python3 -B -m scripts.ci.apple_release_gate lane")]):
+        fail("verification scope Release lane identity must follow successful evidence/cleanup")
+    for job_id in ("ios-release-simulator", "ios-release-device", "ios-release-x64"):
+        header = validation_job(text, job_id).split("\n    steps:\n", 1)[0]
+        if (header.count("    outputs:\n") != 1 or
+                re.findall(r"(?m)^      ([a-z_0-9]+): (.*)$", header) != expected_outputs or
+                re.search(r"(?m)^    (needs|strategy|permissions|continue-on-error):", header)):
+            fail("verification scope Release lanes require independent standard runners and exact custody outputs")
+    shared_names = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies", "Claim fresh verification output ownership",
+                    "Claim apple-aggregate native resource ownership", "Record Xcode toolchain and exact source"]
+    common_finish = ["Stop Gradle after apple-aggregate and retire owned Apple resources",
+                     "Validate iOS plist and privacy manifest"]
+    for job_id, target in (("ios-release-device", "IosArm64"), ("ios-release-x64", "IosX64")):
+        job = validation_job(text, job_id)
+        header = job.split("\n    steps:\n", 1)[0]
+        if (re.findall(r"(?m)^    (if|runs-on|timeout-minutes): (.*)$", header) != [
+                ("if", FULL_VERIFICATION_SCOPE), ("runs-on", FREE_APPLE_RELEASE_RUNNER), ("timeout-minutes", "180")] or
+                re.findall(r"(?m)^      DEVELOPER_DIR: (.*)$", header) != ["/Applications/Xcode_26.3.app/Contents/Developer"]):
+            fail("verification scope Release architecture requires pinned free standard runner/toolchain")
+        run = "Link optimized " + target + " Release framework"
+        upload = "Upload " + target + " release verification evidence"
+        end = [upload, "Clean only attested verification outputs", "Upload verification cleanup receipt",
+               "Publish qualified Apple lane identity", "Save dependencies from trusted main only"]
+        if re.findall(r"(?m)^      - name: (.*)$", job) != shared_names + [run] + common_finish + end:
+            fail("verification scope Release architecture must retain exact ownership/run/retirement/upload order")
+        for name in shared_names + common_finish + [end[2], end[3]]:
+            if validation_step(job, name) != validation_step(simulator, name):
+                fail("verification scope Release architecture changed shared source/toolchain/resource controls")
+        run_step = validation_step(job, run)
+        command = "./gradlew :composeApp:linkReleaseFramework" + target + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        architecture = "arm64" if target == "IosArm64" else "x86_64"
+        binary_target = target[0].lower() + target[1:]
+        # -verify_arch consumes the remaining arguments as architecture names.
+        # The input binary must precede it; an incorrect order fails only after
+        # the expensive optimized link and is not an architecture verification.
+        expected_script = [
+            "set -euo pipefail",
+            'echo "Optimized ' + target + ' Release link; full Apple analysis and Swift packaging run in ios-release-simulator."',
+            command,
+            'binary="composeApp/build/bin/' + binary_target + '/releaseFramework/ComposeApp.framework/ComposeApp"',
+            'test -s "$binary"',
+            'xcrun lipo "$binary" -verify_arch ' + architecture,
+            'file "$binary" | tee build/ci-evidence/release-framework-binary.txt',
+            'shasum -a 256 "$binary" | tee build/ci-evidence/release-framework-binary.sha256',
+        ]
+        if (re.findall(r"(?m)^        (if|id|shell|run): (.*)$", run_step) != [
+                ("if", FULL_VERIFICATION_SCOPE), ("id", "apple_aggregate_run"), ("shell", "bash"), ("run", "|")] or
+                re.findall(r"(?m)^          (.*)$", run_step) != expected_script):
+            fail("verification scope Release architecture must execute its real optimized link and exact binary inspection strictly")
+        expected_upload = validation_step(simulator, "Upload Apple release verification evidence").replace(
+            "name: ios-release-verification", "name: " + job_id + "-verification").replace(
+            "            build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/\n", "")
+        if validation_step(job, upload) != expected_upload:
+            fail("verification scope Release architecture must preserve current evidence and native custody")
+        cleanup = validation_step(job, "Clean only attested verification outputs")
+        expected_cleanup = validation_step(simulator, "Clean only attested verification outputs").replace(
+            '"finish":"${{ steps.apple_aggregate_finish.outcome }}"},\n'
+            '             "apple-wrapper":{"prepare":"${{ steps.apple_wrapper_prepare.outcome }}",'
+            '"run":"${{ steps.apple_wrapper_run.outcome }}","finish":"${{ steps.apple_wrapper_finish.outcome }}"}}',
+            '"finish":"${{ steps.apple_aggregate_finish.outcome }}"}}')
+        if cleanup != expected_cleanup:
+            fail("verification scope Release architecture must finalize only its assigned native cycle")
+    gate = validation_job(text, "ios-release")
+    header = gate.split("\n    steps:\n", 1)[0]
+    if re.findall(r"(?m)^    ([a-z-]+):(?: (.*))?$", header) != [
+            ("if", "always() && (" + FULL_VERIFICATION_SCOPE + ")"),
+            ("name", "iOS release frameworks and Swift wrapper"),
+            ("needs", "[ios-release-simulator, ios-release-device, ios-release-x64]"),
+            ("runs-on", "ubuntu-24.04"), ("timeout-minutes", "5")]:
+        fail("verification scope required Release check must fail closed across all three free-hosted lanes")
+    if re.findall(r"(?m)^      - name: (.*)$", gate) != [
+            "Check out source", "Require all Apple Release architectures and wrapper", "Upload aggregate Apple Release qualification"]:
+        fail("verification scope Release join must check all lane results and publish custody")
+    if validation_step(gate, "Check out source") != validation_step(simulator, "Check out source"):
+        fail("verification scope Release join requires the triggering source")
+    join = validation_step(gate, "Require all Apple Release architectures and wrapper")
+    if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", join) != [
+            ("shell", "bash"), ("env", ""), ("run", "python3 -B -m scripts.ci.apple_release_gate aggregate")] or
+            re.findall(r"(?m)^          ([A-Z_]+): (.*)$", join) != [("PARLOR_APPLE_RELEASE_NEEDS", "${{ toJSON(needs) }}")]):
+        fail("verification scope Release join must validate real needs, never substituted success")
+    if "if:" in validation_step(gate, "Upload aggregate Apple Release qualification"):
+        fail("verification scope Release join evidence must upload only after successful qualification")
+
+
+def verify_free_ci_dependency_cache(text: str) -> None:
+    """GitHub-owned dependency cache; only protected main pushes can write."""
+    lanes = ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+             "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64")
+    key = "parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}"
+    expected = ('        if: ' + FULL_VERIFICATION_SCOPE + '\n'
+                '        id: dependency_cache\n'
+                '        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
+                '        with:\n'
+                '          path: |\n'
+                '            ~/.gradle/caches/modules-2\n'
+                '            ~/.gradle/wrapper/dists\n'
+                '          key: ' + key)
+    save = ("        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'\n"
+            '        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
+            '        with:\n'
+            '          path: |\n'
+            '            ~/.gradle/caches/modules-2\n'
+            '            ~/.gradle/wrapper/dists\n'
+            '          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}')
+    if text.count('uses: actions/cache/restore@') != len(lanes) or text.count('uses: actions/cache/save@') != len(lanes):
+        fail("verification scope requires only reviewed dependency caches in ordinary build lanes")
+    for lane in lanes:
+        body = validation_job(text, lane)
+        cache = validation_step(body, "Restore reviewed Gradle dependencies")
+        if cache.strip("\n") != expected or validation_step(body, "Save dependencies from trusted main only").strip("\n") != save:
+            fail("verification scope dependency-only cache must be read-only except protected main pushes")
+        if not (body.index('- name: Set up JDK 21\n') < body.index('- name: Restore reviewed Gradle dependencies\n') <
+                body.index('- name: Claim fresh verification output ownership\n') < body.index('- name: Save dependencies from trusted main only\n')):
+            fail("verification scope dependency cache must not restore owned build outputs")
+    selections = re.findall(r"(?m)^      apple_release_runner:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
+    if (len(selections) != 1 or
+            re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) != [
+                ("type", "choice"), ("default", "arm64"), ("options", "[arm64, intel]")]):
+        fail("verification scope Apple benchmarking permits only two standard free runner families")
+
+
+DARWIN_CAPABILITY_JOB = """    if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'
+    name: Darwin native host capability (${{ matrix.architecture }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+          - runner: macos-15-intel
+            architecture: x86_64
+    env:
+      PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+      PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+      PARLOR_EXPECTED_ARCHITECTURE: ${{ matrix.architecture }}
+    steps:
+      - name: Check out exact capability source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify real Darwin identity tracking and audit-token signal
+        timeout-minutes: 2
+        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability
+      - name: Preserve native capability receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: darwin-host-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-darwin-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}.json
+"""
+
+
+def verify_darwin_host_capability(text: str) -> None:
+    if validation_job(text, "darwin-host-capability").strip() != DARWIN_CAPABILITY_JOB.strip():
+        fail("verification scope Darwin capability requires its exact free hosted matrix, explicit source/run context and bounded native receipt control")
+
+
 def verify_verification_scopes(text: str) -> None:
     """Only closed reviewed diagnostic/follow-up scopes bypass six mandatory full jobs."""
     jobs_text = text.split("\njobs:\n", 1)[-1]
     jobs = re.findall(r"(?m)^  ([A-Za-z_][A-Za-z0-9_-]*):$", jobs_text)
     expected = list(VERIFICATION_JOBS)
     if jobs != expected:
-        fail("verification scope contract requires exactly six full jobs and one focused protection probe")
+        fail("verification scope contract requires all full lanes, the required Release join, and one focused protection probe")
     for name, display in VERIFICATION_JOBS.items():
         if re.findall(r"(?m)^    name: (.*)$", validation_job(text, name)) != [display]:
             fail("verification scope requires the exact reviewed job/check identities")
@@ -599,7 +831,7 @@ def verify_verification_scopes(text: str) -> None:
             re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
             ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
         fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]\n"):
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
             fail("verification scope must default to full with only the reviewed native, Windows and Linux modes")
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
@@ -628,7 +860,11 @@ def verify_verification_scopes(text: str) -> None:
                 for name in ("Run focused native continuation", "Observe hosted native processes without an app build"))):
         fail("verification scope must reject unknown values before any native execution")
     verify_split_apple_scopes(text)
+    verify_apple_release_fanout(text)
+    verify_free_ci_dependency_cache(text)
+    verify_current_verification_artifacts(text)
     verify_protection_probe(validation_job(text, "ios-protection-probe"))
+    verify_darwin_host_capability(text)
     focused_steps = ("Run focused native continuation", "Upload focused native evidence",
                      "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt")
     for name in focused_steps:
@@ -697,10 +933,45 @@ def verify_validation(text: str) -> None:
     if "fetch-depth: 0" not in desktop_android_job:
         fail("validation workflow review-inventory gate requires full Git history")
     runtime = validation_job(text, "ios")
-    release = validation_job(text, "ios-release")
+    release = validation_job(text, "ios-release-simulator")
+    native_controls = validation_step(runtime, "Run all KMP iOS simulator runtime tests")
+    temporary_scope = '''          (
+          test -d "$RUNNER_TEMP" && test ! -L "$RUNNER_TEMP"
+          test "$(cd -- "$RUNNER_TEMP" && pwd -P)" = "$RUNNER_TEMP"
+          native_control_tmp="$(mktemp -d "$RUNNER_TEMP/parlor-native-controls.XXXXXX")"
+          retire_native_control_tmp() {
+            native_control_status=$?
+            trap - EXIT
+            if ! rmdir -- "$native_control_tmp"; then
+              echo "Native control temporary directory is not empty; preserve it and fail." >&2
+              native_control_status=1
+            fi
+            exit "$native_control_status"
+          }
+          trap 'retire_native_control_tmp' EXIT
+          export TMPDIR="$native_control_tmp"
+'''
+    if (native_controls.count(temporary_scope) != 1 or
+            native_controls.count('          )\n') != 1 or
+            native_controls.count('          retire_native_control_tmp\n          )\n') != 1 or
+            native_controls.count('export TMPDIR=') != 1):
+        fail("macOS diagnostic controls require scoped canonical private temporary ownership and fail-closed retirement")
+    for directory, report in (
+        ("scripts/verification/ios-readiness", "ios-readiness-control-tests.log"),
+        ("remediation-runs/2026-09-08-continuation/protection-application-01", "ios-protection-application-control-tests.log"),
+    ):
+        command = ("/usr/bin/python3 -B -m unittest discover -s " + directory +
+                   " -p 'test_*.py' -v 2>&1 | tee build/ci-evidence/" + report)
+        if (native_controls.count(command) != 1 or
+                re.findall(r"(?m)^          (.*" + re.escape(directory) + r".*)$", native_controls) != [command] or
+                native_controls.index(command) > native_controls.index("./gradlew ") or
+                native_controls.index(command) > native_controls.index('          )\n') or
+                native_controls.index(command) < native_controls.index('export TMPDIR=') or
+                "          set -euo pipefail\n" not in native_controls):
+            fail("validation workflow must run complete macOS diagnostic controls fail-closed before the Apple runtime aggregate")
     for job, name, task in (
         (runtime, "Run all KMP iOS simulator runtime tests", "productionIosSimulatorRuntimeTests"),
-        (release, "Run complete Apple static analysis and release linkage gates", "productionAppleCheck"),
+        (release, "Run complete Apple static analysis", "productionAppleStaticAnalysis"),
     ):
         aggregate = validation_step(job, name)
         command = "./gradlew " + task + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"

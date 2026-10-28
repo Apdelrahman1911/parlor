@@ -189,6 +189,45 @@ and `2026-10-25-AUDIT-INDEX.md`. The parser benchmark is synthetic JVM evidence,
 not RPC or mobile power evidence. Independent review drove fixes for credential
 rotation deletion, saved-scroll identity and detached Gradle cleanup.
 
+## October 27 follow-up
+
+Fresh merged-main run [40418964553](https://github.com/Apdelrahman1911/parlor/actions/runs/40418964553)
+passed all six mandatory lanes at `d72a0d83`. Exact source/upload digests and all
+six cleanup receipts, Android emulator absence and four Apple native-cycle
+claim/stop bindings were independently verified at 01:51:44 UTC. Issue #257 was
+closed after that qualification; physical/security/release acceptance remains
+independent. The preceding aggregate-merge sequencing disclosure is unchanged.
+
+Standalone probe [40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891)
+passed scoped collection/cleanup verification but strict synthetic protection
+remained 0/5. No actual-app/hardware causality is established. Read-only app
+preflight built no app; later confirmed diagnostic drift is tracked in #265.
+[The repair report](2026-10-27-IOS-DIAGNOSTIC-CONTROLS.md) distinguishes reproduced
+defects, supported local test executions, native-only cases and required fresh
+control review. A37/APP04 historical failures and #258 remain open.
+
+At `034de158`, exact-head local `productionCheck allTests` passed with32 executed
+tasks and1,623 valid unchanged-input tasks reused: Desktop1,777 (three real-LAN
+skips), Android646 per Debug/Release variant, GitHub-test107 and release Python690
+(one environment skip); exit0/private stop0/source unchanged. Hosted iOS source/
+artifact/cleanup qualification passed359 readiness/27 application controls with
+no macOS skips,672 KMP Simulator and ten Swift host/UI cases. The native Ghamza
+single-tap journey passed in this run; #267 remains unresolved, not a shipping fix.
+
+Reviewed preflight40473777088 at the same source verified2,346 source files,
+2,385 immutable blobs and115 controls before application dispatch40474753238.
+The copied-app native build/one XCTest and both public-fixture decrypt roundtrips
+passed, but **the overall diagnostic failed**: host-directory links2 before file
+creation were compared with links3 afterward at the same inode. All62 retained
+native hashes and inner/outer cleanup pass; original six raw strict comparisons
+independently remain0/6. New copy-only final-directory evidence retains full
+host size/link-count and per-API/closed-descriptor checks instead of dropping them.
+Two baseline regressions fail;36 revised local application controls pass.
+New templates require new committed-source/full-CI/preflight/native qualification;
+none of source034's older results certify them. See #265 and
+[the diagnostic report](2026-10-27-IOS-DIAGNOSTIC-CONTROLS.md). #258's protection
+root cause/physical acceptance and #267 remain open; no Store release.
+
 ## Environment and safeguards
 
 Linux/JDK21/Gradle8.13; no local Xcode, attached phones or `/dev/kvm`. Hosted CI
