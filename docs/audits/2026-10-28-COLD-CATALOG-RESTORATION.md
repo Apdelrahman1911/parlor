@@ -48,7 +48,7 @@ The first cold-build attempt failed before compilation on Maven Central TLS;
 subsequent default-JDK HTTPS controls returned200 and the strict build downloaded
 normally. No repository override, certificate bypass or metadata regeneration.
 
-## Remaining acceptance
+## Historical pre-merge acceptance checkpoint
 
 See [#273](https://github.com/Apdelrahman1911/parlor/issues/273).
 Committed-source full strict checks, fresh hosted native/architecture checks,
@@ -74,3 +74,18 @@ the full command is failed, not qualified. Original failing XML SHA256:
 `0eba566966bdc9212ba8f51bb390282132bf2cf98ea891e13ea3aa4761352e3f`.
 The429 checkout/observer remains frozen. Final guard correction needs new
 committed-source complete checks and fresh hosted qualification.
+
+## Verified integration and scoped closure — October 28
+
+PR277 normally merged as `aea0e47f610d30cce0adbb3294c9428ac3015648`, with the
+exact qualified16488317 tree. Fresh PR40624827444 and main40634650927
+independently pass all eight producers plus join,20 actual Swift methods,
+677 KMP Simulator cases and source/upload/native/output custody. The corrected
+full local aggregate passes1,817 Desktop cases (three existing LAN skips),
+651 Android cases per Debug/Release variant,112 GitHub-test cases and749 release
+controls (one known Linux skip), including Detekt/lint/R8/unsigned AAB.
+
+#273 is closed against the reproduced shared saver/bounds criteria. Physical
+process death/native restoration, touch/assistive technology and #267's original
+Host-event cause remain explicitly unverified; no private recovery key is saved.
+See [the immutable acceptance report](2026-10-28-FRESH-MAIN-ACCEPTANCE.md).

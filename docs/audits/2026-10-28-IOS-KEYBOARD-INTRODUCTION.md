@@ -58,7 +58,7 @@ source contract protects exact matching, deadline, single input and no replay;
 it **does not execute Swift**. Complete native suite grows16→20 methods; the
 independent cold-catalog change grows shared Simulator cases672→677.
 
-## Status and next qualification
+## Historical pre-merge qualification checkpoint
 
 [#276](https://github.com/Apdelrahman1911/parlor/issues/276) tracks this confirmed
 harness race; #267 retains its separate unresolved input-boundary cause.
@@ -70,3 +70,18 @@ Full committed-source strict checks,
 actual hosted Swift/native execution, protected integration and fresh main
 acceptance remain pending. Linux has no Xcode/UIKit or physical mobile devices.
 No release, security/protection acceptance or mobile performance claim.
+
+## Verified native integration — October 28
+
+PR277 normally merged as `aea0e47f610d30cce0adbb3294c9428ac3015648`.
+Fresh PR40624827444 and actual-main40634650927 independently qualify all eight
+producers plus join, including **all20 actual Swift methods and677 current KMP
+Simulator cases**, zero native failures/errors/skips, and source/upload/native/
+output custody. The four narrow keyboard policy methods and actual EN/AR
+public setup/name journeys execute, rather than relying on Linux source checks.
+
+#276 is closed against these confirmed harness criteria. Unknown future tutorial
+copy still fails closed. The original failed run remains preserved, and #267 is
+reopened for its separate original Host-event cause; no shipping-input sanitizer,
+slower/replayed gesture, timeout increase, physical/security or Store claim.
+See [the acceptance report](2026-10-28-FRESH-MAIN-ACCEPTANCE.md).

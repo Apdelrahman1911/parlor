@@ -110,7 +110,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: '21'
@@ -209,7 +209,7 @@ jobs:
         with:
           subject-path: build/github-distribution/frozen/*
       - name: Upload immutable platform candidate
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ghdist-${{ needs.preflight.outputs.mode }}-${{ needs.preflight.outputs.version_tag }}-${{ matrix.platform }}
           path: build/github-distribution/frozen/*
@@ -252,7 +252,7 @@ jobs:
         with:
           subject-path: build/github-distribution/bundle/*
       - name: Upload immutable complete bundle
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ghdist-${{ needs.preflight.outputs.mode }}-${{ needs.preflight.outputs.version_tag }}-bundle
           path: build/github-distribution/bundle/*

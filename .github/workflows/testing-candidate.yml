@@ -69,7 +69,7 @@ jobs:
           python3 scripts/release/release_tool.py assert-store-identity-approved --platform both
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -152,7 +152,7 @@ jobs:
 
       - name: Reserve this version/build before either signed binary is created
         if: ${{ inputs.publish }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-claim-build-${{ steps.source.outputs.build_number }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -161,7 +161,7 @@ jobs:
 
       - name: Upload preflight evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-preflight-${{ inputs.candidate_sha }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -314,7 +314,7 @@ jobs:
 
       - name: Set up JDK 21
         if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -434,7 +434,7 @@ jobs:
       - name: Upload immutable signed Android candidate
         id: android_upload
         if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -485,7 +485,7 @@ jobs:
 
       - name: Checkpoint immutable Android artifact descriptor before Store mutation
         if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-descriptor-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -494,7 +494,7 @@ jobs:
 
       - name: Retain Android dependency and deep-validation evidence
         if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-validation-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -530,7 +530,7 @@ jobs:
 
       - name: Checkpoint Android Store mutation intent
         if: ${{ inputs.publish && steps.android_state_recovery.outputs.receipt_recovered != 'true' && steps.android_state_recovery.outputs.mutation_intent_recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-mutation-intent-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -586,7 +586,7 @@ jobs:
 
       - name: Upload immutable Android rerun state
         if: ${{ inputs.publish }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-state-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -594,7 +594,7 @@ jobs:
           path: build/release-candidate/android/platform-state.json
 
       - name: Upload sanitized Android Store receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-android-receipt-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -811,7 +811,7 @@ jobs:
 
       - name: Set up JDK 21
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -900,7 +900,7 @@ jobs:
       - name: Upload immutable signed iOS candidate
         id: ios_upload
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -910,7 +910,7 @@ jobs:
 
       - name: Retain signed archive, dSYMs, and export evidence
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-archive-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -963,7 +963,7 @@ jobs:
 
       - name: Checkpoint immutable iOS artifact descriptor before Store mutation
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-descriptor-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -997,7 +997,7 @@ jobs:
 
       - name: Checkpoint Apple Store mutation intent
         if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' && steps.ios_state_recovery.outputs.mutation_intent_recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-mutation-intent-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1052,7 +1052,7 @@ jobs:
 
       - name: Checkpoint accepted Apple upload transport before processing wait
         if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-upload-transport-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1114,7 +1114,7 @@ jobs:
 
       - name: Upload immutable iOS rerun state
         if: ${{ inputs.publish }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-state-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1122,7 +1122,7 @@ jobs:
           path: build/release-candidate/ios/platform-state.json
 
       - name: Upload sanitized Apple Store receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-${{ inputs.candidate_sha }}-ios-receipt-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1216,7 +1216,7 @@ jobs:
 
       - name: Upload immutable candidate manifest
         if: ${{ inputs.publish }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-manifest-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1236,7 +1236,7 @@ jobs:
 
       - name: Upload rehearsal evidence
         if: ${{ !inputs.publish }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-candidate-rehearsal-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error

@@ -1,5 +1,10 @@
 # Free-hosted CI optimization — implementation and benchmark ledger
 
+**Qualified selection, October 28:** retain standard ARM64 as the default.
+Same-source complete ARM52.55min versus Intel107.72min; both independently
+qualify every required lane and custody. See [the measured final comparison](#qualified-same-source-selection).
+The implementation and failed-attempt checkpoints below remain historical.
+
 ## Constraints and baseline
 
 The repository API confirms Parlor is public. Official GitHub documentation,
@@ -322,3 +327,59 @@ not a production gameplay/native-input fix or measured throughput improvement.
 Revised committed source needs fresh complete checks. DefaultARM remains;
 all architectures/optimizedRelease/checks/evidence and free standard runners
 are preserved. No further blind test retry, paid runner or merge qualification.
+
+## Qualified same-source selection
+
+The final comparison uses actual normally merged main
+`aea0e47f610d30cce0adbb3294c9428ac3015648`, tree
+`2e3a20cd0d653c9e8ca4a5eb5b68612b8f2e8f90`, in both profiles.
+[ARM main40634650927](https://github.com/Apdelrahman1911/parlor/actions/runs/40634650927)
+and [Intel dispatch40639850885](https://github.com/Apdelrahman1911/parlor/actions/runs/40639850885)
+independently qualify **all eight producers plus the original Apple join**,
+20 actual Swift methods,677 current KMP Simulator cases, every Desktop lane's
+15 story-matrix cases, exact source/upload/native/output custody. Source is
+frozen throughout; the Intel dispatch occurs once, after ARM qualification,
+without another active Parlor workflow. Independent runtime stays ARM in both.
+
+| Measurement (minutes) | ARM default | Intel Release profile |
+| --- | ---: | ---: |
+| Whole workflow, including queues | **52.55** | 107.72 |
+| Device arm64 lane / optimized link | 52.10 /49.22 | 51.23 /47.82 |
+| Simulator x64 lane / optimized link | 47.52 /46.10 | 33.37 /29.50 |
+| Simulator arm64/Swift lane | 50.52 | 72.53 |
+| That lane's queue offset from creation | 0.07 | 34.80 |
+| Complete Apple static analysis | 1.92 | 8.18 |
+| Normal unsigned optimized Kotlin/Swift wrapper | 46.93 | 59.37 |
+| x64 lane queue offset | 0.08 | 17.15 |
+
+All six Release logs show **exact dependency-cache hits**, isolated by actual
+ARM64/X64 host key. No build outputs, reports, Konan binaries or optimized
+frameworks persist. Each device/x64 link executes136/136 tasks; each wrapper
+analysis executes61/61, then normal embedding executes179/219 with40 valid
+same-job up-to-date tasks. Each optimized target link runs once. Raw task/log
+hashes, step timestamps, labels and cache observations are retained locally.
+
+**Decision: retain ARM64 (`macos-15`) for all three Release lanes.** The original
+two fixed standard selectors and exact guards are unchanged; Intel remains an
+opt-in benchmark alternative, never an arbitrary/paid label. Intel's faster
+x64 stage is not critical, while its wrapper processing and queues make the
+complete profile slower. This selects the fastest fully-qualified **tested**
+configuration, not a universal CPU claim or an unmeasured hybrid profile.
+Queue/account/global runner conditions vary; no queue-time guarantee, statistical
+distribution, physical/mobile CPU/RAM/battery/thermal or RPC result is inferred.
+
+Relative to the older successful173.33-minute complete baseline, ARM52.55min
+is about70% shorter in these observations. PR277's earlier102.63-minute qualified
+run included a long queue; retain that variability and all failed samples rather
+than promising every run finishes in53min. Official free-public standard-runner,
+20-total/five-macOS limits were re-fetched October28. Dependency-cache usage at
+06:00 was5 entries/3,959,625,227 bytes; no billing/cap or infrastructure change.
+
+ARM qualification SHA256:
+`7720f919e013d81489a775267e428596fa5c404f3a7d5ab9c4814b63245911c9`.
+Intel qualification SHA256:
+`e41a20cd8845c64530c7b4f0839446308fb9c9154b4c4bb4b1309f96c5ec91a5`.
+Normal protected PR266/277 integration and fresh-main acceptance qualify the
+optimization. The separate reviewed action update in PR275 must retain its own
+exact-source full/protected/post-merge receipts. #258/#267, device, signing/legal
+and Store ownership/release gates remain independent; no Store publication.
