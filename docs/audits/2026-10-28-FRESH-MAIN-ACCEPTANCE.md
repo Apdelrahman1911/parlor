@@ -54,9 +54,10 @@ Measured composition is not causal build-latency evidence.
 - **P1 #267:** automatically closed by277 and reopened on acceptance review.
   Original synthesized Host event did not transition; its native/Compose cause
   is not established by newer passes, catalog repair or keyboard interruption.
-- **P2 #270:** same-source ARM main52.55min versus Intel40639850885 pending;
-  retain ARM default until full qualification/comparison. Free standard runners
-  only, at most five macOS jobs; no billing/cache-cap change.
+- **P2 #270 accepted comparison:** same-source ARM main52.55min versus fully
+  qualified Intel40639850885 at107.72min; retain ARM default. See the
+  [stage/cache/queue ledger](2026-10-27-FREE-HOSTED-CI.md#qualified-same-source-selection).
+  Free standard runners only, at most five macOS jobs; no billing/cache-cap change.
 - **#251/#252/#253/#259/#260:** implementation integrated, physical/native
   cross-game admission, lifecycle/restore/delete, gameplay and accessibility
   acceptance remain open. Host process death ends the room; cold peer startup

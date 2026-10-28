@@ -1,6 +1,6 @@
 # Project status — 2026-10-28
 
-## Current verified integration (October 28, 05:57 UTC)
+## Verified baseline and CI repair (October 28, 07:36 UTC)
 
 [PR #277](https://github.com/Apdelrahman1911/parlor/pull/277) is **MERGED** as
 `aea0e47f610d30cce0adbb3294c9428ac3015648`, at04:51:17UTC, by normal protected
@@ -22,12 +22,17 @@ See the [fresh-main acceptance report](audits/2026-10-28-FRESH-MAIN-ACCEPTANCE.m
 The fresh ARM64 default run takes **52.55 minutes including queues**, versus
 the older173.33-minute successful baseline (about70% shorter in this observation,
 not a statistical/device benchmark). The **same-source Intel comparison40639850885
-is pending**; ARM64 remains default. Only standard free public-repository
+also fully qualifies, in107.72 minutes**; retain ARM64 as the fastest tested
+complete free profile. Intel's wrapper waits34.80 minutes, then takes72.53 minutes;
+its faster x64 link is not the critical path. [Exact stage/cache/queue evidence](audits/2026-10-27-FREE-HOSTED-CI.md#qualified-same-source-selection)
+discloses the observations, not a universal runner-speed guarantee.
+Only standard free public-repository
 runners are used, within the documented five-macOS limit. No billing/cache-cap
 change or overlapping benchmark is introduced. [PR #275's reviewed action-pin
-repair](audits/2026-10-28-CI-ACTION-PINS.md) includes this qualified baseline
-locally; publishing and fresh full hosted/protected/post-merge acceptance remain
-pending until the benchmark finishes.
+repair](audits/2026-10-28-CI-ACTION-PINS.md) carries this qualified baseline and
+the reviewed exact action contracts. Its [live PR checks and merge receipts](https://github.com/Apdelrahman1911/parlor/pull/275)
+are authoritative for that later source; exact-source full qualification,
+protected integration and fresh main verification remain mandatory.
 
 At this exact merged main, the opt-in real-P2pKit verifier passes3/3 distinct
 Linux host/peer JVM pairs, all six naturally exit0 and owned cleanup passes.
@@ -37,13 +42,15 @@ LAN, native process restoration or mobile CPU/RAM/battery/thermal performance.
 
 **Still open:** #258 strict protection remains0PASS/6FAIL; #267 input causality;
 #251/#252/#253/#259/#260 physical/native gameplay, recovery, persistence and
-accessibility acceptance; #270 final runner comparison; #230 Store ownership,
+accessibility acceptance; #230 Store ownership,
 signing and external release approvals. Linux has no Xcode, physical devices or
 KVM. RPC #524 source changes remain unpublished in the reviewed rc7; retain
 published Parlor0.7.0-rc3 messaging, with no claimed mobile RPC benefit.
 Current executable Store IDs are `me.parlor.android` / `me.parlor.ios`, with
 ownership still blocked; the older AGENTS identity prose is historical.
 No Store workflow is enabled and no production release is published.
+The #270 benchmark acceptance now has both qualified same-source profiles and
+an evidence-backed retained default; its acceptance/readback is linked in the Issue.
 
 **All checkpoints below are historical, not today's integration status.**
 

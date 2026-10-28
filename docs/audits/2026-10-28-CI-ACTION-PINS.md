@@ -64,9 +64,20 @@ disclosed skips. Source is unchanged and owned Gradle stop exits0. Log SHA256
 `6f66d50ba3033a87e67dafe471d5295a08b9f36748c820bd5c8e8148c6273476`.
 Valid caches are reused; this remains Linux engineering evidence, not Apple.
 
-The same-source Intel comparison40639850885 runs at frozen qualified main;
-ARM64 remains default, and this PR is not published while its Mac work competes.
-The newly updated acceptance/report source still requires affected strict/full checks,
-new exact-source hosted qualification and protected integration before275 is
-accepted. No action-update hosted pass, security-policy approval, mobile-device
-result, benchmark winner or Store release is claimed by this checkpoint.
+The same-source Intel comparison40639850885 is now independently fully
+qualified,20 Swift/677 Simulator cases, all eight producers plus join and custody;
+its receipt SHA256 is`e41a20cd8845c64530c7b4f0839446308fb9c9154b4c4bb4b1309f96c5ec91a5`.
+It takes107.72min versus ARM52.55min, including all queues. Retain the already
+qualified ARM default; no runner or exact runner-selection guard changes.
+[The complete comparison](2026-10-27-FREE-HOSTED-CI.md#qualified-same-source-selection)
+retains failed attempts, measured stages/cache hits and limitations.
+
+The documented acceptance source33db4374 also passes the complete strict local
+aggregate in181.2s with the same counts/skips, source unchanged and stop0.
+Log SHA256`2799d44da67f14e83e718336dfee77be8c983fd07be4f761ee232c5452db9de7`.
+These receipts are historical exact-source engineering evidence, not an assertion
+that every later update has executed. Each final changed source must pass affected
+strict/full checks, fresh hosted qualification and protected/post-merge verification.
+Follow [PR275's live checks and retained merge/main receipts](https://github.com/Apdelrahman1911/parlor/pull/275)
+for current integration, rather than inferring it from this source document.
+No security-policy approval, physical-device result or Store release is claimed.
