@@ -13,6 +13,7 @@ import dev.p2pkit.core.SecurityMode
 import dev.p2pkit.core.dsl.jvmSecureIdentityStore
 import dev.p2pkit.core.security.JvmSecureIdentityStore
 import dev.p2pkit.transport.lan.lan
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -30,14 +31,19 @@ internal class LoopbackDeviceFixture(
     initializationDispatcher: CoroutineDispatcher,
     kitFactoryOverride: P2pKitFactory? = null,
 ) {
+    private val realKitAttempts = AtomicInteger()
+    /** Default real-LAN factory attempts only; overrides are separate fake fixtures. */
+    val realKitCreationAttempts: Int get() = realKitAttempts.get()
+
     val identityStore: JvmSecureIdentityStore = LoopbackIdentityStore()
     // Deliberately test-only plaintext storage; no OS keychain or user's identity is opened.
     val secureStorage = PlatformKeyedSecureStorage(InMemorySecureKeyValueBacking())
 
     @OptIn(ExplicitSecurityRisk::class)
     private val kitFactory = kitFactoryOverride ?: object : P2pKitFactory {
-        override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
-            createOwnedP2pKit(initializationDispatcher) {
+        override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
+            realKitAttempts.incrementAndGet()
+            return createOwnedP2pKit(initializationDispatcher) {
                 P2pKit.create {
                     this.appId = appId
                     this.deviceName = deviceName
@@ -50,6 +56,7 @@ internal class LoopbackDeviceFixture(
                     }
                 }
             }
+        }
     }
 
     fun transport(appId: AppId, deviceName: String, scope: CoroutineScope): P2pKitRoomTransport =
