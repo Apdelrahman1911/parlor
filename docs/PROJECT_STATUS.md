@@ -40,7 +40,9 @@ The [continuous elapsed-budget correction](audits/2026-10-29-RECOVERY-ELAPSED-BU
 additionally reproduces clock-rollback renewal and delayed-timer foreground work.
 Final focused tests pass 19 methods without errors/skips; three restored mutation
 controls reject missing elapsed spending. Full exact-source local/hosted checks
-and actual iOS binding/sleep verification remain pending. No phone result claimed.
+remain pending. Original full checks rejected unavailable Mach imports; the
+corrected exposed Apple RAW clock cross-compiles three iOS libraries and passes
+the same 19 methods. Apple linkage/runtime and device sleep remain unverified.
 
 ## Remaining acceptance gates
 

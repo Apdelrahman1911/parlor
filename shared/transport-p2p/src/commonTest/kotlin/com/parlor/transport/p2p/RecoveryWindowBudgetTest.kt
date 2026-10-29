@@ -44,5 +44,7 @@ class RecoveryWindowBudgetTest {
         now = 99L
         assertEquals(0L, budget.remaining(1_000L, 100L, newWindow = false))
         assertEquals(0L, budget.remaining(2_000L, -1L, newWindow = true))
+        val unavailable = RecoveryWindowBudget { -1L }
+        assertEquals(0L, unavailable.remaining(1_000L, 100L, newWindow = true))
     }
 }

@@ -8,6 +8,7 @@ internal class RecoveryWindowBudget(private val elapsedMillis: () -> Long) {
     fun remaining(deadline: Long, requestedDelay: Long, newWindow: Boolean): Long {
         val requested = requestedDelay.coerceAtLeast(0L)
         val now = elapsedMillis()
+        if (now < 0L) return 0L // Platform failure sentinel must not grant a new window.
         val current = window?.takeIf { !newWindow && it.deadline == deadline }
             ?: Window(deadline, now, requested).also { window = it }
         val elapsed = now - current.startedAt

@@ -31,8 +31,10 @@ window; terminal/Leave ownership and stale-deadline guards remain unchanged.
 Impossible or overflowing elapsed readings fail closed.
 
 Android uses `SystemClock.elapsedRealtime()`, which includes deep sleep.
-iOS uses `mach_continuous_time()` with one cached timebase conversion; its
-platform contract includes sleep and availability from iOS 10 (target is 16).
+iOS uses the exposed `clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)` binding.
+Apple implements it with `mach_continuous_time()`, including sleep, available
+from iOS 10 (target is 16). Integer conversion requires no per-read C allocation.
+Its documented error sentinel fails closed, including the first budget reading.
 Desktop uses process-relative `System.nanoTime()`.
 
 Both rooms retain their one existing expiry coroutine. All six callers stop
@@ -42,8 +44,9 @@ polling, wake lock, background entitlement, protocol, dependency or retry deadli
 
 Official references, observed October 29, 2026:
 - [Android SystemClock](https://developer.android.com/reference/android/os/SystemClock)
-- [Apple XNU mach time contract](https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/mach/mach_time.h)
-  (exact observed upstream revision and document hashes retained in local evidence).
+- [Apple clock API and sleep contract](https://github.com/apple-oss-distributions/Libc/blob/71bbe350ab79eef58113991d817ccc6165061a64/gen/clock_gettime.3)
+- [Apple continuous-clock implementation](https://github.com/apple-oss-distributions/Libc/blob/71bbe350ab79eef58113991d817ccc6165061a64/gen/clock_gettime.c)
+  (document and observed Kotlin platform-binding hashes retained locally).
 
 ## Executed verification and limits
 
@@ -61,7 +64,11 @@ expiry at the original deadline and advances only that existing cleanup duration
 
 Full exact-committed-source strict gates, free hosted Android/Apple compilation,
 iOS linkage/runtime tests, normal protected merge and fresh automatic main are
-still required. iOS API binding and real sleep behavior are **unverified locally**.
+still required. The first complete check failed two iOS library compilation
+tasks because the original direct Mach imports are not exported by Kotlin/Native.
+That failure remains retained. The exposed POSIX correction compiles all three
+iOS Kotlin libraries on Linux and independently passes the same 19 Desktop
+methods. This does **not** verify Apple linkage/runtime or actual device sleep.
 Physical Android/iOS locks/calls/suspension/Wi-Fi/process death, simultaneous
 recovery, battery/thermal behavior and strict protected storage remain open.
 Host process death ends the room; no indefinite iOS hosting or migration claim.
