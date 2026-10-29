@@ -60,7 +60,9 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> HostedGameLobby(
 
     LaunchedEffect(transport, route, attempt) {
         error = null
-        when (val result = owner.acquire(route, hostSeed = SecureIds.randomLong()) { mode ->
+        when (val result = owner.acquire(
+            route, hostSeed = SecureIds.randomLong(), retryFailedOpen = attempt > 0,
+        ) { mode ->
             check(mode == MultiplayerOpenMode.Host)
             transport.host(HostConfig(name, maxRemotePlayers = spec.definition.supportedPlayerCounts.last - 1,
                 gameProtocol = HostedGameProtocol(spec.definition.id, spec.version)))

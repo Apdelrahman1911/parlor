@@ -44,3 +44,10 @@ room; no host migration or indefinite iOS hosting is added. #267/#276 original
 input causality, #258 strict protection, six-game accessibility/energy and Store
 ownership/signing/legal approvals remain separate. No paid infrastructure,
 weakened verification, auto-retry of player actions or Store release is used.
+
+## Subsequent host intent correction
+
+The initial alignment above preserves `2b62685d` shipping bytes. A later
+[confirmed host-opening replay](2026-10-29-HOST-OPENING-INTENT.md) is corrected
+by four host acquisition guards, with six actual-App EN/AR regressions. This is
+additional local source, not a retroactive qualification of the earlier alignment.

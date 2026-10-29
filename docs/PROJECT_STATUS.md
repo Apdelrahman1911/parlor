@@ -1,5 +1,21 @@
 # Project status — 2026-10-29
 
+## Additional confirmed host-opening intent defect — focused local fix
+
+Actual Desktop App restoration reproduces two host operations instead of one
+without Retry in all six registered games. The [host-intent correction](audits/2026-10-29-HOST-OPENING-INTENT.md)
+requires explicit Retry after Failed in all four host implementations. Six
+focused methods pass EN/AR200%-text restoration/recreation/Retry journeys;
+retained RED and intermediate rejected fixture attempts remain separate.
+Final committed-source full local/hosted and actual-main verification is pending.
+
+This extends #252's selected cold-recovery/explicit-Retry scope, not #267's
+native Host event cause or physical/native acceptance. The initial alignment
+below preserved the older cold shipping implementation; this subsequent change
+adds only host acquisition intent guards and non-shipping regression tests.
+No paid runner, extra agent, relaxed assertion or Store release.
+
+
 ## Current work — verification repair running; cold recovery locally aligned
 
 PR#286 at `d4219ff41f1217b5c03c27db4a8fb8f459708dca` is draft/open.
