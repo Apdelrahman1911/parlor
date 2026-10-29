@@ -60,6 +60,7 @@ jobs:
       - name: Check source-copy, privacy, exact-result and native SDK controls
         shell: bash
         run: |
+          /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
       - name: Execute one attempt per declared diagnostic arm
         if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'

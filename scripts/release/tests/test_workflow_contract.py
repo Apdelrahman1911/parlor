@@ -965,6 +965,7 @@ class WorkflowContractTest(unittest.TestCase):
             ("permissions:\n  contents: read", "permissions:\n  contents: read\n  id-token: write"),
             ("if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'", "if: false"),
             ("xcode_worker_inventory.py", "run_pin03.py"),
+            ("/usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v", "true"),
         ):
             changed = workflow.replace(before, after)
             self.assertNotEqual(changed, workflow)

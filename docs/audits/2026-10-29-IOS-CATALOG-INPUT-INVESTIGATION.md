@@ -169,3 +169,31 @@ mutation control: same-size fixture writes can preserve filesystem timestamps.
 An actual second bounded byte hash fixes that gap instead of making the fixture
 larger or weakening its assertion. Revised PIN discovery:44methods,41pass and
 3explicit Linux Apple-only skips. This is not actual Xcode inventory execution.
+
+## Verified installed component; exact custody correction (#285)
+
+[Read-only run40812954673](https://github.com/Apdelrahman1911/parlor/actions/runs/40812954673)
+at febe91ce completes successfully. Actual Xcode26.3/17C529 discovery finds one
+component: `Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Versions/A/Resources/DTServiceHub`.
+It is274,304bytes, SHA256
+`c608254350c8f92d08136bcb9772469de6729d1bac10ea54cfab2154b2a99195`.
+Strict signature verification and display exit0; public identifier is
+`com.apple.DTServiceHub`, team`59GAB85EFG`, with the Apple signing chain.
+This identifies the installed SDK component, **not** failed PID66782's lost
+executable identity. The inventory grants no process or cleanup authority.
+
+Add only that exact SDK-relative path to the existing approved executable list.
+Every actual worker must still independently satisfy unchanged effective UID,
+new post-baseline lifetime, exact runner marker, stable executable/generation
+and native audit-token signal checks. Basename variants, other framework versions,
+unknown workers, foreign markers and pre-existing lifetimes remain unauthorized.
+Unknown-worker errors now retain a bounded, normalized public SDK-relative path;
+foreign/control/oversized paths, argv, environments and audit tokens are omitted.
+
+The retained RED control fails exact component admission and missing rejection
+metadata. All70revised Apple hygiene software controls pass locally. The diagnostic
+workflow runs them before its unchanged native source-copy arms. No selectors,
+gestures, deadlines, production workflows, Release builds or architectures change.
+Fresh complete local and actual native three-arm qualification remain required;
+[#285](https://github.com/Apdelrahman1911/parlor/issues/285) stays open pending that
+evidence. The original application input cause and PR#282 remain unresolved.

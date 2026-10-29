@@ -24,6 +24,9 @@ UID = getattr(os, "getuid", lambda: 501)()
 TRACKING = "github_01234567-89ab-cdef-0123-456789abcdef"
 APPLICATION = Path("/Applications/Xcode_26.3.app")
 WORKER = str(APPLICATION / apple.WORKER_PATHS[1])
+SERVICE_HUB = (
+    "Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Versions/A/Resources/DTServiceHub"
+)
 TASK = {"GITHUB_RUN_ID": "123", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "ios"}
 RUNTIME = "com.apple.CoreSimulator.SimRuntime.iOS-18-5"
 DEVICE_TYPE = "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro"
@@ -128,6 +131,87 @@ class WorkerOwnershipTest(unittest.TestCase):
         self.assertEqual(receipt["result"], "FAIL")
         self.assertIn("Unrecognized", receipt["errors"][0]["error"])
         self.assertEqual(backend.signals, [])
+
+    def test_installed_service_hub_is_admitted_only_at_the_exact_reviewed_path(self):
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / SERVICE_HUB))
+        backend = Workers([value])
+        receipt = self.stop(backend)
+        self.assertEqual(receipt["result"], "PASS", receipt)
+        self.assertEqual(backend.signals, [(value, 15)])
+        self.assertEqual(receipt["events"][0]["executable"], SERVICE_HUB)
+        for path in ("Contents/Other/DTServiceHub", SERVICE_HUB + "-copy",
+                     SERVICE_HUB.replace("Versions/A", "Versions/B")):
+            with self.subTest(path=path):
+                backend = Workers([identity(command=str(APPLICATION / path))])
+                self.assertEqual(self.stop(backend)["result"], "FAIL")
+                self.assertEqual(backend.signals, [])
+
+    def test_service_hub_path_does_not_override_lifetime_or_tracking_boundaries(self):
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / SERVICE_HUB))
+        for marker in (None, "another-job", "prefix" + TRACKING):
+            with self.subTest(marker=marker):
+                backend = Workers([value], marker=marker)
+                self.assertEqual(self.stop(backend)["result"], "FAIL" if marker is None else "PASS")
+                self.assertEqual(backend.signals, [])
+        for baseline, started in (([value.lifetime], (2, 0)), ([], (0, 999999))):
+            with self.subTest(baseline=baseline, started=started):
+                self.claim["baseline"] = baseline
+                backend = Workers([identity(command=value.command, started=started)])
+                self.assertEqual(self.stop(backend)["result"], "PASS")
+                self.assertEqual(backend.signals, [])
+
+    def test_exact_service_hub_cannot_authorize_another_uid(self):
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / SERVICE_HUB))._replace(uid=UID + 1)
+        backend = Workers([value])
+        backend.tracking_id = Mock(side_effect=AssertionError("Foreign worker must not be inspected"))
+        self.assertEqual(self.stop(backend)["result"], "FAIL")
+        self.assertEqual(backend.signals, [])
+        backend.tracking_id.assert_not_called()
+
+    def test_service_hub_generation_or_marker_change_revokes_grant_after_term(self):
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / SERVICE_HUB))
+        for change in ("generation", "marker"):
+            with self.subTest(change=change):
+                backend = Workers([value], retire_on=None)
+                original = backend.signal
+                def revoke(worker, signum):
+                    original(worker, signum)
+                    if change == "generation":
+                        backend.values[worker.pid] = worker._replace(token=worker.token[:-1] + (2,))
+                    else:
+                        backend.marker = "another-job"
+                    return True
+                backend.signal = revoke
+                self.assertEqual(self.stop(backend)["result"], "FAIL")
+                self.assertEqual(backend.signals, [(value, 15)])
+
+    def test_unknown_worker_receipt_retains_only_bounded_sdk_relative_executable(self):
+        relative = "Contents/Unreviewed/DTServiceHub"
+        backend = Workers([identity(command=str(APPLICATION / relative))])
+        receipt = self.stop(backend)
+        self.assertEqual(receipt["result"], "FAIL")
+        self.assertEqual(receipt["errors"][0]["executable"], relative)
+        self.assertNotIn(TRACKING, json.dumps(receipt))
+        self.assertNotIn(str(APPLICATION), json.dumps(receipt))
+        self.assertEqual(backend.signals, [])
+
+    def test_worker_receipt_omits_foreign_ambiguous_control_and_oversized_paths(self):
+        commands = ("/private/DO_NOT_RETAIN/DTServiceHub", str(APPLICATION) + "/Contents/../private",
+                    str(APPLICATION) + "/Contents//worker", str(APPLICATION) + "/Contents/worker\nPRIVATE",
+                    str(APPLICATION) + "/Contents/" + "x" * 513)
+        for command in commands:
+            with self.subTest(command=command):
+                backend = Workers([identity(command=command)])
+                receipt = self.stop(backend)
+                self.assertEqual(receipt["result"], "FAIL")
+                self.assertNotIn("executable", receipt["errors"][0])
+                self.assertNotIn("DO_NOT_RETAIN", json.dumps(receipt))
+                self.assertNotIn("PRIVATE", json.dumps(receipt))
+                self.assertEqual(backend.signals, [])
 
     def test_denied_identity_api_fails_without_numeric_pid_fallback(self):
         backend = Workers([identity()])
