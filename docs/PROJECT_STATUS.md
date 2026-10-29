@@ -1,6 +1,6 @@
 # Project status — 2026-10-29
 
-## Current main qualification failed; independent reliability follow-up
+## Current main and first reliability PR qualification failed
 
 Selected-Resume PR#281 merged as `7c87a8726bab4da85cbd3824b30d2fcc709ad894`.
 Its fresh [main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
@@ -12,8 +12,17 @@ unmerged; its separate completed catalog-event failure is unresolved.
 The [independent reliability follow-up](audits/2026-10-29-VERIFICATION-RELIABILITY.md)
 prepares the evidenced exact Xcode worker cleanup correction for proper main
 integration and registers six synthetic credential-availability regressions.
-Focused tests and restored sensitivity controls pass; fresh committed-source
-full local/hosted checks and normal protected integration remain required.
+Its [first PR run40847924214](https://github.com/Apdelrahman1911/parlor/actions/runs/40847924214)
+at066947c8 also **failed** the Arabic exact-value test:19Swift passes/1failure;
+seven other producers and the Apple Release join pass. The original recording
+shows delayed visible input and Apple QuickPath after the unchanged deadline,
+not a proven shipping sanitizer or storage-test defect. It is not merged.
+
+The [bounded native-observer follow-up](audits/2026-10-29-NATIVE-VALUE-FOLLOWUP.md)
+now brings only two test/contract files from PR#282 into this independent scope,
+plus the [measured output-index optimization](audits/2026-10-29-VERIFICATION-OUTPUT-INDEX.md).
+Focused tests and sensitivity controls do not replace fresh committed-source
+full local/hosted checks, normal protected integration and automatic actual-main.
 It changes no shipping gameplay, native gestures, deadlines, architectures,
 Release optimization, dependency verification or release authorization.
 

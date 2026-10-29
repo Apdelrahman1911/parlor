@@ -6,6 +6,9 @@ This small main-based change separates verified tooling and regression coverage
 from unresolved native input loss. Base is `7c87a8726bab4da85cbd3824b30d2fcc709ad894`;
 its production run40759303257 failed. PR#282 stays draft and unmerged.
 No cold-recovery implementation or copied input-observation harness is included.
+After its first failed full PR run, the scope also includes the separately
+reviewed native observer/control follow-up and indexed output checks below;
+the older no-Swift-change PR description is a historical checkpoint.
 
 ## Exact Xcode worker custody — #285
 
@@ -37,6 +40,22 @@ regressions fail, respectively; no errors/skips and all owned stops succeed.
 These controls inject before backing-store mutation: they do not prove partial-
 write atomicity, locked Keychain, OS process death, phone networking or battery use.
 No shipping store correction was required by these tested paths.
+
+## First full PR failure and bounded follow-up
+
+[40847924214](https://github.com/Apdelrahman1911/parlor/actions/runs/40847924214)
+at066947c8 completes failed:19Swift passes/1Arabic exact-value failure; seven
+other producers and the optimized Apple join pass. Owned cleanup PASS does not
+qualify a failed native test. Original artifact and referenced recording are
+retained; later visible input/Apple tutorial do not satisfy the earlier deadline.
+
+The [native follow-up](2026-10-29-NATIVE-VALUE-FOLLOWUP.md) copies only the two
+bounded observer/source-contract files from PR#282, adding three native exact-
+comparison controls without merging its branch or claiming an input-cause fix.
+The [output index](2026-10-29-VERIFICATION-OUTPUT-INDEX.md) preserves ownership
+semantics and measures a sub-second local function gain, not overall CI speed.
+Combining these small verification scopes avoids a separate full hosted run;
+the combined new source still requires all original production checks.
 
 ## Required verification
 
