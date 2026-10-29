@@ -71,6 +71,20 @@ Final documentation-source gates and fresh hosted/native qualification follow;
 [existing #284](https://github.com/Apdelrahman1911/parlor/issues/284) records protected
 integration/actual-main acceptance separately from original input causality.
 
+## Current diagnostic integration qualification
+
+[Draft #289](https://github.com/Apdelrahman1911/parlor/pull/289) targets main.
+Its first production attempt40930610448 fails iOS readiness before KMP/Swift tests:
+imported controls require historical Git objects absent from the shallow lane.
+Actual missing-history RED is retained; eight hash-bound full original-file fixtures
+make the software controls hermetic without new fetches, newer-source fallback or
+production workflow changes. All 20 affected methods and seven fixture adversaries
+execute successfully without those objects. Native diagnostics still archive the
+actual original Git source, not these fixtures. New complete counts: 84 standalone
+and 446 ordinary readiness methods. Fresh final-source/full-hosted/native acceptance
+and protected merge remain; first failed source never qualifies. See the scoped
+report and #284 for live acceptance; original input causality stays separate.
+
 ## Outstanding acceptance gates
 
 - **Release:** #230 Store identity/ownership; #258 Strict Complete Protection

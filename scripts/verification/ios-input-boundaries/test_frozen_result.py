@@ -4,13 +4,13 @@ import io
 import json
 from pathlib import Path
 import stat
-import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
 
 import review_frozen_result as review
+import frozen_sources
 
 
 def metadata():
@@ -63,7 +63,7 @@ class FrozenResultControls(unittest.TestCase):
             review.settlement_lines({'emittedOutput': line + ', snapshotErrorCode=nil'})
 
     def test_schema_is_bound_to_the_actual_frozen_driver_bytes_and_emit_fields(self):
-        raw = subprocess.check_output(['git', 'show', review.SOURCE + ':' + review.DRIVER], cwd=review.ROOT)
+        raw = frozen_sources.load(review.SOURCE, review.DRIVER, review.DRIVER_SHA256)
         self.assertEqual(hashlib.sha256(raw).hexdigest(), review.DRIVER_SHA256)
         driver = raw.decode()
         body = driver.split('private func tapSettledControl(', 1)[1].split('private func verifyKeyboardCycle(', 1)[0]

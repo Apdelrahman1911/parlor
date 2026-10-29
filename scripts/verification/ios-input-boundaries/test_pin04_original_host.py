@@ -1,7 +1,6 @@
 """Frozen original-source software controls; never build, launch, or contact a device."""
 import hashlib
 from pathlib import Path
-import subprocess
 import tempfile
 import unittest
 
@@ -10,6 +9,7 @@ import pin02_capture
 import pin03_catalog_copy as catalog
 import pin04_original_host as original
 import run_pin03 as runner
+import frozen_sources
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -17,10 +17,10 @@ ROOT = Path(__file__).resolve().parents[3]
 class OriginalHostControls(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # Local immutable history only; full source history is required by the workflow.
-        cls.sources = {path: subprocess.check_output(
-            ['git', 'show', original.FROZEN_SOURCE + ':' + path], cwd=ROOT, timeout=15).decode()
-            for path in original.FROZEN_INPUTS}
+        # Exact full original bytes and existing renderer pins; no history fetch
+        # or newer-checkout fallback in ordinary shallow-checkout unit controls.
+        cls.sources = {path: frozen_sources.load(original.FROZEN_SOURCE, path, digest).decode()
+                       for path, digest in original.FROZEN_INPUTS.items()}
         cls.digests = {path: hashlib.sha256(value.encode()).hexdigest()
                        for path, value in cls.sources.items()}
 

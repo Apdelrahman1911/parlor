@@ -146,3 +146,15 @@ outputs are not accepted by suffix. Intake, hashes, regular owned outputs, singl
 attempts, exact results and resource custody remain mandatory. All diagnostic
 software controls, including artifact and worker guards, join ordinary readiness
 discovery; its green result is not application or full-neutrality acceptance.
+
+## Hermetic ordinary controls
+
+Production iOS checkout is shallow. Software controls read eight full original
+source-file fixtures under `fixtures/`, bound to the unchanged original renderer/
+decoder digests and independently pinned commit/tree/blob provenance. They do not
+fetch history or fall back to newer source. Reject changed/missing/oversized files,
+unknown bindings, links and changing descriptors. Seven adversarial methods join
+ordinary discovery (84 standalone/446 ordinary readiness controls). These fixture
+bytes are test inputs only; native diagnostics still materialize the explicitly
+selected actual Git commit. No architecture, Release optimization, dependency,
+shipping observer or production-workflow change is needed.

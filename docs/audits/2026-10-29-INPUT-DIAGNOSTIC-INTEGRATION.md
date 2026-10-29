@@ -85,6 +85,33 @@ owned stop0; shipping source stays untouched. Receipt SHA256
 This is current-source Desktop execution, not UIKit arbitration/timing neutrality,
 original lost-input causality, physical-device or energy verification.
 
+## Shallow-checkout integration regression
+
+Fresh [PR40930610448](https://github.com/Apdelrahman1911/parlor/actions/runs/40930610448)
+at `2a7d22a0` fails its iOS readiness step **before KMP/Swift runtime execution**.
+Two imported controls call `git show` for `9d4f369d`/`841a0b06`, absent from that
+lane's shallow checkout. The diagnostic workflow has full history and its controls
+pass; local full-history success did not cover this integration boundary. The
+original failed job/log remains retained, never rerun or relabeled successful.
+
+Make these software controls hermetic, without widening production checkout or
+fetching 1.3 GiB historical source trees. Eight full original source-file fixtures
+(107,395 bytes) match existing renderer/decoder SHA256 pins and fixed Git blobs/
+commits/trees. Their manifest is independently hash-bound. Reject unknown bindings,
+changed/missing/oversized bytes, symbolic/hard links and changing descriptors; no
+Git/network/newer-source fallback. Native investigation **still archives the actual
+explicit original Git commit**; fixtures never become app/build inputs.
+
+An actual owned-source execution without either historical Git object preserves
+RED (15 methods run/two errors, five setup methods unavailable), then executes all
+20 original affected methods GREEN and seven fixture adversaries: 27 passes,
+zero errors/skips, objects still absent and no fetch. Removing either actual-loader
+hash guard produces one assertion failure; corrected seven pass, no errors/skips.
+Complete standalone controls now total 84; ordinary readiness totals 446. Fresh
+final-source Linux and hosted qualification remains necessary. The first native
+run retains its exact clean sparse `2a7d22a0` source for independent readback while
+the separate coding worktree is corrected; no old run/source/receipt is rewritten.
+
 ## Required qualification and remaining limits
 
 Fresh base-main40916055035 independently qualifies PR #288's actual merged
