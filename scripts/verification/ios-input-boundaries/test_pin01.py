@@ -103,7 +103,10 @@ class CopyControls(unittest.TestCase):
         text = (copies.HERE / 'PIN01Observation.kt.in').read_text()
         for required in ('DoubleArray(CAPACITY * WIDTH)', 'const val CAPACITY = 512',
                          'if (!armed && kind != 4) return', 'armed = value == 0',
-                         'DisposableEffect(Unit) { onDispose { PIN01Observation.publicStage(5) } }',
+                         'DisposableEffect(owner)', 'PIN01Observation.mount(owner)',
+                         'onDispose { PIN01Observation.unmount(owner) }',
+                         'scopes.size == 8', 'it.owner === owner',
+                         'if (scopes.lastOrNull() === scope) publicStage(value)',
                          'PointerEventPass.Initial', 'PointerEventPass.Final', 'changes.count { it.isConsumed }'):
             self.assertIn(required, text)
         for forbidden in ('.consume(', 'awaitFirstDown', 'waitForUpOrCancellation', 'delay(', 'println(',

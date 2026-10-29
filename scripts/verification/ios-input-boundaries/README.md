@@ -51,6 +51,12 @@ Preserve original event duration, selectors, deadlines, permission behavior,
 network tripwire and typed-name equality predicates. Do not slow/replay input,
 retry a failure automatically, grant permissions or start a room to get green.
 
+Copied recording uses bounded mount-ordered scope ownership: an outgoing Nav3
+entry must not disarm its incoming successor. `PIN03NavigationScopeTest.kt.in`
+and the recorder fixture exercise this actual Desktop lifecycle counterexample;
+see `docs/audits/2026-10-29-INPUT-RECORDER-SCOPE.md`. Earlier recorder buffers may
+miss callbacks that really executed. Missing rows never identify an input cause.
+
 `pin01_receipts.decode` rejects unknown/private/duplicate fields, nonnumeric or
 nonfinite rows, invalid enums/geometry/time, clock reversal and incomplete buffers.
 `public_boundaries` reports presence/count only: missing evidence does **not**

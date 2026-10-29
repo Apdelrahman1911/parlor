@@ -3,6 +3,7 @@ package com.parlor.app.inputcopy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,6 +26,31 @@ open class PIN01Recorder {
     private var overflow = 0
     private var invalid = 0
     private var stage = -1
+    private class PublicScope(val owner: Any, var stage: Int? = null)
+    private val scopes = ArrayList<PublicScope>()
+
+    fun mount(owner: Any) {
+        if (scopes.any { it.owner === owner }) return
+        if (scopes.size == 8) {
+            invalid = (invalid + 1).coerceAtMost(CAPACITY)
+            return
+        }
+        scopes.add(PublicScope(owner))
+    }
+
+    fun publicStage(value: Int, owner: Any) {
+        val scope = scopes.firstOrNull { it.owner === owner } ?: return
+        scope.stage = value
+        if (scopes.lastOrNull() === scope) publicStage(value)
+    }
+
+    fun unmount(owner: Any) {
+        val index = scopes.indexOfFirst { it.owner === owner }
+        if (index < 0) return
+        val wasActive = index == scopes.lastIndex
+        scopes.removeAt(index)
+        if (wasActive) publicStage(scopes.lastOrNull()?.stage ?: 5)
+    }
     var armed = false
         private set
     var nativeMode = 0
@@ -92,8 +118,12 @@ object PIN01Observation : PIN01Recorder()
 
 @Composable
 fun PIN01PublicStage(value: Int) {
-    DisposableEffect(Unit) { onDispose { PIN01Observation.publicStage(5) } }
-    SideEffect { PIN01Observation.publicStage(value) }
+    val owner = remember { Any() }
+    DisposableEffect(owner) {
+        PIN01Observation.mount(owner)
+        onDispose { PIN01Observation.unmount(owner) }
+    }
+    SideEffect { PIN01Observation.publicStage(value, owner) }
 }
 
 /** Observe Initial/Final only; never consume, delay or recognize a gesture. */

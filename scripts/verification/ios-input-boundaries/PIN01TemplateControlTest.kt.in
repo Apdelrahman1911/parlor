@@ -29,6 +29,74 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class PIN01TemplateControlTest {
     @Test
+    fun older_scope_disposal_does_not_close_an_equal_stage_successor() {
+        val recorder = PIN01Recorder()
+        val older = Any()
+        val newer = Any()
+        recorder.mount(older)
+        recorder.publicStage(0, older)
+        recorder.mount(newer)
+        recorder.publicStage(0, newer)
+        recorder.unmount(older)
+        assertTrue(recorder.armed)
+        recorder.callback(1)
+        val rows = Json.parseToJsonElement(recorder.snapshot()).jsonObject.getValue("rows").jsonArray
+        assertEquals(1, rows.count { it.jsonArray[1].jsonPrimitive.double == 3.0 })
+        recorder.unmount(newer)
+        assertFalse(recorder.armed)
+    }
+
+    @Test
+    fun older_recomposition_cannot_take_over_the_newest_mounted_scope() {
+        val recorder = PIN01Recorder()
+        val older = Any()
+        val newer = Any()
+        recorder.mount(older)
+        recorder.publicStage(0, older)
+        recorder.mount(newer)
+        recorder.publicStage(0, newer)
+        recorder.publicStage(3, older)
+        assertTrue(recorder.armed)
+        recorder.unmount(newer)
+        assertFalse(recorder.armed)
+        recorder.unmount(older)
+    }
+
+    @Test
+    fun active_disposal_restores_the_remaining_scope_without_reviving_a_removed_owner() {
+        val recorder = PIN01Recorder()
+        val older = Any()
+        val newer = Any()
+        recorder.mount(older)
+        recorder.publicStage(0, older)
+        recorder.mount(newer)
+        recorder.publicStage(1, newer)
+        assertFalse(recorder.armed)
+        recorder.unmount(newer)
+        assertTrue(recorder.armed)
+        recorder.publicStage(3, newer)
+        assertTrue(recorder.armed)
+        recorder.unmount(older)
+        recorder.unmount(newer)
+        recorder.publicStage(0, older)
+        assertFalse(recorder.armed)
+    }
+
+    @Test
+    fun scope_overflow_is_bounded_and_marks_evidence_invalid_without_throwing() {
+        val recorder = PIN01Recorder()
+        val owners = List(10) { Any() }
+        owners.forEach { recorder.mount(it) }
+        recorder.publicStage(0, owners[7])
+        recorder.publicStage(3, owners[9])
+        assertTrue(recorder.armed)
+        val report = Json.parseToJsonElement(recorder.snapshot()).jsonObject
+        assertEquals(2, report.getValue("invalid").jsonPrimitive.int)
+        owners.forEach { recorder.unmount(it) }
+        assertFalse(recorder.armed)
+    }
+
+    @Test
     fun actual_public_card_delivers_one_callback_with_initial_and_final_samples() = runComposeUiTest {
         var callbacks = 0
         setContent {
