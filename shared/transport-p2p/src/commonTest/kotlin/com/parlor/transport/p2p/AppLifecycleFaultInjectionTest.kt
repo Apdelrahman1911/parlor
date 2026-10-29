@@ -17,7 +17,7 @@ class AppLifecycleFaultInjectionTest {
         val failure = IllegalStateException("injected retention failure")
         val observed = mutableListOf<Exception>()
         val room = FaultRoom(retainFailure = failure)
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, observed::add)
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, observed::add, elapsedMillis = { testScheduler.currentTime })
         coordinator.register("room", room)
         coordinator.backgrounded(0L)
         repeat(100) { coordinator.backgrounded(0L) }
@@ -36,7 +36,7 @@ class AppLifecycleFaultInjectionTest {
         val failure = IllegalStateException("injected validation failure")
         val observed = mutableListOf<Exception>()
         val room = FaultRoom(validationFailure = failure)
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, observed::add)
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, observed::add, elapsedMillis = { testScheduler.currentTime })
         coordinator.register("room", room)
         coordinator.backgrounded(0L)
         advanceTimeBy(1_000L)
@@ -54,7 +54,7 @@ class AppLifecycleFaultInjectionTest {
     fun clockRollbackCannotValidateRetainedSocketOrCreateANewGraceWindow() = runTest {
         var now = 1_000L
         val room = FaultRoom()
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { now })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { now }, elapsedMillis = { testScheduler.currentTime })
         coordinator.register("room", room)
         coordinator.backgrounded(now)
         now = 999L
@@ -63,15 +63,15 @@ class AppLifecycleFaultInjectionTest {
         runCurrent()
 
         assertEquals(0, room.validations)
-        assertEquals(listOf(1_000L to 999L), room.suspensions)
-        assertEquals(listOf(999L), room.foregrounds)
+        assertEquals(listOf(1_000L to 1_000L), room.suspensions)
+        assertEquals(listOf(1_000L), room.foregrounds)
         assertEquals(1, room.retentions)
     }
 
     @Test
     fun repeatedShortInterruptionsDoNotLeakOldExpiryJobsIntoTheActiveRoom() = runTest {
         val room = FaultRoom()
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         coordinator.register("room", room)
         repeat(100) {
             coordinator.backgrounded(testScheduler.currentTime)

@@ -244,7 +244,7 @@ class BackgroundConnectionRetentionTest {
     @Test
     fun foregroundPreparationSharesTheBoundedValidationBudget() = runTest {
         val session = FakeP2pSession(peer("host", "Host"))
-        val retention = BackgroundConnectionRetention { testScheduler.currentTime }
+        val retention = BackgroundConnectionRetention(nowMillis = { testScheduler.currentTime })
         retention.register(Validator())
         assertNotNull(retention.retain(0L, 15_000L, listOf(session)))
         val returning = async { retention.resume(0L) { CompletableDeferred<Unit>().await() } }
@@ -259,7 +259,7 @@ class BackgroundConnectionRetentionTest {
     @Test
     fun eachValidatorRegistrationOwnsADistinctTokenEvenWhenTheValidatorIsReused() = runTest {
         val session = FakeP2pSession(peer("host", "Host"))
-        val retention = BackgroundConnectionRetention { 0L }
+        val retention = BackgroundConnectionRetention(nowMillis = { 0L })
         val validator = Validator()
         val detachOld = retention.register(validator)
         assertNotNull(retention.retain(0L, 15_000L, listOf(session)))
@@ -276,7 +276,7 @@ class BackgroundConnectionRetentionTest {
     fun validatorReplacementAndClockRollbackInvalidateRetainedWindow() = runTest {
         val session = FakeP2pSession(peer("host", "Host"))
         var now = 100L
-        val retention = BackgroundConnectionRetention { now }
+        val retention = BackgroundConnectionRetention(nowMillis = { now })
         val old = Validator()
         val detachOld = retention.register(old)
         assertNotNull(retention.retain(100L, 15_100L, listOf(session)))
@@ -288,6 +288,59 @@ class BackgroundConnectionRetentionTest {
         assertFalse(retention.acceptsRemoteCommands)
         assertFalse(retention.resume(now))
         assertNull(retention.retain(100L, 15_100L, listOf(session)))
+    }
+
+    @Test
+    fun hostStopsRetainedRemoteCommandsAtElapsedDeadlineEvenIfWallTimeAndTimersAreStale() = runTest {
+        val fixture = Fixture(this, host = true)
+        fixture.open()
+        fixture.background()
+        fixture.elapsedOffset = AppLifecycleRoomCoordinator.CONNECTION_GRACE_MS
+        assertFalse(fixture.room.acceptsRemoteGameCommands)
+        fixture.room.leave()
+    }
+
+    @Test
+    fun peerRejectsRetainedValidationAtElapsedDeadlineEvenIfWallTimeAndTimersAreStale() = runTest {
+        val fixture = Fixture(this)
+        fixture.open()
+        fixture.background()
+        fixture.elapsedOffset = AppLifecycleRoomCoordinator.CONNECTION_GRACE_MS
+        assertFalse((fixture.room as AppLifecycleAwareRoom).resumeRetainedConnection(0L))
+        assertEquals(0, fixture.validator.calls)
+        fixture.room.leave()
+    }
+
+    @Test
+    fun pendingValidationCannotRestoreAfterTheElapsedGraceExpires() = runTest {
+        val fixture = Fixture(this)
+        fixture.open()
+        fixture.background()
+        fixture.elapsedOffset = 14_999L
+        fixture.validator.response = CompletableDeferred()
+        val returning = async { fixture.foreground() }
+        runCurrent()
+        assertEquals(1, fixture.validator.calls)
+        fixture.elapsedOffset = 15_000L
+        fixture.validator.response?.complete(true)
+        returning.await()
+        assertIs<RoomLifecycleState.Resuming>(fixture.room.lifecycle.value)
+        assertFalse(fixture.room.acceptsLocalGameCommands)
+        assertEquals(1, fixture.session.closeCalls)
+        fixture.room.leave()
+    }
+
+    @Test
+    fun delayedRetentionExpiryCannotRenewTheTotalPeerRecoveryBudget() = runTest {
+        val fixture = Fixture(this)
+        fixture.open()
+        fixture.background()
+        fixture.elapsedOffset = P2pKitRoomTransport.APP_RESUME_GRACE_MS
+        fixture.foreground()
+        assertEquals(RoomLifecycleState.Expired, fixture.room.lifecycle.value)
+        assertEquals(0, fixture.validator.calls)
+        assertFalse(fixture.room.acceptsLocalGameCommands)
+        fixture.room.leave()
     }
 
     private class Validator : ForegroundConnectionValidator {
@@ -306,17 +359,19 @@ class BackgroundConnectionRetentionTest {
         private val codec = RoomMessageCodec()
         val validator = Validator()
         var wallOffset = 0L
+        var elapsedOffset = 0L
+        private val elapsed get() = test.testScheduler.currentTime + elapsedOffset
         private val now get() = test.testScheduler.currentTime + wallOffset
-        private val coordinator = AppLifecycleRoomCoordinator(test.backgroundScope, { now })
+        private val coordinator = AppLifecycleRoomCoordinator(test.backgroundScope, { now }, elapsedMillis = { elapsed })
         val room: LocalRoom = if (host) {
             HostP2pRoom(
                 kit, "ABCDEF", "Host", PlayerId("host"), 5,
-                scope = test.backgroundScope, codec = codec, currentTimeMillis = { now },
+                scope = test.backgroundScope, codec = codec, currentTimeMillis = { now }, recoveryElapsedMillis = { elapsed },
             )
         } else {
             PeerP2pRoom(
                 kit, session, session.peer, "ABCDEF", test.backgroundScope, codec,
-                hostDisplayName = "Host", currentTimeMillis = { now },
+                hostDisplayName = "Host", currentTimeMillis = { now }, recoveryElapsedMillis = { elapsed },
             )
         }
 
