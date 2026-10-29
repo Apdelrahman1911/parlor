@@ -1,4 +1,29 @@
-# Project status — 2026-10-28
+# Project status — 2026-10-29
+
+## Current main qualification failed; independent reliability follow-up
+
+Selected-Resume PR#281 merged as `7c87a8726bab4da85cbd3824b30d2fcc709ad894`.
+Its fresh [main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
+**failed** exact typed-value verification in the Arabic iOS setup journey.
+Older successful main40731239367 qualifies `0bb8d5a5`, not current main.
+[PR#282](https://github.com/Apdelrahman1911/parlor/pull/282) remains draft/open/
+unmerged; its separate completed catalog-event failure is unresolved.
+
+The [independent reliability follow-up](audits/2026-10-29-VERIFICATION-RELIABILITY.md)
+prepares the evidenced exact Xcode worker cleanup correction for proper main
+integration and registers six synthetic credential-availability regressions.
+Focused tests and restored sensitivity controls pass; fresh committed-source
+full local/hosted checks and normal protected integration remain required.
+It changes no shipping gameplay, native gestures, deadlines, architectures,
+Release optimization, dependency verification or release authorization.
+
+Diagnostic40833776865 passes six actual original/Compose/native EN/AR methods
+on iOS18.5; no failed-only recorder capture executes. That green does not prove
+the original iOS26.2 input cause, full native neutrality, production acceptance
+or physical-device security/lifecycle/power behavior. #267/#276/#283 and
+physical/Store/signing/protection gates remain open. No extra agent or paid runner.
+
+The sections below retain historical checkpoints, not newer-main qualification.
 
 ## Catalog accepted; Resume safeguard awaiting fresh integration qualification
 
