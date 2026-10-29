@@ -39,6 +39,16 @@ The prose documents were relocated as follows; filenames are unchanged:
 | `docs/AGENT_CONTINUATION_2026-09-08_LINUX.md` | [handoffs/AGENT_CONTINUATION_2026-09-08_LINUX.md](handoffs/AGENT_CONTINUATION_2026-09-08_LINUX.md) |
 | `docs/BRANCH_CONSOLIDATION_2026-09-12.md` | [handoffs/BRANCH_CONSOLIDATION_2026-09-12.md](handoffs/BRANCH_CONSOLIDATION_2026-09-12.md) |
 
+## Dated execution-status snapshots
+
+The current `docs/PROJECT_STATUS.md` is a short current checkpoint, not an
+append-only execution diary. Its October 29 accumulated checkpoints at source
+`5456d76ab50ceb1ad6a353532504588b0d54fa7d` are preserved byte-for-byte in
+[history/PROJECT_STATUS_2026-10-29_5456d76a.md](history/PROJECT_STATUS_2026-10-29_5456d76a.md).
+Their old relative links and qualification limits retain the original meaning;
+inspect that exact commit for the original layout. This additional snapshot does
+not change the earlier nineteen-document preservation count below.
+
 ## Preservation and reproduction
 
 The pre-cleanup layout is available at commit

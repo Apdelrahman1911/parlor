@@ -3,13 +3,21 @@ package com.parlor.app.shell.game
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasScrollToIndexAction
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.app.di.contentModule
+import com.parlor.app.App
+import com.parlor.app.StartupMultiplayerRecoveryGate
 import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
@@ -27,8 +35,13 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.ResumableSessionInfo
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.TransportCapability
 import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.storage.settings.InMemorySettingsStore
+import com.parlor.storage.snapshot.InMemorySnapshotStore
+import com.parlor.storage.snapshot.SnapshotStore
 import com.parlor.session.multidevice.ProcessMultiplayerState
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
@@ -58,16 +71,49 @@ class ResumeGameBindingTest {
     @Test fun ghamza_resume_binds_its_game_and_version() = verifyResume("ghamza")
     @Test fun word_impostor_resume_binds_its_game_and_version() = verifyResume("word-impostor")
 
-    private fun verifyResume(id: String) {
-        for (language in AppLanguage.entries) verifyResume(GameId(id), language)
+    @Test
+    fun automatic_cold_resume_preserves_the_selection_for_all_six_shipping_games() {
+        for (id in listOf("whodunit", "mafia", "last-light", "egyptian-dominoes", "ghamza", "word-impostor")) {
+            for (language in AppLanguage.entries) {
+                verifyResume(GameId(id), language, fromHome = true, automatic = true)
+            }
+        }
     }
 
-    private fun verifyResume(gameId: GameId, language: AppLanguage) {
+    @Test
+    fun a_recreated_failed_cold_resume_waits_for_explicit_retry() {
+        for (id in listOf("whodunit", "mafia", "last-light", "egyptian-dominoes", "ghamza", "word-impostor")) {
+            for (language in AppLanguage.entries) {
+                verifyResume(GameId(id), language, fromHome = true, automatic = true, recreateRoot = true)
+            }
+        }
+    }
+
+    private fun verifyResume(id: String) {
+        for (language in AppLanguage.entries) {
+            verifyResume(GameId(id), language, fromHome = false)
+            verifyResume(GameId(id), language, fromHome = true)
+        }
+    }
+
+    private fun verifyResume(
+        gameId: GameId, language: AppLanguage, fromHome: Boolean,
+        automatic: Boolean = false, recreateRoot: Boolean = false,
+    ) {
         val job = SupervisorJob()
         // The test owns and injects its executor; no platform/global dispatcher or shipping thread is added.
         val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
         val owner = ProcessMultiplayerSessionOwner(CoroutineScope(job + dispatcher))
         val transport = ResumeBindingTripwire()
+        val selection = object : ResumableSessionSelection {}
+        val settings = InMemorySettingsStore(initialReducedMotion = true, initialLanguageOverride = language.tag)
+        val rootEpoch = mutableStateOf(0)
+        val retryDescription = when {
+            gameId.raw in setOf("whodunit", "mafia", "last-light") ->
+                if (language == AppLanguage.Arabic) "أعد تنفيذ عملية الشبكة المحلية." else "Retry the local-network operation."
+            language == AppLanguage.Arabic -> "جرّب تاني"
+            else -> "Try again"
+        }
         var expected: HostedGameProtocol? = null
         try {
             runComposeUiTest {
@@ -80,6 +126,14 @@ class ResumeGameBindingTest {
                                 single { Json { encodeDefaults = true } }
                                 single<RoomTransport> { transport }
                                 single { owner }
+                                single {
+                                    StartupMultiplayerRecoveryGate().apply {
+                                        // Manual coverage represents Home after the process's first lookup.
+                                        if (!automatic) check(claim())
+                                    }
+                                }
+
+                                single<SnapshotStore> { InMemorySnapshotStore() }
                                 single { AppLifecycleCoordinator(transport).apply { notifyActive() } }
                             },
                         )
@@ -88,25 +142,55 @@ class ResumeGameBindingTest {
                         val binding = assertNotNull(registry.all.singleOrNull { it.definition.id == gameId })
                         val contract = assertNotNull(binding.multiplayerContract)
                         expected = HostedGameProtocol(contract.gameId, contract.gameVersion)
+                        transport.summary = ResumableSessionInfo(
+                            gameId, contract.gameVersion, "Resume Test", Long.MAX_VALUE, selection,
+                        )
                         CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
                             ProvideAppLanguage(language) {
                                 ParlorTheme(reducedMotion = true) {
                                     Box(Modifier.size(320.dp, 740.dp)) {
-                                        binding.Content(GameShellLaunch.ResumeMultiplayer(gameId, "Resume Test"), {})
+                                        if (fromHome) key(rootEpoch.value) { App(settings) }
+                                        else binding.Content(GameShellLaunch.ResumeMultiplayer(gameId, "Resume Test", selection), {})
                                     }
                                 }
                             }
                         }
                     }
                 }
+                if (fromHome && !automatic) {
+                    val description = if (language == AppLanguage.Arabic) "العودة إلى اللعبة الجماعية السابقة."
+                        else "Rejoin the previous multiplayer game."
+                    waitUntil(timeoutMillis = 5_000) { transport.metadataRequests.get() > 0 }
+                    waitForIdle()
+                    onNode(hasScrollToIndexAction()).performScrollToIndex(3)
+                    onNodeWithContentDescription(description).performClick()
+                }
                 waitUntil(timeoutMillis = 5_000) { owner.state.value is ProcessMultiplayerState.Failed }
+                if (recreateRoot) {
+                    runOnIdle { rootEpoch.value++ }
+                    waitForIdle()
+                    onNodeWithContentDescription(retryDescription).assertExists()
+                }
                 runOnIdle {
                     assertEquals(listOf(assertNotNull(expected)), transport.boundRequests.toList())
+                    assertEquals(listOf(selection), transport.membershipRequests.toList())
+                    assertEquals(0, transport.gameOnlyRequests.get(), "Home Resume must not lose its selected membership")
                     assertEquals(0, transport.unboundRequests.get(), "Shipping Resume must never lose its selected binding")
                     assertEquals(0, transport.otherOperations.get())
                     val failed = assertIs<ProcessMultiplayerState.Failed>(owner.state.value)
                     assertEquals(gameId, failed.route.gameId)
                     assertEquals(NetError.IncompatibleProtocol, failed.error)
+                }
+                if (recreateRoot) {
+                    onNodeWithContentDescription(retryDescription).performClick()
+                    waitUntil(timeoutMillis = 5_000) { transport.boundRequests.size == 2 }
+                    runOnIdle {
+                        assertEquals(List(2) { assertNotNull(expected) }, transport.boundRequests.toList())
+                        assertEquals(List(2) { selection }, transport.membershipRequests.toList())
+                        assertEquals(0, transport.gameOnlyRequests.get())
+                        assertEquals(0, transport.unboundRequests.get())
+                        assertEquals(0, transport.otherOperations.get())
+                    }
                 }
             }
         } finally {
@@ -121,12 +205,29 @@ class ResumeGameBindingTest {
 
 private class ResumeBindingTripwire : RoomTransport {
     override val capability = TransportCapability(false, 1, 1024)
+    var summary: ResumableSessionInfo? = null
+    val metadataRequests = AtomicInteger()
+    override suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> {
+        metadataRequests.incrementAndGet()
+        return Result.Success(summary)
+    }
     val boundRequests = CopyOnWriteArrayList<HostedGameProtocol>()
+    val membershipRequests = CopyOnWriteArrayList<ResumableSessionSelection>()
+    val gameOnlyRequests = AtomicInteger()
     val unboundRequests = AtomicInteger()
     val otherOperations = AtomicInteger()
 
     override suspend fun resumeLastSession(expectedGameProtocol: HostedGameProtocol): Result<LocalRoom, NetError> {
+        gameOnlyRequests.incrementAndGet()
+        return Result.Failure(NetError.IncompatibleProtocol)
+    }
+
+    override suspend fun resumeLastSession(
+        expectedGameProtocol: HostedGameProtocol,
+        selection: ResumableSessionSelection,
+    ): Result<LocalRoom, NetError> {
         boundRequests += expectedGameProtocol
+        membershipRequests += selection
         return Result.Failure(NetError.IncompatibleProtocol)
     }
 

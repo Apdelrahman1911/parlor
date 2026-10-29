@@ -349,6 +349,8 @@ private fun WhodunitShellContent(
             code = "",
             peerName = peerName,
             resumeExistingSession = true,
+            resumeSelection = (launch as? GameShellLaunch.ResumeMultiplayer)?.selection
+                ?: (launch as? GameShellLaunch.RestoreOwnedMultiplayer)?.route?.resumeSelection,
             onBackToLibrary = onExit,
             onOpenNetworkSettings = openNetworkSettings,
             backRequestId = activeBackRequestId,

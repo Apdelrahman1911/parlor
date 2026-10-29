@@ -151,6 +151,9 @@ object ResumeProcessEndpoint {
         val loaded = store.loadResumeCandidate()
         check(loaded is Result.Success && loaded.data != null)
         val before = checkNotNull(loaded.data)
+        val summary = transport.resumableSession()
+        check(summary is Result.Success)
+        val selection = checkNotNull(summary.data?.deletionSelection)
         val checkpoint = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(15_000) { room.incoming.first() }
         }
@@ -163,15 +166,15 @@ object ResumeProcessEndpoint {
         // Test runner synchronizes only after the separate host observed closure.
         check(readln() == "CLOSE_OBSERVED")
         val creations = fixture.realKitCreationAttempts
-        check(transport.resumeLastSession(HostedGameProtocol(GameId("different-game"), 1)) ==
+        check(transport.resumeLastSession(HostedGameProtocol(GameId("different-game"), 1), selection) ==
             Result.Failure(NetError.IncompatibleProtocol))
         check(fixture.realKitCreationAttempts == creations && store.loadResumeCandidate() == Result.Success(before))
         println("SELECTED_GAME_REJECTION_PASS")
-        check(transport.resumeLastSession(HostedGameProtocol(game.gameId, 2)) ==
+        check(transport.resumeLastSession(HostedGameProtocol(game.gameId, 2), selection) ==
             Result.Failure(NetError.IncompatibleProtocol))
         check(fixture.realKitCreationAttempts == creations && store.loadResumeCandidate() == Result.Success(before))
         println("SELECTED_VERSION_REJECTION_PASS")
-        val result = transport.resumeLastSession(game)
+        val result = transport.resumeLastSession(game, selection)
         check(result is Result.Success)
         val resumed = result.data
         onRoom(resumed)
@@ -196,6 +199,8 @@ object ResumeProcessEndpoint {
         println("BIDIRECTIONAL_PASS")
         check(resumed.commitValidatedSessionEnd(response) == Result.Success(SessionEndCommitStatus.Committed))
         check(store.loadResumeCandidate() == Result.Success(null))
+        check(transport.resumeLastSession(game, selection) == Result.Failure(NetError.NotConnected))
+        check(fixture.realKitCreationAttempts == creations + 1)
         println("REVOKED_MEMBERSHIP_PASS")
     }
 }

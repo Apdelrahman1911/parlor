@@ -37,6 +37,7 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> MultiplayerShellCont
     val transport: RoomTransport = koinInject()
     val gate = rememberP2pPermissionGate(transport.localNetworkAccess)
     val owned = (launch as? GameShellLaunch.RestoreOwnedMultiplayer)?.route
+    val resumeSelection = owned?.resumeSelection ?: (launch as? GameShellLaunch.ResumeMultiplayer)?.selection
     var name by remember(launch) {
         mutableStateOf(owned?.displayName ?: (launch as? GameShellLaunch.ResumeMultiplayer)?.displayName.orEmpty())
     }
@@ -77,7 +78,7 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> MultiplayerShellCont
         ShellStep.Peer, ShellStep.Resume -> if (name.isBlank() || (step == ShellStep.Peer && code.isBlank())) {
             InvalidGameRouteFallback(onExit)
         } else {
-            PeerGameLobby(spec, transport, code, name, step == ShellStep.Resume, onExit, settings, activeBack, modifier)
+            PeerGameLobby(spec, transport, code, name, step == ShellStep.Resume, onExit, settings, activeBack, modifier, resumeSelection)
         }
     }
 }

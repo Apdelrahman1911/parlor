@@ -9,6 +9,7 @@ import com.parlor.games.lastlight.LastLightDefinition
 import com.parlor.games.lastlight.LastLightIds
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.core.ids.GameId
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.session.multidevice.MultiplayerSessionRoute
@@ -80,8 +81,8 @@ class MultiplayerRouteRestorationTest {
             assertEquals(route, launch.route)
             assertEquals(LastLightIds.GameId, router.bindingFor(launch)?.definition?.id)
         }
-        assertIs<GameShellLaunch.ResumeMultiplayer>(router.resumeMultiplayer(LastLightIds.GameId, 1, "Peer"))
-        assertNull(router.resumeMultiplayer(LastLightIds.GameId, 2, "Peer"))
+        assertIs<GameShellLaunch.ResumeMultiplayer>(router.resumeMultiplayer(LastLightIds.GameId, 1, "Peer", object : ResumableSessionSelection {}))
+        assertNull(router.resumeMultiplayer(LastLightIds.GameId, 2, "Peer", object : ResumableSessionSelection {}))
     }
 
     @Test

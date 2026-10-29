@@ -4569,6 +4569,77 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(kit.stopCalls).isEqualTo(1)
     }
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @Test
+    fun host_clock_rollback_does_not_renew_the_original_recovery_window() = runTest {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        var wallOffset = 1_000_000L
+        val room = HostP2pRoom(
+            kit = kit,
+            roomCode = "ABCDEF",
+            hostDisplayName = "Host",
+            hostPlayerId = PlayerId(kit.localPeerId.value),
+            maxRemotePlayers = 17,
+            scope = backgroundScope,
+            codec = codec,
+            currentTimeMillis = { testScheduler.currentTime + wallOffset },
+            recoveryElapsedMillis = { testScheduler.currentTime },
+        )
+        try {
+            admit(room, kit, FakeP2pSession(peer("alice-pid", "Peer")))
+            val startedAt = testScheduler.currentTime + wallOffset
+            room.appBackgrounded(startedAt)
+            runCurrent()
+            advanceTimeBy(60_000L)
+            wallOffset -= 60_000L
+            room.appForegrounded(testScheduler.currentTime + wallOffset)
+            runCurrent()
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Resuming(startedAt + 120_000L))
+            advanceTimeBy(60_000L)
+            runCurrent()
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+            // Expiration is immediate; existing Bonjour goodbye cleanup completes afterward.
+            advanceTimeBy(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
+            runCurrent()
+            assertThat(kit.stopCalls).isEqualTo(1)
+        } finally {
+            room.leave()
+        }
+    }
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @Test
+    fun spent_continuous_budget_cannot_readvertise_an_empty_host_before_delayed_expiry() = runTest {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        var elapsedOffset = 0L
+        val room = HostP2pRoom(
+            kit = kit,
+            roomCode = "ABCDEF",
+            hostDisplayName = "Host",
+            hostPlayerId = PlayerId(kit.localPeerId.value),
+            maxRemotePlayers = 17,
+            scope = backgroundScope,
+            codec = codec,
+            currentTimeMillis = { testScheduler.currentTime },
+            recoveryElapsedMillis = { testScheduler.currentTime + elapsedOffset },
+        )
+        try {
+            runCurrent()
+            room.appBackgrounded(0L)
+            runCurrent()
+            advanceTimeBy(60_000L)
+            elapsedOffset = 60_000L
+            val advertisements = kit.startAdvertisingCalls
+            room.appForegrounded(testScheduler.currentTime)
+            assertThat(kit.foregroundCalls).isEqualTo(0)
+            assertThat(kit.startAdvertisingCalls).isEqualTo(advertisements)
+            runCurrent()
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+        } finally {
+            room.leave()
+        }
+    }
+
     // ------------------------------------------------------ Idempotent leave ----
 
     /**

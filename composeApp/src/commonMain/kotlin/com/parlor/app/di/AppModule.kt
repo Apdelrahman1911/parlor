@@ -1,6 +1,7 @@
 package com.parlor.app.di
 
 import com.parlor.app.lifecycle.AppLifecycleCoordinator
+import com.parlor.app.StartupMultiplayerRecoveryGate
 import com.parlor.app.p2p.p2pBootstrapModules
 import com.parlor.app.storage.platformStorageModule
 import com.parlor.core.random.SessionSeedSource
@@ -38,6 +39,7 @@ val coreModule: Module = module {
     single<Clock> { SystemClock }
     single<SessionSeedSource> { SecureSessionSeedSource }
     single { AppLifecycleCoordinator(get()) }
+    single { StartupMultiplayerRecoveryGate() }
     single<CoroutineScope>(qualifier = named("multiplayerSession")) {
         createMultiplayerSessionScope()
     }
@@ -46,6 +48,7 @@ val coreModule: Module = module {
         ProcessMultiplayerSessionOwner(
             processScope = get(qualifier = named("multiplayerSession")),
             discardResumableSession = roomTransport::discardResumableSession,
+            discardSelectedMembership = roomTransport::discardResumableMembership,
         )
     }
     // Strict JSON for content validation: unknown fields in case payloads fail

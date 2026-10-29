@@ -159,6 +159,7 @@ fun MafiaHostLobbyFlow(
             val result = sessionOwner.acquire(
                 route = route,
                 hostSeed = SecureIds.randomLong(),
+                retryFailedOpen = hostAttempt > 0,
             ) { mode ->
                 check(mode == MultiplayerOpenMode.Host)
                 transport.host(

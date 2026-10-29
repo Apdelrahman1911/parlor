@@ -262,6 +262,48 @@ class ForegroundReconnectRecoveryTest {
         assertEquals(1, fixture.kit.stopCalls)
     }
 
+    @Test
+    fun clockRollbackDoesNotRenewTheActualPeerRecoveryWindow() = runTest {
+        val fixture = Fixture(this, resumable = false)
+        try {
+            runCurrent()
+            fixture.room.appBackgrounded(0L)
+            runCurrent()
+            advanceTimeBy(60_000L)
+            fixture.wallOffset = -60_000L
+            fixture.room.appForegrounded(testScheduler.currentTime + fixture.wallOffset)
+            runCurrent()
+            assertEquals(RoomLifecycleState.Resuming(120_000L), fixture.room.lifecycle.value)
+            advanceTimeBy(60_000L)
+            runCurrent()
+            assertEquals(RoomLifecycleState.Expired, fixture.room.lifecycle.value,
+                "Wall-clock rollback cannot restart the original 120-second recovery budget")
+            assertEquals(1, fixture.kit.stopCalls)
+        } finally {
+            fixture.room.leave()
+        }
+    }
+
+    @Test
+    fun spentContinuousBudgetPreventsForegroundNetworkingBeforeDelayedTimerRuns() = runTest {
+        val fixture = Fixture(this)
+        try {
+            runCurrent()
+            fixture.room.appBackgrounded(0L)
+            runCurrent()
+            advanceTimeBy(60_000L)
+            // Model sleep advancing the platform counter while coroutine timers remain pending.
+            fixture.elapsedOffset = 60_000L
+            fixture.room.appForegrounded(testScheduler.currentTime)
+            assertEquals(0, fixture.kit.foregroundCalls)
+            runCurrent()
+            assertEquals(RoomLifecycleState.Expired, fixture.room.lifecycle.value)
+            assertTrue(fixture.requests.isEmpty())
+        } finally {
+            fixture.room.leave()
+        }
+    }
+
     private class Fixture(scope: TestScope, resumable: Boolean = true) {
         val kit = FakeP2pKit(PeerId("peer"))
         val host = Peer(PeerId("host"), "Host", Platform.UNKNOWN, setOf(TransportKind.LAN))
@@ -278,11 +320,13 @@ class ForegroundReconnectRecoveryTest {
         val requests = mutableListOf<ResumableSessionCredential>()
         val events = mutableListOf<PeerEvent>()
         var wallOffset = 0L
+        var elapsedOffset = 0L
         var connect: suspend () -> Result<ResumedPeerConnection, ResumeConnectionFailure> = { Result.Success(resumed()) }
         val room = PeerP2pRoom(
             kit = kit, session = session, hostPeer = host, roomCode = "ABCDEF", scope = scope.backgroundScope,
             codec = codec, initialCredential = credential.takeIf { resumable }, hostDisplayName = host.name,
             currentTimeMillis = { scope.testScheduler.currentTime + wallOffset },
+            recoveryElapsedMillis = { scope.testScheduler.currentTime + elapsedOffset },
             resumeConnector = if (resumable) ({ requests += it; connect() }) else null,
         )
 

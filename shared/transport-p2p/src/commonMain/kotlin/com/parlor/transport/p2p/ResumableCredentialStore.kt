@@ -145,11 +145,20 @@ internal class ResumableCredentialStore(
     /** Serializes read/modify/write transactions across lifecycle and game flows. */
     private val mutex = Mutex()
 
-    suspend fun loadResumeCandidate(): Result<ResumableSessionCredential?, CredentialStoreError> =
+    suspend fun loadResumeCandidate(
+        selection: CredentialDeletionSelection? = null,
+    ): Result<ResumableSessionCredential?, CredentialStoreError> =
         mutex.withLock {
             when (val loaded = loadRecord()) {
                 is Result.Failure -> loaded
-                is Result.Success -> Result.Success(loaded.data?.resumeCandidate())
+                is Result.Success -> {
+                    val candidate = loaded.data?.resumeCandidate()
+                    if (selection != null && candidate != null && !selection.matchesMembership(candidate)) {
+                        Result.Failure(CredentialStoreError.TransactionMismatch)
+                    } else {
+                        Result.Success(candidate)
+                    }
+                }
             }
         }
 
@@ -301,6 +310,16 @@ internal class ResumableCredentialStore(
             is Result.Success -> loaded.data
         }
         invalidateMembership(CredentialDeletionSelection(valid, current?.active, current?.pending), current)
+    }
+
+    /** Final Leave retains logical ownership across rotations, never across membership replacement. */
+    suspend fun invalidateSelectedMembership(
+        selection: CredentialDeletionSelection,
+    ): Result<CredentialInvalidationResult, CredentialStoreError> = mutex.withLock {
+        when (val loaded = loadRecord()) {
+            is Result.Failure -> loaded
+            is Result.Success -> invalidateMembership(selection, loaded.data)
+        }
     }
 
     /** Home must still own the exact candidate it displayed, not a later replacement/rotation. */
