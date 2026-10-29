@@ -24,9 +24,15 @@ passes exact-test export; independent source/artifact review confirms its PNG
 is byte-identical to the retained original. Actual image
 inspection shows the Arabic public LAN rationale and Continue/Back with no
 obvious overlay. It does not explain earlier native hittability=false or the
-separate completed catalog event. Corrected-recorder native execution and full
-60-journey neutrality remain unverified. A fresh corrected-recorder three-arm
-native execution is being prepared; it does not replace production CI.
+separate completed catalog event.
+[Corrected-recorder40833776865](https://github.com/Apdelrahman1911/parlor/actions/runs/40833776865)
+atc62fdc73 completes all three original/Compose/native arms: two actual EN/AR
+methods pass per arm, no failures/skips, exact source/result manifests and
+consistent owned cleanup receipts. Actual runtime is iOS18.5/iPhone16Pro,
+not originaliOS26.2. All journeys pass, so failed-only capture/export does not
+execute; native recorder rows and failed-request export remain unattested.
+Full60-journey neutrality and the original input cause remain unverified.
+This does not replace production CI or clear PR#282 for merge.
 
 Local strict `productionCheck allTests` at diagnostic4b33deae passes release,
 analysis/lint/R8/AAB/inventory gates,1,867Desktop cases (3existing LAN skips),

@@ -294,3 +294,61 @@ viewed again: public Arabic permission rationale, visible Continue/Back, no
 obvious overlay. All direct children are reaped; original failure is unchanged.
 This confirms the collection fix, not the native hittability or completed
 catalog-event cause. No app execution, tap replay or production qualification.
+
+### Corrected-recorder native app execution completed
+
+[40833776865](https://github.com/Apdelrahman1911/parlor/actions/runs/40833776865)
+atharnessc62fdc73 successfully builds and executes all three declared arms
+against frozen app841a0b06. Each arm's two actual original EN/AR methods pass:
+**6passed/0failed/0skipped** total, not60 journeys or the full production lane.
+Independent review matches the original archive, each exact copied source plan,
+producer product-manifest hashes and actual case/device outcomes. ZIP SHA256
+`af345dcc5e6f092bef2f00ac2a674b2b1e75c097de22652e79f54c632e83ce3d`.
+Actual platform is standard free macos-15, Xcode26.3/17C529, SDK26.2,
+iOS18.5/iPhone16Pro and ARM64 Debug wrappers.
+
+The corrected mount-ordered template is in the built observed arms. All journeys
+pass, so no failed-only PIN02 request/capture or observed-arm attachment export
+executes. This verifies app linkage/execution and these public outcomes, **not
+each native recorder row, failure-request export, timing neutrality or the
+original cause**. Earlier failed original/production journeys remain failed.
+
+All three producer cleanup receipts record Gradle stop0, owned Simulator
+retirement and exactly inventoried DTServiceHub lifetimes receiving SIGTERM then
+SIGKILL. Source/toolchain/task/UID/birth/baseline ownership comparisons agree;
+these are consistent producer receipts, not an independent post-run process
+re-attestation or permission for global/PID-name cleanup. #284/#285's local and
+hosted tool fixes still need qualified main integration.
+
+| Arm | Build seconds | Actual XCTest seconds |
+|---|---:|---:|
+| Original | 1461.167 | 442.836 |
+| Compose-only | 499.485 | 441.383 |
+| Native-observed | 145.758 | 426.813 |
+
+Runner duration is64m58s; queue21m54s; total86m52s. The earlier runner duration
+was82m04s, but this is not a controlled performance comparison or proof that
+the recorder correction caused a speedup. No paid runner, Release/architecture
+change, production-test substitution, deadline extension or input retry.
+
+### Independent recovery storage fault injection
+
+Four extra diagnostic Kotlin tests actually execute against exact candidate
+credential-store bytes in the already owned Linux source copy:4PASS/0FAIL/0SKIP,
+64.206s, owned stop0 and full copied-input manifest unchanged. They inject
+`SecureStorage` read/write/remove failure results, not a phone lock or OS error.
+Ten failed-read transactions preserve active and pending generations with zero
+mutations; pending-only outages are not normalized to missing sessions; failed
+staging/commit writes retain the durable winner; failed selected deletion is not
+false success and retains ownership for recovery. Subsequent successful reads,
+commit and deletion select the correct state. No shipping fix was needed for
+these tested common-store paths.
+
+Exact tested store SHA256
+`cea24e33a1292cd95d8664a6e55b5afc9f59d1951d97d7eb58e18a871c88de2b`;
+fixture `0ff068546562065b35bbf63853b4d702840d4f47d893a3abfc727a6616da2635`;
+log `c6692dfba87583aed572b322c8693116bb3f5b3fc5a356a9838eee62b055019c`.
+These are candidate bytes, not newer-main qualification or shipping-suite
+additions. [#252 evidence](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6491287314)
+retains the scope. Actual locked Keychain, cold process/mobile screen recovery,
+physical LAN, power/thermal and #258 protection acceptance remain unverified.
