@@ -1800,6 +1800,7 @@ internal class HostP2pRoom(
     private val firstApplicationMessageTimeoutMs: Long =
         P2pKitRoomTransport.FIRST_APPLICATION_MESSAGE_TIMEOUT_MS,
     private val currentTimeMillis: () -> Long = { kotlin.time.Clock.System.now().toEpochMilliseconds() },
+    private val recoveryElapsedMillis: () -> Long = ::platformRecoveryElapsedMillis,
 ) : LocalRoom, AppLifecycleAwareRoom {
 
     init {
@@ -1935,6 +1936,7 @@ internal class HostP2pRoom(
     /** Orders off-lock advertiser work with terminal Leave cleanup. */
     private val advertisingMutex = Mutex()
     private var lifecycleExpiryJob: Job? = null
+    private val lifecycleExpiryBudget = RecoveryWindowBudget(recoveryElapsedMillis)
 
     // p2p-016: leave() runs from a "Leave" tap AND from DisposableEffect.onDispose,
     // so a real double-call is expected. rc3's kit.stop() is idempotent, but the
@@ -3440,7 +3442,7 @@ internal class HostP2pRoom(
             expireLifecycle(transition.deadline)
             return
         }
-        scheduleLifecycleExpiry(transition.deadline, transition.delayMs)
+        if (!scheduleLifecycleExpiry(transition.deadline, transition.delayMs)) return
         kit.notifyAppBackgrounded()
         try {
             // P2pKit's notification starts cleanup asynchronously. Await the
@@ -3492,7 +3494,7 @@ internal class HostP2pRoom(
             P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
             P2pDiagnosticRole.HOST,
         )
-        scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
+        if (!scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)) return
         kit.notifyAppForegrounded()
         startRoomAdvertising()
         markActiveIfRestored()
@@ -3520,16 +3522,22 @@ internal class HostP2pRoom(
         }
     }
 
-    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
+    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long): Boolean =
         stateMutex.withLock {
-            if (left || !hasLifecycleDeadline(deadline)) return
+            if (left || !hasLifecycleDeadline(deadline)) return@withLock false
+            val remaining = lifecycleExpiryBudget.remaining(
+                deadline = deadline,
+                requestedDelay = delayMs.coerceAtMost(appResumeGraceMs).coerceAtLeast(0L),
+                newWindow = lifecycleExpiryJob == null,
+            )
             lifecycleExpiryJob?.cancel()
             lifecycleExpiryJob = scope.launch {
-                delay(delayMs.coerceAtLeast(0L))
+                delay(remaining)
                 expireLifecycle(deadline)
             }
+            // Timer cleanup stays off the caller; expired foreground must not start native work.
+            remaining > 0L
         }
-    }
 
     /** Caller holds stateMutex; a stale foreground may never replace terminal state. */
     private fun hasLifecycleDeadline(deadline: Long): Boolean = when (val current = _lifecycle.value) {
@@ -3824,6 +3832,7 @@ internal class PeerP2pRoom(
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
     hostDisplayName: String,
     private val currentTimeMillis: () -> Long = { kotlin.time.Clock.System.now().toEpochMilliseconds() },
+    private val recoveryElapsedMillis: () -> Long = ::platformRecoveryElapsedMillis,
 ) : LocalRoom, AppLifecycleAwareRoom {
 
     override val selfPlayerId: PlayerId = PlayerId(kit.localPeerId.value)
@@ -3878,6 +3887,7 @@ internal class PeerP2pRoom(
     private val sessionMutex = Mutex()
     private val terminalCommitMutex = Mutex()
     private var lifecycleExpiryJob: Job? = null
+    private val lifecycleExpiryBudget = RecoveryWindowBudget(recoveryElapsedMillis)
     private var resumeJob: Job? = null
     /** A session-validated authenticated terminal frame permanently disables resume. */
     private var terminalByHost = false
@@ -3971,7 +3981,7 @@ internal class PeerP2pRoom(
                 expireLifecycle(transition.deadline)
                 return
             }
-            scheduleLifecycleExpiry(transition.deadline, transition.delayMs)
+            if (!scheduleLifecycleExpiry(transition.deadline, transition.delayMs)) return
             kit.notifyAppBackgrounded()
             // The kit's default policy closes sessions in a launched child.
             // Complete the same idempotent close here before a foreground event
@@ -4013,7 +4023,7 @@ internal class PeerP2pRoom(
             P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
             P2pDiagnosticRole.PEER,
         )
-        scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
+        if (!scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)) return
         kit.notifyAppForegrounded()
         resumeAfterForeground(deadline)
     }
@@ -4357,9 +4367,9 @@ internal class PeerP2pRoom(
         return restored
     }
 
-    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
+    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long): Boolean =
         lifecycleMutex.withLock {
-            if (left || terminalByHost || terminalCommitInFlight != null) return
+            if (left || terminalByHost || terminalCommitInFlight != null) return@withLock false
             val currentDeadline = when (val current = _lifecycle.value) {
                 is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
                 is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
@@ -4367,14 +4377,20 @@ internal class PeerP2pRoom(
                 RoomLifecycleState.Expired,
                 RoomLifecycleState.Closed -> null
             }
-            if (currentDeadline != deadline) return
+            if (currentDeadline != deadline) return@withLock false
+            val remaining = lifecycleExpiryBudget.remaining(
+                deadline = deadline,
+                requestedDelay = delayMs.coerceAtMost(appResumeGraceMs).coerceAtLeast(0L),
+                newWindow = lifecycleExpiryJob == null,
+            )
             lifecycleExpiryJob?.cancel()
             lifecycleExpiryJob = scope.launch {
-                delay(delayMs.coerceAtLeast(0L))
+                delay(remaining)
                 expireLifecycle(deadline)
             }
+            // A collector cannot join its own parent during Leave; the sibling owns cleanup.
+            remaining > 0L
         }
-    }
 
     private suspend fun expireLifecycle(deadline: Long) {
         val shouldLeave = lifecycleMutex.withLock {
@@ -4633,7 +4649,7 @@ internal class PeerP2pRoom(
         }
         recovery ?: return
         val remaining = (recovery.deadline - nowMillis()).coerceAtLeast(0L)
-        scheduleLifecycleExpiry(recovery.deadline, remaining)
+        if (!scheduleLifecycleExpiry(recovery.deadline, remaining)) return
         if (recovery.resume) resumeAfterForeground(recovery.deadline)
     }
 
@@ -4855,7 +4871,7 @@ internal class PeerP2pRoom(
                 resumeDeadline
             }
         } ?: return
-        scheduleLifecycleExpiry(deadline, (deadline - now).coerceAtLeast(0L))
+        if (!scheduleLifecycleExpiry(deadline, (deadline - now).coerceAtLeast(0L))) return
         // Expiry owns a sibling job: leaving from this session collector (or
         // its fallback child) would otherwise join its own parent during cleanup.
         if (now >= deadline) return

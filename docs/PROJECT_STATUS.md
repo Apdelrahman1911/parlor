@@ -1,20 +1,18 @@
 # Project status — October 29, 2026
 
-## Qualification checkpoint (11:20 UTC)
+## Qualification checkpoint (11:54 UTC)
 
-Main is `7c87a872` ([PR #281](https://github.com/Apdelrahman1911/parlor/pull/281)).
-Its [automatic main run](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
-failed the Arabic iOS exact-input check; an older catalog-main pass does not
-qualify it. [PR #256](https://github.com/Apdelrahman1911/parlor/pull/256) was
-already merged as `81ee9b7b`; do not replay that integration.
-
-[PR #286](https://github.com/Apdelrahman1911/parlor/pull/286), head `d4219ff4`,
-is draft/open. [Fresh automatic verification](https://github.com/Apdelrahman1911/parlor/actions/runs/40856349281)
-is in progress, not qualified: four Desktop/Android producers pass; four Apple
-producers continue. Preserve all eight producers, optimized Release architectures,
-23 Swift methods, 685 KMP Simulator cases and the original Apple join. The
-previous PR run remains failed. Normal protected merge and fresh actual-main
-verification are required; no blind rerun or approval/check bypass.
+[PR #286](https://github.com/Apdelrahman1911/parlor/pull/286) normally merged as
+`2f7594c9b46ead62feb597c5211e9127164af4f8`. Its fresh
+[PR run40856349281](https://github.com/Apdelrahman1911/parlor/actions/runs/40856349281)
+independently qualifies all eight producers plus the original Apple join,
+23 Swift methods, 685 KMP Simulator cases and exact source/artifact/native/output
+custody. Fresh [automatic main40867943050](https://github.com/Apdelrahman1911/parlor/actions/runs/40867943050)
+is running, **not yet post-merge qualified**. Two local merge preflight failures
+preceded all GitHub mutation (receipt-schema mismatch, mistyped checksum);
+reviewed distinct corrections preserved every protection check and AGENTS bytes.
+Older main/PR exact-input failures stay failed; #267/#276 remain unresolved.
+PR #256 was already merged as `81ee9b7b`; never replay that integration.
 
 ## Implemented, not yet integrated
 
@@ -37,6 +35,12 @@ rechecks, fresh free hosted qualification, normal protected merge and actual-mai
 verification remain. Its source requires 703 KMP Simulator methods; this is not
 an executed native result. Earlier three-pair Linux LAN evidence is scoped to
 its recorded network bytes, not physical phones or complete gameplay acceptance.
+
+The [continuous elapsed-budget correction](audits/2026-10-29-RECOVERY-ELAPSED-BUDGET.md)
+additionally reproduces clock-rollback renewal and delayed-timer foreground work.
+Final focused tests pass 19 methods without errors/skips; three restored mutation
+controls reject missing elapsed spending. Full exact-source local/hosted checks
+and actual iOS binding/sleep verification remain pending. No phone result claimed.
 
 ## Remaining acceptance gates
 
