@@ -1,0 +1,68 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
+import com.parlor.app.AppNavDisplay
+import com.parlor.app.AppNavigator
+import com.parlor.app.shell.game.GameShellLaunch
+import com.parlor.core.ids.GameId
+import com.parlor.designsystem.theme.ParlorTheme
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@OptIn(ExperimentalTestApi::class)
+class PIN03NavigationScopeTest {
+    @Test
+    fun outgoing_home_disposal_must_not_hide_an_incoming_setup_callback() = runComposeUiTest {
+        val navigator = AppNavigator()
+        var callbacks = 0
+        var baseline = 0
+        runOnIdle { baseline = Json.parseToJsonElement(PIN01Observation.snapshot()).jsonObject.getValue("rows").jsonArray.count { val row = it.jsonArray
+            row[1].jsonPrimitive.double == 3.0 && row[2].jsonPrimitive.double == 1.0 } }
+        setContent {
+            ParlorTheme(reducedMotion = true) {
+                Box(Modifier.size(320.dp, 740.dp)) {
+                    AppNavDisplay(navigator,
+                        homeContent = { PIN01PublicStage(6); Box(Modifier.size(100.dp).testTag("home-public")) },
+                        settingsContent = {}, recoveryContent = {},
+                        gameContent = {
+                            PIN01PublicStage(0)
+                            Box(Modifier.size(100.dp).testTag("setup-public").pin01PublicInput(1).clickable {
+                                PIN01Observation.callback(1)
+                                callbacks++
+                            })
+                        }, onBack = {})
+                }
+            }
+        }
+        onNodeWithTag("home-public").assertExists()
+        runOnIdle { navigator.openGame(GameShellLaunch.New(GameId("word-impostor"))) }
+        mainClock.advanceTimeBy(1000)
+        onNodeWithTag("setup-public").assertExists().performTouchInput {
+            down(center); advanceEventTime(50); up()
+        }
+        runOnIdle {
+            assertEquals(1, callbacks, "Actual Compose callback must execute once")
+            val raw = PIN01Observation.snapshot()
+            println("PUBLIC_NUMERIC_OBSERVER_NAVIGATION_RECEIPT=" + raw)
+            val rows = Json.parseToJsonElement(raw).jsonObject.getValue("rows").jsonArray
+            val observed = rows.count { val row=it.jsonArray
+                row[1].jsonPrimitive.double==3.0 && row[2].jsonPrimitive.double==1.0 }
+            assertEquals(baseline + 1, observed, "Outgoing Home disposal must not erase active setup observation; " + raw)
+        }
+    }
+}

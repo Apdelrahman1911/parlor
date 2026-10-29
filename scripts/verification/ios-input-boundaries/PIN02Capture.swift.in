@@ -1,0 +1,137 @@
+#if DEBUG && (targetEnvironment(simulator) || PIN02_CONTROL)
+import Foundation
+import CoreFoundation
+import Darwin
+
+/// COPY ONLY. Registered once, never polls. Darwin delivery requires a running
+/// main run loop; a suspended/killed host is not recoverable by this adapter.
+final class PIN02Capture {
+    private let token: String
+    private let simulator: String
+    private let bundle: String
+    private let boot = UUID().uuidString
+    private let installedMs = ProcessInfo.processInfo.systemUptime * 1000
+    private let directory: URL
+    private let snapshot: () -> String
+    private var attempted = false
+    private var registered = false
+
+    private var requestName: CFString { ("com.parlor.pin02.request." + token) as CFString }
+    private var ackName: CFNotificationName {
+        CFNotificationName(("com.parlor.pin02.ack." + token) as CFString)
+    }
+
+    static func install(snapshot: @escaping () -> String) -> PIN02Capture? {
+        let environment = ProcessInfo.processInfo.environment
+        guard Thread.isMainThread,
+              let token = environment["PARLOR_PIN02_TOKEN"], canonicalUUID(token),
+              let expected = environment["PARLOR_PIN02_SIMULATOR"], canonicalUUID(expected),
+              environment["SIMULATOR_UDID"] == expected,
+              let bundle = Bundle.main.bundleIdentifier,
+              let expectedBundle = environment["PARLOR_PIN02_BUNDLE"], bundle == expectedBundle,
+              bundle.hasSuffix(".debug"), bundle.utf8.count <= 128 else { return nil }
+        return PIN02Capture(token: token, simulator: expected, bundle: bundle,
+                            parent: FileManager.default.temporaryDirectory, snapshot: snapshot)
+    }
+
+    // Internal constructor also permits actual Foundation control execution with
+    // explicitly owned temporary files. It is not a production launch fallback.
+    init(token: String, simulator: String, bundle: String, parent: URL, snapshot: @escaping () -> String) {
+        precondition(Thread.isMainThread && Self.canonicalUUID(token) && Self.canonicalUUID(simulator))
+        self.token = token
+        self.simulator = simulator
+        self.bundle = bundle
+        self.directory = parent.appendingPathComponent("parlor-pin02-" + token, isDirectory: true)
+        self.snapshot = snapshot
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+            Unmanaged.passUnretained(self).toOpaque(), { _, observer, _, _, _ in
+                guard let observer else { return }
+                let owner = Unmanaged<PIN02Capture>.fromOpaque(observer).takeUnretainedValue()
+                owner.captureOnce()
+            }, requestName, nil, .deliverImmediately)
+        registered = true
+    }
+
+    deinit {
+        if registered {
+            CFNotificationCenterRemoveObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                Unmanaged.passUnretained(self).toOpaque(), CFNotificationName(requestName), nil)
+        }
+    }
+
+    private func captureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true // A failed/duplicate request is NEVER retried in this process.
+        do {
+            let raw = Data(snapshot().utf8)
+            guard raw.count > 0, raw.count <= 131_072,
+                  let value = try JSONSerialization.jsonObject(with: raw) as? [String: Any],
+                  Self.publicNumericShape(value) else { return }
+            let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator,
+                "bundle": bundle, "boot": boot, "process": ProcessInfo.processInfo.processIdentifier,
+                "installedMs": installedMs, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+                "snapshot": value]
+            let encoded = try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys])
+            guard encoded.count <= 135_168 else { return }
+            // Exclusive directory AND file. No atomic+withoutOverwriting mix,
+            // no existing path adoption, no cleanup or evidence replacement.
+            guard mkdir(directory.path, 0o700) == 0 else { return }
+            let file = directory.appendingPathComponent("capture.json")
+            let fd = open(file.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+            guard fd >= 0 else { return }
+            defer { close(fd) }
+            let complete = encoded.withUnsafeBytes { buffer -> Bool in
+                guard let base = buffer.baseAddress else { return false }
+                var offset = 0
+                while offset < buffer.count {
+                    let count = write(fd, base.advanced(by: offset), buffer.count - offset)
+                    guard count > 0 else { return false }
+                    offset += count
+                }
+                return fsync(fd) == 0
+            }
+            guard complete else { return }
+            // ACK follows durable numeric export, but is NOT custody proof.
+            CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+                ackName, nil, nil, true)
+        } catch {
+            // Never serialize exception descriptions, userInfo, file paths,
+            // environment values, names, roles, credentials or view hierarchies.
+        }
+    }
+
+    static func canonicalUUID(_ value: String) -> Bool {
+        UUID(uuidString: value)?.uuidString == value
+    }
+
+    private static func publicNumericShape(_ value: [String: Any]) -> Bool {
+        guard Set(value.keys) == Set(["schema", "nativeMode", "overflow", "invalid", "rows"]),
+              integer(value["schema"], range: 1...1), integer(value["nativeMode"], range: 0...1),
+              integer(value["overflow"], range: 0...512), integer(value["invalid"], range: 0...512),
+              let rows = value["rows"] as? [[Any]], rows.count <= 512 else { return false }
+        for row in rows {
+            guard row.count == 10 else { return false }
+            for (index, field) in row.enumerated() {
+                guard let number = field as? NSNumber,
+                      CFGetTypeID(number) != CFBooleanGetTypeID(), number.doubleValue.isFinite else { return false }
+                let numberValue = number.doubleValue
+                if index == 0 || index == 9 {
+                    guard (0...1e12).contains(numberValue) else { return false }
+                } else if index == 7 || index == 8 {
+                    guard abs(numberValue) <= 100_000 else { return false }
+                } else {
+                    guard numberValue.rounded(.towardZero) == numberValue,
+                          (0...16).contains(numberValue) else { return false }
+                }
+            }
+        }
+        return true // Full categorical/clock completeness is checked by host decoder.
+    }
+
+    private static func integer(_ value: Any?, range: ClosedRange<Double>) -> Bool {
+        guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID() else { return false }
+        let numeric = number.doubleValue
+        return numeric.isFinite && numeric.rounded(.towardZero) == numeric && range.contains(numeric)
+    }
+}
+#endif

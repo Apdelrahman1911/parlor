@@ -951,6 +951,37 @@ class WorkflowContractTest(unittest.TestCase):
     def test_repository_workflows_satisfy_release_contract(self) -> None:
         self.assertEqual(workflow_contract.main(), 0)
 
+    def test_input_investigation_registration_rejects_privilege_runner_trigger_retry_and_upload_drift(self) -> None:
+        workflow = (workflow_contract.WORKFLOWS / "ios-input-investigation.yml").read_text()
+        workflow_contract.verify_input_investigation(workflow)
+        for before, after in (
+            ("contents: read", "contents: write"),
+            ("runs-on: macos-15", "runs-on: macos-15-large"),
+            ("branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29, diagnostic/ios-original-host-runtime-2026-10-29, fix/input-diagnostic-integration-2026-10-29]", "branches: [main]"),
+            ("fix/input-diagnostic-integration-2026-10-29", "main"),
+            ("cancel-in-progress: false", "cancel-in-progress: true"),
+            ("actions/cache/restore@", "actions/cache/save@"),
+            ("--source \"$PARLOR_INPUT_SOURCE\"", "--source \"$PARLOR_INPUT_SOURCE\" --retry"),
+            ("/original/tests.xcresult", "/original/source/**"),
+            ("permissions:\n  contents: read", "permissions:\n  contents: read\n  id-token: write"),
+            ("if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'", "if: false"),
+            ("xcode_worker_inventory.py", "run_pin03.py"),
+            ("review_frozen_result.py", "run_pin03.py"),
+            ("actions: read", "actions: write"),
+            ("/settlement-lines.json", "/console/**"),
+            ("/public-settlement-*.png", "/decoded-attachments/**"),
+            ("/usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v", "true"),
+            ("9d4f369d2b1581f5c157b67cce3ff0fada49effa", "841a0b0623b508eae103f79ba7b4e5773e6a8b4d"),
+            ("SimRuntime.iOS-26-2", "SimRuntime.iOS-18-5"),
+            ("SimDeviceType.iPhone-17-Pro", "SimDeviceType.iPhone-16-Pro"),
+            ('--profile "$PARLOR_INPUT_PROFILE"', '--profile catalog'),
+        ):
+            changed = workflow.replace(before, after)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_input_investigation(changed)
+
+
     def test_xcode_identity_guard_matches_the_exact_build_setting(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
             encoding="utf-8"

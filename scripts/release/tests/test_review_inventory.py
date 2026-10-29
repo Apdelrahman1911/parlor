@@ -122,6 +122,26 @@ class ReviewInventoryTest(unittest.TestCase):
         ):
             self.assertNotIn(unsupported_claim, content)
 
+    def test_input_investigation_is_not_inventoried_as_production_qualification(self) -> None:
+        diagnostic = ".github/workflows/ios-input-investigation.yml"
+        production = ".github/workflows/production-verification.yml"
+        rows = {
+            row["path"]: row
+            for row in csv.DictReader(io.StringIO(review_inventory.render_inventory([diagnostic, production], {}, {})))
+        }
+        self.assertEqual("ci-diagnostic-workflow", rows[diagnostic]["classification"])
+        self.assertEqual("CI-ONLY: explicit non-production investigation; not application qualification",
+                         rows[diagnostic]["inferred_production_reachability"])
+        self.assertEqual("read-only original-source input investigation and retained failure analysis",
+                         rows[diagnostic]["inferred_main_callers_or_consumers"])
+        self.assertEqual("RETAIN as non-publishing diagnostic tooling; never substitutes for production checks",
+                         rows[diagnostic]["suggested_disposition"])
+        self.assertEqual("ci-workflow", rows[production]["classification"])
+        self.assertEqual("CI-ONLY: production qualification workflow",
+                         rows[production]["inferred_production_reachability"])
+        for row in rows.values():
+            self.assertEqual("MECHANICALLY INVENTORIED; INDEPENDENT REVIEW NOT ATTESTED", row["inventory_status"])
+
     def test_archive_paths_never_become_shipping_sources_or_resources(self) -> None:
         source = "composeApp/src/commonMain/kotlin/Fixture.kt"
         resource = "composeApp/src/androidMain/res/values/strings.xml"

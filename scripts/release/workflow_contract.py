@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -18,7 +19,11 @@ EXPECTED = {
     "testing-candidate.yml",
     "testing-external-promotion.yml",
     "production-promotion.yml",
+    "ios-input-investigation.yml",
 }
+# Exact reviewed evidence-only workflow. Adding it never widens the generic
+# security contract: changed privileges, runners, triggers or uploads fail closed.
+INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -111,6 +116,12 @@ def verify_common(name: str, text: str) -> None:
         fail(f"{name}: every workflow must bound job duration")
     if "permissions:" not in text or "contents: read" not in text:
         fail(f"{name}: missing least-privilege baseline permissions")
+
+
+def verify_input_investigation(text: str) -> None:
+    verify_common("ios-input-investigation.yml", text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != INPUT_INVESTIGATION_SHA256:
+        fail("Input investigation must retain its exact reviewed read-only, free-runner, non-production workflow")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1738,6 +1749,7 @@ def main() -> int:
     for name, text in files.items():
         verify_common(name, text)
     verify_validation(files["production-verification.yml"])
+    verify_input_investigation(files["ios-input-investigation.yml"])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)

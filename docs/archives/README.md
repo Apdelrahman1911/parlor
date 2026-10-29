@@ -49,6 +49,11 @@ Their old relative links and qualification limits retain the original meaning;
 inspect that exact commit for the original layout. This additional snapshot does
 not change the earlier nineteen-document preservation count below.
 
+The later 15:26 UTC checkpoint at source `5958f928` is retained unchanged in
+[history/PROJECT_STATUS_2026-10-29_5958f928.md](history/PROJECT_STATUS_2026-10-29_5958f928.md).
+It predates PR #288 post-merge acceptance and completion of the original-runtime
+diagnostic. Neither this snapshot nor a later diagnostic pass qualifies new source.
+
 ## Preservation and reproduction
 
 The pre-cleanup layout is available at commit

@@ -119,6 +119,8 @@ def classification_for(path: str, source_set: str) -> str:
     # Archived source/resource paths describe evidence, not a shipping source set.
     if path.startswith(ARCHIVE_PREFIX):
         return "historical-document" if suffix == ".md" else "historical-artifact"
+    if path == ".github/workflows/ios-input-investigation.yml":
+        return "ci-diagnostic-workflow"
     if path.startswith(".github/workflows/"):
         return "ci-workflow"
     if path == ".github/dependabot.yml":
@@ -206,6 +208,8 @@ def reachability_for(path: str, source_set: str, classification: str, module: st
         return "DEVELOPMENT-ONLY: IDE convenience configuration"
     if classification == "ios-preview-resource":
         return "DEVELOPMENT-ONLY: SwiftUI/Xcode preview resource"
+    if classification == "ci-diagnostic-workflow":
+        return "CI-ONLY: explicit non-production investigation; not application qualification"
     if classification == "ci-workflow":
         return "CI-ONLY: production qualification workflow"
     return "BUILD-TIME OR REPOSITORY-ONLY: not loaded by the app at runtime"
@@ -216,6 +220,8 @@ def consumers_for(path: str, classification: str, module: str) -> str:
         return "Android manifest merger, lint, R8/AAB packaging, and Play review"
     if classification == "ios-privacy-or-manifest":
         return "Xcode bundle assembly, iOS runtime declarations, and App Store review"
+    if classification == "ci-diagnostic-workflow":
+        return "read-only original-source input investigation and retained failure analysis"
     if classification == "ci-workflow":
         return "GitHub Actions protected-branch production verification"
     if classification in {"historical-document", "historical-artifact", "operational-document", "review-evidence"}:
@@ -230,6 +236,8 @@ def consumers_for(path: str, classification: str, module: str) -> str:
 
 
 def disposition_for(classification: str, source_set: str) -> str:
+    if classification == "ci-diagnostic-workflow":
+        return "RETAIN as non-publishing diagnostic tooling; never substitutes for production checks"
     if classification == "historical-document":
         return "RETAIN AS HISTORICAL; authority banner requires separate inspection"
     if classification == "historical-artifact":

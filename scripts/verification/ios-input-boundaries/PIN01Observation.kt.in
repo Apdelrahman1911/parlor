@@ -1,0 +1,147 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlin.time.TimeSource
+
+/** COPY ONLY. Public setup counters; no state/identity/text/exception serialization. */
+open class PIN01Recorder {
+    private companion object {
+        const val CAPACITY = 512
+        const val WIDTH = 10
+    }
+    private val rows = DoubleArray(CAPACITY * WIDTH)
+    private val origin = TimeSource.Monotonic.markNow()
+    var clock: () -> Double = { origin.elapsedNow().inWholeMicroseconds / 1000.0 }
+    private var size = 0
+    private var overflow = 0
+    private var invalid = 0
+    private var stage = -1
+    private class PublicScope(val owner: Any, var stage: Int? = null)
+    private val scopes = ArrayList<PublicScope>()
+
+    fun mount(owner: Any) {
+        if (scopes.any { it.owner === owner }) return
+        if (scopes.size == 8) {
+            invalid = (invalid + 1).coerceAtMost(CAPACITY)
+            return
+        }
+        scopes.add(PublicScope(owner))
+    }
+
+    fun publicStage(value: Int, owner: Any) {
+        val scope = scopes.firstOrNull { it.owner === owner } ?: return
+        scope.stage = value
+        if (scopes.lastOrNull() === scope) publicStage(value)
+    }
+
+    fun unmount(owner: Any) {
+        val index = scopes.indexOfFirst { it.owner === owner }
+        if (index < 0) return
+        val wasActive = index == scopes.lastIndex
+        scopes.removeAt(index)
+        if (wasActive) publicStage(scopes.lastOrNull()?.stage ?: 5)
+    }
+    var armed = false
+        private set
+    var nativeMode = 0
+
+    // Row: uptimeMs, kind, control, phase, count, pressed, consumed, x, y, eventMs.
+    // All calls are on the actual Compose/UIKit main thread. No event-path JSON,
+    // logging, network, disk I/O, launch job, timer, replay or input consumption.
+    fun record(kind: Int, control: Int, phase: Int, count: Int, pressed: Int,
+               consumed: Int, x: Double, y: Double, eventMs: Double = 0.0) {
+        if (!armed && kind != 4) return
+        if (kind == 4 && phase !in 0..4) return
+        val now = clock()
+        if (!now.isFinite() || now < 0 || now > 1e12 || !x.isFinite() || !y.isFinite() ||
+            kotlin.math.abs(x) > 100_000 || kotlin.math.abs(y) > 100_000 ||
+            !eventMs.isFinite() || eventMs < 0 || eventMs > 1e12 ||
+            kind !in 1..5 || control !in 0..2 || phase !in 0..5 || count !in 0..16 ||
+            pressed !in 0..16 || consumed !in 0..16) {
+            invalid = (invalid + 1).coerceAtMost(CAPACITY)
+            return
+        }
+        if (size == CAPACITY) {
+            overflow = (overflow + 1).coerceAtMost(CAPACITY)
+            return
+        }
+        val offset = size++ * WIDTH
+        rows[offset] = now
+        rows[offset + 1] = kind.toDouble()
+        rows[offset + 2] = control.toDouble()
+        rows[offset + 3] = phase.toDouble()
+        rows[offset + 4] = count.toDouble()
+        rows[offset + 5] = pressed.toDouble()
+        rows[offset + 6] = consumed.toDouble()
+        rows[offset + 7] = x
+        rows[offset + 8] = y
+        rows[offset + 9] = eventMs
+    }
+
+    fun publicStage(value: Int) {
+        // Only Setup arms touches. Permission/name record stage enums, never keyboard input.
+        if (value == stage) return
+        stage = value
+        armed = value == 0
+        record(4, 0, value, 0, 0, 0, 0.0, 0.0)
+    }
+
+    fun callback(control: Int) = record(3, control, 0, 0, 0, 0, 0.0, 0.0)
+    fun scene(phase: Int) = record(5, 0, phase, 0, 0, 0, 0.0, 0.0)
+
+    /** An app-host diagnostic driver may capture AFTER the original action.
+     * Not an accessibility label, event-path write, production log or UI tap. */
+    fun snapshot(): String = buildJsonObject {
+        put("schema", 1)
+        put("nativeMode", nativeMode)
+        put("overflow", overflow)
+        put("invalid", invalid)
+        put("rows", buildJsonArray {
+            for (index in 0 until size) add(buildJsonArray {
+                for (field in 0 until WIDTH) add(JsonPrimitive(rows[index * WIDTH + field]))
+            })
+        })
+    }.toString()
+}
+
+object PIN01Observation : PIN01Recorder()
+
+@Composable
+fun PIN01PublicStage(value: Int) {
+    val owner = remember { Any() }
+    DisposableEffect(owner) {
+        PIN01Observation.mount(owner)
+        onDispose { PIN01Observation.unmount(owner) }
+    }
+    SideEffect { PIN01Observation.publicStage(value, owner) }
+}
+
+/** Observe Initial/Final only; never consume, delay or recognize a gesture. */
+fun Modifier.pin01PublicInput(control: Int): Modifier = pointerInput(control) {
+    val passes = arrayOf(PointerEventPass.Initial, PointerEventPass.Final)
+    awaitPointerEventScope {
+        while (true) {
+            for (pass in passes) {
+                val event = awaitPointerEvent(pass)
+                val changes = event.changes
+                val position = changes.singleOrNull()?.position
+                PIN01Observation.record(
+                    2, control, if (pass == PointerEventPass.Initial) 0 else 1,
+                    changes.size, changes.count { it.pressed }, changes.count { it.isConsumed },
+                    position?.x?.toDouble() ?: 0.0, position?.y?.toDouble() ?: 0.0,
+                    changes.singleOrNull()?.uptimeMillis?.toDouble() ?: 0.0,
+                )
+            }
+        }
+    }
+}
