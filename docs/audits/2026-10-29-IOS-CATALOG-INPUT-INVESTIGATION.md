@@ -64,6 +64,11 @@ because the new diagnostic workflow was not yet registered. Its1,867Desktop
 source is unchanged and private Gradle stop succeeds. The original failed log is
 preserved. Exact registration and its sensitivity controls are implemented before
 any publication; a fresh committed-source complete check remains required.
+The second check atd2d41d79 passes the755release controls but correctly fails
+Actionlint: `runner.temp` is unavailable in job-level `env`. The temporary-path
+context is moved to its supported step scopes, preserving the exact owned path;
+the immutable workflow image is reviewed again. Neither failed attempt is
+reclassified as a pass, and no hosted execution precedes complete local gates.
 
 Before attributing causality, inspect the original event and app-side receipt
 ordering. Native build/export execution, complete60-journey neutrality controls,

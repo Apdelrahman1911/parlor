@@ -34,7 +34,7 @@ jobs:
     timeout-minutes: 190
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
-      PARLOR_INPUT_OUTPUT: ${{ runner.temp }}/parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
+      PARLOR_INPUT_OUTPUT: parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
       PARLOR_INPUT_SOURCE: ${{ inputs.source || '841a0b0623b508eae103f79ba7b4e5773e6a8b4d' }}
       PARLOR_INPUT_RUNTIME: ${{ inputs.runtime || 'com.apple.CoreSimulator.SimRuntime.iOS-18-5' }}
       PARLOR_INPUT_DEVICE: ${{ inputs.device || 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro' }}
@@ -66,7 +66,7 @@ jobs:
         run: |
           /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
             --source "$PARLOR_INPUT_SOURCE" --runtime "$PARLOR_INPUT_RUNTIME" \
-            --device "$PARLOR_INPUT_DEVICE" --output "$PARLOR_INPUT_OUTPUT"
+            --device "$PARLOR_INPUT_DEVICE" --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Retain original failures, source/product manifests and owned cleanup
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -75,8 +75,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
           path: |
-            ${{ env.PARLOR_INPUT_OUTPUT }}/state.json
-            ${{ env.PARLOR_INPUT_OUTPUT }}/*/*.json
-            ${{ env.PARLOR_INPUT_OUTPUT }}/*/*.log
-            ${{ env.PARLOR_INPUT_OUTPUT }}/*/tests.xcresult
-            ${{ env.PARLOR_INPUT_OUTPUT }}/*/attachments
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/attachments
