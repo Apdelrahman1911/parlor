@@ -112,6 +112,33 @@ final-source Linux and hosted qualification remains necessary. The first native
 run retains its exact clean sparse `2a7d22a0` source for independent readback while
 the separate coding worktree is corrected; no old run/source/receipt is rewritten.
 
+## Native software-control temporary scope
+
+At corrected `ccfce05e`, [production40936865715](https://github.com/Apdelrahman1911/parlor/actions/runs/40936865715)
+executes all **446** ordinary readiness and 36 protection-application controls on
+macOS without errors/skips. The shallow-history repair is exercised successfully.
+Before KMP/Swift runtime, the existing outer private-directory `rmdir` then fails
+because that directory is nonempty. Original failed job/log is retained. Its exact
+leftover filenames/creating API were not recorded; do not invent attribution.
+
+Three newly imported Apple controls isolate source/module-cache files but their
+SDK/compiler/Foundation IPC child processes inherit the **outer** `TMPDIR`.
+The actual control bodies, executed with synthetic native scratch writers, leave
+that outer parent nonempty. Two behavioral assertions and seven child-environment
+routing subcases reject the old calls (three methods, nine assertion failures;
+zero errors/skips). This is executed process-boundary evidence, not an actual
+Linux UIKit compilation or proof of the unknown hosted file's origin.
+
+Give every SDK query, compiler, listener and notification request the exact owned,
+canonical **per-test** `TMPDIR`. Child lifetimes and existing listener retirement
+remain; the temporary fixture now owns those children's transient files too.
+All three new controls pass, including actual old-body RED/changed-body GREEN.
+The existing outer empty-directory-only retirement, failures, timeouts, native
+SDK compilation/IPC checks and workflow remain unchanged. No unknown output is
+force-removed and no check is disabled. Complete ordinary controls now total449,
+standalone diagnostic87. Fresh macOS source/runtime/cleanup execution must verify
+whether this also resolves the actual hosted retention; local mocks cannot do so.
+
 ## Required qualification and remaining limits
 
 Fresh base-main40916055035 independently qualifies PR #288's actual merged

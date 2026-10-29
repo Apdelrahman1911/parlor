@@ -2,6 +2,8 @@
 import copy
 import hashlib
 import itertools
+import inspect
+import os
 import json
 from pathlib import Path
 import platform
@@ -9,6 +11,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import pin01_copy as copies
 import pin01_receipts as receipts
@@ -203,15 +207,35 @@ class AppleCompileControl(unittest.TestCase):
         # Compile only; no Simulator allocation, app launch, signing or delivery claim.
         with tempfile.TemporaryDirectory(prefix='parlor-pin01-swift-') as raw:
             root = Path(raw).resolve()
+            environment = {**os.environ, 'TMPDIR': str(root)}
             source = root / 'Observer.swift'
             source.write_text('import UIKit\n' + (copies.HERE / 'PIN01TouchObserver.swift.in').read_text())
             sdk = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'],
-                                          text=True, timeout=45).strip()
+                                          text=True, timeout=45, env=environment).strip()
             architecture = {'arm64': 'arm64', 'x86_64': 'x86_64'}[platform.machine()]
             result = subprocess.run(['/usr/bin/xcrun', 'swiftc', '-typecheck', '-D', 'DEBUG', '-sdk', sdk,
                 '-target', architecture + '-apple-ios16.0-simulator', '-module-cache-path', str(root / 'cache'),
-                str(source)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120)
+                str(source)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120, env=environment)
             self.assertEqual(result.returncode, 0, result.stdout)
+
+
+class NativeScratchControls(unittest.TestCase):
+    def test_actual_typecheck_call_scopes_native_scratch_inside_its_owned_fixture(self):
+        # Execute the real control body with a synthetic native scratch writer.
+        # This does not compile UIKit or claim the hosted leftover's exact name.
+        with tempfile.TemporaryDirectory() as raw:
+            parent = Path(raw) / 'outer'; parent.mkdir()
+            def compile_with_scratch(*args, env=None, **kwargs):
+                scratch = Path((env or os.environ)['TMPDIR']) / 'TemporaryItems'
+                scratch.mkdir(exist_ok=True)
+                (scratch / 'synthetic-compiler-scratch').write_text('nonprivate fixture')
+                return SimpleNamespace(returncode=0, stdout='')
+            body = inspect.unwrap(AppleCompileControl.test_standalone_passive_recognizer_typechecks_with_actual_simulator_sdk)
+            with patch.dict(os.environ, {'TMPDIR': str(parent)}), patch.object(tempfile, 'tempdir', str(parent)), \
+                    patch.object(subprocess, 'check_output', return_value='/synthetic-sdk'), \
+                    patch.object(subprocess, 'run', side_effect=compile_with_scratch):
+                body(self)
+            self.assertEqual(list(parent.iterdir()), [], 'Native scratch must retire with the exact test fixture')
 
 
 if __name__ == '__main__':

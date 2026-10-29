@@ -1,5 +1,6 @@
 """Executed copy/retention controls; native app delivery and neutrality stay open."""
 import copy
+import ast
 import hashlib
 import inspect
 import json
@@ -10,6 +11,8 @@ import subprocess
 import sys
 import tempfile
 import time
+import textwrap
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -215,15 +218,16 @@ class AppleCompileControls(unittest.TestCase):
     @unittest.skipUnless(sys.platform == 'darwin', 'Capture typecheck requires actual Apple SDK')
     def test_exporter_and_actual_copied_xctest_driver_typecheck_with_simulator_sdk(self):
         with tempfile.TemporaryDirectory(prefix='parlor-pin02-compile-') as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
+            environment = {**os.environ, 'TMPDIR': str(root)}
             exporter = root / 'Capture.swift'; exporter.write_text((captures.HERE / 'PIN02Capture.swift.in').read_text())
             sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
             digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
             driver = root / 'Driver.swift'; driver.write_text(captures.render(sources, digests)[captures.DRIVER])
             sdk = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'],
-                                          text=True, timeout=45).strip()
+                                          text=True, timeout=45, env=environment).strip()
             platform_path = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'iphonesimulator', '--show-sdk-platform-path'],
-                                                    text=True, timeout=45).strip()
+                                                    text=True, timeout=45, env=environment).strip()
             architecture = {'arm64': 'arm64', 'x86_64': 'x86_64'}[platform.machine()]
             result = subprocess.run(['/usr/bin/xcrun', 'swiftc', '-typecheck', '-D', 'DEBUG', '-sdk', sdk,
                 '-target', architecture + '-apple-ios16.0-simulator', '-F', platform_path + '/Developer/Library/Frameworks',
@@ -231,34 +235,35 @@ class AppleCompileControls(unittest.TestCase):
                 # alone imports only ObjC macros, not XCTAssert/runActivity.
                 '-I', platform_path + '/Developer/usr/lib',
                 '-module-cache-path', str(root / 'cache'), str(exporter), str(driver)],
-                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180, env=environment)
             self.assertEqual(result.returncode, 0, result.stdout)
 
     @unittest.skipUnless(sys.platform == 'darwin', 'Actual Darwin IPC control requires macOS')
     def test_real_foundation_cross_process_export_one_shot_retention_and_observer_cleanup(self):
         with tempfile.TemporaryDirectory(prefix='parlor-pin02-ipc-') as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
+            environment = {**os.environ, 'TMPDIR': str(root)}
             source = root / 'Capture.swift'; source.write_text((captures.HERE / 'PIN02Capture.swift.in').read_text())
             control = root / 'Control.swift'; control.write_text((captures.HERE / 'PIN02FoundationControl.swift.in').read_text())
             binary = root / 'control'
             result = subprocess.run(['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-D', 'DEBUG',
                 '-D', 'PIN02_CONTROL', '-module-cache-path', str(root / 'cache'), str(source), str(control),
-                '-o', str(binary)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
+                '-o', str(binary)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180, env=environment)
             self.assertEqual(result.returncode, 0, result.stdout)
             parent = root / 'owned'; parent.mkdir()
             listener = subprocess.Popen([str(binary), 'listen', TOKEN, SIMULATOR, str(parent)],
-                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=environment)
             try:
                 # Bound even readiness reads; only the caller-owned listener is
                 # terminated on failure. No unrelated process/Simulator cleanup.
                 import select
                 self.assertTrue(select.select([listener.stdout], [], [], 5)[0], 'Control readiness timeout')
                 self.assertEqual(listener.stdout.readline().strip(), 'PIN02_CONTROL_READY')
-                subprocess.run([str(binary), 'request', SIMULATOR], check=True, timeout=5)
+                subprocess.run([str(binary), 'request', SIMULATOR], check=True, timeout=5, env=environment)
                 time.sleep(0.1) # Control harness only, never an app/touch event delay.
                 directory = parent / ('parlor-pin02-' + TOKEN)
                 self.assertFalse(directory.exists(), 'Foreign signal must not capture')
-                subprocess.run([str(binary), 'request', TOKEN], check=True, timeout=5)
+                subprocess.run([str(binary), 'request', TOKEN], check=True, timeout=5, env=environment)
                 output, _ = listener.communicate(timeout=10)
                 self.assertEqual(listener.returncode, 0, output)
                 self.assertIn('PIN02_CONTROL_ONE_EXPORT_REMOVED', output)
@@ -272,6 +277,41 @@ class AppleCompileControls(unittest.TestCase):
                 if listener.poll() is None:
                     listener.terminate()
                     listener.communicate(timeout=5)
+
+
+class NativeScratchControls(unittest.TestCase):
+    def test_actual_exporter_typecheck_scopes_native_scratch_inside_its_owned_fixture(self):
+        with tempfile.TemporaryDirectory() as raw:
+            parent = Path(raw) / 'outer'; parent.mkdir()
+            def compile_with_scratch(*args, env=None, **kwargs):
+                scratch = Path((env or os.environ)['TMPDIR']) / 'TemporaryItems'
+                scratch.mkdir(exist_ok=True)
+                (scratch / 'synthetic-compiler-scratch').write_text('nonprivate fixture')
+                return SimpleNamespace(returncode=0, stdout='')
+            body = inspect.unwrap(AppleCompileControls.test_exporter_and_actual_copied_xctest_driver_typecheck_with_simulator_sdk)
+            with patch.dict(os.environ, {'TMPDIR': str(parent)}), patch.object(tempfile, 'tempdir', str(parent)), \
+                    patch.object(subprocess, 'check_output', return_value='/synthetic-sdk'), \
+                    patch.object(subprocess, 'run', side_effect=compile_with_scratch):
+                body(self)
+            self.assertEqual(list(parent.iterdir()), [], 'Native scratch must retire with the exact test fixture')
+
+    def test_all_exporter_sdk_compiler_listener_and_request_processes_use_owned_environment(self):
+        methods = (AppleCompileControls.test_exporter_and_actual_copied_xctest_driver_typecheck_with_simulator_sdk,
+                   AppleCompileControls.test_real_foundation_cross_process_export_one_shot_retention_and_observer_cleanup)
+        counts = []
+        for method in methods:
+            tree = ast.parse(textwrap.dedent(inspect.getsource(inspect.unwrap(method))))
+            calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
+                     and isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name)
+                     and node.func.value.id == 'subprocess']
+            counts.append(len(calls))
+            for call in calls:
+                with self.subTest(method=method.__name__, command=call.func.attr):
+                    environment = [k.value for k in call.keywords if k.arg == 'env']
+                    self.assertEqual(len(environment), 1)
+                    self.assertIsInstance(environment[0], ast.Name)
+                    self.assertEqual(environment[0].id, 'environment')
+        self.assertEqual(counts, [3, 4])
 
 
 if __name__ == '__main__':
