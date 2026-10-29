@@ -88,11 +88,17 @@ normally as `539f8073fde9e7f168c64890ff89a416ab5551f0` after fresh
 [PR40877009596](https://github.com/Apdelrahman1911/parlor/actions/runs/40877009596)
 qualifies all eight producers/the Apple join, 23 Swift and 708 source-derived KMP
 Simulator methods. [Automatic main40886687896](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
-is running at this checkpoint, **not yet post-merge qualified**. Preparatory local
-alignment with that merged main changes no source-tree bytes. [Draft #288](https://github.com/Apdelrahman1911/parlor/pull/288)
-remains stacked remotely; never merge it into the feature branch. Main qualification,
-final documentation-source rechecks, retargeting to main, fresh complete hosted
-controls/architectures, protected integration and distinct actual-main checks remain.
+now independently qualifies every required producer/the Apple join, 23 Swift,
+708 KMP Simulator and 359 readiness methods with zero skips. Qualification SHA256
+`532068c2bc3c8a3f4af3f4218b54260ea1cf3b2655ff3dadf5493c680f6ec09a`.
+Normal local alignment with that main changes no source-tree bytes.
+Committed `6dc6d996` includes the release-graph documentation regression; full
+strict checks pass the same combined counts/gates, source unchanged and stop0.
+Full log SHA256 `75baef85dfa232665fa86d2875da76d63b100dfa5d60db3ae11b53e7e2d35dcd`.
+[Draft #288](https://github.com/Apdelrahman1911/parlor/pull/288) must target main,
+never be merged into the feature branch. Final documentation-source rechecks,
+fresh complete hosted controls/architectures, protected integration and distinct
+actual-main checks remain.
 
 These are source-inventory software results, not Apple execution or application
 qualification. Keep #284 open until its relevant integration requirements

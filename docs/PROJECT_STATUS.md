@@ -1,6 +1,6 @@
 # Project status — October 29, 2026
 
-## Qualification checkpoint (14:05 UTC)
+## Qualification checkpoint (15:26 UTC)
 
 [PR #287](https://github.com/Apdelrahman1911/parlor/pull/287) normally merged at
 13:57 UTC as `539f8073fde9e7f168c64890ff89a416ab5551f0`. Fresh
@@ -10,9 +10,12 @@ independently qualifies every required producer/the original Apple join,
 readiness methods and exact source/artifact/native/output custody. Qualification
 SHA256 `1f1dd059ec5fd47523a4785743340a8ef158426ea3135686e78821044ffc8e08`.
 Fresh [automatic main40886687896](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
-is running, **not yet post-merge qualified**. Main/PR tree is exactly
-`7ff23d909ed10e0807b3352f0227f7183abef211`; source identity does not replace fresh
-post-merge verification. Required protections remain active; no bypass occurred.
+now independently qualifies all eight producers/the Apple join, 23 Swift,
+708 source-derived KMP Simulator and 359 readiness methods (zero skips).
+Qualification SHA256 `532068c2bc3c8a3f4af3f4218b54260ea1cf3b2655ff3dadf5493c680f6ec09a`.
+Main/PR tree is exactly `7ff23d909ed10e0807b3352f0227f7183abef211`; actual
+native runtime is **iOS18.5/iPhone16Pro**, not the SDK26.2 or physical devices.
+Required protections remain active; no bypass occurred.
 
 Previous [PR #286](https://github.com/Apdelrahman1911/parlor/pull/286) and its
 [automatic main40867943050](https://github.com/Apdelrahman1911/parlor/actions/runs/40867943050)
@@ -52,13 +55,30 @@ identifies it and fails. Exact recorded Gradle output paths replace hidden/basen
 pruning; intake/hash/symlink checks remain strict. Original RED and four reader
 mutations are retained. Combined `0e8341ea` passes all strict local gates above and
 **362 ordinary readiness methods**, three Apple-only Linux skips. Reader bytes
-remain unchanged through preparatory local alignment with merged recovery main.
+remain unchanged through normal local alignment with now-qualified recovery main.
 
-The remote PR still targets the feature branch; **never merge there**. Actual-main
-qualification, final-source rechecks, main retargeting, fresh full hosted/native/
-readiness qualification, protected merge and automatic actual-main verification
-remain. Keep #284 open: this is not dormant PIN03 harness integration or #267/#276
+Committed `6dc6d996` additionally corrects release-gate prose to all 11 existing
+job definitions; its existing regression rejects the stale count. Full strict
+local checks pass the same counts/gates in 183.7 seconds, source unchanged/stop0.
+Log SHA256 `75baef85dfa232665fa86d2875da76d63b100dfa5d60db3ae11b53e7e2d35dcd`.
+Final documentation-source checks remain before publication. The draft must target
+**main, never the feature branch**. Fresh full hosted/native/readiness qualification,
+protected merge and distinct automatic actual-main verification remain. Keep #284 open: this is not dormant PIN03 harness integration or #267/#276
 root-cause resolution. Local reuse is not a controlled cold-build speed benchmark.
+
+## Original native input investigation running
+
+[Diagnostic40889770560](https://github.com/Apdelrahman1911/parlor/actions/runs/40889770560)
+runs harness `91eec0ec` against original failed app `9d4f369d`, explicitly selected
+iOS26.2/iPhone17Pro and Xcode26.3/17C529. The exact original driver is retained;
+no slower/replayed tap or newer successful path replaces it. Three original/
+Compose/native arms each get one attempt. Local diagnostic-source checks pass
+1,867 Desktop, 671 Android per variant, 120 GitHub-test, 761 release controls and
+403 readiness methods (six Apple-only Linux skips). Five profile controls reject
+longer-tap/early-capture/unbound-runtime mutations. This is a c62-based diagnostic,
+not newer-main qualification. Case outcomes, actual result runtime/device and
+capture/cleanup acceptance are pending; #267/#276 remain open. It was published
+after main's Desktop macOS lane finished, on one standard free runner.
 
 ## Remaining acceptance gates
 
