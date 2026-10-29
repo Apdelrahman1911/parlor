@@ -957,14 +957,17 @@ class WorkflowContractTest(unittest.TestCase):
         for before, after in (
             ("contents: read", "contents: write"),
             ("runs-on: macos-15", "runs-on: macos-15-large"),
-            ("branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29]", "branches: [main]"),
+            ("branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29]", "branches: [main]"),
             ("cancel-in-progress: false", "cancel-in-progress: true"),
             ("actions/cache/restore@", "actions/cache/save@"),
             ("--source \"$PARLOR_INPUT_SOURCE\"", "--source \"$PARLOR_INPUT_SOURCE\" --retry"),
-            ("/*/tests.xcresult", "/*/source/**"),
+            ("/original/tests.xcresult", "/original/source/**"),
             ("permissions:\n  contents: read", "permissions:\n  contents: read\n  id-token: write"),
             ("if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'", "if: false"),
             ("xcode_worker_inventory.py", "run_pin03.py"),
+            ("review_frozen_result.py", "run_pin03.py"),
+            ("actions: read", "actions: write"),
+            ("/settlement-lines.json", "/console/**"),
             ("/usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v", "true"),
         ):
             changed = workflow.replace(before, after)

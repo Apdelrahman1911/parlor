@@ -63,3 +63,32 @@ Fresh committed-source gates, native linkage/behavior of the corrected template,
 protected integration, original iOS26.2 and physical-device acceptance remain
 separate requirements. No shipping source, gesture, deadline, permission,
 production workflow, architecture, Release optimization or Store release changes.
+
+## Completed native investigation (05:12 UTC)
+
+[Run40814363116](https://github.com/Apdelrahman1911/parlor/actions/runs/40814363116)
+completes all three arms at original application841a0b06/harnessd7fd8d2d.
+Independent frozen source/manifests and actual xcresult counts agree:
+original1PASS/1FAIL, Compose2PASS, native2PASS, no skips. The original Arabic
+failure is **pre-tap public control settlement**, not the earlier post-catalog
+Host assertion. Its failed result remains failed; no shipping cause is proven.
+No post-transition numeric capture is produced, because the observed arms pass.
+Different outcomes do not establish observer neutrality or a repair.
+
+All three owned cleanup receipts pass; each records delivered SIGTERM and
+SIGKILL for the exact inventoried DTServiceHub path. Those are producer ownership
+receipts, not independent post-run process re-attestation. ZIP SHA256:
+`41d75ff88eeb1f3a1e39e1f66b45d1b028ff98bb8cff06f3e026ab23d4ab85dc`.
+
+The independent review's elapsed-time dictionary mistakenly uses duplicate
+`*-tests` labels: JSON result decoding overwrites actual XCTest duration.
+Original command rows are intact: XCTest398.754/511.733/479.884seconds for
+original/Compose/native, not0.088/0.141/0.080seconds. New decoder labels are
+distinct, with a regression control; preserve the prior receipt and this erratum.
+
+Before another application execution, a separate standard free macOS lane reads
+only that exact retained original xcresult. Artifact/run/source/digest/path
+controls reject substitution; Xcode decodes activities, details and already
+recorded settlement samples. No build, app launch, event replay, Simulator,
+permission change, cache write, signing or production-check substitution occurs.
+The corrected recorder's native application linkage remains unverified.

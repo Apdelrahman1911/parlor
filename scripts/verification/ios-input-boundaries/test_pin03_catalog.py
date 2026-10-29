@@ -35,6 +35,15 @@ def snapshot():
 
 
 class CopyControls(unittest.TestCase):
+    def test_result_decode_labels_cannot_overwrite_native_test_execution_timing(self):
+        for arm in catalog.ARMS:
+            labels = [runner.result_label(arm, kind) for kind in ('summary', 'tests')]
+            self.assertEqual(len(set(labels)), 2)
+            self.assertNotIn(arm + '-tests', labels)
+        for arm, kind in (('unknown', 'tests'), ('original', 'execute')):
+            with self.assertRaises(ValueError):
+                runner.result_label(arm, kind)
+
     def test_native_test_command_runs_both_original_methods_once_without_repetition_options(self):
         base = ['/usr/bin/xcodebuild', '-project', 'iosApp/iosApp.xcodeproj',
                 '-scheme', 'iosApp', '-configuration', 'Debug',

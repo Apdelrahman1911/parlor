@@ -24,7 +24,7 @@ EXPECTED = {
 # Exact reviewed evidence-only workflow. Registration never widens the generic
 # allowlist: any privilege, trigger, runner, cache, command or upload edit fails
 # until this complete image is deliberately reviewed with sensitivity controls.
-INPUT_INVESTIGATION_SHA256 = "39980fb0137abe1077755056bf9f00084a83c654c1c557737abdd93431aa9d32"
+INPUT_INVESTIGATION_SHA256 = "ae3dbe50e62a582a30e636968774fbcef941d0aa794e367e9f9da3b8f3219ee6"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"

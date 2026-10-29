@@ -201,6 +201,12 @@ def test_command(base, result):
             *('-only-testing:' + t for t in TESTS)]
 
 
+def result_label(arm, kind):
+    if arm not in catalog.ARMS or kind not in ('summary', 'tests'):
+        raise ValueError('Explicit diagnostic arm and result decoder required')
+    return arm + '-result-' + kind
+
+
 def decode_capture(raw, tokens, simulator_id, bundle):
     if len(raw) > pin02_capture.MAX_BYTES:
         raise ValueError('Oversized capture')
@@ -371,7 +377,7 @@ def main():
                 raise ValueError('Original built application changed during native execution')
             for kind in ('summary', 'tests'):
                 rc, raw = command(['/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', kind,
-                                   '--path', str(result)], arm + '-' + kind)
+                                   '--path', str(result)], result_label(arm, kind))
                 if rc:
                     raise RuntimeError('Original XCTest result decoding failed')
                 (dest / (kind + '.json')).write_bytes(raw)
