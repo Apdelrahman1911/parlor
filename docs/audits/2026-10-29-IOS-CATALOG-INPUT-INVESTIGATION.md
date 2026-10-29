@@ -137,3 +137,35 @@ verifies1,143original/1,144observed inputs, all three copy-plan hashes and62decl
 output directories. Existing hash/symlink/product/result boundaries remain.
 Local validation is not hosted acceptance of this changed reader. #269's resolved
 ignored-worktree false positive is distinct and is not reopened.
+
+## Native execution proceeds; unknown cleanup worker blocks observed arms
+
+[Run40807977599](https://github.com/Apdelrahman1911/parlor/actions/runs/40807977599)
+at e4ac328b passes all37actual Apple controls. Both original EN/AR methods execute
+and pass on frozen841a0b06 with zero skips; original build/test exits0, post-native
+input hashes remain exact. This confirms execution of the command correction,
+not the original tap-loss cause or full three-arm acceptance.
+
+Cleanup fails closed: a new task-tracked Xcode worker, PID66782, is not on the
+exact approved executable list. The retained cleanup error omits its full path;
+GitHub's final orphan report identifies the same PID as `DTServiceHub`. No signal
+is authorized by our cleanup helper, device retirement is withheld, and neither
+observed arm executes. Artifact12870103449 API/download ZIP SHA256:
+`e7b86ffc8124c08222970b715ee3ac09ca2374f05fb4b04e677d72b1d3f0764d`.
+Independent frozen-archive/input/result comparison retains this **failed** scope.
+
+A separate explicit inventory branch performs bounded read-only discovery of
+installed Xcode components, hashes actual bytes before/after signature inspection
+and records public signature fields. It launches no app, creates no Simulator,
+signals no worker, and grants no cleanup authority. Full native execution remains
+selected on the original diagnostic branch; production workflows are unchanged.
+The cheap free-runner inventory avoids another Native build merely to discover
+a path. Exact native lifetime/UID/marker/audit-token attestation and real supported
+cleanup remain required before extending any approved worker list.
+
+Seven new inventory controls cover redirects, unexpected paths, bounds, signature
+commands/failure and changing bytes. The first discovery retains one failed
+mutation control: same-size fixture writes can preserve filesystem timestamps.
+An actual second bounded byte hash fixes that gap instead of making the fixture
+larger or weakening its assertion. Revised PIN discovery:44methods,41pass and
+3explicit Linux Apple-only skips. This is not actual Xcode inventory execution.
