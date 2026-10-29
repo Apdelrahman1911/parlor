@@ -1,4 +1,62 @@
-# Project status — 2026-10-28
+# Project status — 2026-10-29
+
+## Current main and first reliability PR qualification failed
+
+Selected-Resume PR#281 merged as `7c87a8726bab4da85cbd3824b30d2fcc709ad894`.
+Its fresh [main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
+**failed** exact typed-value verification in the Arabic iOS setup journey.
+Older successful main40731239367 qualifies `0bb8d5a5`, not current main.
+[PR#282](https://github.com/Apdelrahman1911/parlor/pull/282) remains draft/open/
+unmerged; its separate completed catalog-event failure is unresolved.
+
+The [independent reliability follow-up](audits/2026-10-29-VERIFICATION-RELIABILITY.md)
+prepares the evidenced exact Xcode worker cleanup correction for proper main
+integration and registers six synthetic credential-availability regressions.
+Its [first PR run40847924214](https://github.com/Apdelrahman1911/parlor/actions/runs/40847924214)
+at066947c8 also **failed** the Arabic exact-value test:19Swift passes/1failure;
+seven other producers and the Apple Release join pass. The original recording
+shows delayed visible input and Apple QuickPath after the unchanged deadline,
+not a proven shipping sanitizer or storage-test defect. It is not merged.
+
+The [bounded native-observer follow-up](audits/2026-10-29-NATIVE-VALUE-FOLLOWUP.md)
+now brings only two test/contract files from PR#282 into this independent scope,
+plus the [measured output-index optimization](audits/2026-10-29-VERIFICATION-OUTPUT-INDEX.md).
+Focused tests and sensitivity controls do not replace fresh committed-source
+full local/hosted checks, normal protected integration and automatic actual-main.
+It changes no shipping gameplay, native gestures, deadlines, architectures,
+Release optimization, dependency verification or release authorization.
+
+Diagnostic40833776865 passes six actual original/Compose/native EN/AR methods
+on iOS18.5; no failed-only recorder capture executes. That green does not prove
+the original iOS26.2 input cause, full native neutrality, production acceptance
+or physical-device security/lifecycle/power behavior. #267/#276/#283 and
+physical/Store/signing/protection gates remain open. No extra agent or paid runner.
+
+The sections below retain historical checkpoints, not newer-main qualification.
+
+## Catalog accepted; Resume safeguard awaiting fresh integration qualification
+
+Catalog [PR#280](https://github.com/Apdelrahman1911/parlor/pull/280) is merged as
+`0bb8d5a59d2a4f7b1849d188e312aef178593005`. Its automatic
+[main40731239367](https://github.com/Apdelrahman1911/parlor/actions/runs/40731239367)
+independently qualifies eight producers plus the original Apple join,20Swift
+methods,678KMP Simulator cases, all15Whodunit/pointer6/artwork5 methods in every
+Desktop lane and exact source/artifact/native/output custody. This accepts the
+six-game cached-vector catalog, real rounded-card feedback containment and
+atomic Gradle-fixture readiness repair, not complete mobile UX/Store acceptance.
+
+The [selected-game Resume safeguard](audits/2026-10-28-RESUME-GAME-BINDING.md)
+is integrated locally with that verified base, but remains unmerged/unpublished.
+At frozen09578533, its full strict local check passes1,840Desktop cases,
+653Android perDebug/Release,112GitHub-test and750release controls, including28
+focused methods and sensitivity controls. These older exact-head results do
+not qualify the new documentation/integration source. Fresh full local/hosted
+checks, normal protected integration and automatic actual-main verification
+remain mandatory. #251/#252 physical recovery, same-game selection binding,
+#267 native input causality, #258 strict protection and Store/signing gates stay
+open. No physical-device, RPC performance, battery/thermal or Store claim.
+
+The checkpoints below are retained historical evidence, not current-head proof.
 
 ## Catalog main accepted; selected-membership and cold-recovery follow-ups
 
