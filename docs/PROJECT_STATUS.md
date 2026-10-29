@@ -1,6 +1,6 @@
 # Project status — October 29, 2026
 
-## Verified checkpoint
+## Verified main and source-preparation checkpoint
 
 [PR #288](https://github.com/Apdelrahman1911/parlor/pull/288) normally merged as
 `5958f9289e6de77273eedc459cd54a2869423fb5` at 16:53 UTC. Fresh
@@ -13,9 +13,11 @@ methods without skips. Exact source/artifact/native/output custody matches tree
 Actual UIKit runtime: **iOS18.5/iPhone16Pro**, not SDK26.2 or physical devices.
 
 [Distinct automatic main40916055035](https://github.com/Apdelrahman1911/parlor/actions/runs/40916055035)
-is still running at this preparation checkpoint. Three Desktop host lanes pass;
-Apple/Android completion and independent post-merge qualification remain. Never
-substitute PR success for actual-main acceptance. Protections remain active.
+independently qualifies actual main `5958f9289e6de77273eedc459cd54a2869423fb5`: all eight producers/the original
+Apple Release join, 23 Swift, 708 source-derived KMP Simulator and 362 ordinary
+readiness methods (zero skips), with exact source/artifact/native/output custody.
+Qualification SHA256 `eebb48d83bbcc1bbdf594b2770c2fa5fc1bcd6ceaf2ddb4c2616fd19c8d6344f`. This is distinct automatic actual-
+main execution, not PR-pass substitution. Protections remain active.
 
 Previously accepted [recovery PR #287/main539f8073](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
 qualifies all producers/Apple join,23Swift/708KMP Simulator/359readiness and
@@ -58,10 +60,16 @@ at merge. [Its state/wording correction](https://github.com/Apdelrahman1911/parl
 is read back; #267/#276 remain open and original failures remain failed.
 
 The [separate diagnostic integration](audits/2026-10-29-INPUT-DIAGNOSTIC-INTEGRATION.md)
-is prepared locally, not published/accepted. It retains the reviewed copy-only
-harness, repairs independently reproduced output-symlink/suffix gaps and includes
-all artifact/worker controls in ordinary readiness. Keep #284 open pending fresh
-committed-source/native qualification, protected integration and actual-main checks.
+retains the reviewed copy-only harness, repairs independently reproduced output-
+symlink/suffix gaps and includes all artifact/worker controls in ordinary readiness.
+At this source-preparation checkpoint, clean `b0773085` passes strict full local
+checks (1,889 Desktop, 681 Android per variant, 120 GitHub-test, 768 release
+controls), all 439 readiness methods (six Apple-only Linux skips), and actual owned-
+copy Desktop execution: ten recorder/Nav3 methods plus 60 unchanged public-pointer
+journeys before/after observation. The old-scope sensitivity failure is retained.
+Final documentation-source gates and fresh hosted/native qualification follow;
+[existing #284](https://github.com/Apdelrahman1911/parlor/issues/284) records protected
+integration/actual-main acceptance separately from original input causality.
 
 ## Outstanding acceptance gates
 

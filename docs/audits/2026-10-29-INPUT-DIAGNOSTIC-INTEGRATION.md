@@ -63,14 +63,38 @@ new reader methods. A separate inventory regression rejects misclassifying this
 workflow as production qualification; corrected mechanical inventory remains
 expressly **not independently attested source review**.
 
+## Fresh committed-source local execution
+
+At clean `b07730859440357f88b79334b92c5f57cca9595e`, strict `productionCheck allTests`
+passes 1,889 Desktop methods (three existing LAN skips), 681 Android per Debug/
+Release, 120 GitHub-test and 768 release controls (one platform skip), with Detekt,
+lint/R8/unsigned AAB and inventory/shell gates. The 295 unchanged affected Desktop
+methods in 15 files match actual XML. All 439 source-derived ordinary readiness
+methods pass with six explicit Apple-only Linux skips. Source unchanged/owned stop0.
+Full log SHA256 `67143cb85bfda70fb34f484db267ca728566fdae7c51a43c8f6245477a64a92b`;
+readiness log `73be1f0e3b70c4d9f1ceb3d7c95fa36ae1440b0152b339224013ae996339c2ca`.
+
+A separately owned filtered Git-source copy executes the actual recorder and
+Compose/Nav3 templates. Restoring close-on-any-scope-disposal produces one expected
+failure: the actual setup callback runs once but its numeric recorder row is lost.
+The corrected template executes all ten methods successfully; all six unchanged
+public-pointer methods/60 journeys pass both before and after copied observation.
+Independent review matches source manifests, methods, XML, numeric rows, logs and
+owned stop0; shipping source stays untouched. Receipt SHA256
+`8e48d77edf83431aa0cd8db16c578d7de680a24f3d836e5abcfd09e360b2bfed`.
+This is current-source Desktop execution, not UIKit arbitration/timing neutrality,
+original lost-input causality, physical-device or energy verification.
+
 ## Required qualification and remaining limits
 
-Fresh complete committed-source Linux gates, all439 ordinary readiness methods,
-actual Apple/native architecture/runtime execution, source/product/result/artifact
-custody, protected merge and distinct automatic actual-main acceptance remain.
-An old diagnostic pass does not qualify this candidate. Publication is held while
-already running actual-main verification completes; no extra agents or paid
-infrastructure are used. Local cache reuse is not a controlled speed benchmark.
+Fresh base-main40916055035 independently qualifies PR #288's actual merged
+`5958f928`: all eight producers/original Apple Release join, 23 Swift/708 KMP
+Simulator/362 readiness and custody; receipt SHA256 `eebb48d83bbcc1bbdf594b2770c2fa5fc1bcd6ceaf2ddb4c2616fd19c8d6344f`.
+Final documentation-source gates, fresh candidate Apple/native architecture/runtime
+execution, source/product/result/artifact custody, protected merge and distinct
+candidate automatic actual-main acceptance remain at this preparation checkpoint.
+Old diagnostics do not qualify a newer candidate. No extra agents or paid
+infrastructure are used; local cache reuse is not a controlled speed benchmark.
 
 Original iOS26.2 diagnostic40889770560 has six passes, but none triggered failed-
 only captures/exports. Recorder callbacks/export pipeline, full60-journey neutrality
