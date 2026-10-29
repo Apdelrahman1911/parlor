@@ -9,7 +9,7 @@ not a new duplicate or a physical-device security conclusion. The already accept
 
 At main `5958f928`, two new tests execute **unchanged actual host/peer room code**
 with synthetic P2pKit sessions, independent injected wall/elapsed counters and
-pending coroutine timers. Move elapsed time to15seconds while wall time remains
+pending coroutine timers. Move elapsed time to15 seconds while wall time remains
 inside the original window: the host still accepts remote game commands and the
 peer still attempts retained validation. Both assertions fail (zero errors/skips).
 Original RED log SHA256
@@ -23,7 +23,7 @@ getters, validation and coordinator timers spend the original elapsed budget.
 Calendar hints can shorten but never renew grace. Invalid/backward/overflowed
 elapsed readings fail closed. Epoch projection saturates on overflow and carries
 elapsed time into hard recovery, preventing a delayed short-grace expiry from
-renewing the total120second window. Validation is rechecked after its await;
+renewing the total120-second window. Validation is rechecked after its await;
 slow retention work cannot start a fresh timer. Existing room generation,
 mutex/close authority, cancellation, privacy and host-only gameplay stay intact.
 
@@ -41,7 +41,7 @@ zero failures/errors/skips; independent retained XML readback matches every suit
 Log SHA256 `7365dab10b37d3398d961e3cdcbb44ae4bb5e2e53ce760d442efb078770cb4d3`.
 Tests cover delayed timer start, wall rollback inside/outside the window, slow
 retention, an awaited validation crossing the deadline, expiry at the original
-120second total, invalid counters/epochs and overflow, alongside existing
+120-second total, invalid counters/epochs and overflow, alongside existing
 leave/room-replacement/cleanup cases.
 
 The first corrected-source attempt compiled main Kotlin but failed new test
@@ -81,11 +81,34 @@ faults, OS sleep/suspension, phones, process death, game reducers or energy evid
 Whole-JVM samples include startup/JIT and one incomplete peer sample; no exhaustive
 mobile resource measurement is claimed.
 
+## Combined current-main alignment
+
+The separate candidate is aligned by normal local merge with main `c81f75b4`;
+head `102b38ae` / tree `1c165500` is byte-identical to already tested `f3784375`. Receipts
+remain explicitly bound to `f378`; tree identity is not a new-head execution claim.
+At `f378`, strict complete local gates pass1,901 Desktop (three existing LAN skips),
+689 Android per Debug/Release,120 GitHub-test and768 release controls (one platform
+skip), plus Detekt/lint/R8/AAB/shell/inventory. All21affected suites/336Desktop
+methods independently match actual XML; source unchanged/owned stop0.
+Log SHA256 `4f4b09518aad7d116f005babac4a88b23661822804d706b2454a1a5d73604af3`.
+Complete 450 ordinary readiness methods pass with six Apple-only Linux skips.
+The 388.2-second local run used680 cached tasks, not a cold/mobile benchmark.
+
+Fresh real LAN execution independently matches 1,146 runtime artifacts / six helper
+sources across three Resume pairs, six natural zero exits and unchanged seat,
+game/version, rotation/revocation/terminal/cleanup assertions. Receipt SHA256
+`13a16a1d25798ee453e3e8735e2207b14ac26a6fc804888522a01260d5965a5f`.
+Explicit private preparation-only scheduling adaptation lowers Gradle workers 2 to 1
+and adds no-parallel; runtime pair/assertion/deadline/helper source is unchanged.
+Do not describe the entire launcher as byte-exact unmodified. Surviving local
+JVMs/in-memory stores do not execute short-grace faults, mobile APIs or OS sleep.
+
 ## Required integration and remaining limits
 
-Accepted-base alignment, final documentation/source rechecks, protected PR integration,
+Accepted-base alignment is complete; final documentation/source rechecks, protected PR integration,
 fresh Apple linkage/runtime and distinct automatic actual-main verification remain
-before merge. PR#289 runs independently; its frozen checkouts are unchanged.
+before merge. PR #289 is normally merged; its distinct actual-main verification runs
+independently, and its frozen checkouts are unchanged.
 Physical Android/iOS calls/lock/sleep/Wi-Fi/process death/simultaneous recovery,
 energy/thermal and #258 protected-storage acceptance remain unverified. No Store
 release, free-runner policy change or additional agents.
