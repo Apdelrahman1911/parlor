@@ -120,7 +120,12 @@ class FreeHostedCIContractTest(unittest.TestCase):
 
     def test_current_workflow_is_complete_and_free_only(self):
         contract.verify_validation(self.workflow)
-        self.assertEqual(self.workflow.count(contract.FREE_APPLE_RELEASE_RUNNER), 3)
+        self.assertEqual(self.workflow.count(contract.FREE_APPLE_RELEASE_RUNNER), 2)
+        self.assertEqual(self.workflow.count(contract.FREE_APPLE_X64_RELEASE_RUNNER), 1)
+        for job_id, selector in (("ios-release-device", contract.FREE_APPLE_RELEASE_RUNNER),
+                                 ("ios-release-simulator", contract.FREE_APPLE_RELEASE_RUNNER),
+                                 ("ios-release-x64", contract.FREE_APPLE_X64_RELEASE_RUNNER)):
+            self.assertIn("    runs-on: " + selector + "\n", contract.validation_job(self.workflow, job_id))
         self.assertNotIn("OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES", self.workflow)
         self.assertNotIn("smallBinary", self.workflow)
 
@@ -156,10 +161,12 @@ class FreeHostedCIContractTest(unittest.TestCase):
                     contract.verify_validation(changed)
 
     def test_release_runners_cannot_use_paid_or_arbitrary_labels(self):
-        for label in ("macos-15-large", "macos-15-xlarge", "self-hosted", "${{ inputs.apple_release_runner }}"):
-            changed = self.workflow.replace(contract.FREE_APPLE_RELEASE_RUNNER, label, 1)
-            with self.subTest(label=label), self.assertRaises(RuntimeError):
-                contract.verify_validation(changed)
+        for selector in (contract.FREE_APPLE_RELEASE_RUNNER, contract.FREE_APPLE_X64_RELEASE_RUNNER):
+            for label in ("macos-15-large", "macos-15-xlarge", "self-hosted", "${{ inputs.apple_release_runner }}"):
+                changed = self.workflow.replace(selector, label, 1)
+                self.assertNotEqual(changed, self.workflow)
+                with self.subTest(selector=selector, label=label), self.assertRaises(RuntimeError):
+                    contract.verify_validation(changed)
 
     def test_caches_cannot_write_on_prs_or_restore_reports_builds_or_secrets(self):
         for old, new in (("if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'", "if: always()"),
