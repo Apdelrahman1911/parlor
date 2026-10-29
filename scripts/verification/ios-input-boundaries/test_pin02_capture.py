@@ -1,6 +1,7 @@
 """Executed copy/retention controls; native app delivery and neutrality stay open."""
 import copy
 import hashlib
+import inspect
 import json
 import os
 from pathlib import Path
@@ -37,6 +38,31 @@ def decode(value):
 
 
 class CopyControls(unittest.TestCase):
+    def test_typecheck_command_includes_swift_overlay_and_rejects_compiler_failure(self):
+        # Command construction only, with explicit mock SDK/compiler. This does
+        # not turn an Apple-only native control into a Linux compile claim.
+        method = inspect.unwrap(AppleCompileControls.test_exporter_and_actual_copied_xctest_driver_typecheck_with_simulator_sdk)
+        sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
+        digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
+        expected = captures.render(sources, digests)[captures.DRIVER]
+        def compiler(command, **options):
+            self.assertEqual(command[:6], ['/usr/bin/xcrun', 'swiftc', '-typecheck', '-D', 'DEBUG', '-sdk'])
+            self.assertEqual(command[command.index('-target') + 1], 'arm64-apple-ios16.0-simulator')
+            self.assertEqual(command[command.index('-F') + 1], '/mock/Simulator.platform/Developer/Library/Frameworks')
+            self.assertEqual(command[command.index('-I') + 1], '/mock/Simulator.platform/Developer/usr/lib')
+            self.assertEqual(Path(command[-2]).read_text(), (captures.HERE / 'PIN02Capture.swift.in').read_text())
+            self.assertEqual(Path(command[-1]).read_text(), expected)
+            self.assertEqual(options['timeout'], 180)
+            return subprocess.CompletedProcess(command, code, stdout='Mock compiler result, not Apple execution')
+        for code in (0, 1):
+            with patch.object(platform, 'machine', return_value='arm64'), \
+                    patch.object(subprocess, 'check_output', side_effect=['/mock/SDK', '/mock/Simulator.platform']), \
+                    patch.object(subprocess, 'run', side_effect=compiler):
+                if code:
+                    with self.assertRaises(AssertionError): method(AppleCompileControls())
+                else:
+                    method(AppleCompileControls())
+
     def actual(self):
         sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
         digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
@@ -201,6 +227,9 @@ class AppleCompileControls(unittest.TestCase):
             architecture = {'arm64': 'arm64', 'x86_64': 'x86_64'}[platform.machine()]
             result = subprocess.run(['/usr/bin/xcrun', 'swiftc', '-typecheck', '-D', 'DEBUG', '-sdk', sdk,
                 '-target', architecture + '-apple-ios16.0-simulator', '-F', platform_path + '/Developer/Library/Frameworks',
+                # XCTest's Swift overlay is outside the SDK. Framework search
+                # alone imports only ObjC macros, not XCTAssert/runActivity.
+                '-I', platform_path + '/Developer/usr/lib',
                 '-module-cache-path', str(root / 'cache'), str(exporter), str(driver)],
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
             self.assertEqual(result.returncode, 0, result.stdout)

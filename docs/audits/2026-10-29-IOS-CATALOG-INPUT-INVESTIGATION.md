@@ -75,3 +75,27 @@ ordering. Native build/export execution, complete60-journey neutrality controls,
 the original iOS26.2 runtime and physical touch/VoiceOver remain separate gates.
 No longer/replayed gesture, permission grant, Release deoptimization, check bypass,
 Store publication or overall production-overhaul completion is claimed here.
+
+## First hosted control failure and correction
+
+The fresh full strict local check at39adad02 passes1,867Desktop cases
+(3existing LAN skips),671Android cases perDebug/Release,120GitHub-test cases,
+755release controls (one known Linux skip), Detekt/lint/R8/unsigned AAB and
+workflow/inventory gates. Source is unchanged; private Gradle stop0.
+Log SHA256: `2ff049a6c17edbce7674ca7b42ee9724cd0d18b140bff9858b6ad76e3dfe0259`.
+
+Automatic [diagnostic40803737198](https://github.com/Apdelrahman1911/parlor/actions/runs/40803737198)
+then fails **before application execution**:29controls pass,3source-copy controls
+error and1SDK typecheck fails. The passive UIKit recognizer and actual Foundation
+cross-process one-shot exporter controls pass; no input journey or capture runs.
+This is a retained failed investigation, not an original application retry.
+
+The source-copy fixtures incorrectly use macOS's noncanonical `/var` temporary
+alias. Newly allocated fixture roots are now resolved before source creation;
+strict input/symlink rejection is unchanged and a redirected-root regression is
+added. The direct Swift compiler command finds XCTest's ObjC framework but lacks
+its platform Swift overlay search path, causing missing `XCTAssert*` and
+`XCTContext.runActivity`. Add the actual platform's `Developer/usr/lib` import
+path; do not stub assertions, exclude the driver, or skip the SDK control.
+The revised native typecheck and all app-side investigation gates must still
+execute before claiming correction or causality. PR#282 remains failed/unmerged.

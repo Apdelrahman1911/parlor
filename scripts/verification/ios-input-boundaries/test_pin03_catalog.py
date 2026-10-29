@@ -80,7 +80,7 @@ class CopyControls(unittest.TestCase):
     def test_sequential_source_materialization_retains_original_then_validates_every_arm(self):
         sources, hashes = actual()
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve(strict=True)
             for p, text in sources.items():
                 dest = root / p; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_text(text)
             previous = hashes
@@ -104,7 +104,7 @@ class CopyControls(unittest.TestCase):
                     tar.addfile(extra, io.BytesIO(b'x') if extra.isfile() else None)
             return buffer.getvalue()
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve(strict=True)
             valid = root / 'valid'; valid.mkdir()
             manifest = runner.materialize(archive(), valid)
             runner.verify_inputs(valid, manifest)
@@ -118,9 +118,24 @@ class CopyControls(unittest.TestCase):
                 dest = root / str(index); dest.mkdir()
                 with self.subTest(path=path), self.assertRaises(ValueError): runner.materialize(archive(entry), dest)
 
+    def test_source_copy_requires_canonical_owned_root_without_admitting_redirects(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve(strict=True)
+            owned = root / 'owned'; owned.mkdir()
+            source = owned / 'composeApp/source.kt'
+            source.parent.mkdir(); source.write_bytes(b'public source')
+            manifest = {'composeApp/source.kt': runner.sha(source.read_bytes())}
+            runner.verify_inputs(owned, manifest)
+            redirected = root / 'redirected'; redirected.symlink_to(owned, target_is_directory=True)
+            with self.assertRaises(ValueError): runner.verify_inputs(redirected, manifest)
+            # Resolve the freshly allocated owner before creating its source copy,
+            # as RUNNER_TEMP and macOS /var -> /private/var require. Validation
+            # remains strict; it never silently resolves a claimed input later.
+            runner.verify_inputs(redirected.resolve(strict=True), manifest)
+
     def test_postbuild_input_verification_rejects_unknown_sources_but_not_owned_outputs(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); file = root / 'composeApp/source.kt'
+            root = Path(tmp).resolve(strict=True); file = root / 'composeApp/source.kt'
             file.parent.mkdir(); file.write_bytes(b'public test source')
             manifest = {'composeApp/source.kt': runner.sha(file.read_bytes())}
             generated = root / 'composeApp/build/generated.kt'; generated.parent.mkdir(); generated.write_bytes(b'generated')
@@ -172,7 +187,7 @@ class ReceiptControls(unittest.TestCase):
 
     def test_capture_retention_rejects_links_fifos_empty_and_oversized_files(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); data = root / 'capture'; data.write_bytes(b'public numeric test')
+            root = Path(tmp).resolve(strict=True); data = root / 'capture'; data.write_bytes(b'public numeric test')
             self.assertEqual(runner.read_capture(data), data.read_bytes())
             link = root / 'link'; link.symlink_to(data)
             with self.assertRaises(OSError): runner.read_capture(link)
