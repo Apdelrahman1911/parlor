@@ -46,3 +46,28 @@ Final committed-source strict aggregate, free hosted Android/Apple architectures
 23native methods, normal protected integration and fresh actual-main qualification
 remain required. Physical host/client/background/storage/energy and #258/Store
 gates stay open. No paid runner, verification relaxation or Store release.
+
+## Complete local verification at `5456d76a`
+
+Strict `productionCheck allTests` passes every original task with zero test
+failures/errors: 1,880 Desktop cases (three existing LAN skips), 677 Android
+per Debug/Release, 120 GitHub-test and 766 source-derived release controls
+(one platform skip). All 143 annotated methods in eleven changed recovery/host
+classes match actual Desktop XML. Detekt, lint, R8, unsigned AAB and shell/
+inventory gates pass. Source is unchanged; owned Gradle stop exits zero.
+Log SHA256: `73b606bbfaf79b8a6ca15e090d86c5e5f8919ece616fec372f56178a3ca1ae18`.
+Ordinary readiness also passes 359 methods, with three Apple-only Linux skips.
+
+The first full attempt was killed by the host kernel for memory pressure, not
+an identified test assertion. Its failed log/receipt remain retained. The
+successful 690.9-second local run uses `--max-workers=1 --no-parallel`, unchanged
+strict tasks/Release flags, with 78 executed/1,586 up-to-date tasks. This is not
+a hosted/cold-build speed measurement or a repository concurrency change.
+The first private evidence reader guessed a root shell-dispatch task; its
+rejection is retained. Corrected review checks the actual registered/completed
+`:composeApp:verifyGameShellDispatch`, without a build or verification change.
+
+Existing [#252 evidence](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6494991375)
+records the reproduction and outstanding acceptance criteria. Documentation and
+accepted-base integration still require affected rechecks and fresh complete
+hosted/main qualification. No physical-device or Store acceptance is inferred.

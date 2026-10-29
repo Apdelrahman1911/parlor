@@ -51,3 +51,22 @@ The initial alignment above preserves `2b62685d` shipping bytes. A later
 [confirmed host-opening replay](2026-10-29-HOST-OPENING-INTENT.md) is corrected
 by four host acquisition guards, with six actual-App EN/AR regressions. This is
 additional local source, not a retroactive qualification of the earlier alignment.
+
+## Independently reviewed local checkpoints
+
+The initial alignment `dea4d46e` passes strict full local checks: 1,874 Desktop
+cases (three existing LAN skips), 677 Android per variant, 120 GitHub-test and
+766 release controls. Its fresh selected-seat/rotation/revocation probe uses
+three distinct Linux host/peer JVM pairs: all six natural exits zero and owned
+teardown passes. Invocation `20261029T102759Z-2e3dbc31`, receipt SHA256
+`a3003f38d0cb1eef9599a39042149e712663686a62f13ad5d77e9c3383d6349b`.
+This is same-machine real P2pKit transport, not OS protected-storage/phone/energy
+or complete gameplay proof.
+
+The later host-intent source `5456d76a` independently passes 1,880 Desktop cases,
+the same Android/GitHub/release controls and 359 ordinary readiness methods
+(three Apple-only Linux skips). See its separate host-intent report for the
+retained kernel-OOM first attempt, serial resource profile, full log hash and
+all 143 source-derived changed methods. These are exact-source local results;
+final documentation, accepted actual-main integration and fresh hosted/native
+qualification remain mandatory.
