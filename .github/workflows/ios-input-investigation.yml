@@ -2,7 +2,7 @@ name: iOS input investigation (not production qualification)
 
 on:
   push:
-    branches: [diagnostic/ios-input-probe-2026-10-29]
+    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29]
   workflow_dispatch:
     inputs:
       source:
@@ -31,7 +31,7 @@ jobs:
     # Standard public-repository runner only. No larger/self-hosted runner,
     # artifact cache writes, signing credentials or production-check substitution.
     runs-on: macos-15
-    timeout-minutes: 190
+    timeout-minutes: ${{ github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && 14 || 190 }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       PARLOR_INPUT_OUTPUT: parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
@@ -62,11 +62,18 @@ jobs:
         run: |
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
       - name: Execute one attempt per declared diagnostic arm
+        if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'
         shell: bash
         run: |
           /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
             --source "$PARLOR_INPUT_SOURCE" --runtime "$PARLOR_INPUT_RUNTIME" \
             --device "$PARLOR_INPUT_DEVICE" --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+      - name: Read installed Xcode component paths without launching an application
+        if: github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/xcode_worker_inventory.py \
+            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Retain original failures, source/product manifests and owned cleanup
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -76,6 +83,7 @@ jobs:
           retention-days: 14
           path: |
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/xcode-worker-inventory.json
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.json
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.log
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/tests.xcresult
