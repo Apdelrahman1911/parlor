@@ -19,8 +19,9 @@ Artifact12864545980's independently matched API/download ZIP SHA256 is
 Swift executes23methods:22pass/1fail. Independently parsed132KMP Simulator suites
 contain679cases, zero failures/errors/skips. Actual UIKit runtime is iOS18.5,
 iPhone16Pro, Xcode26.3/17C529—not the original iOS26.2 failure or a physical device.
-Remaining optimized Release lanes were still running when this report was written.
-No protected merge or current-main acceptance follows from these partial results.
+The run subsequently finishes **failed** at01:35UTC: all seven other producers
+and the original optimized Release join pass. The protected acceptance pipeline
+correctly rejects it, without a merge or accepted-main receipt.
 
 [#267](https://github.com/Apdelrahman1911/parlor/issues/267) retains this related
 public-input investigation. A shared cause with its original lost Host event is
@@ -46,6 +47,9 @@ The separate evidence-only workflow uses **one standard `macos-15` runner**,
 sequential arms, read-only dependency cache and no paid infrastructure. It cannot
 replace Production verification. Diagnostic completion can include faithfully
 retained failed journeys; it is not a green application test or a root-cause fix.
+The release contract registers its exact reviewed SHA256 image; eight mutations
+to privileges, paid runners, triggers, cancellation, caching, commands or uploads
+reject. Existing unknown-workflow rejection and all production checks remain.
 
 ## Executed local evidence and remaining gates
 
@@ -53,6 +57,13 @@ Twelve focused source/archive/result/privacy controls pass. Actual frozen841a0b0
 materializes1,143original build inputs; all three copy plans and post-plan hashes
 verify without changing the source checkout. These are Linux software controls,
 **not** SDK compilation, native application linkage or touch execution.
+
+The first full local check at17f0c6a9 correctly fails the closed workflow registry
+because the new diagnostic workflow was not yet registered. Its1,867Desktop
+(3existing LAN skips),671Android Debug+671Release and120GitHub-test cases pass;
+source is unchanged and private Gradle stop succeeds. The original failed log is
+preserved. Exact registration and its sensitivity controls are implemented before
+any publication; a fresh committed-source complete check remains required.
 
 Before attributing causality, inspect the original event and app-side receipt
 ordering. Native build/export execution, complete60-journey neutrality controls,

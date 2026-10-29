@@ -951,6 +951,24 @@ class WorkflowContractTest(unittest.TestCase):
     def test_repository_workflows_satisfy_release_contract(self) -> None:
         self.assertEqual(workflow_contract.main(), 0)
 
+    def test_input_investigation_registration_rejects_privilege_runner_trigger_retry_and_upload_drift(self) -> None:
+        workflow = (workflow_contract.WORKFLOWS / "ios-input-investigation.yml").read_text()
+        workflow_contract.verify_input_investigation(workflow)
+        for before, after in (
+            ("contents: read", "contents: write"),
+            ("runs-on: macos-15", "runs-on: macos-15-large"),
+            ("branches: [diagnostic/ios-input-probe-2026-10-29]", "branches: [main]"),
+            ("cancel-in-progress: false", "cancel-in-progress: true"),
+            ("actions/cache/restore@", "actions/cache/save@"),
+            ("--source \"$PARLOR_INPUT_SOURCE\"", "--source \"$PARLOR_INPUT_SOURCE\" --retry"),
+            ("/*/tests.xcresult", "/*/source/**"),
+            ("permissions:\n  contents: read", "permissions:\n  contents: read\n  id-token: write"),
+        ):
+            changed = workflow.replace(before, after)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_input_investigation(changed)
+
     def test_xcode_identity_guard_matches_the_exact_build_setting(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
             encoding="utf-8"
