@@ -32,7 +32,8 @@ keeps every gate. This is valid unaffected-input reuse, not a cold speed benchma
 
 The candidate is unpushed. Accepted-base integration, final documentation-source
 rechecks, fresh free hosted qualification, normal protected merge and actual-main
-verification remain. Its source requires 707 KMP Simulator methods; this is not
+verification remain. Its source requires 708 KMP Simulator methods, including
+a direct real-platform elapsed-clock regression; this is not
 an executed native result. Three current-source real P2pKit Linux Resume pairs
 independently verify all six natural zero exits, exact assertions, 1,133 runtime
 hashes and owned cleanup. These surviving same-machine processes/in-memory stores

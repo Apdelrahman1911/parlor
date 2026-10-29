@@ -89,6 +89,10 @@ sleep, persistent-storage/process-death, gameplay or phone performance evidence.
 Final documentation-source rechecks, fresh free hosted Android/Apple compilation,
 iOS linkage/runtime tests, normal protected merge and automatic actual-main
 verification remain required.
+A subsequent common regression directly reads the real platform elapsed clock
+32 times, requiring a readable, nondecreasing counter on every executable target.
+This makes fresh hosted iOS tests exercise the exposed POSIX function itself,
+not just injected budget values; it still does not simulate device sleep.
 Physical Android/iOS locks/calls/suspension/Wi-Fi/process death, simultaneous
 recovery, battery/thermal behavior and strict protected storage remain open.
 Host process death ends the room; no indefinite iOS hosting or migration claim.
