@@ -1,0 +1,82 @@
+name: iOS input investigation (not production qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-input-probe-2026-10-29]
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Exact original source commit, not the diagnostic harness commit
+        required: true
+        default: 841a0b0623b508eae103f79ba7b4e5773e6a8b4d
+      runtime:
+        description: Explicit installed runtime; never infer it from the SDK
+        required: true
+        default: com.apple.CoreSimulator.SimRuntime.iOS-18-5
+      device:
+        description: Explicit installed iPhone type
+        required: true
+        default: com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro
+
+concurrency:
+  group: parlor-ios-input-investigation-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    name: Original / Compose / native diagnostic arms
+    # Standard public-repository runner only. No larger/self-hosted runner,
+    # artifact cache writes, signing credentials or production-check substitution.
+    runs-on: macos-15
+    timeout-minutes: 190
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      PARLOR_INPUT_OUTPUT: ${{ runner.temp }}/parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
+      PARLOR_INPUT_SOURCE: ${{ inputs.source || '841a0b0623b508eae103f79ba7b4e5773e6a8b4d' }}
+      PARLOR_INPUT_RUNTIME: ${{ inputs.runtime || 'com.apple.CoreSimulator.SimRuntime.iOS-18-5' }}
+      PARLOR_INPUT_DEVICE: ${{ inputs.device || 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro' }}
+    steps:
+      - name: Check out reviewed harness and original source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Restore reviewed dependencies without saving diagnostic state
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Check source-copy, privacy, exact-result and native SDK controls
+        shell: bash
+        run: |
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
+      - name: Execute one attempt per declared diagnostic arm
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
+            --source "$PARLOR_INPUT_SOURCE" --runtime "$PARLOR_INPUT_RUNTIME" \
+            --device "$PARLOR_INPUT_DEVICE" --output "$PARLOR_INPUT_OUTPUT"
+      - name: Retain original failures, source/product manifests and owned cleanup
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-input-investigation-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ env.PARLOR_INPUT_OUTPUT }}/state.json
+            ${{ env.PARLOR_INPUT_OUTPUT }}/*/*.json
+            ${{ env.PARLOR_INPUT_OUTPUT }}/*/*.log
+            ${{ env.PARLOR_INPUT_OUTPUT }}/*/tests.xcresult
+            ${{ env.PARLOR_INPUT_OUTPUT }}/*/attachments
