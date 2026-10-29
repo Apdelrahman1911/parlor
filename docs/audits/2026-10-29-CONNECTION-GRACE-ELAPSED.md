@@ -108,8 +108,8 @@ JVMs/in-memory stores do not execute short-grace faults, mobile APIs or OS sleep
 
 Accepted-base alignment is complete; final documentation/source rechecks, protected PR integration,
 fresh Apple linkage/runtime and distinct automatic actual-main verification remain
-before merge. PR #289 is normally merged; its distinct actual-main verification runs
-independently, and its frozen checkouts are unchanged.
+before merge. PR #289 is normally merged and independently qualifies its distinct actual-main
+run40964941119; its frozen checkouts are unchanged.
 Physical Android/iOS calls/lock/sleep/Wi-Fi/process death/simultaneous recovery,
 energy/thermal and #258 protected-storage acceptance remain unverified. No Store
 release, free-runner policy change or additional agents.

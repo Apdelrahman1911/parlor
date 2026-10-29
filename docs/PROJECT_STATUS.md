@@ -11,13 +11,15 @@ independently passes all eight producers/the original Apple Release join,
 zero macOS skips and exact source/artifact/native/output custody. Qualification
 SHA256 `40260aaa1e77947055301bd0522a1a7aecc038fc120b65cc53c43753457770bd`.
 
-At this documentation-preparation checkpoint, the **distinct automatic
+The **distinct automatic
 [actual-main40964941119](https://github.com/Apdelrahman1911/parlor/actions/runs/40964941119)
-is still running** at that exact merge. PR green is not main acceptance; #284
-remains open until independent actual-main qualification. Previously accepted
-main `5958f928` [40916055035](https://github.com/Apdelrahman1911/parlor/actions/runs/40916055035)
-qualifies all producers/Apple join,23 Swift / 708 KMP / 362 readiness and exact custody;
-its result does not qualify a newer checkout. Protections remain active.
+independently qualifies that exact merge**: all eight producers/original Apple
+Release join, **23 Swift / 708 KMP Simulator / 450 ordinary readiness methods**,
+zero macOS skips and exact source/artifact/native/output custody. Qualification
+SHA256 `cd2e6822b689c28177efb7b82b919fb3600ec2bd800ae72b70c53af8a9820327`.
+Scoped #284 is closed after protected merge and distinct main acceptance; original
+input causality remains separate. This is not PR-pass substitution or certification
+of the subsequently prepared short-grace candidate. Protections remain active.
 PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
 
 ## Application and verification repairs
@@ -34,7 +36,9 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   hash-bound original-file software fixtures work in shallow hosted checkouts.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
-**locally prepared, not merged**. Actual host/peer fault tests reproduce remote
+**locally prepared, not merged at this checkpoint**; follow
+[#252](https://github.com/Apdelrahman1911/parlor/issues/252) for later accepted
+source and exact verification. Actual host/peer fault tests reproduce remote
 command eligibility and retained validation exceeding15 elapsed seconds when
 wall clocks/timers are stale. Immutable elapsed stamps fix those paths and carry
 spent time into hard recovery. Combined local `f3784375` / tree `1c165500` passes strict
@@ -89,8 +93,8 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
 - **Six games/UX:** #259/#260 physical LAN/gameplay/accessibility, hidden-information
   isolation, large text/RTL and full resource matrices. No real-device claim.
 - **Native/tooling:** #267/#276 input causality/failed-only pipeline/full 60-journey
-  neutrality; #284 actual-main diagnostic-integration acceptance. Scoped #283/#285
-  are closed. Closed #6 covers separate-process automation, not physical phones.
+  neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
+  scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
 - **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
   October 29, 21:15 UTC publication recheck still lists 0.8.0-rc7, published October 23
   before upstream #524 merged October 25; no reproducible post524 publication or
