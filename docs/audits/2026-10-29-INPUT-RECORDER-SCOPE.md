@@ -128,3 +128,30 @@ of the particular rejected native candidate**. Numeric grammar remains strict.
 Each declared log view is read independently even after a rejection; bounded
 numeric field/category metadata explains rejections without retaining raw logs.
 Any rejected view or missing samples still fails the complete-reader gate.
+
+### Exact-source schema correction
+
+[40826563143](https://github.com/Apdelrahman1911/parlor/actions/runs/40826563143)
+remains failed: action output contains one rejected344-byte/two-sample
+`emittedOutput` candidate; console exits1 with32stderr bytes. Rejected text and
+raw stderr were discarded, so the precise native values/message are not known.
+The exact930-file result manifest, failed method and iOS18.5 device independently
+match the original artifact. All direct decoder children are reaped.
+
+A subsequent source/manifests comparison confirms a reader defect: the original
+arm's driver at841a0b06 emits **six sequential-query fields**, but the reader
+requires the newer coherent-snapshot driver's seventh `snapshotErrorCode` field.
+Original source, state and original-arm input manifest agree on driver SHA256
+`c65fe65aee8442aa06f02007b57daaf3e9113f5f61046edb59e361c2e4a6e115`.
+A six-field regression fails against the previous reader before the correction.
+This establishes a schema mismatch, not the contents of the discarded candidate
+or an application input-loss cause.
+
+The reader now binds that exact frozen driver hash in Git and both artifact
+manifests, uses its six-field schema only, and validates each of four CGRect
+coordinates instead of accepting arbitrary numeric punctuation. New-driver
+seven-field output is rejected rather than silently treated as old output.
+Failed console reads retain bounded closed-vocabulary error tokens, byte count
+and digest—not raw logs, arbitrary words or paths. Both declared views still
+execute and any read error still fails complete decoding. No application retry,
+production-test change, gesture/deadline adjustment or Store qualification.

@@ -31,12 +31,17 @@ DIGEST = '41d75ff88eeb1f3a1e39e1f66b45d1b028ff98bb8cff06f3e026ab23d4ab85dc'
 BYTES = 90110713
 MAX_BYTES = 128 * 1024 * 1024
 METHOD = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
+DRIVER = 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
+DRIVER_SHA256 = 'c65fe65aee8442aa06f02007b57daaf3e9113f5f61046edb59e361c2e4a6e115'
 NUMBER = r'-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?'
+# This frozen original arm used six sequential-query fields. The newer
+# coherent-snapshot driver has a seventh error-code field; do not import its
+# schema merely because that driver happens to be in the reviewer's checkout.
+FRAME = r'Optional\(\((' + NUMBER + r', ){3}' + NUMBER + r'\)\)'
 SAMPLE = re.compile(
     r'at=' + NUMBER + r', querySeconds=' + NUMBER +
-    r', frame=(?:nil|Optional\([\d.eE()+, -]*\)), enabled=(?:true|false), '
-    r'stable=(?:true|false), hittable=(?:nil|Optional\((?:true|false)\)), '
-    r'snapshotErrorCode=(?:nil|Optional\(-?\d+\))\Z')
+    r', frame=(?:nil|' + FRAME + r'), enabled=(?:true|false), '
+    r'stable=(?:true|false), hittable=(?:nil|Optional\((?:true|false)\))\Z')
 
 
 def require(value):
@@ -73,6 +78,8 @@ def unpack(raw, destination):
                     (not stat.S_IFMT(mode) or stat.S_ISREG(mode) or stat.S_ISDIR(mode)))
         state = json.loads(archive.read('state.json'))
         require(state['source'] == SOURCE and state['harness'] == HEAD)
+        original_inputs = json.loads(archive.read('original/inputs.json'))
+        require(state['original_inputs'][DRIVER] == original_inputs[DRIVER] == DRIVER_SHA256)
         arms = state['arms']
         require(len(arms) == 3 and arms[0]['arm'] == 'original' and
                 arms[0]['result'] == 'JOURNEYS_FAILED' and arms[0]['test_exit'] == 65 and
@@ -106,6 +113,32 @@ class SettlementSampleError(ValueError):
         super().__init__('Public numeric log candidate rejected')
         self.metadata = dict(bytes=len(samples.encode()), samples=len(parts),
                              field=field if field in ('emittedOutput', 'name', 'title', 'text', 'message') else 'other')
+
+
+def stderr_summary(raw):
+    """Closed-vocabulary error tokens, never raw stderr, paths or arbitrary words.
+
+    This explains a failed CLI read without hypothesizing its message or silently
+    accepting it. Unknown tokens are redacted, not retained; failure stays sticky.
+    """
+    allowed = frozenset(('error', 'no', 'console', 'action', 'build', 'log', 'logs',
+                         'data', 'was', 'were', 'is', 'are', 'not', 'found', 'available',
+                         'result', 'bundle', 'missing', 'unavailable', ':', '.', '-'))
+    tokens = []
+    if len(raw) <= 4096:
+        for token in re.findall(r'[A-Za-z]+|[^\sA-Za-z]', raw.decode('ascii', errors='replace'))[:128]:
+            normalized = token.lower()
+            tokens.append(normalized if normalized in allowed else '[redacted]')
+    return dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest(), tokens=tokens,
+                bounded=len(raw) <= 4096)
+
+
+class FrozenLogReadError(ValueError):
+    def __init__(self, row, stderr):
+        super().__init__('Frozen log CLI read failed')
+        self.metadata = dict(exit_code=row.get('exit_code'),
+                             direct_child_reaped=row.get('direct_child_reaped') is True,
+                             stderr=stderr_summary(stderr))
 
 
 def settlement_lines(value):
@@ -150,6 +183,8 @@ def collect_log_samples(read_view):
             errors[kind] = dict(error_type=type(error).__name__)
             if isinstance(error, SettlementSampleError):
                 errors[kind]['candidate'] = error.metadata
+            elif isinstance(error, FrozenLogReadError):
+                errors[kind]['command'] = error.metadata
     require(len(lines) <= 32)
     return dict(lines=lines, errors=errors, counts=counts, complete=bool(lines) and not errors)
 
@@ -166,11 +201,14 @@ def main():
     require(not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip())
     require(subprocess.check_output(['/usr/bin/xcodebuild', '-version']).decode() ==
             'Xcode 26.3\nBuild version 17C529\n')
+    require(hashlib.sha256(subprocess.check_output(['git', 'show', SOURCE + ':' + DRIVER],
+                                                  cwd=ROOT)).hexdigest() == DRIVER_SHA256)
     out = args.output.absolute()
     require(out.parent == Path(os.environ['RUNNER_TEMP']).resolve(strict=True) and
             not out.exists() and not out.is_symlink())
     out.mkdir(mode=0o700)
     receipt = dict(run=RUN, artifact=ARTIFACT, digest=DIGEST, source=SOURCE, producer=HEAD,
+                   driver_sha256=DRIVER_SHA256, settlement_schema='six-field-sequential-query',
                    reviewer=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
                    result='NOT_REVIEWED', production_qualified=False, app_execution=False)
     (out / 'receipt.json').write_text(json.dumps(receipt, indent=2))
@@ -204,8 +242,11 @@ def main():
     result = inputs / 'original/tests.xcresult'
 
     def read(argv, label):
-        row, raw, _ = commands.capture(['/usr/bin/xcrun', 'xcresulttool', *argv], label, 60)
-        require(row['status'] == 'EXITED' and row.get('exit_code') == 0 and row.get('direct_child_reaped'))
+        row, raw, stderr = commands.capture(['/usr/bin/xcrun', 'xcresulttool', *argv], label, 60)
+        if not (row['status'] == 'EXITED' and row.get('exit_code') == 0 and row.get('direct_child_reaped')):
+            if label in ('action-log', 'console-log'):
+                raise FrozenLogReadError(row, stderr)
+            require(False)
         return raw
 
     try:

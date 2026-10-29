@@ -4,6 +4,7 @@ import io
 import json
 from pathlib import Path
 import stat
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -24,7 +25,8 @@ def metadata():
 
 
 def archive(extra=None, state_change=None):
-    state = dict(source=review.SOURCE, harness=review.HEAD, arms=[
+    state = dict(source=review.SOURCE, harness=review.HEAD,
+                 original_inputs={review.DRIVER: review.DRIVER_SHA256}, arms=[
         dict(arm='original', result='JOURNEYS_FAILED', test_exit=65, cleanup='PASS'), {}, {}])
     if state_change:
         state_change(state)
@@ -33,6 +35,7 @@ def archive(extra=None, state_change=None):
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w') as z:
         z.writestr('state.json', json.dumps(state))
+        z.writestr('original/inputs.json', json.dumps(state['original_inputs']))
         z.writestr('original/summary.json', json.dumps(summary))
         z.writestr('original/tests.xcresult/Data/public', b'original failed result')
         z.writestr('compose/tests.xcresult/ignored', b'not extracted')
@@ -50,14 +53,58 @@ class FrozenResultControls(unittest.TestCase):
             with self.assertRaises(ValueError):
                 review.log_command(Path('/owned/result.xcresult'), kind)
 
+    def test_exact_frozen_driver_six_field_output_is_not_confused_with_newer_snapshot_driver(self):
+        # 841a0b06 used sequential queries, not snapshot(); there is no error-code field.
+        sample = ('at=1.0, querySeconds=2.0, frame=nil, enabled=false, '
+                  'stable=false, hittable=nil')
+        line = 'Public control settlement: ' + sample
+        self.assertEqual(review.settlement_lines({'emittedOutput': line}), [line])
+        with self.assertRaises(ValueError):
+            review.settlement_lines({'emittedOutput': line + ', snapshotErrorCode=nil'})
+
+    def test_schema_is_bound_to_the_actual_frozen_driver_bytes_and_emit_fields(self):
+        raw = subprocess.check_output(['git', 'show', review.SOURCE + ':' + review.DRIVER], cwd=review.ROOT)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), review.DRIVER_SHA256)
+        driver = raw.decode()
+        body = driver.split('private func tapSettledControl(', 1)[1].split('private func verifyKeyboardCycle(', 1)[0]
+        for field in ('at=', 'querySeconds=', 'frame=', 'enabled=', 'stable=', 'hittable='):
+            self.assertEqual(body.count(field), 1)
+        self.assertNotIn('snapshotErrorCode=', body)
+        self.assertNotIn('control.snapshot()', body)
+
+    def test_stderr_tokens_are_closed_vocabulary_and_failures_still_do_not_qualify(self):
+        raw = b'Error: No console log found. /private/secret/path credential=abcd1234'
+        summary = review.stderr_summary(raw)
+        self.assertEqual(summary['bytes'], len(raw))
+        self.assertEqual(summary['sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(summary['tokens'][:7], ['error', ':', 'no', 'console', 'log', 'found', '.'])
+        for secret in ('private', 'secret', 'path', 'credential', 'abcd1234'):
+            self.assertNotIn(secret, json.dumps(summary))
+        self.assertFalse(review.stderr_summary(b'x' * 4097)['bounded'])
+        self.assertEqual(review.stderr_summary(b'x' * 4097)['tokens'], [])
+        row = dict(exit_code=1, direct_child_reaped=True)
+        calls = []
+        sample = 'Public control settlement: at=1.0, querySeconds=2.0, frame=nil, enabled=false, stable=false, hittable=nil'
+        def read(kind):
+            calls.append(kind)
+            if kind == 'console':
+                raise review.FrozenLogReadError(row, raw)
+            return {'emittedOutput': sample}
+        result = review.collect_log_samples(read)
+        self.assertEqual(calls, ['action', 'console'])
+        self.assertEqual(result['lines'], [sample])
+        self.assertEqual(result['errors']['console']['command']['stderr'], summary)
+        self.assertFalse(result['complete'])
+
     def test_only_bounded_public_numeric_settlement_grammar_can_be_retained(self):
         sample = ('at=1.2, querySeconds=0.5, frame=Optional((24.0, 200.0, 100.0, 48.0)), '
-                  'enabled=true, stable=false, hittable=nil, snapshotErrorCode=nil')
+                  'enabled=true, stable=false, hittable=nil')
         line = 'Public control settlement: ' + sample
         self.assertEqual(review.settlement_lines({'items': [{'message': line}]}), [line])
         self.assertEqual(review.settlement_lines({'message': 'unrelated arbitrary text'}), [])
         for changed in (sample + ', secret=private', sample.replace('1.2', 'nan'),
-                        sample.replace('snapshotErrorCode=nil', 'snapshotErrorCode=private'),
+                        sample.replace('hittable=nil', 'hittable=private'),
+                        sample.replace('Optional((24.0, 200.0, 100.0, 48.0))', 'Optional(())'),
                         '; '.join([sample] * 13)):
             with self.assertRaises(ValueError):
                 review.settlement_lines({'message': 'Public control settlement: ' + changed})
@@ -67,7 +114,7 @@ class FrozenResultControls(unittest.TestCase):
     def test_quoted_source_marker_is_not_misidentified_as_emitted_public_output(self):
         source = '            print("Public control settlement: " + samples.joined(separator: "; "))'
         sample = ('at=1.0, querySeconds=2.0, frame=nil, enabled=false, '
-                  'stable=false, hittable=nil, snapshotErrorCode=Optional(1001)')
+                  'stable=false, hittable=nil')
         line = 'Public control settlement: ' + sample
         self.assertEqual(review.settlement_lines({'source': source, 'emittedOutput': line}), [line])
         self.assertEqual(review.settlement_lines({'source': source}), [])
@@ -81,7 +128,7 @@ class FrozenResultControls(unittest.TestCase):
     def test_rejected_action_view_does_not_suppress_console_and_cannot_qualify(self):
         calls = []
         sample = ('Public control settlement: at=1.0, querySeconds=2.0, frame=nil, '
-                  'enabled=false, stable=false, hittable=nil, snapshotErrorCode=nil')
+                  'enabled=false, stable=false, hittable=nil')
         def read(kind):
             calls.append(kind)
             return {'text': 'Public control settlement: malformed'} if kind == 'action' else {'text': sample}
@@ -130,7 +177,8 @@ class FrozenResultControls(unittest.TestCase):
     def test_bad_digest_source_and_original_result_cannot_be_reclassified(self):
         for change in (None, lambda s: s.update(source='a' * 40),
                        lambda s: s['arms'][0].update(result='JOURNEYS_PASSED'),
-                       lambda s: s['arms'][0].update(cleanup='FAIL')):
+                       lambda s: s['arms'][0].update(cleanup='FAIL'),
+                       lambda s: s['original_inputs'].update({review.DRIVER: 'a' * 64})):
             raw = archive(state_change=change)
             digest = 'a' * 64 if change is None else hashlib.sha256(raw).hexdigest()
             with tempfile.TemporaryDirectory() as tmp, patch.object(review, 'DIGEST', digest), self.assertRaises(ValueError):
