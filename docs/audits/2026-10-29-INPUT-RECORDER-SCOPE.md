@@ -251,3 +251,22 @@ sampled native frame. It is a post-failure image, not evidence of continuous
 visibility or earlier hit testing. Exact named-attachment export equality remains
 pending. Neither this image nor diagnostic collection establishes a shipping
 input-loss cause. Main40759303257 failed; PR#282 remains draft/unmerged.
+
+### Corrected-recorder follow-up preparation
+
+The mount-ordered recorder correction at343bfb0d is integrated locally with
+the exact-source decoder and screenshot-selector repairs. The three-arm runner
+also used `--only-failures` for copied post-failure ACK-request attachments.
+Source inspection shows those requests are attached before their assertion;
+the same association filter can omit them. **No executed failed observed-arm
+request export has established that omission yet.** This is an evidenced
+selector risk, not proof of lost native/callback input.
+
+Copied-arm failed exports now require installed exact-test selection support,
+validate one/two unique failed methods against the two originally declared
+EN/AR tests, and export each into a distinct bounded directory with unique
+command labels. Whole-result, wildcard, foreign/duplicate/mismatched summaries
+reject. Only original failed methods are selected; gesture, predicates,
+deadlines, permissions, network tripwire and original failures are unchanged.
+Actual corrected-recorder iOS app linkage/journeys remain pending. Synthetic
+export controls do not certify native timing neutrality or shipping behavior.

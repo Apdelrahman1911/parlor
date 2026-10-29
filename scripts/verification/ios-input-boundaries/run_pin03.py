@@ -25,6 +25,7 @@ import pin01_copy
 import pin01_receipts
 import pin02_capture
 import pin03_catalog_copy as catalog
+import public_attachments
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
@@ -38,6 +39,27 @@ ROOTS = ('build.gradle.kts', 'settings.gradle.kts', 'gradle.properties', 'gradle
 TESTS = tuple('iosAppUITests/IOSAppLaunchUITests/' + name for name in (
     'testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish',
     'testAdditionalGamesExposeOnlyMultiplayerSetupInArabic'))
+
+
+def failed_method_exports(result, destination, summary):
+    """Select complete exact failed-test attachments, including pre-assertion ACKs."""
+    if not isinstance(summary, dict):
+        raise ValueError('Declared failed-test summary required')
+    failures = summary.get('testFailures')
+    if not isinstance(failures, list) or not 0 < len(failures) <= len(TESTS) or \
+            type(summary.get('failedTests')) is not int or \
+            summary.get('failedTests') != len(failures):
+        raise ValueError('Bounded declared failed methods required for attachment export')
+    methods = [failure.get('testIdentifierString') if isinstance(failure, dict) else None
+               for failure in failures]
+    allowed = {test.split('/', 1)[1] + '()' for test in TESTS}
+    if any(not isinstance(method, str) or method not in allowed for method in methods) or \
+            len(methods) != len(set(methods)):
+        raise ValueError('Foreign or duplicate failed attachment method')
+    return [(destination / ('failed-%02d' % (index + 1)),
+             ['export', 'attachments', '--path', str(result), '--output-path',
+              str(destination / ('failed-%02d' % (index + 1))), '--test-id', method])
+            for index, method in enumerate(sorted(methods))]
 
 
 def sha(raw):
@@ -385,10 +407,20 @@ def main():
                                             json.loads((dest / 'tests.json').read_bytes()), simulator_id, code)
             if arm != 'original' and code:
                 attachments = dest / 'attachments'; attachments.mkdir()
-                rc, _ = command(['/usr/bin/xcrun', 'xcresulttool', 'export', 'attachments', '--path',
-                    str(result), '--output-path', str(attachments), '--only-failures'], arm + '-attachments')
+                rc, helptext = command(['/usr/bin/xcrun', 'xcresulttool', 'help', 'export', 'attachments'],
+                                       arm + '-attachments-help')
                 if rc:
-                    raise RuntimeError('Failure attachments could not be retained')
+                    raise RuntimeError('Installed attachment export help unavailable')
+                public_attachments.verify_export_help(helptext)
+                exports = failed_method_exports(result, attachments,
+                                                json.loads((dest / 'summary.json').read_bytes()))
+                row['attachment_test_ids'] = [argv[-1] for _, argv in exports]
+                for index, (directory, argv) in enumerate(exports):
+                    directory.mkdir()
+                    rc, _ = command(['/usr/bin/xcrun', 'xcresulttool', *argv],
+                                    arm + '-attachments-%02d' % (index + 1))
+                    if rc:
+                        raise RuntimeError('Exact failed-test attachments could not be retained')
                 tokens = set()
                 for path in attachments.rglob('*'):
                     if path.is_file() and not path.is_symlink() and path.stat().st_size <= 4096:

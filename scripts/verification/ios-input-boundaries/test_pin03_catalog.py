@@ -35,6 +35,27 @@ def snapshot():
 
 
 class CopyControls(unittest.TestCase):
+    def test_failed_attachment_exports_select_exact_tests_not_failure_association(self):
+        english = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()'
+        arabic = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
+        summary = dict(failedTests=2, testFailures=[dict(testIdentifierString=english),
+                                                 dict(testIdentifierString=arabic)])
+        exports = runner.failed_method_exports(Path('/owned/tests.xcresult'), Path('/owned/exported'), summary)
+        self.assertEqual(exports, [(Path('/owned/exported/failed-%02d' % i),
+            ['export', 'attachments', '--path', '/owned/tests.xcresult', '--output-path',
+             '/owned/exported/failed-%02d' % i, '--test-id', method])
+            for i, method in enumerate((arabic, english), 1)])
+        self.assertEqual(len(runner.failed_method_exports(Path('/r'), Path('/d'),
+                         dict(failedTests=1, testFailures=[dict(testIdentifierString=english)]))), 1)
+        for changed in (None, {}, dict(failedTests=0, testFailures=[]),
+                        dict(failedTests=True, testFailures=[dict(testIdentifierString=english)]),
+                        dict(failedTests=2, testFailures=[dict(testIdentifierString=english)]),
+                        dict(failedTests=1, testFailures=[dict(testIdentifierString='IOSAppLaunchUITests/*')]),
+                        dict(failedTests=1, testFailures=[None]),
+                        dict(failedTests=2, testFailures=[dict(testIdentifierString=english)] * 2)):
+            with self.assertRaises(ValueError):
+                runner.failed_method_exports(Path('/r'), Path('/d'), changed)
+
     def test_result_decode_labels_cannot_overwrite_native_test_execution_timing(self):
         for arm in catalog.ARMS:
             labels = [runner.result_label(arm, kind) for kind in ('summary', 'tests')]
