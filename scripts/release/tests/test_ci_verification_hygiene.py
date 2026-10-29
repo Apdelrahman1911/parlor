@@ -5,10 +5,11 @@ import importlib.util
 import io
 import json
 import os
+import random
 import subprocess
 import sys
 import unittest
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
@@ -53,6 +54,76 @@ class VerificationHygieneTest(unittest.TestCase):
                                  "composeApp/build", "iosApp/build", "scripts/release/tests/__pycache__"])
         with self.assertRaisesRegex(RuntimeError, "tracked files"):
             hygiene.output_roots(["build.gradle.kts", "build/keep-source.txt"])
+
+    def test_output_index_rejects_exact_tracked_root_files(self) -> None:
+        for source, output in (("build.gradle.kts", "build"),
+                               ("iosApp/iosApp/Info.plist", "iosApp/build"),
+                               ("module/build.gradle", "module/build"),
+                               ("scripts/check.py", "scripts/__pycache__")):
+            with self.subTest(output=output), self.assertRaisesRegex(RuntimeError, "tracked files"):
+                hygiene.output_roots([source, output])
+
+    def test_output_index_cannot_hide_descendants_behind_lexical_siblings(self) -> None:
+        siblings = ["build!", "build-old/source.kt", "build.gradle.kts", "build0/source.kt"]
+        for descendant in ("build/source.kt", "build/.hidden.kt", "build/.hidden/source.kt"):
+            with self.subTest(descendant=descendant), self.assertRaisesRegex(RuntimeError, "tracked files"):
+                hygiene.output_roots(siblings + [descendant])
+
+    def test_output_index_does_not_claim_prefix_siblings_as_descendants(self) -> None:
+        tracked = ["build-old/source.kt", "build.gradle.kts", "build0/source.kt",
+                   "module/build.gradle.kts", "module/build-source/source.kt",
+                   "scripts/check.py", "scripts/__pycache__-source/keep.kt"]
+        self.assertEqual(hygiene.output_roots(tracked),
+                         ["build", "iosApp/build", "module/build", "scripts/__pycache__"])
+
+    def test_output_index_preserves_input_order_and_duplicate_behavior(self) -> None:
+        tracked = ["z/check.py", "module/build.gradle.kts", "build.gradle.kts", "z/check.py"]
+        original = tracked.copy()
+        self.assertEqual(hygiene.output_roots(tracked),
+                         ["build", "iosApp/build", "module/build", "z/__pycache__"])
+        self.assertEqual(tracked, original)
+        with self.assertRaisesRegex(RuntimeError, "tracked files"):
+            hygiene.output_roots(tracked + ["module/build/source.kt"] * 2)
+
+    def test_output_index_retains_unicode_and_newline_path_boundaries(self) -> None:
+        for module in ("لعبة", "module\nname"):
+            source = module + "/build.gradle.kts"
+            self.assertIn(module + "/build", hygiene.output_roots([source, module + "/build-old/source.kt"]))
+            with self.subTest(module=module), self.assertRaisesRegex(RuntimeError, "tracked files"):
+                hygiene.output_roots([source, module + "/build/.source.kt"])
+
+    def test_output_index_matches_linear_reference_for_seeded_manifests(self) -> None:
+        def reference(tracked: list[str]) -> list[str]:
+            roots = {"build", "iosApp/build"}
+            for name in tracked:
+                path = PurePosixPath(name)
+                if path.name in {"build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"}:
+                    roots.add(str(path.parent / "build"))
+                if path.suffix == ".py":
+                    roots.add(str(path.parent / "__pycache__"))
+            for output in roots:
+                if any(name == output or name.startswith(output + "/") for name in tracked):
+                    raise RuntimeError("tracked files")
+            return sorted(roots)
+
+        paths = ["build.gradle.kts", "build", "build/source.kt", "build-old/source.kt",
+                 "iosApp/build", "iosApp/build/source.kt", "iosApp/build-old/source.kt",
+                 "a/settings.gradle", "a/build.gradle.kts", "a/build", "a/build/.hidden.kt",
+                 "a/build-old/source.kt", "scripts/check.py", "scripts/__pycache__",
+                 "scripts/__pycache__/source.kt", "scripts/__pycache__-old/source.kt",
+                 "لعبة/build.gradle.kts", "لعبة/build/.source.kt", "nested/module/settings.gradle.kts",
+                 "nested/module/build/source.kt", "nested/module/build-old/source.kt"]
+        randomizer = random.Random(20261029)
+        for case in range(400):
+            tracked = randomizer.choices(paths, k=randomizer.randrange(30))
+            with self.subTest(case=case):
+                try:
+                    expected = reference(tracked)
+                except RuntimeError:
+                    with self.assertRaisesRegex(RuntimeError, "tracked files"):
+                        hygiene.output_roots(tracked)
+                else:
+                    self.assertEqual(hygiene.output_roots(tracked), expected)
 
     def test_preexisting_outputs_are_never_claimed(self) -> None:
         (self.root / "build").mkdir()
