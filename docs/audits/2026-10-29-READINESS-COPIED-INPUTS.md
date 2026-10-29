@@ -67,13 +67,27 @@ not a cold-build benchmark. A separate committed-source readiness run passes all
 terminal status is independently checked, including all three new methods.
 Log SHA256 `e328934eb9ff3c57d801a5e01d630f7af6001c60ede217d032e756d9fdf8f5a2`.
 
-Subsequent local preparation normally merges the independently local-qualified
-recovery candidate `b439cefa` from draft PR #287. Only mechanical inventory
-conflicts occur; all three reader/test files retain their verified hashes.
-This is provisional integration with an **unmerged** recovery PR, not accepted
-main. The original independent branch is preserved. Final combined-source checks,
-accepted-base alignment, unchanged complete hosted Apple controls, protected
-integration and fresh actual-main checks remain mandatory.
+Subsequent local preparation normally merges recovery `b439cefa` from PR #287.
+At clean combined `0e8341ea0e41703cbe4c2ebc93a6af46993d9db7`, full strict local
+checks pass **1,889 Desktop**, **681 Android per Debug/Release**, **120 GitHub-test**
+and **766 release controls**, with only the same three LAN/one platform skips.
+All 295 changed Desktop methods in 15 files match actual XML; source unchanged,
+owned stop 0. Complete ordinary readiness passes all 362 source-derived methods
+(three Apple-only Linux skips). Full log SHA256
+`891aad5eed7efe317f918898e659d9e1bfa7f9fc529685fbe05de516cfe1cca4`;
+readiness log `a97ae9c53045d13d748c0e875726ff78c2b5ddf5eef53972debf9ffabc616ea5`.
+297.9 seconds of valid unaffected-input reuse is not a cold-build benchmark.
+
+[PR #287](https://github.com/Apdelrahman1911/parlor/pull/287) subsequently merges
+normally as `539f8073fde9e7f168c64890ff89a416ab5551f0` after fresh
+[PR40877009596](https://github.com/Apdelrahman1911/parlor/actions/runs/40877009596)
+qualifies all eight producers/the Apple join, 23 Swift and 708 source-derived KMP
+Simulator methods. [Automatic main40886687896](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
+is running at this checkpoint, **not yet post-merge qualified**. Preparatory local
+alignment with that merged main changes no source-tree bytes. [Draft #288](https://github.com/Apdelrahman1911/parlor/pull/288)
+remains stacked remotely; never merge it into the feature branch. Main qualification,
+final documentation-source rechecks, retargeting to main, fresh complete hosted
+controls/architectures, protected integration and distinct actual-main checks remain.
 
 These are source-inventory software results, not Apple execution or application
 qualification. Keep #284 open until its relevant integration requirements
