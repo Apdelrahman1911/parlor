@@ -112,3 +112,19 @@ latency. The target's repeated native queries—not a completed Continue gesture
 precede the assertion. Geometry/timing samples are still required to establish
 why the original criterion fails; this does not identify a shipping root cause
 or explain the original Ghamza Host loss.
+
+[40825194544](https://github.com/Apdelrahman1911/parlor/actions/runs/40825194544)
+confirms the actual supported `get log` CLI and decodes its action view, then
+fails numeric candidate validation before its independently declared console
+read. The failure remains failed; exact930-file extraction manifests and failed
+method/owned device match independently. No rejected raw candidate is retained,
+so its particular field/content is not yet established. The previous progress
+notification's queued state races this completion; the retained final is FAIL.
+
+The reader now recognizes an emitted marker only at the start of a logical
+line, rather than misclassifying source/context quoting it. A concrete quoted
+source regression exercises that parser defect, **not a proven identification
+of the particular rejected native candidate**. Numeric grammar remains strict.
+Each declared log view is read independently even after a rejection; bounded
+numeric field/category metadata explains rejections without retaining raw logs.
+Any rejected view or missing samples still fails the complete-reader gate.

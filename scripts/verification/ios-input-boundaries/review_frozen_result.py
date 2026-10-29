@@ -100,30 +100,58 @@ def log_command(result, kind):
     return ['get', 'log', '--path', str(result), '--type', kind]
 
 
+class SettlementSampleError(ValueError):
+    """Bounded numeric rejection metadata only; never the rejected log string."""
+    def __init__(self, samples, parts, field):
+        super().__init__('Public numeric log candidate rejected')
+        self.metadata = dict(bytes=len(samples.encode()), samples=len(parts),
+                             field=field if field in ('emittedOutput', 'name', 'title', 'text', 'message') else 'other')
+
+
 def settlement_lines(value):
     """Retain only the original driver's bounded numeric diagnostic grammar."""
     lines = []
     prefix = 'Public control settlement: '
 
-    def visit(node):
+    def visit(node, field='other'):
         if isinstance(node, dict):
-            for child in node.values():
-                visit(child)
+            for key, child in node.items():
+                visit(child, key)
         elif isinstance(node, list):
             for child in node:
-                visit(child)
+                visit(child, field)
         elif isinstance(node, str):
             for line in node.splitlines():
-                if prefix not in line:
+                # Action logs can contain source/context strings quoting the
+                # marker. A marker embedded in another string is not an emitted
+                # diagnostic line; never parse arbitrary source as numeric data.
+                if not line.startswith(prefix):
                     continue
-                samples = line.split(prefix, 1)[1]
+                samples = line[len(prefix):]
                 parts = samples.split('; ')
-                require(0 < len(parts) <= 12 and len(samples) <= 16384 and
-                        all(SAMPLE.fullmatch(part) for part in parts))
+                if not (0 < len(parts) <= 12 and len(samples) <= 16384 and
+                        all(SAMPLE.fullmatch(part) for part in parts)):
+                    raise SettlementSampleError(samples, parts, field)
                 require(len(lines) < 16)
                 lines.append(prefix + samples)
     visit(value)
     return lines
+
+
+def collect_log_samples(read_view):
+    lines, errors, counts = [], {}, {}
+    for kind in ('action', 'console'):
+        try:
+            found = settlement_lines(read_view(kind))
+            counts[kind] = len(found)
+            lines.extend(found)
+        except ValueError as error:
+            # A bad read cannot suppress the other independent observation.
+            errors[kind] = dict(error_type=type(error).__name__)
+            if isinstance(error, SettlementSampleError):
+                errors[kind]['candidate'] = error.metadata
+    require(len(lines) <= 32)
+    return dict(lines=lines, errors=errors, counts=counts, complete=bool(lines) and not errors)
 
 
 def main():
@@ -193,21 +221,21 @@ def main():
         require(all(token in helptext for token in (b'--path', b'--type', b'console', b'action')))
         # Two declared read-only views of the existing result, not fallback
         # execution or a replay. Verify their real installed CLI first.
-        lines = []
-        for kind in ('action', 'console'):
-            decoded = json.loads(read(log_command(result, kind), kind + '-log'))
-            found = settlement_lines(decoded)
-            receipt[kind + '_settlement_lines'] = len(found)
-            lines.extend(found)
-        require(len(lines) <= 32)
+        collected = collect_log_samples(lambda kind:
+            json.loads(read(log_command(result, kind), kind + '-log')))
+        lines, errors = collected['lines'], collected['errors']
+        for kind, count in collected['counts'].items():
+            receipt[kind + '_settlement_lines'] = count
         (out / 'settlement-lines.json').write_text(json.dumps(lines, indent=2))
+        receipt['log_errors'] = errors
         # Original command receipts have duplicate '*-tests' labels. Keep rows,
         # not a dict that silently substitutes JSON decoding time for XCTest.
         receipt['execution_times'] = [dict(label=r['label'], seconds=r['elapsed_seconds'])
             for r in state['commands'] if 'elapsed_seconds' in r and
             any('test-without-building' == argument for argument in r['command'])]
-        receipt['result'] = 'FROZEN_RESULT_DECODED' if lines else 'NO_PUBLIC_SETTLEMENT_SAMPLES'
-        require(bool(lines))
+        receipt['result'] = 'LOG_SAMPLES_REJECTED' if errors else \
+            'FROZEN_RESULT_DECODED' if lines else 'NO_PUBLIC_SETTLEMENT_SAMPLES'
+        require(collected['complete'])
     finally:
         for name, digest in manifest.items():
             require(hashlib.sha256((inputs / name).read_bytes()).hexdigest() == digest)

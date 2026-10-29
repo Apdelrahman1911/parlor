@@ -64,6 +64,44 @@ class FrozenResultControls(unittest.TestCase):
         with self.assertRaises(ValueError):
             review.settlement_lines([line] * 17)
 
+    def test_quoted_source_marker_is_not_misidentified_as_emitted_public_output(self):
+        source = '            print("Public control settlement: " + samples.joined(separator: "; "))'
+        sample = ('at=1.0, querySeconds=2.0, frame=nil, enabled=false, '
+                  'stable=false, hittable=nil, snapshotErrorCode=Optional(1001)')
+        line = 'Public control settlement: ' + sample
+        self.assertEqual(review.settlement_lines({'source': source, 'emittedOutput': line}), [line])
+        self.assertEqual(review.settlement_lines({'source': source}), [])
+
+    def test_rejected_candidate_metadata_never_contains_the_rejected_payload(self):
+        with self.assertRaises(review.SettlementSampleError) as caught:
+            review.settlement_lines({'emittedOutput': 'Public control settlement: secret=private'})
+        self.assertEqual(caught.exception.metadata, dict(bytes=14, samples=1, field='emittedOutput'))
+        self.assertNotIn('private', str(caught.exception))
+
+    def test_rejected_action_view_does_not_suppress_console_and_cannot_qualify(self):
+        calls = []
+        sample = ('Public control settlement: at=1.0, querySeconds=2.0, frame=nil, '
+                  'enabled=false, stable=false, hittable=nil, snapshotErrorCode=nil')
+        def read(kind):
+            calls.append(kind)
+            return {'text': 'Public control settlement: malformed'} if kind == 'action' else {'text': sample}
+        result = review.collect_log_samples(read)
+        self.assertEqual(calls, ['action', 'console'])
+        self.assertEqual(result['lines'], [sample])
+        self.assertEqual(list(result['errors']), ['action'])
+        self.assertFalse(result['complete'])
+
+    def test_empty_and_failed_reads_remain_incomplete_after_both_declared_views(self):
+        self.assertFalse(review.collect_log_samples(lambda _: {'items': []})['complete'])
+        calls = []
+        def failed(kind):
+            calls.append(kind)
+            raise ValueError('simulated read failure')
+        result = review.collect_log_samples(failed)
+        self.assertEqual(calls, ['action', 'console'])
+        self.assertFalse(result['complete'])
+        self.assertEqual(list(result['errors']), ['action', 'console'])
+
     def test_metadata_accepts_only_the_exact_completed_producer_and_artifact(self):
         run, artifact = metadata()
         review.validate_metadata(run, artifact)
