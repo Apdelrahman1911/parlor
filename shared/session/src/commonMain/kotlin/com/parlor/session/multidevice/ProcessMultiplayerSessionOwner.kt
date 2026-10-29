@@ -8,6 +8,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
+import com.parlor.networking.transport.ResumableSessionSelection
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +49,7 @@ class MultiplayerSessionRoute private constructor(
     val resumeExistingSession: Boolean,
     val contentId: String?,
     val modeId: String?,
+    val resumeSelection: ResumableSessionSelection?,
 ) {
     init {
         require(gameId.raw.isNotBlank()) { "gameId must not be blank" }
@@ -83,7 +85,8 @@ class MultiplayerSessionRoute private constructor(
             roomCode == other.roomCode &&
             resumeExistingSession == other.resumeExistingSession &&
             contentId == other.contentId &&
-            modeId == other.modeId
+            modeId == other.modeId &&
+            resumeSelection == other.resumeSelection
 
     override fun hashCode(): Int {
         var result = gameId.hashCode()
@@ -93,6 +96,7 @@ class MultiplayerSessionRoute private constructor(
         result = 31 * result + resumeExistingSession.hashCode()
         result = 31 * result + (contentId?.hashCode() ?: 0)
         result = 31 * result + (modeId?.hashCode() ?: 0)
+        result = 31 * result + (resumeSelection?.hashCode() ?: 0)
         return result
     }
 
@@ -126,6 +130,7 @@ class MultiplayerSessionRoute private constructor(
             resumeExistingSession = false,
             contentId = contentId,
             modeId = modeId,
+            resumeSelection = null,
         )
 
         fun peer(
@@ -133,6 +138,7 @@ class MultiplayerSessionRoute private constructor(
             displayName: String,
             roomCode: String,
             resumeExistingSession: Boolean = false,
+            resumeSelection: ResumableSessionSelection? = null,
         ): MultiplayerSessionRoute = MultiplayerSessionRoute(
             gameId = gameId,
             role = MultiplayerSessionRole.Peer,
@@ -141,6 +147,7 @@ class MultiplayerSessionRoute private constructor(
             resumeExistingSession = resumeExistingSession,
             contentId = null,
             modeId = null,
+            resumeSelection = resumeSelection,
         )
     }
 }
@@ -408,6 +415,9 @@ class ProcessMultiplayerSession internal constructor(
  */
 class ProcessMultiplayerSessionOwner(
     private val processScope: CoroutineScope,
+    private val discardSelectedMembership: suspend (ResumableSessionSelection) -> Result<Unit, NetError> = {
+        Result.Failure(NetError.SecureStorageUnavailable)
+    },
     private val discardResumableSession: suspend () -> Result<Unit, NetError> = {
         Result.Success(Unit)
     },
@@ -420,9 +430,14 @@ class ProcessMultiplayerSessionOwner(
     private var retainedRetryRoom: RetainedRetryRoom? = null
     private var closing: ClosingAttempt? = null
 
+    /**
+     * Reattaches a matching live/in-flight room. UI entry uses [retryFailedOpen] = false;
+     * only its explicit Retry sets true. Direct intentional callers retain the existing default.
+     */
     suspend fun acquire(
         route: MultiplayerSessionRoute,
         hostSeed: Long? = null,
+        retryFailedOpen: Boolean = true,
         openRoom: suspend (MultiplayerOpenMode) -> Result<LocalRoom, NetError>,
     ): Result<ProcessMultiplayerSession, NetError> {
         require((route.role == MultiplayerSessionRole.Host) == (hostSeed != null)) {
@@ -451,6 +466,12 @@ class ProcessMultiplayerSessionOwner(
             val currentRoute = _state.value.routeOrNull
             if (currentRoute != null && currentRoute != route) {
                 return@withLock completed(Result.Failure(NetError.AlreadyConnected))
+            }
+
+            // Recreated UI restores a failed opening; only an explicit Retry may reopen it.
+            val failed = _state.value as? ProcessMultiplayerState.Failed
+            if (failed != null && !retryFailedOpen) {
+                return@withLock completed(Result.Failure(failed.error))
             }
 
             val mode = nextOpenMode(route)
@@ -598,7 +619,9 @@ class ProcessMultiplayerSessionOwner(
             processScope.launch {
                 var cancellation: CancellationException? = null
                 val discarded = try {
-                    retained?.room?.discardRejoinCapability() ?: discardResumableSession()
+                    retained?.room?.discardRejoinCapability()
+                        ?: route.resumeSelection?.let { discardSelectedMembership(it) }
+                        ?: discardResumableSession()
                 } catch (cancelled: CancellationException) {
                     cancellation = cancelled
                     Result.Failure(NetError.SessionSuspended)

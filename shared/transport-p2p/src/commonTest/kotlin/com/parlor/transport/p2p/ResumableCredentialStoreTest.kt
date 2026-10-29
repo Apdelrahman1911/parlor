@@ -70,6 +70,75 @@ class ResumableCredentialStoreTest {
     }
 
     @Test
+    fun selected_resume_keeps_the_same_logical_membership_across_pending_and_committed_rotations() = runTest {
+        val original = credential(offerId = "selected", generation = 1)
+        store.stage(original)
+        store.commit(original.offerId, original.generation)
+        val selection = selectedHandle()
+        val rotated = original.copy(offerId = "rotation", generation = 2, secret = "b".repeat(64))
+        store.stage(rotated)
+        assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Success(original))
+        store.commit(rotated.offerId, rotated.generation)
+        assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Success(rotated))
+        assertThat(store.invalidateSelectedMembership(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.Invalidated))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+    }
+
+    @Test
+    fun selected_resume_rejects_same_presentation_replacement_without_falling_back_to_old_active() = runTest {
+        val original = credential(offerId = "selected", generation = 1)
+        store.stage(original)
+        store.commit(original.offerId, original.generation)
+        val selection = selectedHandle()
+        val replacements = listOf(
+            original.copy(membershipId = "replacement", offerId = "replacement-offer"),
+            original.copy(playerId = "replacement-player", offerId = "replacement-player-offer"),
+            original.copy(hostPeerId = "replacement-host", offerId = "replacement-host-offer"),
+            original.copy(hostFingerprint = "p2f1-" + "b".repeat(52), offerId = "replacement-fingerprint-offer"),
+            original.copy(roomCode = "XYZ789", offerId = "replacement-room-offer"),
+        )
+        for (replacement in replacements) {
+            assertThat(store.stage(replacement)).isEqualTo(Result.Success(Unit))
+            assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Failure(CredentialStoreError.TransactionMismatch))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(replacement))
+            assertThat(store.discardPending(replacement.offerId)).isEqualTo(Result.Success(Unit))
+            assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Success(original))
+        }
+    }
+
+    @Test
+    fun selected_final_leave_preserves_unrelated_pending_membership_and_is_idempotent() = runTest {
+        val original = credential(offerId = "selected", generation = 1)
+        store.stage(original)
+        store.commit(original.offerId, original.generation)
+        val selection = selectedHandle()
+        val replacement = original.copy(membershipId = "replacement", offerId = "replacement-offer")
+        store.stage(replacement)
+        assertThat(store.invalidateSelectedMembership(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.Invalidated))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(replacement))
+        assertThat(store.invalidateSelectedMembership(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.NotOwned))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(replacement))
+    }
+
+    @Test
+    fun selected_pending_membership_leave_preserves_unrelated_active_and_never_resumes_it() = runTest {
+        val active = credential(offerId = "active", generation = 1)
+        store.stage(active)
+        store.commit(active.offerId, active.generation)
+        val pending = active.copy(offerId = "pending", membershipId = "pending-membership")
+        store.stage(pending)
+        val selection = selectedHandle()
+        assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Success(pending))
+        assertThat(store.invalidateSelectedMembership(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.Invalidated))
+        assertThat(store.loadResumeCandidate(selection)).isEqualTo(Result.Failure(CredentialStoreError.TransactionMismatch))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(active))
+    }
+
+    @Test
     fun excessiveJsonNestingIsCorruptedInputAndDoesNotPoisonLaterStorageAccess() = runTest {
         val payload = ("[".repeat(2_048) + "0" + "]".repeat(2_048)).encodeToByteArray()
         storage.put("p2p-resumable-session-v1", payload)

@@ -30,6 +30,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.MultiplayerOpenMode
 import com.parlor.session.multidevice.MultiplayerSessionRoute
@@ -44,9 +45,12 @@ import org.koin.compose.koinInject
 internal fun <S : GameState, A : GameAction, E : GameEvent> PeerGameLobby(
     spec: MultiplayerGameSpec<S, A, E>, transport: RoomTransport, code: String, name: String, resume: Boolean,
     onExit: () -> Unit, onSettings: (() -> Unit)?, backRequest: Long, modifier: Modifier,
+    resumeSelection: ResumableSessionSelection? = null,
 ) {
     val owner: ProcessMultiplayerSessionOwner = koinInject()
-    val route = remember(spec.definition.id, code, name, resume) { MultiplayerSessionRoute.peer(spec.definition.id, name, code, resume) }
+    val route = remember(spec.definition.id, code, name, resume, resumeSelection) {
+        MultiplayerSessionRoute.peer(spec.definition.id, name, code, resume, resumeSelection)
+    }
     val ownerState by owner.state.collectAsState()
     val session = (ownerState as? ProcessMultiplayerState.Active)?.session?.takeIf { it.route == route }
     val ownerError = ownerState.peerRouteError(route)
@@ -60,15 +64,15 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> PeerGameLobby(
     val access by transport.localNetworkAccess.collectAsState()
     LaunchedEffect(transport, route, attempt) {
         error = null
-        when (val result = owner.acquire(route) { mode ->
+        when (val result = owner.acquire(route, retryFailedOpen = attempt > 0) { mode ->
             when (mode) {
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
                     code = code, displayName = name,
                     expectedGameProtocol = HostedGameProtocol(spec.definition.id, spec.version),
                 ))
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
-                    HostedGameProtocol(spec.definition.id, spec.version),
-                )
+                MultiplayerOpenMode.Resume -> route.resumeSelection?.let { selection ->
+                    transport.resumeLastSession(HostedGameProtocol(spec.definition.id, spec.version), selection)
+                } ?: transport.resumeLastSession(HostedGameProtocol(spec.definition.id, spec.version))
                 MultiplayerOpenMode.Host -> error("Peer route cannot host")
             }
         }) {

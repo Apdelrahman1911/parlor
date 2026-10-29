@@ -60,6 +60,25 @@ interface RoomTransport {
         Result.Failure(NetError.IncompatibleProtocol)
 
     /**
+     * Resume the selected logical membership, allowing its authenticated rotations.
+     * The selection is transport-owned and non-persistent. Check it against the
+     * same loaded credential used for authentication, never a separate UI read.
+     * Unsupported/foreign/stale selections fail closed without touching LAN.
+     */
+    suspend fun resumeLastSession(
+        expectedGameProtocol: HostedGameProtocol,
+        selection: ResumableSessionSelection,
+    ): Result<LocalRoom, NetError> = Result.Failure(NetError.NotConnected)
+
+    /**
+     * Final Leave for an observed logical membership when no room was opened.
+     * Unlike Home's exact-generation deletion, this revokes its rotations but
+     * preserves unrelated replacements; an already absent selection succeeds.
+     */
+    suspend fun discardResumableMembership(selection: ResumableSessionSelection): Result<Unit, NetError> =
+        Result.Failure(NetError.SecureStorageUnavailable)
+
+    /**
      * Permanently discards the protected membership returned by
      * [resumableSession], even when no [LocalRoom] could be reconstructed.
      * Implementations must use an ownership-checked transaction so a stale
@@ -174,5 +193,5 @@ data class ResumableSessionInfo(
     val deletionSelection: ResumableSessionSelection? = null,
 )
 
-/** An implementation-owned handle, not a room credential or a serialized player identity. */
+/** Non-persistent implementation-owned membership handle; never a credential or serialized identity. */
 interface ResumableSessionSelection

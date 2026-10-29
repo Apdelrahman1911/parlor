@@ -119,10 +119,13 @@ class PeerOpeningCancellationTest {
         val fixture = OpeningFixture(backgroundScope, resume = true)
         fixture.prepare()
         val before = fixture.committedCredential()
+        val selection = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            fixture.transport.resumableSession(),
+        ).data?.deletionSelection)
         var room: LocalRoom? = null
         try {
             room = assertIs<Result.Success<LocalRoom>>(fixture.transport.resumeLastSession(
-                HostedGameProtocol(GameId("fixture-game"), 1),
+                HostedGameProtocol(GameId("fixture-game"), 1), selection,
             )).data
             assertEquals(1, fixture.createCalls)
             assertEquals(1, fixture.connectCalls)
@@ -158,6 +161,60 @@ class PeerOpeningCancellationTest {
             assertEquals(0, fixture.connectCalls)
             assertTrue(fixture.session.sent.isEmpty())
             assertEquals(replaced, fixture.committedCredential())
+        } finally {
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
+    @Test
+    fun sameGameReplacementAfterHomeReadCannotOpenAnotherMembership() = runTest {
+        val fixture = OpeningFixture(backgroundScope, resume = true)
+        fixture.prepare()
+        val summary = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            fixture.transport.resumableSession(),
+        ).data)
+        val replacement = fixture.committedCredential().copy(
+            membershipId = "another-membership", offerId = "another-offer",
+        )
+        assertEquals(Result.Success(Unit), fixture.store.stage(replacement))
+        assertEquals(Result.Success(Unit), fixture.store.commit(replacement.offerId, replacement.generation))
+        var room: LocalRoom? = null
+        try {
+            val result = fixture.transport.resumeLastSession(
+                HostedGameProtocol(summary.gameId, summary.gameVersion), assertNotNull(summary.deletionSelection),
+            )
+            room = (result as? Result.Success)?.data
+            assertEquals(0, fixture.createCalls, "Home's observed membership must survive the caller boundary")
+            assertEquals(0, fixture.connectCalls)
+            assertEquals(Result.Failure(NetError.NotConnected), result)
+            assertEquals(replacement, fixture.committedCredential())
+            assertEquals(Result.Success(Unit), fixture.transport.discardResumableMembership(
+                assertNotNull(summary.deletionSelection),
+            ))
+            assertEquals(replacement, fixture.committedCredential(), "Leaving a stale route must preserve its replacement")
+        } finally {
+            room?.closeForRetry()
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
+    @Test
+    fun foreignOrAbsentSelectedMembershipCannotCreateAKit() = runTest {
+        val fixture = OpeningFixture(backgroundScope, resume = true)
+        fixture.prepare()
+        val selection = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            fixture.transport.resumableSession(),
+        ).data?.deletionSelection)
+        val foreign = object : com.parlor.networking.transport.ResumableSessionSelection {}
+        val protocol = HostedGameProtocol(GameId("fixture-game"), 1)
+        try {
+            assertEquals(Result.Failure(NetError.NotConnected), fixture.transport.resumeLastSession(protocol, foreign))
+            assertEquals(Result.Failure(NetError.SecureStorageUnavailable), fixture.transport.discardResumableMembership(foreign))
+            assertEquals(Result.Success(Unit), fixture.store.clear())
+            assertEquals(Result.Failure(NetError.NotConnected), fixture.transport.resumeLastSession(protocol, selection))
+            assertEquals(Result.Success(Unit), fixture.transport.discardResumableMembership(selection))
+            assertEquals(0, fixture.createCalls)
+            assertEquals(0, fixture.connectCalls)
         } finally {
             fixture.stopFakeIfNeeded()
         }
@@ -508,9 +565,13 @@ private class OpeningFixture(
         }
     }
 
-    suspend fun open(): Result<LocalRoom, NetError> =
-        if (resume) transport.resumeLastSession(HostedGameProtocol(GameId("fixture-game"), 1))
-        else transport.join("ABCDEF", "Alice")
+    suspend fun open(): Result<LocalRoom, NetError> {
+        if (!resume) return transport.join("ABCDEF", "Alice")
+        val selected = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            transport.resumableSession(),
+        ).data?.deletionSelection)
+        return transport.resumeLastSession(HostedGameProtocol(GameId("fixture-game"), 1), selected)
+    }
 
     suspend fun committedCredential(): ResumableSessionCredential = assertNotNull(
         assertIs<Result.Success<ResumableSessionCredential?>>(store.loadResumeCandidate()).data,

@@ -269,6 +269,8 @@ private fun MafiaShellContent(
             code = "",
             peerName = peerName,
             resumeExistingSession = true,
+            resumeSelection = (launch as? GameShellLaunch.ResumeMultiplayer)?.selection
+                ?: (launch as? GameShellLaunch.RestoreOwnedMultiplayer)?.route?.resumeSelection,
             onBackToHome = onExit,
             onOpenNetworkSettings = openNetworkSettings,
             backRequestId = activeBackRequestId,
