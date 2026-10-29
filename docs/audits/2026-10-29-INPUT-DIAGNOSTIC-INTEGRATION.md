@@ -139,6 +139,38 @@ force-removed and no check is disabled. Complete ordinary controls now total449,
 standalone diagnostic87. Fresh macOS source/runtime/cleanup execution must verify
 whether this also resolves the actual hosted retention; local mocks cannot do so.
 
+## Canonical owned fixture roots
+
+Fresh [standalone40939999222](https://github.com/Apdelrahman1911/parlor/actions/runs/40939999222)
+at `b0706863` fails three of its 87 software controls, **before application/build
+execution**. Original manifest-corruption, source-corruption and hardlink assertions
+encounter the loader's earlier `Redirected frozen control fixture` guard instead.
+The exact hosted temporary-path alias component was not retained. Preserve the
+failed job, absent application artifact and rejected independent native review.
+
+The controls construct copied fixture roots from uncanonicalized `TemporaryDirectory`
+names; a real owned temporary-directory alias reproduces exactly the same three
+failures on unchanged source (seven methods, zero errors/skips). Original RED log
+SHA256 `cf5b00881fb8321927bd070fb98599459023e65ed2cd49f3dbd8e9484beadabf`.
+This identifies a fixture prerequisite defect, not a loader bypass or gameplay bug.
+
+Canonicalize only each newly owned temporary root **before** making its test files.
+Do not canonicalize candidate inputs or intentional adversarial links. Original
+manifest/content hash, missing/oversized source, symlink, hardlink and descriptor
+assertions remain unchanged; loader and frozen manifest bytes are unchanged.
+The loader SHA256 remains
+`6402b9fc49298d143d1893dd6b609079b96fbeeb9672432816cd9357ff310962`.
+A new real-directory-alias regression executes the three original control bodies,
+requires their owned child directories to retire and retains the intentional alias.
+
+Corrected alias execution passes all eight methods, zero errors/skips; log SHA256
+`137a01413746efddd9730edc06bfdf4b277983b2cc34b94154be6b7a8e4d2b0c`.
+Standalone discovery now contains88 methods; ordinary readiness450. Fresh complete
+committed-source and macOS checks are still required; this Linux reproduction does
+not certify the hosted repair. Workflows, deadlines and strict path/hash guards are
+unchanged. Production40940007224 remains separately observed at its frozen old head;
+no failed native preflight is substituted with the older successful three-arm run.
+
 ## Required qualification and remaining limits
 
 Fresh base-main40916055035 independently qualifies PR #288's actual merged

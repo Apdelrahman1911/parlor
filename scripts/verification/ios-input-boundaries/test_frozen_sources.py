@@ -45,7 +45,7 @@ class FrozenSourceFixtureControls(unittest.TestCase):
 
     def test_changed_manifest_is_rejected_before_source_selection(self):
         with tempfile.TemporaryDirectory() as raw:
-            directory = Path(raw) / 'fixtures'
+            directory = Path(raw).resolve(strict=True) / 'fixtures'
             shutil.copytree(frozen.DIRECTORY, directory)
             (directory / 'manifest.json').write_bytes((frozen.DIRECTORY / 'manifest.json').read_bytes() + b'\n')
             with self.assertRaisesRegex(ValueError, 'manifest changed'):
@@ -53,7 +53,7 @@ class FrozenSourceFixtureControls(unittest.TestCase):
 
     def test_changed_missing_and_oversized_full_file_never_falls_back_to_git_or_current_source(self):
         with tempfile.TemporaryDirectory() as raw:
-            directory = Path(raw) / 'fixtures'
+            directory = Path(raw).resolve(strict=True) / 'fixtures'
             shutil.copytree(frozen.DIRECTORY, directory)
             path = directory / original.FROZEN_SOURCE / (next(iter(original.FROZEN_INPUTS)) + '.source')
             path.write_bytes(path.read_bytes() + b'\n')
@@ -68,10 +68,11 @@ class FrozenSourceFixtureControls(unittest.TestCase):
 
     def test_file_and_parent_symlinks_and_hardlinks_are_not_frozen_inputs(self):
         with tempfile.TemporaryDirectory() as raw:
-            directory = Path(raw) / 'fixtures'
+            root = Path(raw).resolve(strict=True)
+            directory = root / 'fixtures'
             shutil.copytree(frozen.DIRECTORY, directory)
             path = directory / original.FROZEN_SOURCE / (next(iter(original.FROZEN_INPUTS)) + '.source')
-            target = Path(raw) / 'target'
+            target = root / 'target'
             path.rename(target)
             path.symlink_to(target)
             with self.assertRaisesRegex(ValueError, 'Redirected'):
@@ -80,10 +81,29 @@ class FrozenSourceFixtureControls(unittest.TestCase):
             os.link(target, path)
             with self.assertRaisesRegex(ValueError, 'Invalid'):
                 self.load_original(directory)
-            redirected = Path(raw) / 'redirected'
+            redirected = root / 'redirected'
             redirected.symlink_to(directory, target_is_directory=True)
             with self.assertRaisesRegex(ValueError, 'Redirected'):
                 self.load_original(redirected)
+
+    def test_owned_temporary_alias_reaches_original_corruption_and_link_guards(self):
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw).resolve(strict=True)
+            real = root / 'real'
+            real.mkdir()
+            alias = root / 'alias'
+            alias.symlink_to(real, target_is_directory=True)
+            self.assertNotEqual(alias.absolute(), alias.resolve(strict=True))
+            with patch.object(tempfile, 'tempdir', str(alias)):
+                for name in (
+                    'test_changed_manifest_is_rejected_before_source_selection',
+                    'test_changed_missing_and_oversized_full_file_never_falls_back_to_git_or_current_source',
+                    'test_file_and_parent_symlinks_and_hardlinks_are_not_frozen_inputs',
+                ):
+                    with self.subTest(control=name):
+                        getattr(self, name)()
+            self.assertEqual(list(real.iterdir()), [])
+            self.assertTrue(alias.is_symlink())
 
     def test_changing_descriptor_metadata_rejects_even_hash_matching_bytes(self):
         actual = os.fstat
