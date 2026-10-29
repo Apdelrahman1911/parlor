@@ -35,6 +35,17 @@ def snapshot():
 
 
 class CopyControls(unittest.TestCase):
+    def test_native_test_command_runs_both_original_methods_once_without_repetition_options(self):
+        base = ['/usr/bin/xcodebuild', '-project', 'iosApp/iosApp.xcodeproj',
+                '-scheme', 'iosApp', '-configuration', 'Debug',
+                '-destination', 'platform=iOS Simulator,id=' + SIMULATOR,
+                '-parallel-testing-enabled', 'NO']
+        result = Path('/owned/original/tests.xcresult')
+        self.assertEqual(runner.test_command(base, result), [
+            *base, 'test-without-building', '-resultBundlePath', str(result),
+            '-only-testing:iosAppUITests/IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish',
+            '-only-testing:iosAppUITests/IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic'])
+
     def test_original_arm_is_byte_exact_and_both_observed_arms_never_write_root(self):
         sources, hashes = actual()
         self.assertEqual(catalog.render(sources, hashes, arm='original'), sources)
@@ -118,6 +129,21 @@ class CopyControls(unittest.TestCase):
                 dest = root / str(index); dest.mkdir()
                 with self.subTest(path=path), self.assertRaises(ValueError): runner.materialize(archive(entry), dest)
 
+    def test_hidden_source_additions_and_fake_nested_output_directories_reject(self):
+        for relative in ('composeApp/.hidden.kt', 'composeApp/.hidden/Added.kt',
+                         'composeApp/src/.gradle/Added.kt', 'composeApp/src/build/Added.kt',
+                         'composeApp/src/.kotlin/Added.kt', 'composeApp/src/__pycache__/Added.kt'):
+            with self.subTest(path=relative), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve(strict=True)
+                sources = {'build.gradle.kts': b'root build', 'composeApp/build.gradle.kts': b'module build',
+                           'composeApp/src/main.kt': b'public source'}
+                for name, content in sources.items():
+                    path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(content)
+                manifest = {name: runner.sha(content) for name, content in sources.items()}
+                runner.verify_inputs(root, manifest)
+                added = root / relative; added.parent.mkdir(parents=True, exist_ok=True); added.write_bytes(b'unregistered source')
+                with self.assertRaises(ValueError): runner.verify_inputs(root, manifest)
+
     def test_source_copy_requires_canonical_owned_root_without_admitting_redirects(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp).resolve(strict=True)
@@ -137,8 +163,12 @@ class CopyControls(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp).resolve(strict=True); file = root / 'composeApp/source.kt'
             file.parent.mkdir(); file.write_bytes(b'public test source')
-            manifest = {'composeApp/source.kt': runner.sha(file.read_bytes())}
+            config = root / 'composeApp/build.gradle.kts'; config.write_bytes(b'declared build')
+            manifest = {'composeApp/source.kt': runner.sha(file.read_bytes()),
+                        'composeApp/build.gradle.kts': runner.sha(config.read_bytes())}
             generated = root / 'composeApp/build/generated.kt'; generated.parent.mkdir(); generated.write_bytes(b'generated')
+            for name in ('composeApp/.gradle/state', 'composeApp/.kotlin/session'):
+                cache = root / name; cache.parent.mkdir(parents=True); cache.write_bytes(b'owned output')
             runner.verify_inputs(root, manifest)
             unknown = root / 'composeApp/unregistered.kt'; unknown.write_bytes(b'unknown')
             with self.assertRaises(ValueError): runner.verify_inputs(root, manifest)

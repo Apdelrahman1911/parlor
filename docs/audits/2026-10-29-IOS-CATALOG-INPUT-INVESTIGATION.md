@@ -99,3 +99,41 @@ its platform Swift overlay search path, causing missing `XCTAssert*` and
 path; do not stub assertions, exclude the driver, or skip the SDK control.
 The revised native typecheck and all app-side investigation gates must still
 execute before claiming correction or causality. PR#282 remains failed/unmerged.
+
+## Second hosted failure: invalid single-iteration option
+
+[Run40804590789](https://github.com/Apdelrahman1911/parlor/actions/runs/40804590789)
+at harness177174d2 passes all35actual Apple SDK/control methods and compiles the
+original841a0b06 Debug application. Its test command exits64 before any journey:
+`xcodebuild: error: Must specify -test-iterations with more than 1 iteration.`
+The original xcresult has zero tests and no test nodes. Neither observed arm
+executes; owned native/Gradle cleanup passes. API/download artifact12868826338
+ZIP SHA256 matches `ea0512498c29cce7dce28dda23e92be32817f1a9f504d6df60e33f58b5137bcb`.
+This is a confirmed diagnostic-command defect, not application input evidence.
+
+Remove only `-test-iterations 1`: ordinary Xcode execution defaults to one run.
+The exact command regression rejects repetition/retry options and preserves both
+original EN/AR method selectors. Its retained RED run fails exactly that method;
+revised complete PIN discovery executes37methods:34pass,3explicit Linux Apple-only
+skips. Zero/incomplete results still reject; no original driver, tap, deadline,
+assertion, production workflow, architecture or Release optimization changes.
+Corrected native execution and fresh committed-source gates remain required.
+
+## Confirmed source-copy input-discovery gap (#284)
+
+[#284](https://github.com/Apdelrahman1911/parlor/issues/284) records a separate
+nonshipping verification defect. The frozen177174d2 validator accepts an
+unregistered hidden Kotlin source while actual strict Desktop compilation consumes
+that exact file and rejects its deliberate invalid token. Injection is removed,
+source stays clean, private Gradle stop0. Compile log SHA256:
+`061ec51cbd6898aa393c4f25aed1106b01378e6cca5bab26cfc2ab9de754c5e1`.
+No shipping exploit or relationship to the native tap failure is established.
+
+Replace blanket hidden-name/output-basename pruning with exact generated output
+paths derived from frozen recorded Gradle projects and Xcode containers. Six
+hidden/nested-source subcases fail RED, then reject under the corrected reader;
+actual declared outputs remain supported. Fresh materialization of841a0b06
+verifies1,143original/1,144observed inputs, all three copy-plan hashes and62declared
+output directories. Existing hash/symlink/product/result boundaries remain.
+Local validation is not hosted acceptance of this changed reader. #269's resolved
+ignored-worktree false positive is distinct and is not reopened.

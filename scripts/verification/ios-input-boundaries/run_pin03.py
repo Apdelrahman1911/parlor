@@ -81,26 +81,40 @@ def materialize(raw, destination):
     return manifest
 
 
+def generated_directories(manifest):
+    """Only frozen declared project outputs, never a name-based source exclusion."""
+    outputs = set()
+    for name in manifest:
+        path = PurePosixPath(name)
+        if path.name in ('build.gradle.kts', 'build.gradle', 'settings.gradle.kts', 'settings.gradle'):
+            outputs.update(str(path.parent / leaf) for leaf in ('build', '.gradle', '.kotlin'))
+        for parent in path.parents:
+            if parent.name.endswith(('.xcodeproj', '.xcworkspace')):
+                outputs.add(str(parent / 'xcuserdata'))
+    return outputs
+
+
 def verify_inputs(copy, manifest):
     for path, digest in manifest.items():
         source = copy / path
         if source.is_symlink() or source.resolve() != source.absolute() or sha(source.read_bytes()) != digest:
             raise ValueError('Copied build input changed or redirected')
     actual = set()
+    outputs = generated_directories(manifest)
     def unreadable(error):
         raise error
     for directory, dirs, names in os.walk(copy, followlinks=False, onerror=unreadable):
         retained = []
         for name in dirs:
             path = Path(directory) / name
-            if name in ('build', '__pycache__', 'xcuserdata') or name.startswith('.'):
+            if str(path.relative_to(copy)) in outputs:
                 continue
             if path.is_symlink():
                 raise ValueError('Redirected source directory')
             retained.append(name)
         dirs[:] = retained
         for name in names:
-            if name.startswith('.') or name.endswith(('.pyc', '.xcuserstate')):
+            if name.endswith(('.pyc', '.xcuserstate')):
                 continue
             path = Path(directory) / name
             relative = str(path.relative_to(copy))
@@ -179,6 +193,12 @@ def verify_results(summary, tests, simulator_id, code):
             summary.get('result') != ('Passed' if passed == 2 else 'Failed'):
         raise ValueError('Command, summary and actual case outcomes disagree')
     return {p['nodeIdentifier']: p['result'] for p in cases}
+
+
+def test_command(base, result):
+    """One ordinary run; Xcode rejects an explicit iteration count of one."""
+    return [*base, 'test-without-building', '-resultBundlePath', str(result),
+            *('-only-testing:' + t for t in TESTS)]
 
 
 def decode_capture(raw, tokens, simulator_id, bundle):
@@ -341,8 +361,7 @@ def main():
                 raise RuntimeError('Actual Debug wrapper is not the declared ARM64 image')
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
             result = dest / 'tests.xcresult'
-            code, _ = command([*base, 'test-without-building', '-resultBundlePath', str(result),
-                               '-test-iterations', '1', *('-only-testing:' + t for t in TESTS)],
+            code, _ = command(test_command(base, result),
                               arm + '-tests', 900, dest / 'test.log',
                               environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
             row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
