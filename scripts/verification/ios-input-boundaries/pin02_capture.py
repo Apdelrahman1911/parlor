@@ -28,6 +28,24 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def render_container(text):
+    """Shared additive exporter plan; caller must validate its exact source binding."""
+    text = pin01_copy.once(text,
+        '    private let contentController: UIViewController\n',
+        '    private let contentController: UIViewController\n'
+        '#if DEBUG && targetEnvironment(simulator)\n'
+        '    private var pin02Capture: PIN02Capture?\n'
+        '#endif\n')
+    text = pin01_copy.once(text,
+        '        super.init(nibName: nil, bundle: nil)\n',
+        '        super.init(nibName: nil, bundle: nil)\n'
+        '#if DEBUG && targetEnvironment(simulator)\n'
+        '        pin02Capture = PIN02Capture.install(snapshot: { MainViewControllerKt.PIN01InputSnapshot() })\n'
+        '#endif\n')
+    text = 'import ComposeApp\n' + text + '\n' + (HERE / 'PIN02Capture.swift.in').read_text()
+    return text
+
+
 def render(sources, digests):
     """Return changes for two exact, separately owned source copies only.
 
@@ -40,19 +58,7 @@ def render(sources, digests):
         require(type(source) is str and 'PIN02' not in source, 'Unknown/repeated capture copy')
         require(hashlib.sha256(source.encode()).hexdigest() == digests[path], 'Frozen source changed')
     output = dict(sources)
-    output[CONTAINER] = pin01_copy.once(output[CONTAINER],
-        '    private let contentController: UIViewController\n',
-        '    private let contentController: UIViewController\n'
-        '#if DEBUG && targetEnvironment(simulator)\n'
-        '    private var pin02Capture: PIN02Capture?\n'
-        '#endif\n')
-    output[CONTAINER] = pin01_copy.once(output[CONTAINER],
-        '        super.init(nibName: nil, bundle: nil)\n',
-        '        super.init(nibName: nil, bundle: nil)\n'
-        '#if DEBUG && targetEnvironment(simulator)\n'
-        '        pin02Capture = PIN02Capture.install(snapshot: { MainViewControllerKt.PIN01InputSnapshot() })\n'
-        '#endif\n')
-    output[CONTAINER] = 'import ComposeApp\n' + output[CONTAINER] + '\n' + (HERE / 'PIN02Capture.swift.in').read_text()
+    output[CONTAINER] = render_container(output[CONTAINER])
     # Every app instance gets an opaque request owner before its original launch;
     # no app observation, wait, preference or permission action is inserted here.
     anchor = '        let app = XCUIApplication()\n'

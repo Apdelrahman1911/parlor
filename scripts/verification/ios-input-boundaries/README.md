@@ -119,3 +119,19 @@ possible→failed state machine. Its `cancelsTouchesInView`, `delaysTouchesBegan
 explicit policies. These APIs support investigation, not proof that adding a
 recognizer leaves Compose/native scheduling unaffected. No window-event
 swizzling, private recognizer introspection or unrelated background mode is used.
+
+## Original #267 Host profile
+
+`--profile original-host` binds application `9d4f369d2b1581f5c157b67cce3ff0fada49effa`,
+installed iOS26.2 and iPhone17Pro exactly. The newer catalog driver cannot
+instrument that earlier driver's missing post-failure anchor; this profile never
+substitutes a newer driver or silently falls back to iOS18.5. All seven observed
+source hashes are pinned. Original `.tap()`, searches, predicates, ten-second
+deadlines and successful paths stay exact. The copied observer requests capture
+only after the original eight-search public-control loop has already failed.
+
+Five software controls check original-byte restoration, all three copy plans,
+source/profile mutation rejection and Compose/native privacy. They are not native
+execution, full neutrality, physical input verification or root-cause evidence.
+A single standard free hosted runner must execute and independently attest the
+actual source/product/runtime/results/cleanup before reporting any native result.

@@ -2,7 +2,7 @@ name: iOS input investigation (not production qualification)
 
 on:
   push:
-    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29]
+    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29, diagnostic/ios-original-host-runtime-2026-10-29]
   workflow_dispatch:
     inputs:
       source:
@@ -17,6 +17,11 @@ on:
         description: Explicit installed iPhone type
         required: true
         default: com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro
+      profile:
+        description: Catalog investigation, or exact original #267 Host source/runtime/device (no fallback)
+        type: choice
+        options: [catalog, original-host]
+        default: catalog
 
 concurrency:
   group: parlor-ios-input-investigation-${{ github.ref }}
@@ -38,9 +43,10 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       PARLOR_INPUT_OUTPUT: parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
-      PARLOR_INPUT_SOURCE: ${{ inputs.source || '841a0b0623b508eae103f79ba7b4e5773e6a8b4d' }}
-      PARLOR_INPUT_RUNTIME: ${{ inputs.runtime || 'com.apple.CoreSimulator.SimRuntime.iOS-18-5' }}
-      PARLOR_INPUT_DEVICE: ${{ inputs.device || 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro' }}
+      PARLOR_INPUT_SOURCE: ${{ inputs.source || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && '9d4f369d2b1581f5c157b67cce3ff0fada49effa') || '841a0b0623b508eae103f79ba7b4e5773e6a8b4d' }}
+      PARLOR_INPUT_RUNTIME: ${{ inputs.runtime || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'com.apple.CoreSimulator.SimRuntime.iOS-26-2') || 'com.apple.CoreSimulator.SimRuntime.iOS-18-5' }}
+      PARLOR_INPUT_DEVICE: ${{ inputs.device || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro') || 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro' }}
+      PARLOR_INPUT_PROFILE: ${{ inputs.profile || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'original-host') || 'catalog' }}
     steps:
       - name: Check out reviewed harness and original source history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -73,7 +79,8 @@ jobs:
         run: |
           /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
             --source "$PARLOR_INPUT_SOURCE" --runtime "$PARLOR_INPUT_RUNTIME" \
-            --device "$PARLOR_INPUT_DEVICE" --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+            --device "$PARLOR_INPUT_DEVICE" --profile "$PARLOR_INPUT_PROFILE" \
+            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Read installed Xcode component paths without launching an application
         if: github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'
         shell: bash

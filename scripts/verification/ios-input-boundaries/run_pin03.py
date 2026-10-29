@@ -25,6 +25,7 @@ import pin01_copy
 import pin01_receipts
 import pin02_capture
 import pin03_catalog_copy as catalog
+import pin04_original_host as original_host
 import public_attachments
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -144,9 +145,9 @@ def verify_inputs(copy, manifest):
         raise ValueError('Unregistered or missing copied build input')
 
 
-def apply_arm(copy, original, manifest, arm, *, previous):
+def apply_arm(copy, original, manifest, arm, *, previous, renderer=catalog.render):
     verify_inputs(copy, previous)
-    plan = catalog.render(original, {p: manifest[p] for p in original}, arm=arm)
+    plan = renderer(original, {p: manifest[p] for p in original}, arm=arm)
     if arm == 'original' and (copy / pin01_copy.ADDITION).exists():
         raise ValueError('Original arm cannot reuse an observed source copy')
     for path, content in plan.items():
@@ -277,13 +278,24 @@ class Backend:
         return value
 
 
+def renderer_for_profile(profile, source, runtime, device):
+    if profile == 'catalog':
+        return catalog.render
+    if profile == 'original-host' and (source, runtime, device) == (
+            original_host.FROZEN_SOURCE, original_host.RUNTIME, original_host.DEVICE):
+        return original_host.render
+    raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument('--source', required=True)
     parser.add_argument('--runtime', required=True)
     parser.add_argument('--device', required=True)
+    parser.add_argument('--profile', choices=('catalog', 'original-host'), default='catalog')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
+    renderer = renderer_for_profile(args.profile, args.source, args.runtime, args.device)
     if platform.system() != 'Darwin' or platform.machine() != 'arm64' or \
             not re.fullmatch('[0-9a-f]{40}', args.source) or \
             not re.fullmatch(r'com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9]+-[0-9]+', args.runtime) or \
@@ -311,7 +323,8 @@ def main():
     bundle = json.loads((copy / 'config/release-policy.json').read_text())['applications']['ios']['debug_bundle_id']
     if not bundle.endswith('.debug'):
         raise ValueError('Debug bundle only')
-    state = dict(source=args.source, harness=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
+    state = dict(source=args.source, profile=args.profile,
+                 harness=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
                  archive_sha256=sha(archive), runtime=args.runtime, device=args.device, xcode=xcode, sdk=sdk,
                  original_inputs=manifest, arms=[], result='NOT_QUALIFIED',
                  scope='Existing EN/AR additional-game journeys only, not 60-journey neutrality, original iOS26.2 cause, production CI or physical acceptance')
@@ -344,7 +357,7 @@ def main():
     previous = manifest
     for arm in catalog.ARMS:
         dest = out / arm; dest.mkdir()
-        inputs = apply_arm(copy, original, manifest, arm, previous=previous)
+        inputs = apply_arm(copy, original, manifest, arm, previous=previous, renderer=renderer)
         previous = inputs
         verify_inputs(copy, inputs)
         (dest / 'inputs.json').write_text(json.dumps(inputs, indent=2))
