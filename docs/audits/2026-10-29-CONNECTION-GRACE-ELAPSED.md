@@ -20,7 +20,8 @@ These are executed timer/clock fault scenarios, not phones, actual OS sleep or L
 
 `ConnectionGraceBudget` is immutable and constant-space: synchronous command
 getters, validation and coordinator timers spend the original elapsed budget.
-Calendar hints can shorten but never renew grace. Invalid/backward/overflowed
+Calendar hints may shorten current eligibility but cannot extend the original
+elapsed deadline. Invalid/backward/overflowed
 elapsed readings fail closed. Epoch projection saturates on overflow and carries
 elapsed time into hard recovery, preventing a delayed short-grace expiry from
 renewing the total120-second window. Validation is rechecked after its await;

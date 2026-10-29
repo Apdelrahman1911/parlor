@@ -305,6 +305,24 @@ retention. A retained return is possible, not guaranteed: record whether the
 OS kept the socket usable. Failure to retain must still pass secure recovery,
 privacy, original-deadline, and no-duplicate-action criteria.
 
+**Elapsed-budget acceptance (not yet device-verified):** repeat the 14/16-second
+and near/beyond-120-second cases with automatic date/time disabled on the affected
+device. Move wall time backward while backgrounded; measure interruption duration
+independently, record host/client directions, and restore automatic time afterward.
+A wall-clock change must never extend the original 15-second retained-connection
+or 120-second total recovery budget. Beyond short grace, commands must remain
+blocked until authenticated recovery installs authoritative state; beyond total
+grace, return must expire rather than revive the old room. No automatic replay of
+an unresolved player action is permitted. Record actual OS/socket retention rather
+than interpreting a delayed UI update as successful background execution.
+
+The deterministic actual-host/peer timer/clock fault tests in
+[the short-grace report](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) cover delayed
+callbacks, expired command eligibility and awaited validation crossing a deadline.
+They do not replace this physical matrix, locked-storage verification or energy
+measurements. Run the device matrix against the eventual accepted merge, not an
+older source receipt.
+
 For all games, record `connection_closed` → `lifecycle_resume_started` →
 `connection_secure` → `lifecycle_resumed` → `snapshot_received`. A foreground
 peer stuck in soft reconnect should start logical resume after about 1 second,
