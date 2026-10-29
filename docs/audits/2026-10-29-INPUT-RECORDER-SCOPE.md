@@ -263,10 +263,34 @@ request export has established that omission yet.** This is an evidenced
 selector risk, not proof of lost native/callback input.
 
 Copied-arm failed exports now require installed exact-test selection support,
-validate one/two unique failed methods against the two originally declared
-EN/AR tests, and export each into a distinct bounded directory with unique
-command labels. Whole-result, wildcard, foreign/duplicate/mismatched summaries
-reject. Only original failed methods are selected; gesture, predicates,
+validate the two originally declared EN/AR case outcomes, and export each
+failed method into a distinct bounded directory with unique command labels.
+Whole-result, wildcard, foreign/missing/skipped/invalid cases reject. Selection
+uses the already verified case outcomes, not assertion records: one failed test
+can legitimately contain multiple assertions. Only original failed methods are selected; gesture, predicates,
 deadlines, permissions, network tripwire and original failures are unchanged.
 Actual corrected-recorder iOS app linkage/journeys remain pending. Synthetic
 export controls do not certify native timing neutrality or shipping behavior.
+
+Fresh ordinary readiness discovery at671c0d90 fails with one import error:
+the explicit module loader did not register the new `public_attachments`
+dependency before loading the runner. Direct PIN controls and full strict
+Linux gates pass, but do not erase that failure. The loader now explicitly
+registers the exact repository helper under its existing foreign-module guard.
+Fresh complete readiness and committed-source strict gates remain required.
+
+### Verified exact-test screenshot export
+
+[40832790430](https://github.com/Apdelrahman1911/parlor/actions/runs/40832790430)
+atb6f14919 finishes **successful read-only collection**. Independent review
+binds original source, all930unchanged result files, failed Arabic method,
+iOS18.5/ARM64 owned device, action samples and exact optional console absence.
+Artifact SHA256
+`c81f79a13bdd524bb01dbc133147a3a0e2fc1bd21d38605cc58140e28b5ba0e5`.
+The actual export command uses `--test-id` with the exact failed method and
+no association filter. Its only curated PNG matches the direct original raw
+object byte-for-byte (`3314057f…658e`,257,712bytes,1206×2622) and is actually
+viewed again: public Arabic permission rationale, visible Continue/Back, no
+obvious overlay. All direct children are reaped; original failure is unchanged.
+This confirms the collection fix, not the native hittability or completed
+catalog-event cause. No app execution, tap replay or production qualification.

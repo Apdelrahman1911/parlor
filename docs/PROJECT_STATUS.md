@@ -18,13 +18,15 @@ The [input investigation](audits/2026-10-29-INPUT-RECORDER-SCOPE.md) preserves
 the original failed journeys. Read-only40830036426 successfully decodes existing
 action evidence and exact optional console absence; it is not application
 qualification. Subsequent40831268153 **failed screenshot collection**:
-`--only-failures` excludes the pre-assertion screenshot activity. The correction
-selects only the exact eligible failed test with `--test-id`; fresh hosted export
-and named-image binding are pending. Direct authenticated original PNG
+`--only-failures` excludes the pre-assertion screenshot activity. The corrected
+[40832790430](https://github.com/Apdelrahman1911/parlor/actions/runs/40832790430)
+passes exact-test export; independent source/artifact review confirms its PNG
+is byte-identical to the retained original. Actual image
 inspection shows the Arabic public LAN rationale and Continue/Back with no
 obvious overlay. It does not explain earlier native hittability=false or the
 separate completed catalog event. Corrected-recorder native execution and full
-60-journey neutrality remain unverified.
+60-journey neutrality remain unverified. A fresh corrected-recorder three-arm
+native execution is being prepared; it does not replace production CI.
 
 Local strict `productionCheck allTests` at diagnostic4b33deae passes release,
 analysis/lint/R8/AAB/inventory gates,1,867Desktop cases (3existing LAN skips),

@@ -38,21 +38,17 @@ class CopyControls(unittest.TestCase):
     def test_failed_attachment_exports_select_exact_tests_not_failure_association(self):
         english = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()'
         arabic = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
-        summary = dict(failedTests=2, testFailures=[dict(testIdentifierString=english),
-                                                 dict(testIdentifierString=arabic)])
-        exports = runner.failed_method_exports(Path('/owned/tests.xcresult'), Path('/owned/exported'), summary)
+        outcomes = {english: 'Failed', arabic: 'Failed'}
+        exports = runner.failed_method_exports(Path('/owned/tests.xcresult'), Path('/owned/exported'), outcomes)
         self.assertEqual(exports, [(Path('/owned/exported/failed-%02d' % i),
             ['export', 'attachments', '--path', '/owned/tests.xcresult', '--output-path',
              '/owned/exported/failed-%02d' % i, '--test-id', method])
             for i, method in enumerate((arabic, english), 1)])
         self.assertEqual(len(runner.failed_method_exports(Path('/r'), Path('/d'),
-                         dict(failedTests=1, testFailures=[dict(testIdentifierString=english)]))), 1)
-        for changed in (None, {}, dict(failedTests=0, testFailures=[]),
-                        dict(failedTests=True, testFailures=[dict(testIdentifierString=english)]),
-                        dict(failedTests=2, testFailures=[dict(testIdentifierString=english)]),
-                        dict(failedTests=1, testFailures=[dict(testIdentifierString='IOSAppLaunchUITests/*')]),
-                        dict(failedTests=1, testFailures=[None]),
-                        dict(failedTests=2, testFailures=[dict(testIdentifierString=english)] * 2)):
+                         {english: 'Failed', arabic: 'Passed'})), 1)
+        for changed in (None, {}, {english: 'Failed'}, {english: 'Passed', arabic: 'Passed'},
+                        outcomes | {'IOSAppLaunchUITests/*': 'Failed'},
+                        outcomes | {english: 'Skipped'}, outcomes | {arabic: True}):
             with self.assertRaises(ValueError):
                 runner.failed_method_exports(Path('/r'), Path('/d'), changed)
 

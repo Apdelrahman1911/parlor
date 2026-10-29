@@ -41,25 +41,21 @@ TESTS = tuple('iosAppUITests/IOSAppLaunchUITests/' + name for name in (
     'testAdditionalGamesExposeOnlyMultiplayerSetupInArabic'))
 
 
-def failed_method_exports(result, destination, summary):
+def failed_method_exports(result, destination, outcomes):
     """Select complete exact failed-test attachments, including pre-assertion ACKs."""
-    if not isinstance(summary, dict):
-        raise ValueError('Declared failed-test summary required')
-    failures = summary.get('testFailures')
-    if not isinstance(failures, list) or not 0 < len(failures) <= len(TESTS) or \
-            type(summary.get('failedTests')) is not int or \
-            summary.get('failedTests') != len(failures):
-        raise ValueError('Bounded declared failed methods required for attachment export')
-    methods = [failure.get('testIdentifierString') if isinstance(failure, dict) else None
-               for failure in failures]
     allowed = {test.split('/', 1)[1] + '()' for test in TESTS}
-    if any(not isinstance(method, str) or method not in allowed for method in methods) or \
-            len(methods) != len(set(methods)):
-        raise ValueError('Foreign or duplicate failed attachment method')
+    # Use the already verified case outcomes, not assertion records: one failed
+    # case can legitimately contain several assertions with the same identifier.
+    if not isinstance(outcomes, dict) or set(outcomes) != allowed or \
+            any(value not in ('Passed', 'Failed') for value in outcomes.values()):
+        raise ValueError('Exact declared test case outcomes required')
+    methods = sorted(method for method, outcome in outcomes.items() if outcome == 'Failed')
+    if not methods:
+        raise ValueError('Only failed test cases are eligible')
     return [(destination / ('failed-%02d' % (index + 1)),
              ['export', 'attachments', '--path', str(result), '--output-path',
               str(destination / ('failed-%02d' % (index + 1))), '--test-id', method])
-            for index, method in enumerate(sorted(methods))]
+            for index, method in enumerate(methods)]
 
 
 def sha(raw):
@@ -412,8 +408,7 @@ def main():
                 if rc:
                     raise RuntimeError('Installed attachment export help unavailable')
                 public_attachments.verify_export_help(helptext)
-                exports = failed_method_exports(result, attachments,
-                                                json.loads((dest / 'summary.json').read_bytes()))
+                exports = failed_method_exports(result, attachments, row['methods'])
                 row['attachment_test_ids'] = [argv[-1] for _, argv in exports]
                 for index, (directory, argv) in enumerate(exports):
                     directory.mkdir()
