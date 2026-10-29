@@ -42,6 +42,28 @@ def archive(extra=None, state_change=None):
 
 
 class FrozenResultControls(unittest.TestCase):
+    def test_log_reads_use_the_supported_get_log_not_nonexistent_export_logs(self):
+        for kind in ('action', 'console'):
+            self.assertEqual(review.log_command(Path('/owned/result.xcresult'), kind),
+                ['get', 'log', '--path', '/owned/result.xcresult', '--type', kind])
+        for kind in ('build', 'all', '--retry', None):
+            with self.assertRaises(ValueError):
+                review.log_command(Path('/owned/result.xcresult'), kind)
+
+    def test_only_bounded_public_numeric_settlement_grammar_can_be_retained(self):
+        sample = ('at=1.2, querySeconds=0.5, frame=Optional((24.0, 200.0, 100.0, 48.0)), '
+                  'enabled=true, stable=false, hittable=nil, snapshotErrorCode=nil')
+        line = 'Public control settlement: ' + sample
+        self.assertEqual(review.settlement_lines({'items': [{'message': line}]}), [line])
+        self.assertEqual(review.settlement_lines({'message': 'unrelated arbitrary text'}), [])
+        for changed in (sample + ', secret=private', sample.replace('1.2', 'nan'),
+                        sample.replace('snapshotErrorCode=nil', 'snapshotErrorCode=private'),
+                        '; '.join([sample] * 13)):
+            with self.assertRaises(ValueError):
+                review.settlement_lines({'message': 'Public control settlement: ' + changed})
+        with self.assertRaises(ValueError):
+            review.settlement_lines([line] * 17)
+
     def test_metadata_accepts_only_the_exact_completed_producer_and_artifact(self):
         run, artifact = metadata()
         review.validate_metadata(run, artifact)

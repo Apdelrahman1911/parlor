@@ -92,3 +92,23 @@ controls reject substitution; Xcode decodes activities, details and already
 recorded settlement samples. No build, app launch, event replay, Simulator,
 permission change, cache write, signing or production-check substitution occurs.
 The corrected recorder's native application linkage remains unverified.
+
+### Retained-result decoder failure and narrowed location
+
+[40824385175](https://github.com/Apdelrahman1911/parlor/actions/runs/40824385175)
+passes all actual hosted controls, independently verifies/extracts the exact
+original artifact, and decodes its Arabic test details and activities. It then
+fails its real CLI capability check: Xcode26.3 has no `export logs` subcommand.
+No application or Simulator executes; no input/result byte changes. This tooling
+failure remains failed, not relabeled as acceptance. Supported `get log` action
+and console views replace the nonexistent command, with an exact-command
+regression and strict bounded numeric-only sample retention controls.
+
+The retained activities establish the first Egyptian Dominoes Arabic journey:
+catalog tap25.485s, Host30.826s, permission Continue36.309s, Back42.471s,
+catalog47.871s, Join52.030s, then failed settlement67.376s before the second
+permission Continue tap. These times are relative to test start, not networking
+latency. The target's repeated native queries—not a completed Continue gesture—
+precede the assertion. Geometry/timing samples are still required to establish
+why the original criterion fails; this does not identify a shipping root cause
+or explain the original Ghamza Host loss.

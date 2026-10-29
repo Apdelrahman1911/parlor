@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import platform
+import re
 import stat
 import subprocess
 import sys
@@ -30,6 +31,12 @@ DIGEST = '41d75ff88eeb1f3a1e39e1f66b45d1b028ff98bb8cff06f3e026ab23d4ab85dc'
 BYTES = 90110713
 MAX_BYTES = 128 * 1024 * 1024
 METHOD = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
+NUMBER = r'-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?'
+SAMPLE = re.compile(
+    r'at=' + NUMBER + r', querySeconds=' + NUMBER +
+    r', frame=(?:nil|Optional\([\d.eE()+, -]*\)), enabled=(?:true|false), '
+    r'stable=(?:true|false), hittable=(?:nil|Optional\((?:true|false)\)), '
+    r'snapshotErrorCode=(?:nil|Optional\(-?\d+\))\Z')
 
 
 def require(value):
@@ -86,6 +93,37 @@ def unpack(raw, destination):
             manifest[entry.filename] = hashlib.sha256(content).hexdigest()
         require(bool(manifest))
     return state, summary, manifest
+
+
+def log_command(result, kind):
+    require(kind in ('action', 'console'))
+    return ['get', 'log', '--path', str(result), '--type', kind]
+
+
+def settlement_lines(value):
+    """Retain only the original driver's bounded numeric diagnostic grammar."""
+    lines = []
+    prefix = 'Public control settlement: '
+
+    def visit(node):
+        if isinstance(node, dict):
+            for child in node.values():
+                visit(child)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child)
+        elif isinstance(node, str):
+            for line in node.splitlines():
+                if prefix not in line:
+                    continue
+                samples = line.split(prefix, 1)[1]
+                parts = samples.split('; ')
+                require(0 < len(parts) <= 12 and len(samples) <= 16384 and
+                        all(SAMPLE.fullmatch(part) for part in parts))
+                require(len(lines) < 16)
+                lines.append(prefix + samples)
+    visit(value)
+    return lines
 
 
 def main():
@@ -150,32 +188,26 @@ def main():
             raw = read(['get', 'test-results', kind, '--path', str(result), '--test-id', METHOD], kind)
             json.loads(raw)
             (out / (kind + '.json')).write_bytes(raw)
-        helptext = read(['help', 'export', 'logs'], 'logs-help')
+        helptext = read(['help', 'get', 'log'], 'logs-help')
         (out / 'logs-help.txt').write_bytes(helptext)
-        require(all(token in helptext for token in (b'--path', b'--output-path', b'console')))
-        logs = out / 'console'; logs.mkdir()
-        read(['export', 'logs', '--path', str(result), '--output-path', str(logs), '--type', 'console'], 'logs')
-        # Retain only already-recorded public numeric settlement lines, never
-        # arbitrary hierarchies, typed values, argv, exception descriptions.
+        require(all(token in helptext for token in (b'--path', b'--type', b'console', b'action')))
+        # Two declared read-only views of the existing result, not fallback
+        # execution or a replay. Verify their real installed CLI first.
         lines = []
-        files = list(logs.rglob('*'))
-        require(len(files) <= 128)
-        for path in files:
-            require(not path.is_symlink())
-            if path.is_file():
-                require(path.stat().st_size <= 16 * 1024 * 1024)
-                for line in path.read_text(errors='replace').splitlines():
-                    if 'Public control settlement: ' in line:
-                        line = 'Public control settlement: ' + line.split('Public control settlement: ', 1)[1]
-                        require(len(line) <= 16384 and len(lines) < 16)
-                        lines.append(line)
+        for kind in ('action', 'console'):
+            decoded = json.loads(read(log_command(result, kind), kind + '-log'))
+            found = settlement_lines(decoded)
+            receipt[kind + '_settlement_lines'] = len(found)
+            lines.extend(found)
+        require(len(lines) <= 32)
         (out / 'settlement-lines.json').write_text(json.dumps(lines, indent=2))
         # Original command receipts have duplicate '*-tests' labels. Keep rows,
         # not a dict that silently substitutes JSON decoding time for XCTest.
         receipt['execution_times'] = [dict(label=r['label'], seconds=r['elapsed_seconds'])
             for r in state['commands'] if 'elapsed_seconds' in r and
             any('test-without-building' == argument for argument in r['command'])]
-        receipt['result'] = 'FROZEN_RESULT_DECODED'
+        receipt['result'] = 'FROZEN_RESULT_DECODED' if lines else 'NO_PUBLIC_SETTLEMENT_SAMPLES'
+        require(bool(lines))
     finally:
         for name, digest in manifest.items():
             require(hashlib.sha256((inputs / name).read_bytes()).hexdigest() == digest)
