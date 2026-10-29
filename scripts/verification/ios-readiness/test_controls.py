@@ -44,13 +44,13 @@ class SourceCopyTests(unittest.TestCase):
     def test_all_copy_only_kotlin_transformations_use_current_source_and_preserve_the_root(self):
         with tempfile.TemporaryDirectory(prefix='parlor-native-copy-test-') as raw:
             root = Path(raw).resolve(); manifest = dict(copy_only=[])
-            for relative in copies.MODIFIED_KOTLIN:
+            for relative in (*copies.MODIFIED_KOTLIN, 'composeApp/build.gradle.kts'):
                 target = root / relative; target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(ROOT / relative, target)
                 manifest['copy_only'].append(dict(path=relative, sha256=copies.sha256(target)))
             copies.instrument_kotlin(root)
             observed = copies.inspect_copied_manifest(root, manifest, [])
-            self.assertEqual(len(observed), len(copies.MODIFIED_KOTLIN) + len(copies.ADDITIONS))
+            self.assertEqual(len(observed), len(copies.MODIFIED_KOTLIN) + len(copies.ADDITIONS) + 1)
             for entry in manifest['copy_only']:
                 self.assertEqual(copies.sha256(ROOT / entry['path']), entry['sha256'])
             self.assertTrue(copies.inspect_copied_inputs_after_build(root, observed)['unchanged'])

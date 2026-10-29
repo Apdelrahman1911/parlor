@@ -181,10 +181,20 @@ def inspect_copied_manifest(copy_root, bindings, additional_modified):
     return result
 
 
+def generated_copy_output_paths(before):
+    """Derive only exact Gradle output paths from frozen project/build inputs."""
+    outputs = set()
+    for entry in before:
+        path = PurePosixPath(entry['path'])
+        if path.name in ('build.gradle.kts', 'build.gradle', 'settings.gradle.kts', 'settings.gradle'):
+            outputs.update(str(path.parent / leaf) for leaf in ('build', '.gradle', '.kotlin'))
+    return outputs
+
+
 def inspect_copied_inputs_after_build(copy_root, before):
     """Compare the instrumented source inputs after workers stop, not outputs.
 
-    Generated build/.gradle/.kotlin trees are pruned before traversal. Existing
+    Only frozen declared generated output paths are pruned before traversal. Existing
     reviewed inputs must retain their exact post-instrumentation bytes; a build
     adding another applicable input must not disappear with temporary cleanup.
     Return compact mismatches for durable evidence before the caller fails.
@@ -203,23 +213,24 @@ def inspect_copied_inputs_after_build(copy_root, before):
         files.append(dict(path=path, expected_sha256=digest, observed_sha256=observed,
                           unchanged=safe and observed == digest))
     actual, symlinks = set(), []
+    outputs = generated_copy_output_paths(before)
     def unreadable(error):
         raise error
     for directory, dirs, names in os.walk(root, followlinks=False, onerror=unreadable):
         retained = []
         for name in dirs:
             target = Path(directory) / name
-            if name == 'build' or name.startswith('.'):
-                continue  # Owned recreatable outputs are not source inputs.
+            relative = str(target.relative_to(root))
             if target.is_symlink():
-                symlinks.append(str(target.relative_to(root)))
-            else:
+                symlinks.append(relative)
+            elif relative not in outputs:
                 retained.append(name)
         dirs[:] = retained
         for name in names:
             target = Path(directory) / name
             relative = str(target.relative_to(root))
-            if allowed_path(relative):
+            # Intake validation remains strict; inventory must also detect disallowed new inputs.
+            if relative in BUILD_ROOTS or relative.startswith(BUILD_PREFIXES):
                 actual.add(relative)
                 if target.is_symlink():
                     symlinks.append(relative)
@@ -228,4 +239,4 @@ def inspect_copied_inputs_after_build(copy_root, before):
     return dict(schema_version=1, files=files, unexpected_build_inputs=additions,
                 missing_build_inputs=missing, unexpected_source_symlinks=sorted(symlinks),
                 unchanged=all(entry['unchanged'] for entry in files) and not additions and not missing and not symlinks,
-                method='Exact post-instrumentation input hashes and build-input inventory after task workers stop; generated build/hidden directories excluded')
+                method='Exact post-instrumentation input hashes and build-input inventory after task workers stop; only frozen declared output paths excluded; hidden source additions retained')
