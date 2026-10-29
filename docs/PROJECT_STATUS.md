@@ -1,5 +1,29 @@
 # Project status — 2026-10-29
 
+## Current work — verification repair running; cold recovery locally aligned
+
+PR#286 at `d4219ff41f1217b5c03c27db4a8fb8f459708dca` is draft/open.
+[Automatic PR40856349281](https://github.com/Apdelrahman1911/parlor/actions/runs/40856349281)
+is running/queued, **not qualified or merged**. The prior run40847924214 remains
+failed at Arabic native exact-name observation. All eight required build lanes,
+23Swift methods,685KMP Simulator cases and the Apple Release join remain required;
+local or diagnostic green cannot replace them. #267/#276 causes stay open.
+
+A separate [cold-recovery integration](audits/2026-10-29-COLD-RECOVERY-INTEGRATION.md)
+locally aligns the preserved `2b62685d` shipping implementation with that unmerged
+verification candidate. Selected Resume/Leave, one-shot foreground routing and
+explicit-Retry restoration remain independently scoped; fresh combined-source
+local/hosted and actual-main qualification is outstanding. No cold-recovery
+source is published or accepted merely by this preparation.
+
+Physical Android/iOS/LAN/storage/lock/recovery, accessibility/CPU/battery/thermal,
+#258 strict protection and Store ownership/signing/legal/approval gates remain
+open. Free standard hosted runners only; no additional agents, weakened checks,
+blind reruns, host migration or Store release.
+
+**All checkpoints below are historical; their exact-head results do not certify
+this checkout.**
+
 ## Current main and first reliability PR qualification failed
 
 Selected-Resume PR#281 merged as `7c87a8726bab4da85cbd3824b30d2fcc709ad894`.
