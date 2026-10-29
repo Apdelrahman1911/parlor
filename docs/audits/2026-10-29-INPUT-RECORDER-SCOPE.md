@@ -216,3 +216,38 @@ eligibility check execute locally; a corrupt-CRC negative control first fails,
 then rejects after correction. These are not native screenshot export or visual
 inspection. Actual hosted export and image review remain required before
 concluding which screen is present after native hittability fails.
+
+### Screenshot selector failure and actual retained-image inspection
+
+[40831268153](https://github.com/Apdelrahman1911/parlor/actions/runs/40831268153)
+at4b33deae remains **failed**. All hosted controls and action/console decoding
+pass; installed attachment help and export exit0, but no PNG is selected.
+Exact original source/result/manifests and failed method/device match;
+artifact SHA256 `44eceb80eded39dc09a7fc1649f01b5934137801551161a7a8550e6dc864f0d1`.
+
+Installed help defines `--only-failures` as attachments **associated with
+failures**, not every attachment of a failed test. Actual activity
+`Failed public control settlement before tap` has
+`isAssociatedWithFailure=false`: attachment creation precedes the assertion.
+This confirms an evidence-selector bug. The reader now requires installed
+`--test-id` support and explicitly selects only the exact frozen Arabic method.
+Whole-result, class, wildcard and foreign-method exports reject. Existing
+pre-input eligibility, privacy, ownership, PNG CRC and resource bounds remain.
+The previous-command regression first fails, then passes after correction;
+actual hosted export and exact named-image binding are still required.
+
+No guessed JPEG handling is added. Apple's
+[no-quality screenshot initializer](https://developer.apple.com/documentation/xctest/xctattachment/init(screenshot:))
+documents PNG; the exact original driver uses this initializer. The original
+authenticated result contains exactly one raw PNG and no raw JPEG.
+
+That original uncompressed PNG is directly extracted from the digest-verified
+ZIP and **actually viewed**, without another build, Simulator or input event:
+257,712bytes,1206×2622, SHA256
+`3314057f28879e0abb1234785cf7b555d496b565b773d14814590b64afba658e`.
+It shows the Arabic public LAN rationale, visible Continue and Back, no keyboard,
+alert, catalog or obvious occluding overlay; position agrees visually with the
+sampled native frame. It is a post-failure image, not evidence of continuous
+visibility or earlier hit testing. Exact named-attachment export equality remains
+pending. Neither this image nor diagnostic collection establishes a shipping
+input-loss cause. Main40759303257 failed; PR#282 remains draft/unmerged.

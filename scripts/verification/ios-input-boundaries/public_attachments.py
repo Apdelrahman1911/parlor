@@ -6,12 +6,22 @@ import struct
 import zlib
 
 TITLE = 'Failed public control settlement before tap'
+METHOD = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
 MAX_TOTAL = 128 * 1024 * 1024
 MAX_IMAGE = 16 * 1024 * 1024
 
 
-def attachment_command(result, destination):
-    return ['export', 'attachments', '--path', str(result), '--output-path', str(destination), '--only-failures']
+def attachment_command(result, destination, *, method):
+    require(method == METHOD)
+    # --only-failures selects failure-associated attachments, not all attachments
+    # of a failed test. This screenshot activity precedes the failing assertion
+    # and has isAssociatedWithFailure=false. Select the exact eligible test.
+    return ['export', 'attachments', '--path', str(result), '--output-path', str(destination),
+            '--test-id', method]
+
+
+def verify_export_help(raw):
+    require(all(token in raw for token in (b'--path', b'--output-path', b'--test-id')))
 
 
 def require(condition):

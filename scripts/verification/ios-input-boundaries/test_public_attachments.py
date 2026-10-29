@@ -14,14 +14,27 @@ def png(width=1, height=1):
 
 
 def activities():
-    return dict(testIdentifier='FrozenPublicMethod()', children=[dict(title=p.TITLE), dict(title='XCTAssertEqual failed: Public setup control must stop scrolling before it is tapped', isAssociatedWithFailure=True)])
+    return dict(testIdentifier='FrozenPublicMethod()', children=[dict(title=p.TITLE, isAssociatedWithFailure=False), dict(title='XCTAssertEqual failed: Public setup control must stop scrolling before it is tapped', isAssociatedWithFailure=True)])
 
 
 class PublicAttachmentControls(unittest.TestCase):
     def test_export_command_reads_existing_failed_attachments_without_application_execution(self):
-        self.assertEqual(p.attachment_command(Path('/owned/failed.xcresult'), Path('/owned/exported')),
+        self.assertEqual(p.attachment_command(Path('/owned/failed.xcresult'), Path('/owned/exported'), method=p.METHOD),
                          ['export', 'attachments', '--path', '/owned/failed.xcresult',
-                          '--output-path', '/owned/exported', '--only-failures'])
+                          '--output-path', '/owned/exported', '--test-id',
+                          'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'])
+
+    def test_whole_result_foreign_test_and_wildcard_exports_are_not_eligible(self):
+        for method in ('', None, 'IOSAppLaunchUITests', 'IOSAppLaunchUITests/*',
+                       'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetup()'):
+            with self.assertRaises(ValueError):
+                p.attachment_command(Path('/owned/failed.xcresult'), Path('/owned/exported'), method=method)
+
+    def test_installed_export_help_must_support_exact_test_selection(self):
+        p.verify_export_help(b'--path --output-path --test-id --only-failures')
+        for helptext in (b'--path --output-path --only-failures', b'--test-id', b''):
+            with self.assertRaises(ValueError):
+                p.verify_export_help(helptext)
 
     def test_only_the_exact_pre_input_settlement_failure_is_eligible(self):
         p.verify_public_failure(activities(), 'FrozenPublicMethod()')

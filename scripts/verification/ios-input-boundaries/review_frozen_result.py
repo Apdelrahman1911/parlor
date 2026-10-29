@@ -32,7 +32,7 @@ SOURCE = '841a0b0623b508eae103f79ba7b4e5773e6a8b4d'
 DIGEST = '41d75ff88eeb1f3a1e39e1f66b45d1b028ff98bb8cff06f3e026ab23d4ab85dc'
 BYTES = 90110713
 MAX_BYTES = 128 * 1024 * 1024
-METHOD = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'
+METHOD = public_attachments.METHOD
 DRIVER = 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
 DRIVER_SHA256 = 'c65fe65aee8442aa06f02007b57daaf3e9113f5f61046edb59e361c2e4a6e115'
 NUMBER = r'-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?'
@@ -316,9 +316,9 @@ def main():
         public_attachments.verify_public_failure(json.loads((out / 'activities.json').read_bytes()), METHOD)
         helptext = read(['help', 'export', 'attachments'], 'attachments-help')
         (out / 'attachments-help.txt').write_bytes(helptext)
-        require(all(token in helptext for token in (b'--path', b'--output-path', b'--only-failures')))
+        public_attachments.verify_export_help(helptext)
         exported = out / 'decoded-attachments'; exported.mkdir(mode=0o700)
-        read(public_attachments.attachment_command(result, exported), 'attachments-export')
+        read(public_attachments.attachment_command(result, exported, method=METHOD), 'attachments-export')
         receipt['public_screenshots'] = public_attachments.curate_public_screenshots(exported, out)
         receipt['public_attachments'] = 'CURATED_PUBLIC_PNGS'
     finally:
