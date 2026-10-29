@@ -55,9 +55,27 @@ Independent isolated-source sensitivity checks retain:
 | Basename-only output pruning | 3 | 0 / 0 |
 | Output pruning before symlink check | 1 | 0 / 0 |
 
+At independent committed source `20ca6c37c60a2c5d0871ef1f507ff16221351394`, full
+strict `productionCheck allTests` additionally passes 1,847 Desktop cases (three
+existing opt-in LAN skips), 659 Android per Debug/Release, 112 GitHub-test and
+766 release controls (one platform skip), plus Detekt/lint/R8/unsigned AAB and
+inventory/shell gates. Exact source unchanged; owned Gradle stop 0. Log SHA256
+`63275e67ed956598753add77e5133fdb70092c479391ab09adabf163b2d9a69a`.
+390.4 seconds with 904 executed/665 from cache/99 up-to-date tasks: valid reuse,
+not a cold-build benchmark. A separate committed-source readiness run passes all
+362 methods (three Apple-only Linux skips); every source-derived method and
+terminal status is independently checked, including all three new methods.
+Log SHA256 `e328934eb9ff3c57d801a5e01d630f7af6001c60ede217d032e756d9fdf8f5a2`.
+
+Subsequent local preparation normally merges the independently local-qualified
+recovery candidate `b439cefa` from draft PR #287. Only mechanical inventory
+conflicts occur; all three reader/test files retain their verified hashes.
+This is provisional integration with an **unmerged** recovery PR, not accepted
+main. The original independent branch is preserved. Final combined-source checks,
+accepted-base alignment, unchanged complete hosted Apple controls, protected
+integration and fresh actual-main checks remain mandatory.
+
 These are source-inventory software results, not Apple execution or application
-qualification. Final committed-source full strict checks, the unchanged complete
-hosted Apple control suite, protected integration and fresh actual-main checks
-remain mandatory. Keep #284 open until its relevant integration requirements
+qualification. Keep #284 open until its relevant integration requirements
 are met; this narrow reader repair does not integrate the dormant PIN03 harness,
 resolve #267/#276, certify observation neutrality or authorize a Store release.
