@@ -16,6 +16,7 @@ import stat
 import subprocess
 import sys
 import time
+from bisect import bisect_left
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
@@ -53,8 +54,17 @@ def output_roots(tracked: list[str]) -> list[str]:
             roots.add(str(path.parent / "build"))
         if path.suffix == ".py":
             roots.add(str(path.parent / "__pycache__"))
+    # Index once instead of scanning every tracked file for every output root.
+    # Search the slash-delimited prefix separately: "build-old" may sort before
+    # "build/source.kt", but must neither hide that source nor count as a child.
+    ordered_names = sorted(tracked)
     for output in roots:
-        if any(name == output or name.startswith(output + "/") for name in tracked):
+        root_index = bisect_left(ordered_names, output)
+        has_root = root_index < len(ordered_names) and ordered_names[root_index] == output
+        prefix = output + "/"
+        index = bisect_left(ordered_names, prefix)
+        has_descendant = index < len(ordered_names) and ordered_names[index].startswith(prefix)
+        if has_root or has_descendant:
             raise RuntimeError(f"Refusing a generated-output root containing tracked files: {output}")
     return sorted(roots)
 

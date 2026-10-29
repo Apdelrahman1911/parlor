@@ -29,6 +29,9 @@ WORKER_PATHS = (
     "sourcekitd.framework/Versions/A/XPCServices/SourceKitService.xpc/Contents/MacOS/SourceKitService",
     "Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/"
     "XCBBuildService.bundle/Contents/MacOS/XCBBuildService",
+    # Actual Xcode 26.3 / 17C529 component, independently inventoried in run
+    # 40812954673. A basename is not an executable or process ownership grant.
+    "Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Versions/A/Resources/DTServiceHub",
 )
 MAX_WORKERS = 64
 
@@ -130,7 +133,19 @@ def stop_workers(claim: dict, backend, tracking: str, clock=time.monotonic, slee
             denied.add(key)
             if identity is not None:
                 quarantined_pids.add(identity.pid)
-            errors.append({"pid": identity.pid if identity is not None else None, "error": message})
+            record = {"pid": identity.pid if identity is not None else None, "error": message}
+            if identity is not None:
+                # Public SDK-relative path only: no argv, environment, audit
+                # token, foreign absolute path or unbounded/control text.
+                executable = Path(identity.command)
+                if application in executable.parents:
+                    relative = str(executable.relative_to(application))
+                    if (len(relative) <= 512 and relative.startswith("Contents/") and
+                            str(application / relative) == identity.command and
+                            not {".", ".."}.intersection(executable.parts) and
+                            re.fullmatch(r"[A-Za-z0-9_+.-]{1,128}(?:/[A-Za-z0-9_+.-]{1,128}){1,12}", relative)):
+                        record["executable"] = relative
+            errors.append(record)
 
     for iteration in range(121):
         alive = []
