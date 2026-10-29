@@ -189,3 +189,30 @@ Other errors, partial output, timeouts and missing/invalid action samples still
 fail. Console-only output cannot substitute for action output. A successful
 collection means existing evidence decoded, never a passing application journey,
 shipping cause, originaliOS26.2/physical verification or production qualification.
+
+### Verified decoder completion and next retained-screen investigation
+
+[40830036426](https://github.com/Apdelrahman1911/parlor/actions/runs/40830036426)
+at1c0396af finishes **successful collection**, independently bound to the exact
+source, original930-file manifest, failed method/device, five instances/one
+unique packet and byte-exact console absence. All direct children are reaped.
+Artifact SHA256 `a28bd7529cdfc50a0a84c5134dcfccbc770c07cdd45c0457f3c963dc9f30d645`.
+Fresh full strict local gates also pass1,867Desktop (3existing LAN skips),
+671Android perDebug/Release,120GitHub-test, release/analysis/lint/R8/AAB/inventory;
+source unchanged and stop0. This is not new application execution or a repair
+of the original failed journey. PR#282 remains draft/unmerged at841a0b06.
+
+The next explicitly bound read adds existing failed-attachment export, not an
+application retry. Eligibility requires this exact public settlement failure
+with no recorded typing. The archived driver/source and first failed Arabic
+setup journey establish that no room/game operation or private player input
+occurs. Installed CLI help must support the original `export attachments`
+command and `--only-failures`. Only bounded, CRC-checked PNGs with fixed public
+filenames and numeric geometry/digests are retained. Raw export manifests and
+recordings are not uploaded; redirections, multi-link files, excessive counts/
+sizes, invalid PNG chunks and existing destinations reject before publication.
+Five synthetic filesystem controls and the actual archived public-failure
+eligibility check execute locally; a corrupt-CRC negative control first fails,
+then rejects after correction. These are not native screenshot export or visual
+inspection. Actual hosted export and image review remain required before
+concluding which screen is present after native hittability fails.

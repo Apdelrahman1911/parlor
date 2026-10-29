@@ -17,6 +17,8 @@ import sys
 import time
 import zipfile
 
+import public_attachments
+
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 from scripts.ci.native_process_probe import Commands, child_environment
@@ -235,7 +237,8 @@ def main():
     receipt = dict(run=RUN, artifact=ARTIFACT, digest=DIGEST, source=SOURCE, producer=HEAD,
                    driver_sha256=DRIVER_SHA256, settlement_schema='six-field-sequential-query',
                    reviewer=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
-                   result='NOT_REVIEWED', production_qualified=False, app_execution=False)
+                   result='NOT_REVIEWED', public_attachments='NOT_REVIEWED',
+                   production_qualified=False, app_execution=False)
     (out / 'receipt.json').write_text(json.dumps(receipt, indent=2))
 
     def api(path):
@@ -306,6 +309,18 @@ def main():
             'FROZEN_ACTION_DECODED_CONSOLE_UNAVAILABLE' if collected['complete'] and collected['unavailable'] else \
             'FROZEN_RESULT_DECODED' if collected['complete'] else 'NO_PUBLIC_ACTION_SETTLEMENT_SAMPLES'
         require(collected['complete'])
+        # This exact failed method stopped before any text/room operation.
+        # Export only its already recorded public failure attachments. Raw
+        # manifests and recordings stay on this runner; curate bounded PNGs.
+        receipt['public_attachments'] = 'EXPORT_STARTED'
+        public_attachments.verify_public_failure(json.loads((out / 'activities.json').read_bytes()), METHOD)
+        helptext = read(['help', 'export', 'attachments'], 'attachments-help')
+        (out / 'attachments-help.txt').write_bytes(helptext)
+        require(all(token in helptext for token in (b'--path', b'--output-path', b'--only-failures')))
+        exported = out / 'decoded-attachments'; exported.mkdir(mode=0o700)
+        read(public_attachments.attachment_command(result, exported), 'attachments-export')
+        receipt['public_screenshots'] = public_attachments.curate_public_screenshots(exported, out)
+        receipt['public_attachments'] = 'CURATED_PUBLIC_PNGS'
     finally:
         for name, digest in manifest.items():
             require(hashlib.sha256((inputs / name).read_bytes()).hexdigest() == digest)

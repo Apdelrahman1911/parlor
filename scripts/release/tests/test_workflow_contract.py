@@ -968,6 +968,7 @@ class WorkflowContractTest(unittest.TestCase):
             ("review_frozen_result.py", "run_pin03.py"),
             ("actions: read", "actions: write"),
             ("/settlement-lines.json", "/console/**"),
+            ("/public-settlement-*.png", "/decoded-attachments/**"),
             ("/usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v", "true"),
         ):
             changed = workflow.replace(before, after)
