@@ -141,6 +141,24 @@ class FrozenLogReadError(ValueError):
                              stderr=stderr_summary(stderr))
 
 
+class ConsoleLogUnavailable(FrozenLogReadError):
+    """Exact installed-tool absence, not a decoder error or successful log read."""
+
+
+def log_payload(row, raw, stderr, kind):
+    require(kind in ('action', 'console'))
+    exited = row['status'] == 'EXITED' and row.get('direct_child_reaped') is True
+    if exited and row.get('exit_code') == 0 and not stderr:
+        return json.loads(raw)
+    # Actual Xcode26.3 observation40828492426: byte-exact absence of this
+    # optional view. Do not accept other errors, missing action data, truncated
+    # output, timeouts, unreaped children or strings merely quoting this error.
+    if kind == 'console' and exited and row.get('exit_code') == 1 and not raw and \
+            stderr == b'Error: No console log available\n':
+        raise ConsoleLogUnavailable(row, stderr)
+    raise FrozenLogReadError(row, stderr)
+
+
 def settlement_lines(value):
     """Retain only the original driver's bounded numeric diagnostic grammar."""
     lines = []
@@ -172,7 +190,7 @@ def settlement_lines(value):
 
 
 def collect_log_samples(read_view):
-    lines, errors, counts = [], {}, {}
+    lines, errors, counts, unavailable = [], {}, {}, {}
     for kind in ('action', 'console'):
         try:
             found = settlement_lines(read_view(kind))
@@ -180,13 +198,20 @@ def collect_log_samples(read_view):
             lines.extend(found)
         except ValueError as error:
             # A bad read cannot suppress the other independent observation.
+            if kind == 'console' and isinstance(error, ConsoleLogUnavailable):
+                unavailable[kind] = error.metadata
+                counts[kind] = 0
+                continue
             errors[kind] = dict(error_type=type(error).__name__)
             if isinstance(error, SettlementSampleError):
                 errors[kind]['candidate'] = error.metadata
             elif isinstance(error, FrozenLogReadError):
                 errors[kind]['command'] = error.metadata
     require(len(lines) <= 32)
-    return dict(lines=lines, errors=errors, counts=counts, complete=bool(lines) and not errors)
+    # XCTest emitted output belongs to the action view (installed CLI help).
+    # A console-only sample cannot substitute for a failed/empty action read.
+    return dict(lines=lines, errors=errors, counts=counts, unavailable=unavailable,
+                complete=bool(counts.get('action')) and not errors)
 
 
 def main():
@@ -242,12 +267,14 @@ def main():
     result = inputs / 'original/tests.xcresult'
 
     def read(argv, label):
-        row, raw, stderr = commands.capture(['/usr/bin/xcrun', 'xcresulttool', *argv], label, 60)
-        if not (row['status'] == 'EXITED' and row.get('exit_code') == 0 and row.get('direct_child_reaped')):
-            if label in ('action-log', 'console-log'):
-                raise FrozenLogReadError(row, stderr)
-            require(False)
+        row, raw, _ = commands.capture(['/usr/bin/xcrun', 'xcresulttool', *argv], label, 60)
+        require(row['status'] == 'EXITED' and row.get('exit_code') == 0 and row.get('direct_child_reaped'))
         return raw
+
+    def read_view(kind):
+        row, raw, stderr = commands.capture(
+            ['/usr/bin/xcrun', 'xcresulttool', *log_command(result, kind)], kind + '-log', 60)
+        return log_payload(row, raw, stderr, kind)
 
     try:
         for kind in ('test-details', 'activities'):
@@ -262,20 +289,22 @@ def main():
         require(all(token in helptext for token in (b'--path', b'--type', b'console', b'action')))
         # Two declared read-only views of the existing result, not fallback
         # execution or a replay. Verify their real installed CLI first.
-        collected = collect_log_samples(lambda kind:
-            json.loads(read(log_command(result, kind), kind + '-log')))
+        collected = collect_log_samples(read_view)
         lines, errors = collected['lines'], collected['errors']
         for kind, count in collected['counts'].items():
             receipt[kind + '_settlement_lines'] = count
         (out / 'settlement-lines.json').write_text(json.dumps(lines, indent=2))
         receipt['log_errors'] = errors
+        receipt['unavailable_log_views'] = collected['unavailable']
+        receipt['unique_settlement_lines'] = len(set(lines))
         # Original command receipts have duplicate '*-tests' labels. Keep rows,
         # not a dict that silently substitutes JSON decoding time for XCTest.
         receipt['execution_times'] = [dict(label=r['label'], seconds=r['elapsed_seconds'])
             for r in state['commands'] if 'elapsed_seconds' in r and
             any('test-without-building' == argument for argument in r['command'])]
         receipt['result'] = 'LOG_SAMPLES_REJECTED' if errors else \
-            'FROZEN_RESULT_DECODED' if lines else 'NO_PUBLIC_SETTLEMENT_SAMPLES'
+            'FROZEN_ACTION_DECODED_CONSOLE_UNAVAILABLE' if collected['complete'] and collected['unavailable'] else \
+            'FROZEN_RESULT_DECODED' if collected['complete'] else 'NO_PUBLIC_ACTION_SETTLEMENT_SAMPLES'
         require(collected['complete'])
     finally:
         for name, digest in manifest.items():

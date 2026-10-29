@@ -155,3 +155,37 @@ Failed console reads retain bounded closed-vocabulary error tokens, byte count
 and digest—not raw logs, arbitrary words or paths. Both declared views still
 execute and any read error still fails complete decoding. No application retry,
 production-test change, gesture/deadline adjustment or Store qualification.
+
+### Actual numeric decode and optional console absence
+
+[40828492426](https://github.com/Apdelrahman1911/parlor/actions/runs/40828492426)
+atc08c1ac1 passes all actual hosted controls and the corrected action parser.
+It still fails the console requirement, explicitly retained as failure. Exact
+source/result/manifests and the failed method/device agree independently; artifact
+SHA256 `9b1bd616de8bfeb06087dea6c8aa5d98c635f824e7d38a4c11de7670bf840999`.
+
+Action output contains five instances of **one unique two-sample packet**, not
+five independent failures. Both observed frames are
+`(32,466.3333435058594,338,52.000030517578125)` and enabled. Sample1 at1.031727s
+has query0.265524s and no adjacent stable frame yet. Sample2 at2.040363s has
+query8.262880s, stable=true, but native hittable=false. This identifies the
+failed predicate component, **not why native hittability fails**. Query duration
+covers the whole sequential predicate, not solely `isHittable`; equal sampled
+frames are not proof of continuous UI stability. No second Continue tap occurs.
+This remains different from production's completed Word Impostor catalog event.
+
+The console observation is now precise: reaped CLI exit1, empty stdout,
+32stderr bytes, tokens `Error: No console log available`. Reconstructing that
+exact message with its newline matches observed SHA256
+`7edd4c9be5a9e23098ec98cc71122a9fbd83e1dead265129a4869665f21454c5`.
+Installed Xcode help explicitly identifies action logs for Run/Test actions.
+A separate console view is therefore unavailable in this frozen XCTest result,
+not evidence that its authoritative action log failed to decode.
+
+The reader preserves both reads and reports this exact optional absence
+separately as `FROZEN_ACTION_DECODED_CONSOLE_UNAVAILABLE`. Only byte-exact absence,
+exit1, empty stdout and reaped normal completion qualify for that classification.
+Other errors, partial output, timeouts and missing/invalid action samples still
+fail. Console-only output cannot substitute for action output. A successful
+collection means existing evidence decoded, never a passing application journey,
+shipping cause, originaliOS26.2/physical verification or production qualification.

@@ -149,6 +149,52 @@ class FrozenResultControls(unittest.TestCase):
         self.assertFalse(result['complete'])
         self.assertEqual(list(result['errors']), ['action', 'console'])
 
+    def test_actual_console_absence_is_explicit_and_cannot_substitute_for_action_output(self):
+        sample = 'Public control settlement: at=1.0, querySeconds=2.0, frame=nil, enabled=false, stable=false, hittable=nil'
+        row = dict(status='EXITED', exit_code=1, direct_child_reaped=True)
+        stderr = b'Error: No console log available\n'
+        self.assertEqual(hashlib.sha256(stderr).hexdigest(),
+                         '7edd4c9be5a9e23098ec98cc71122a9fbd83e1dead265129a4869665f21454c5')
+        calls = []
+        def read(kind):
+            calls.append(kind)
+            if kind == 'console':
+                return review.log_payload(row, b'', stderr, kind)
+            return {'emittedOutput': sample}
+        result = review.collect_log_samples(read)
+        self.assertEqual(calls, ['action', 'console'])
+        self.assertTrue(result['complete'])
+        self.assertEqual(result['errors'], {})
+        self.assertEqual(result['counts'], {'action': 1, 'console': 0})
+        self.assertEqual(result['unavailable']['console']['stderr']['sha256'], hashlib.sha256(stderr).hexdigest())
+        def no_action(kind):
+            return {'items': []} if kind == 'action' else review.log_payload(row, b'', stderr, kind)
+        self.assertFalse(review.collect_log_samples(no_action)['complete'])
+        self.assertFalse(review.collect_log_samples(lambda kind:
+            {'items': []} if kind == 'action' else {'emittedOutput': sample})['complete'])
+
+    def test_console_absence_requires_exact_error_exit_empty_stdout_and_owned_completion(self):
+        row = dict(status='EXITED', exit_code=1, direct_child_reaped=True)
+        stderr = b'Error: No console log available\n'
+        for changed, raw, error, kind in (
+            (row, b'', stderr, 'action'),
+            (row | {'status': 'TIMEOUT'}, b'', stderr, 'console'),
+            (row | {'direct_child_reaped': False}, b'', stderr, 'console'),
+            (row | {'exit_code': 2}, b'', stderr, 'console'),
+            (row, b'partial stdout', stderr, 'console'),
+            (row, b'', stderr.rstrip(), 'console'),
+            (row, b'', stderr + b'private suffix', 'console'),
+            (row, b'', b'Error: Result bundle is missing\n', 'console'),
+            (row | {'exit_code': 0}, b'{}', stderr, 'console'),
+        ):
+            with self.subTest(kind=kind, status=changed['status']), self.assertRaises(review.FrozenLogReadError) as caught:
+                review.log_payload(changed, raw, error, kind)
+            self.assertNotIsInstance(caught.exception, review.ConsoleLogUnavailable)
+        success = dict(status='EXITED', exit_code=0, direct_child_reaped=True)
+        self.assertEqual(review.log_payload(success, b'{"items": []}', b'', 'action'), {'items': []})
+        with self.assertRaises(ValueError):
+            review.log_payload(success, b'not JSON', b'', 'action')
+
     def test_metadata_accepts_only_the_exact_completed_producer_and_artifact(self):
         run, artifact = metadata()
         review.validate_metadata(run, artifact)
