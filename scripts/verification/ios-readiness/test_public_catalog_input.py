@@ -6,10 +6,12 @@ import sys
 
 def load_tests(loader, _tests, _pattern):
     folder = Path(__file__).resolve().parents[3] / 'scripts/verification/ios-input-boundaries'
+    tests = {'test_pin03_catalog': '_parlor_catalog_input_controls',
+             'test_pin04_original_host': '_parlor_original_host_controls'}
     for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
-                 'public_attachments', 'run_pin03', 'test_pin03_catalog'):
+                 'pin04_original_host', 'public_attachments', 'run_pin03', *tests):
         path = folder / (name + '.py')
-        key = name if name != 'test_pin03_catalog' else '_parlor_catalog_input_controls'
+        key = tests.get(name, name)
         module = sys.modules.get(key)
         if module is not None and Path(module.__file__).resolve() != path:
             raise RuntimeError('Unexpected catalog-input control module')
@@ -18,4 +20,4 @@ def load_tests(loader, _tests, _pattern):
             module = importlib.util.module_from_spec(spec)
             sys.modules[key] = module
             spec.loader.exec_module(module)
-    return loader.loadTestsFromModule(sys.modules['_parlor_catalog_input_controls'])
+    return loader.suiteClass(loader.loadTestsFromModule(sys.modules[key]) for key in tests.values())

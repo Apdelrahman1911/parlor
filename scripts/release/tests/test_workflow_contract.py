@@ -957,7 +957,7 @@ class WorkflowContractTest(unittest.TestCase):
         for before, after in (
             ("contents: read", "contents: write"),
             ("runs-on: macos-15", "runs-on: macos-15-large"),
-            ("branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29]", "branches: [main]"),
+            ("branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29, diagnostic/ios-original-host-runtime-2026-10-29]", "branches: [main]"),
             ("cancel-in-progress: false", "cancel-in-progress: true"),
             ("actions/cache/restore@", "actions/cache/save@"),
             ("--source \"$PARLOR_INPUT_SOURCE\"", "--source \"$PARLOR_INPUT_SOURCE\" --retry"),
@@ -970,6 +970,10 @@ class WorkflowContractTest(unittest.TestCase):
             ("/settlement-lines.json", "/console/**"),
             ("/public-settlement-*.png", "/decoded-attachments/**"),
             ("/usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v", "true"),
+            ("9d4f369d2b1581f5c157b67cce3ff0fada49effa", "841a0b0623b508eae103f79ba7b4e5773e6a8b4d"),
+            ("SimRuntime.iOS-26-2", "SimRuntime.iOS-18-5"),
+            ("SimDeviceType.iPhone-17-Pro", "SimDeviceType.iPhone-16-Pro"),
+            ('--profile "$PARLOR_INPUT_PROFILE"', '--profile catalog'),
         ):
             changed = workflow.replace(before, after)
             self.assertNotEqual(changed, workflow)
