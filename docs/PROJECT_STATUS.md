@@ -1,4 +1,37 @@
-# Project status — 2026-10-28
+# Project status — 2026-10-29
+
+## Current main is not post-merge qualified
+
+Selected-membership PR#281 normally merged on October28 as
+`7c87a8726bab4da85cbd3824b30d2fcc709ad894`. Its fresh
+[main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
+**failed** in the iOS Simulator runtime/Swift-host job. The earlier successful
+main40731239367 qualifies `0bb8d5a5`, not this newer main. Earlier preparation
+and accepted-base entries below are historical checkpoints, not current gates.
+
+[PR#282](https://github.com/Apdelrahman1911/parlor/pull/282) remains **draft,
+open and unmerged** at `841a0b0623b508eae103f79ba7b4e5773e6a8b4d`.
+Its failed40794322752 loses Host after a completed Word Impostor catalog event;
+no shipping root cause or accepted cold-recovery successor is established.
+
+The [input investigation](audits/2026-10-29-INPUT-RECORDER-SCOPE.md) preserves
+the original failed journeys. Read-only40830036426 successfully decodes existing
+action evidence and exact optional console absence; it is not application
+qualification. Subsequent40831268153 **failed screenshot collection**:
+`--only-failures` excludes the pre-assertion screenshot activity. The correction
+selects only the exact eligible failed test with `--test-id`; fresh hosted export
+and named-image binding are pending. Direct authenticated original PNG
+inspection shows the Arabic public LAN rationale and Continue/Back with no
+obvious overlay. It does not explain earlier native hittability=false or the
+separate completed catalog event. Corrected-recorder native execution and full
+60-journey neutrality remain unverified.
+
+Local strict `productionCheck allTests` at diagnostic4b33deae passes release,
+analysis/lint/R8/AAB/inventory gates,1,867Desktop cases (3existing LAN skips),
+671Android cases perDebug/Release and120GitHub-test cases. This is not Apple or
+physical qualification. #258 protection and #251/#252/#253/#259/#260 mobile
+acceptance, Store identity/signing/legal/approval gates remain unresolved. No
+release, paid runner, extra agent or weakened verification is used.
 
 ## Catalog main accepted; selected-membership and cold-recovery follow-ups
 

@@ -2,7 +2,7 @@ name: iOS input investigation (not production qualification)
 
 on:
   push:
-    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29]
+    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29]
   workflow_dispatch:
     inputs:
       source:
@@ -31,7 +31,10 @@ jobs:
     # Standard public-repository runner only. No larger/self-hosted runner,
     # artifact cache writes, signing credentials or production-check substitution.
     runs-on: macos-15
-    timeout-minutes: ${{ github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && 14 || 190 }}
+    timeout-minutes: ${{ github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && 14 || github.ref == 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29' && 10 || 190 }}
+    permissions:
+      contents: read
+      actions: read
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       PARLOR_INPUT_OUTPUT: parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
@@ -45,12 +48,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up JDK 21
+        if: github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
       - name: Restore reviewed dependencies without saving diagnostic state
+        if: github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
@@ -63,7 +68,7 @@ jobs:
           /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
       - name: Execute one attempt per declared diagnostic arm
-        if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'
+        if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
         shell: bash
         run: |
           /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
@@ -75,6 +80,14 @@ jobs:
         run: |
           /usr/bin/python3 -B scripts/verification/ios-input-boundaries/xcode_worker_inventory.py \
             --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+      - name: Decode one frozen failed xcresult without executing the application
+        if: github.ref == 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_frozen_result.py \
+            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Retain original failures, source/product manifests and owned cleanup
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -85,7 +98,23 @@ jobs:
           path: |
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/xcode-worker-inventory.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*/attachments
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/receipt.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*-help.txt
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original-summary.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/extracted-inputs.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/test-details.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/activities.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/settlement-lines.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/public-settlement-*.png
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/attachments
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/attachments
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/attachments
