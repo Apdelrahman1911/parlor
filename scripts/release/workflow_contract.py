@@ -27,6 +27,10 @@ INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
+# Hybrid changes only x64. The default and all other Apple lane selectors stay
+# fixed; arbitrary inputs cannot select paid or unreviewed runner labels.
+FREE_APPLE_X64_RELEASE_RUNNER = ("${{ (inputs.apple_release_runner == 'intel' || inputs.apple_release_runner == 'hybrid') "
+                               "&& 'macos-15-intel' || 'macos-15' }}")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 ALLOWED_ACTIONS = {
     "actions/checkout",
@@ -644,8 +648,9 @@ def verify_apple_release_fanout(text: str) -> None:
     for job_id, target in (("ios-release-device", "IosArm64"), ("ios-release-x64", "IosX64")):
         job = validation_job(text, job_id)
         header = job.split("\n    steps:\n", 1)[0]
+        runner = FREE_APPLE_X64_RELEASE_RUNNER if job_id == "ios-release-x64" else FREE_APPLE_RELEASE_RUNNER
         if (re.findall(r"(?m)^    (if|runs-on|timeout-minutes): (.*)$", header) != [
-                ("if", FULL_VERIFICATION_SCOPE), ("runs-on", FREE_APPLE_RELEASE_RUNNER), ("timeout-minutes", "180")] or
+                ("if", FULL_VERIFICATION_SCOPE), ("runs-on", runner), ("timeout-minutes", "180")] or
                 re.findall(r"(?m)^      DEVELOPER_DIR: (.*)$", header) != ["/Applications/Xcode_26.3.app/Contents/Developer"]):
             fail("verification scope Release architecture requires pinned free standard runner/toolchain")
         run = "Link optimized " + target + " Release framework"
@@ -746,8 +751,8 @@ def verify_free_ci_dependency_cache(text: str) -> None:
     selections = re.findall(r"(?m)^      apple_release_runner:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) != [
-                ("type", "choice"), ("default", "arm64"), ("options", "[arm64, intel]")]):
-        fail("verification scope Apple benchmarking permits only two standard free runner families")
+                ("type", "choice"), ("default", "arm64"), ("options", "[arm64, intel, hybrid]")]):
+        fail("verification scope Apple benchmarking permits only three profiles of two standard free runner families")
 
 
 DARWIN_CAPABILITY_JOB = """    if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'

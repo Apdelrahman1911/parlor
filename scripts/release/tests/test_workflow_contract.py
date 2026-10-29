@@ -19,6 +19,88 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_free_apple_profiles_route_hybrid_only_to_intel_x64(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+
+        def resolve(expression, profile):
+            source = expression.removeprefix("${{ ").removesuffix(" }}")
+            tree = ast.parse(source.replace("inputs.apple_release_runner", "profile")
+                             .replace("&&", "and").replace("||", "or"), mode="eval")
+
+            def visit(node):
+                if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                    return node.value
+                if isinstance(node, ast.Name) and node.id == "profile":
+                    return profile
+                if isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], ast.Eq):
+                    return visit(node.left) == visit(node.comparators[0])
+                if isinstance(node, ast.BoolOp) and isinstance(node.op, (ast.And, ast.Or)):
+                    for value in node.values:
+                        result = visit(value)
+                        if isinstance(node.op, ast.And) and not result:
+                            return result
+                        if isinstance(node.op, ast.Or) and result:
+                            return result
+                    return result
+                raise AssertionError("Runner selector uses an unreviewed expression")
+
+            return visit(tree.body)
+
+        for job_id in ("ios", "ios-release-device", "ios-release-simulator", "ios-release-x64"):
+            job = workflow_contract.validation_job(workflow, job_id)
+            selector, = re.findall(r"(?m)^    runs-on: (.*)$", job)
+            for profile in (None, "", "arm64", "intel", "hybrid", "unknown", "macos-15-large"):
+                expected = "macos-15-intel" if job_id != "ios" and (
+                    profile == "intel" or profile == "hybrid" and job_id == "ios-release-x64") else "macos-15"
+                actual = resolve(selector, profile) if selector.startswith("${{") else selector
+                with self.subTest(job=job_id, profile=profile):
+                    self.assertEqual(expected, actual)
+
+    def test_free_apple_profiles_reject_paid_labels_options_and_default_changes(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("options: [arm64, intel, hybrid]", "options: [arm64, intel, hybrid, paid]"),
+            ("options: [arm64, intel, hybrid]", "options: [arm64, intel]"),
+            ("default: arm64", "default: hybrid"),
+            ("default: arm64", "default: intel"),
+            ("'macos-15-intel'", "'macos-15-large'"),
+            ("'macos-15-intel'", "inputs.runner"),
+            ("'macos-15'", "'self-hosted'"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_hybrid_selector_cannot_retarget_other_apple_lanes(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        x64 = workflow_contract.validation_job(workflow, "ios-release-x64")
+        selector, = re.findall(r"(?m)^    runs-on: (.*)$", x64)
+        for job_id in ("ios", "ios-release-device", "ios-release-simulator"):
+            job = workflow_contract.validation_job(workflow, job_id)
+            changed_job = re.sub(r"(?m)^    runs-on: .*$", "    runs-on: " + selector, job)
+            self.assertNotEqual(changed_job, job)
+            with self.subTest(job=job_id), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(workflow.replace(job, changed_job, 1))
+
+    def test_hybrid_profile_preserves_optimized_release_and_required_join(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            (":composeApp:linkReleaseFrameworkIosX64", ":composeApp:linkDebugFrameworkIosX64"),
+            (":composeApp:linkReleaseFrameworkIosArm64", ":composeApp:linkReleaseFrameworkIosX64"),
+            (":composeApp:linkReleaseFrameworkIosX64 --dependency-verification=strict",
+             ":composeApp:linkReleaseFrameworkIosX64 --dependency-verification=off"),
+            ("xcrun lipo \"$binary\" -verify_arch x86_64", "file \"$binary\""),
+            ("python3 -B -m scripts.ci.apple_release_gate aggregate", "true"),
+            ("${{ toJSON(needs) }}", "{}"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaises(RuntimeError):
+                workflow_contract.verify_validation(changed)
+
     def test_darwin_capability_requires_both_exact_free_hosts_and_native_receipt_control(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         job = workflow_contract.validation_job(workflow, "darwin-host-capability")
