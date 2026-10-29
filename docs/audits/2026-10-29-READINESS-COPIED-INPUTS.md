@@ -36,6 +36,11 @@ cause, secret disclosure or physical-device failure.
 
 The existing positive instrumentation fixture now includes its actual
 `composeApp/build.gradle.kts`; expected cardinality increases exactly one.
+The related release-gate guide now describes all 11 existing job definitions
+(eight producers, the Release join and two supplemental diagnostics). Its existing
+regression test rejects the old ten-job claim, then passes the corrected prose;
+the workflow and required checks are unchanged.
+
 No source transformations, checks or deadlines are removed. No shipping code,
 dependency, workflow architecture, Release optimization or platform policy changes.
 

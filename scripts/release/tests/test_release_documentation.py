@@ -46,6 +46,16 @@ class ReleaseDocumentationTest(unittest.TestCase):
         capability = jobs.split("  darwin-host-capability:\n", 1)[1]
         self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'", capability)
 
+        gates = (root / "docs/RELEASE_GATES.md").read_text(encoding="utf-8")
+        gate_policy = re.search(r"(?ms)^## CI policy\n(.*?)(?=^## |\Z)", gates)
+        self.assertIsNotNone(gate_policy, "Release gates must document the complete CI graph")
+        assert gate_policy is not None
+        policy = " ".join(gate_policy.group(1).split())
+        self.assertIn(f"configures {len(job_ids)} job definitions", policy)
+        for diagnostic in ("ios-protection-probe", "darwin-host-capability"):
+            self.assertIn(f"`{diagnostic}`", policy)
+        self.assertIn("Neither diagnostic replaces full verification", policy)
+
 
 if __name__ == "__main__":
     unittest.main()

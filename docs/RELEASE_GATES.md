@@ -68,9 +68,12 @@ unit test.
 
 ## CI policy
 
-`.github/workflows/production-verification.yml` configures ten jobs: six
-mandatory check identities (including a fail-closed Release join), three Release
-workers, and one opt-in protection diagnostic.
+`.github/workflows/production-verification.yml` configures 11 job definitions:
+eight mandatory producers, the required Release join, and two opt-in diagnostics
+(`ios-protection-probe` and `darwin-host-capability`). The six full check identities
+below include the join; its three Release producers also must qualify. Neither
+diagnostic replaces full verification. The Darwin capability matrix expands to
+both standard macOS hosts only for its explicit focused dispatch.
 The six full jobs are:
 
 - Linux x64: strict dependency verification, the root `productionCheck` and
