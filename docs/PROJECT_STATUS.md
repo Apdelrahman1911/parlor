@@ -1,6 +1,6 @@
 # Project status — October 29, 2026
 
-## Qualification checkpoint (11:54 UTC)
+## Qualification checkpoint (12:34 UTC)
 
 [PR #286](https://github.com/Apdelrahman1911/parlor/pull/286) normally merged as
 `2f7594c9b46ead62feb597c5211e9127164af4f8`. Its fresh
@@ -22,25 +22,28 @@ explicit-Retry restoration. Its additional [host-intent correction](audits/2026-
 prevents root recreation silently repeating a failed Host operation in all six
 games. Track the confirmed reproduction and fix in [#252](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6494991375).
 
-Exact local `5456d76a` passes strict `productionCheck allTests`: 1,880 Desktop
-cases (three existing LAN skips), 677 Android per Debug/Release, 120 GitHub-test,
+Exact local `0a8a04b2` passes strict `productionCheck allTests`: 1,888 Desktop
+cases (three existing LAN skips), 681 Android per Debug/Release, 120 GitHub-test,
 766 release controls (one platform skip), Detekt/lint/R8/unsigned AAB and shell/
-inventory gates. All 143 annotated methods in 11 changed classes are independently
+inventory gates. All 294 annotated methods in 14 changed classes are independently
 matched to actual XML. Ordinary readiness: 359 methods, three Apple-only Linux
 skips. A kernel-OOM first attempt remains failed; successful local serial execution
 keeps every gate. This is valid unaffected-input reuse, not a cold speed benchmark.
 
 The candidate is unpushed. Accepted-base integration, final documentation-source
 rechecks, fresh free hosted qualification, normal protected merge and actual-main
-verification remain. Its source requires 703 KMP Simulator methods; this is not
-an executed native result. Earlier three-pair Linux LAN evidence is scoped to
-its recorded network bytes, not physical phones or complete gameplay acceptance.
+verification remain. Its source requires 707 KMP Simulator methods; this is not
+an executed native result. Three current-source real P2pKit Linux Resume pairs
+independently verify all six natural zero exits, exact assertions, 1,133 runtime
+hashes and owned cleanup. These surviving same-machine processes/in-memory stores
+are not physical phones, process death or complete gameplay acceptance.
 
 The [continuous elapsed-budget correction](audits/2026-10-29-RECOVERY-ELAPSED-BUDGET.md)
 additionally reproduces clock-rollback renewal and delayed-timer foreground work.
 Final focused tests pass 19 methods without errors/skips; three restored mutation
-controls reject missing elapsed spending. Full exact-source local/hosted checks
-remain pending. Original full checks rejected unavailable Mach imports; the
+controls reject missing elapsed spending. Full exact-source local checks pass;
+final documentation-source and hosted qualification remain pending. Original
+full checks rejected unavailable Mach imports; the
 corrected exposed Apple RAW clock cross-compiles three iOS libraries and passes
 the same 19 methods. Apple linkage/runtime and device sleep remain unverified.
 

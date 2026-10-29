@@ -62,13 +62,33 @@ The first host observer incorrectly checked teardown before existing Bonjour
 goodbye flush; its failure remains rejected. The corrected test still asserts
 expiry at the original deadline and advances only that existing cleanup duration.
 
-Full exact-committed-source strict gates, free hosted Android/Apple compilation,
-iOS linkage/runtime tests, normal protected merge and fresh automatic main are
-still required. The first complete check failed two iOS library compilation
+The first complete check failed two iOS library compilation
 tasks because the original direct Mach imports are not exported by Kotlin/Native.
 That failure remains retained. The exposed POSIX correction compiles all three
 iOS Kotlin libraries on Linux and independently passes the same 19 Desktop
 methods. This does **not** verify Apple linkage/runtime or actual device sleep.
+
+At corrected committed source `0a8a04b25d1032aaaed0e51f5dc6f9d08f519d6f`, full
+strict `productionCheck allTests` passes **1,888 Desktop cases** (three existing
+opt-in LAN skips), **681 Android per Debug/Release**, **120 GitHub-test** and
+**766 release controls** (one platform skip), plus Detekt, lint, R8, unsigned AAB,
+inventory and shell gates. All 294 annotated methods in 14 changed classes match
+actual Desktop and applicable Android XML. Source unchanged; owned Gradle stop 0.
+Log SHA256 `76e36798ba67bc39fb404610b7bc8ef1f2d85cfd87b9776d0841150e23e4afaf`.
+Elapsed 509.9 seconds, 84 executed/1,584 up-to-date tasks: legitimate reuse,
+**not a cold-build or mobile-performance benchmark**.
+
+The same source additionally passes three actual P2pKit Linux host/peer Resume
+pairs; all six processes exit naturally with code 0 and teardown markers.
+Independent review checks 1,133 runtime hashes, six helper hashes, exact assertions
+and owned cleanup. Receipt SHA256
+`fa14440f7ab44cf9fe24eec5f4fd60df424b71bd5f1e260085a810d6c2b71aeb`.
+These surviving same-machine JVMs use in-memory credentials; this is **not** OS
+sleep, persistent-storage/process-death, gameplay or phone performance evidence.
+
+Final documentation-source rechecks, fresh free hosted Android/Apple compilation,
+iOS linkage/runtime tests, normal protected merge and automatic actual-main
+verification remain required.
 Physical Android/iOS locks/calls/suspension/Wi-Fi/process death, simultaneous
 recovery, battery/thermal behavior and strict protected storage remain open.
 Host process death ends the room; no indefinite iOS hosting or migration claim.

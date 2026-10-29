@@ -3,10 +3,12 @@
 ## Scope
 
 Preserve the independently tested October 28 cold-recovery source (`2b62685d`)
-on its original branch. A new local branch normally merges the exact PR#286
-verification candidate `d4219ff4`, with no changes to the cold-recovery shipping
-implementation. This is **local preparation atop an unmerged candidate**, not
-an accepted-main or physical-device result.
+on its original branch. Initial local preparation normally merged the exact
+PR#286 verification candidate `d4219ff4`, without changing the cold-recovery
+shipping implementation. PR#286 subsequently merged normally as `2f7594c9`;
+the recovery branch now includes that actual main. Its automatic main workflow
+is still pending qualification at the 12:34 UTC checkpoint. Neither base alignment
+nor local tests establish protected integration or physical-device acceptance.
 
 The scope combines selection-bound Resume and final Leave, foreground-only
 one-shot cold-peer routing, and restoration of a failed opening without silently
@@ -28,12 +30,11 @@ The selected-membership store and adapter controls bind the same credential used
 for authentication, never a separate unbound UI lookup. Earlier same-machine
 separate-process Linux LAN pairs qualify only their exact original source.
 
-A fresh complete strict local aggregate will test the combined committed source,
+The complete strict local aggregate tests the combined committed source,
 including PR#286's six availability controls against the selected-membership
-store. Previous passing counts/logs cannot certify this integration. Fresh full
-hosted checks, a normal protected merge and automatic actual-main verification
-remain required before acceptance. No workflow dispatch or source publication
-is performed merely by this local preparation.
+store. See the exact-source checkpoint below; earlier passing counts/logs do not
+certify newer documentation. Fresh full hosted checks, a normal protected merge
+and automatic actual-main verification remain required before acceptance.
 
 ## Remaining gates
 
@@ -70,3 +71,13 @@ retained kernel-OOM first attempt, serial resource profile, full log hash and
 all 143 source-derived changed methods. These are exact-source local results;
 final documentation, accepted actual-main integration and fresh hosted/native
 qualification remain mandatory.
+
+The final [continuous-clock correction](2026-10-29-RECOVERY-ELAPSED-BUDGET.md)
+at `0a8a04b2` passes all strict local gates: 1,888 Desktop cases, 681 Android
+per variant, 120 GitHub-test and 766 release controls, with all 294 annotated
+changed methods in 14 classes matched to applicable XML. Three actual Linux
+P2pKit Resume pairs independently verify six natural zero exits, same seat,
+credential rotation/revocation and game/version rejection. These are surviving
+same-machine JVMs with in-memory stores, not mobile lifecycle or gameplay proof.
+Final documentation/inventory source, free hosted native tests, normal protected
+integration and automatic actual-main qualification remain outstanding.
