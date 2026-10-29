@@ -263,27 +263,21 @@ final class IOSAppLaunchUITests: XCTestCase {
 
     @MainActor
     private func tapSettledControl(_ control: XCUIElement) throws {
-        // Public setup only. One coherent snapshot per frame sample avoids
-        // separate exists/hittable/frame queries exhausting the same deadline.
-        // Preserve exact adjacent-frame equality and the native hittability
-        // check; do not lengthen, replay, or replace the actual tap.
+        // Public setup only. Full snapshot() also faults in value, placeholder,
+        // identifier and window attributes that frame settlement never uses.
+        // Read only existence, one complete CGRect and enabled state. These
+        // are sequential observations, not an atomic accessibility snapshot;
+        // absence/disabled state breaks adjacency and native hittability is
+        // still required immediately before admitting the single ordinary tap.
+        // Keep the same exact-frame comparison and original ten-second budget.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let snapshot: (any XCUIElementSnapshot)?
-            var snapshotErrorCode: Int? = nil
-            do {
-                snapshot = try control.snapshot()
-            } catch {
-                snapshot = nil
-                // NSError descriptions/userInfo can include arbitrary UI data.
-                // Retain only the numeric code; never stringify the error.
-                snapshotErrorCode = (error as NSError).code
-            }
-            let frame = snapshot?.frame
-            let enabled = snapshot?.isEnabled == true
+            let exists = control.exists
+            let frame = exists ? control.frame : nil
+            let enabled = exists && control.isEnabled
             let stable = frames.observe(frame: frame, enabled: enabled)
             let hittable = stable ? control.isHittable : nil
             if stable && hittable != true { frames.reset() }
@@ -293,8 +287,7 @@ final class IOSAppLaunchUITests: XCTestCase {
                 samples.append("at=\(sampleStarted - started), " +
                     "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
                     "frame=\(String(describing: frame)), enabled=\(enabled), " +
-                    "stable=\(stable), hittable=\(String(describing: hittable)), " +
-                    "snapshotErrorCode=\(String(describing: snapshotErrorCode))")
+                    "stable=\(stable), hittable=\(String(describing: hittable))")
             }
             return stable && hittable == true
         }, object: nil)
@@ -494,7 +487,7 @@ final class PublicTextValueTests: XCTestCase {
     }
 }
 
-// Test-only frame state. Losing a snapshot, enabled state or hittability must
+// Test-only frame state. Losing the control, enabled state or hittability must
 // break adjacency; a matching frame before an interruption cannot admit a tap.
 private struct PublicControlFrames {
     private var previous: CGRect?
@@ -533,18 +526,22 @@ final class PublicControlFramesTests: XCTestCase {
         XCTAssertTrue(frames.observe(frame: moved, enabled: true))
     }
 
-    func testMissingSnapshotBreaksFrameAdjacency() {
+    func testMissingControlBreaksFrameAdjacency() {
         var frames = PublicControlFrames()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
-        XCTAssertFalse(frames.observe(frame: nil, enabled: true))
+        for _ in 0..<4 {
+            XCTAssertFalse(frames.observe(frame: nil, enabled: false))
+        }
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
     }
 
-    func testDisabledSnapshotBreaksFrameAdjacency() {
+    func testDisabledControlBreaksFrameAdjacency() {
         var frames = PublicControlFrames()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
-        XCTAssertFalse(frames.observe(frame: resting, enabled: false))
+        for _ in 0..<4 {
+            XCTAssertFalse(frames.observe(frame: resting, enabled: false))
+        }
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
     }

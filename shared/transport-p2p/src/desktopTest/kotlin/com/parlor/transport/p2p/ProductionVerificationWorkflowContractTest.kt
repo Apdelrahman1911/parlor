@@ -48,21 +48,23 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun public_ios_settlement_uses_coherent_adjacent_frames_and_never_taps_after_failure() {
+    fun public_ios_settlement_uses_minimal_adjacent_frames_and_never_taps_after_failure() {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val helper = swift.substringAfter("private func tapSettledControl(")
             .substringBefore("private func verifyKeyboardCycle(")
         val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
-        assertEquals(1, Regex(Regex.escape("control.snapshot()")).findAll(code).count())
+        listOf("control.exists", "control.frame", "control.isEnabled").forEach { attribute ->
+            assertEquals(1, Regex(Regex.escape(attribute)).findAll(code).count())
+        }
         assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
         assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
+        assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
+        assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
-            "snapshot = try control.snapshot()",
-            "snapshot = nil",
-            "snapshotErrorCode = (error as NSError).code",
-            "snapshotErrorCode=",
-            "let frame = snapshot?.frame",
-            "let enabled = snapshot?.isEnabled == true",
+            "let exists = control.exists",
+            "let frame = exists ? control.frame : nil",
+            "let enabled = exists && control.isEnabled",
+            "let stable = frames.observe(frame: frame, enabled: enabled)",
             "let hittable = stable ? control.isHittable : nil",
             "if stable && hittable != true { frames.reset() }",
             "XCTWaiter.wait(for: [settled], timeout: 10)",
@@ -73,7 +75,7 @@ class ProductionVerificationWorkflowContractTest {
             "screenshot.lifetime = .keepAlways",
         ).forEach { assertContains(code, it) }
         assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
-        listOf("try? control.snapshot()", "control.exists", "control.frame", ".label", ".value",
+        listOf(".snapshot()", ".label", ".value", ".placeholderValue", ".identifier",
             ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
             "press(forDuration", "swipe").forEach { assertFalse(it in code) }
         val frameState = swift.substringAfter("private struct PublicControlFrames {")
@@ -86,8 +88,8 @@ class ProductionVerificationWorkflowContractTest {
         listOf(
             "testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes",
             "testMotionIsNotRoundedIntoASettledFrame",
-            "testMissingSnapshotBreaksFrameAdjacency",
-            "testDisabledSnapshotBreaksFrameAdjacency",
+            "testMissingControlBreaksFrameAdjacency",
+            "testDisabledControlBreaksFrameAdjacency",
             "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
             "testHittabilityInterruptionRequiresTwoFreshFrames",
         ).forEach { assertContains(swift, "func $it()") }
@@ -132,6 +134,10 @@ class ProductionVerificationWorkflowContractTest {
             .substringBefore("private func dismissKeyboardIntroduction(")
         val code = observer.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
         assertEquals(1, Regex(Regex.escape("field.snapshot()")).findAll(code).count())
+        // Interpolation-only bans miss direct print(expected). Permit exactly
+        // the existing categorical failure-ledger print, never another sink.
+        assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
+        assertContains(code, """print("Public text commit: " + samples.joined(separator: "; "))""")
         listOf(
             "snapshot = try field.snapshot()", "snapshot = nil",
             "snapshotErrorCode = (error as NSError).code", "if samples.count < 12",

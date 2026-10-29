@@ -1,4 +1,31 @@
-# Project status — 2026-10-28
+# Project status — 2026-10-29
+
+## Current CI repair: PR #282 failed and remains unmerged
+
+[PR #281](https://github.com/Apdelrahman1911/parlor/pull/281) merged normally
+as `7c87a8726bab4da85cbd3824b30d2fcc709ad894`, but its automatic
+[main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
+failed the Arabic exact-name deadline; it is not accepted main. Full recording
+inspection shows delayed complete input after that deadline, not permanent
+sanitizer loss. #276 is reopened; #267's earlier lost Host event is separate.
+
+The test-observer/control follow-up [PR #282](https://github.com/Apdelrahman1911/parlor/pull/282)
+[run40774291250](https://github.com/Apdelrahman1911/parlor/actions/runs/40774291250)
+also fails: all 679 KMP cases and seven other producers/original Release join
+pass, but Swift is 22PASS/1FAIL. Both additional-game text journeys pass;
+a different Arabic permission-screen pre-tap observer exhausts its unchanged
+ten-second budget in full-snapshot attribute queries. XCTest code1001 is the
+outer waiter interruption, not proof of a missing screen. See the
+[targeted correction](audits/2026-10-29-IOS-SETTLEMENT-ATTRIBUTE-COST.md).
+
+The correction preserves exact adjacent valid/enabled frames, native
+hittability, no-tap-on-failure, original gestures/deadlines and all 23 Swift
+methods. New-source complete local and hosted verification, protected merge
+and independently qualified automatic main are still mandatory. No blind rerun,
+paid runner, weaker check or mobile/Store claim. Cold recovery and copy-only
+native input instrumentation remain unpublished successor candidates, held
+behind fresh accepted-main qualification. All earlier checkpoints below are
+historical, not current-source proof.
 
 ## Resume merged; actual-main failed — input investigation remains open
 
