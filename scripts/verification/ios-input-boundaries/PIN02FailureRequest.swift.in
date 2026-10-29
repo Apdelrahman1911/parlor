@@ -1,0 +1,44 @@
+#if DEBUG && targetEnvironment(simulator)
+import CoreFoundation
+
+/// Appended ONLY to the copied original XCTest source. No private UI query,
+/// synthesized gesture, navigation callback, relaunch or successful-path wait.
+private enum PIN02FailureRequest {
+    @MainActor static func configure(_ app: XCUIApplication) {
+        // Explicit caller-owned Debug identity; never guess an app or Simulator.
+        let environment = ProcessInfo.processInfo.environment
+        guard let simulator = environment["SIMULATOR_UDID"], UUID(uuidString: simulator)?.uuidString == simulator,
+              let bundle = environment["PARLOR_PIN02_BUNDLE"], bundle.hasSuffix(".debug") else { return }
+        app.launchEnvironment["PARLOR_PIN02_TOKEN"] = UUID().uuidString
+        app.launchEnvironment["PARLOR_PIN02_SIMULATOR"] = simulator
+        app.launchEnvironment["PARLOR_PIN02_BUNDLE"] = bundle
+    }
+
+    @MainActor static func captureAfterFailedTransition(_ app: XCUIApplication) {
+        guard let token = app.launchEnvironment["PARLOR_PIN02_TOKEN"],
+              UUID(uuidString: token)?.uuidString == token else { return }
+        let acknowledgement = XCTestExpectation(description: "Post-failure numeric export attempt")
+        let owner = Unmanaged.passUnretained(acknowledgement).toOpaque()
+        let name = CFNotificationName(("com.parlor.pin02.ack." + token) as CFString)
+        let center = CFNotificationCenterGetDarwinNotifyCenter()
+        CFNotificationCenterAddObserver(center, owner, { _, observer, _, _, _ in
+            guard let observer else { return }
+            Unmanaged<XCTestExpectation>.fromOpaque(observer).takeUnretainedValue().fulfill()
+        }, name.rawValue, nil, .deliverImmediately)
+        defer { CFNotificationCenterRemoveObserver(center, owner, name, nil) }
+        CFNotificationCenterPostNotification(center,
+            CFNotificationName(("com.parlor.pin02.request." + token) as CFString), nil, nil, true)
+        // Only AFTER the original single-tap/10s transition has already failed.
+        // A timeout remains failed; an ACK cannot change the original result.
+        let result = XCTWaiter.wait(for: [acknowledgement], timeout: 3)
+        let receipt: [String: Any] = ["schema": 1, "token": token,
+            "ackObserved": result == .completed, "originalTransitionFailed": true]
+        if let bytes = try? JSONSerialization.data(withJSONObject: receipt, options: [.sortedKeys]) {
+            let attachment = XCTAttachment(data: bytes, uniformTypeIdentifier: "public.json")
+            attachment.name = "PIN02 post-failure request (not capture custody)"
+            attachment.lifetime = .keepAlways
+            XCTContext.runActivity(named: "Post-failure numeric request") { activity in activity.add(attachment) }
+        }
+    }
+}
+#endif

@@ -1,0 +1,18 @@
+// Appended ONLY to the manifest-owned copied MainViewController.kt.
+fun PIN01InputArmed(): Boolean = com.parlor.app.inputcopy.PIN01Observation.armed
+
+fun PIN01NativeMode(mode: Int) {
+    check(platform.Foundation.NSThread.isMainThread)
+    check(mode in 0..1)
+    com.parlor.app.inputcopy.PIN01Observation.nativeMode = mode
+}
+
+fun PIN01NativeInput(phase: Int, count: Int, pressed: Int, x: Double, y: Double, eventMs: Double) {
+    check(platform.Foundation.NSThread.isMainThread)
+    com.parlor.app.inputcopy.PIN01Observation.record(1, 0, phase, count, pressed, 0, x, y, eventMs)
+}
+
+fun PIN01InputSnapshot(): String {
+    check(platform.Foundation.NSThread.isMainThread)
+    return com.parlor.app.inputcopy.PIN01Observation.snapshot()
+}

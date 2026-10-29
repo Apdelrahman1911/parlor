@@ -1,0 +1,51 @@
+// CONTROL ONLY. Executes the real exporter/Darwin IPC on macOS with a synthetic
+// numeric snapshot and task-owned files. NOT a Simulator/Kotlin/app/touch test.
+import Foundation
+import CoreFoundation
+import Darwin
+
+@main
+struct PIN02FoundationControl {
+    static func main() throws {
+        let arguments = CommandLine.arguments
+        guard arguments.count >= 3 else { exit(2) }
+        let token = arguments[2]
+        if arguments[1] == "request" {
+            CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+                CFNotificationName(("com.parlor.pin02.request." + token) as CFString), nil, nil, true)
+            return
+        }
+        guard arguments.count == 5, arguments[1] == "listen" else { exit(3) }
+        let simulator = arguments[3]
+        let parent = URL(fileURLWithPath: arguments[4], isDirectory: true)
+        let file = parent.appendingPathComponent("parlor-pin02-" + token).appendingPathComponent("capture.json")
+        var calls = 0
+        var owner: PIN02Capture? = PIN02Capture(token: token, simulator: simulator,
+            bundle: "com.parlor.app.debug", parent: parent, snapshot: {
+                calls += 1
+                let uptime = ProcessInfo.processInfo.systemUptime * 1000
+                return "{\"schema\":1,\"nativeMode\":0,\"overflow\":0,\"invalid\":0," +
+                    "\"rows\":[[\(uptime),4,0,0,0,0,0,0,0,0]]}"
+            })
+        print("PIN02_CONTROL_READY")
+        fflush(stdout)
+        let limit = ProcessInfo.processInfo.systemUptime + 8
+        while !FileManager.default.fileExists(atPath: file.path), ProcessInfo.processInfo.systemUptime < limit {
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.02))
+        }
+        guard FileManager.default.fileExists(atPath: file.path), calls == 1 else { exit(4) }
+        let original = try Data(contentsOf: file)
+        // A second actual signal must not call the bridge or overwrite evidence.
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+            CFNotificationName(("com.parlor.pin02.request." + token) as CFString), nil, nil, true)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        guard calls == 1, try Data(contentsOf: file) == original else { exit(5) }
+        withExtendedLifetime(owner) {}
+        owner = nil // Actual observer removal, then another signal; no stale callback.
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+            CFNotificationName(("com.parlor.pin02.request." + token) as CFString), nil, nil, true)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        guard calls == 1, try Data(contentsOf: file) == original else { exit(6) }
+        print("PIN02_CONTROL_ONE_EXPORT_REMOVED")
+    }
+}

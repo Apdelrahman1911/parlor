@@ -1,104 +1,107 @@
 # Project status — October 29, 2026
 
-## Qualification checkpoint (15:26 UTC)
+## Verified main and source-preparation checkpoint
 
-[PR #287](https://github.com/Apdelrahman1911/parlor/pull/287) normally merged at
-13:57 UTC as `539f8073fde9e7f168c64890ff89a416ab5551f0`. Fresh
-[PR40877009596](https://github.com/Apdelrahman1911/parlor/actions/runs/40877009596)
-independently qualifies every required producer/the original Apple join,
-23 Swift methods, **708 source-derived KMP Simulator methods**, all 359 ordinary
-readiness methods and exact source/artifact/native/output custody. Qualification
-SHA256 `1f1dd059ec5fd47523a4785743340a8ef158426ea3135686e78821044ffc8e08`.
-Fresh [automatic main40886687896](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
-now independently qualifies all eight producers/the Apple join, 23 Swift,
-708 source-derived KMP Simulator and 359 readiness methods (zero skips).
-Qualification SHA256 `532068c2bc3c8a3f4af3f4218b54260ea1cf3b2655ff3dadf5493c680f6ec09a`.
-Main/PR tree is exactly `7ff23d909ed10e0807b3352f0227f7183abef211`; actual
-native runtime is **iOS18.5/iPhone16Pro**, not the SDK26.2 or physical devices.
-Required protections remain active; no bypass occurred.
+[PR #288](https://github.com/Apdelrahman1911/parlor/pull/288) normally merged as
+`5958f9289e6de77273eedc459cd54a2869423fb5` at 16:53 UTC. Fresh
+[PR40902449629](https://github.com/Apdelrahman1911/parlor/actions/runs/40902449629)
+independently qualifies all eight producers/the original Apple Release join,
+23 Swift methods, 708 source-derived KMP Simulator cases and all362 readiness
+methods without skips. Exact source/artifact/native/output custody matches tree
+`845c4313d08fe563a8bd9a24fbcfaea9513bf703`; qualification SHA256
+`13682d4c3955add39e2e4c077c9b5aea47f9a2c281cdc6850788c21b6004666c`.
+Actual UIKit runtime: **iOS18.5/iPhone16Pro**, not SDK26.2 or physical devices.
 
-Previous [PR #286](https://github.com/Apdelrahman1911/parlor/pull/286) and its
-[automatic main40867943050](https://github.com/Apdelrahman1911/parlor/actions/runs/40867943050)
-independently qualify `2f7594c9`: eight producers/Apple join, 23 Swift/685 KMP
-Simulator methods and custody. Scoped worker issue #285 and coherent-observation
-integration #283 are resolved, not original input causality. Older failed attempts
-stay failed. PR #256 already merged as `81ee9b7b`; never replay that integration.
+[Distinct automatic main40916055035](https://github.com/Apdelrahman1911/parlor/actions/runs/40916055035)
+independently qualifies actual main `5958f9289e6de77273eedc459cd54a2869423fb5`: all eight producers/the original
+Apple Release join, 23 Swift, 708 source-derived KMP Simulator and 362 ordinary
+readiness methods (zero skips), with exact source/artifact/native/output custody.
+Qualification SHA256 `eebb48d83bbcc1bbdf594b2770c2fa5fc1bcd6ceaf2ddb4c2616fd19c8d6344f`. This is distinct automatic actual-
+main execution, not PR-pass substitution. Protections remain active.
 
-## Integrated recovery corrections; physical acceptance remains
+Previously accepted [recovery PR #287/main539f8073](https://github.com/Apdelrahman1911/parlor/actions/runs/40886687896)
+qualifies all producers/Apple join,23Swift/708KMP Simulator/359readiness and
+exact custody. PR #286 is accepted; scoped #283/#285 are closed. PR #256 already
+merged as `81ee9b7b`; never replay those integrations or relabel earlier failures.
 
-[Selected cold-peer recovery](audits/2026-10-29-COLD-RECOVERY-INTEGRATION.md)
-binds Resume/Leave to the observed membership, allows one foreground startup
-attempt and retains explicit Retry. [Host intent](audits/2026-10-29-HOST-OPENING-INTENT.md)
-prevents repeated failed Host operations after root recreation in all six games.
-[Elapsed budgets](audits/2026-10-29-RECOVERY-ELAPSED-BUDGET.md) prevent clock
-rollback or delayed timers extending recovery; Android elapsedRealtime, Desktop
-nanoTime and Apple's exposed continuous RAW clock fail closed. #252 retains the
-real-mobile acceptance gate; no new dependency, protocol, polling, wake lock,
-thread or host migration is introduced.
+## Integrated application and verification repairs
 
-Exact `b439cefa` strict local `productionCheck allTests` passes 1,889 Desktop
-(three existing LAN skips), 681 Android per Debug/Release, 120 GitHub-test,
-766 release controls (one platform skip), Detekt/lint/R8/unsigned AAB and inventory/
-shell gates. All 295 changed Desktop methods in 15 files match actual XML.
-Three current-source real P2pKit Linux Resume pairs verify six natural zero exits,
-seat/rotation/revocation/version assertions and cleanup. Surviving same-machine
-JVMs and in-memory stores are not physical phones or process-death verification.
-Earlier OOM, unavailable Mach imports and Android JVM SDK-stub failures remain
-retained; corrected real-clock tests execute on Desktop and iOS source sets.
+- [Cold-peer recovery](audits/2026-10-29-COLD-RECOVERY-INTEGRATION.md) binds
+  Resume/Leave to observed membership, attempts startup once in the foreground
+  and retains explicit Retry.
+- [Host-opening intent](audits/2026-10-29-HOST-OPENING-INTENT.md) prevents implicit
+  failed Host replay after root recreation in all six games.
+- [Continuous elapsed budgets](audits/2026-10-29-RECOVERY-ELAPSED-BUDGET.md) prevent
+  clock rollback/delayed timers extending recovery.
+- [Existing readiness copied-input repair](audits/2026-10-29-READINESS-COPIED-INPUTS.md)
+  detects hidden/nested inputs and rejects symlinks before output pruning.
 
-## Source-copy repair prepared, not yet integrated
+Exact PR #288 source passes strict local checks:1,889Desktop (three existing LAN
+skips),681Android perDebug/Release,120GitHub-test,766release controls (one platform
+skip),Detekt/lint/R8/unsigned AAB/inventory/shell. These Linux results do not execute
+Apple APIs. Fresh actual main5958f928 also passes three real P2pKit Linux host/peer
+JVM Resume pairs: six natural zero exits, selected seat, rotation/revocation,
+game/version rejection and owned cleanup. Receipt SHA256
+`daeb997b4249695c4218d6989ac9f4c9eca3d43013f3a0867dbd01efb02ba89c`.
+Surviving same-machine JVMs with synthetic in-memory stores are not phones,
+process-death restoration, gameplay or mobile energy measurements.
 
-[Draft #288](https://github.com/Apdelrahman1911/parlor/pull/288) narrowly fixes the
-existing [main readiness source-copy consumer](audits/2026-10-29-READINESS-COPIED-INPUTS.md).
-Original inspection accepts hidden invalid Kotlin while the actual compiler
-identifies it and fails. Exact recorded Gradle output paths replace hidden/basename
-pruning; intake/hash/symlink checks remain strict. Original RED and four reader
-mutations are retained. Combined `0e8341ea` passes all strict local gates above and
-**362 ordinary readiness methods**, three Apple-only Linux skips. Reader bytes
-remain unchanged through normal local alignment with now-qualified recovery main.
-
-Committed `6dc6d996` additionally corrects release-gate prose to all 11 existing
-job definitions; its existing regression rejects the stale count. Full strict
-local checks pass the same counts/gates in 183.7 seconds, source unchanged/stop0.
-Log SHA256 `75baef85dfa232665fa86d2875da76d63b100dfa5d60db3ae11b53e7e2d35dcd`.
-Final documentation-source checks remain before publication. The draft must target
-**main, never the feature branch**. Fresh full hosted/native/readiness qualification,
-protected merge and distinct automatic actual-main verification remain. Keep #284 open: this is not dormant PIN03 harness integration or #267/#276
-root-cause resolution. Local reuse is not a controlled cold-build speed benchmark.
-
-## Original native input investigation running
+## Native-input investigation and separate diagnostic integration
 
 [Diagnostic40889770560](https://github.com/Apdelrahman1911/parlor/actions/runs/40889770560)
-runs harness `91eec0ec` against original failed app `9d4f369d`, explicitly selected
-iOS26.2/iPhone17Pro and Xcode26.3/17C529. The exact original driver is retained;
-no slower/replayed tap or newer successful path replaces it. Three original/
-Compose/native arms each get one attempt. Local diagnostic-source checks pass
-1,867 Desktop, 671 Android per variant, 120 GitHub-test, 761 release controls and
-403 readiness methods (six Apple-only Linux skips). Five profile controls reject
-longer-tap/early-capture/unbound-runtime mutations. This is a c62-based diagnostic,
-not newer-main qualification. Case outcomes, actual result runtime/device and
-capture/cleanup acceptance are pending; #267/#276 remain open. It was published
-after main's Desktop macOS lane finished, on one standard free runner.
+has completed. Frozen original app9d4f369d/harness91eec0ec executes all six
+original/Compose/native EN/AR journeys successfully on **actual iOS26.2/23C54,
+iPhone17Pro, ARM64**, Xcode26.3/17C529. This does not identify the original input
+cause, execute failed-only capture/export callbacks, prove full60-journey neutrality
+or qualify current main/physical devices. PR #282 remains draft/unmerged.
 
-## Remaining acceptance gates
+#267 was accidentally closed by negated PR-description closing-keyword wording
+at merge. [Its state/wording correction](https://github.com/Apdelrahman1911/parlor/issues/267#issuecomment-6503091495)
+is read back; #267/#276 remain open and original failures remain failed.
 
-- **Release blockers:** #230 Store identity/ownership; #258 iOS Strict Complete
-  Protection (0 PASS/6 FAIL); signing, legal and external Store approvals.
-- **Real mobile recovery:** #251/#252/#253 Android/iOS admission, selected-seat
-  restoration/deletion, locked storage, calls/lock/Wi-Fi/process death and energy.
-  Host process death still ends the room; no host migration/indefinite iOS hosting.
-- **Six-game journeys:** #259/#260 physical accessibility, private-information
-  isolation, complete UX/gameplay and CPU/battery/thermal acceptance.
-- **Native/tooling investigation:** #267/#276 original input causality;
-  #283/#284 separately scoped observer acceptance/source-copy integration;
-  #285 worker custody is accepted, not proof of original input causality.
-  PR #282 remains draft/unmerged; diagnostic green is not production qualification.
-- **RPC:** retain reviewed P2pKit 0.7.0-rc3 single-connection messaging.
-  Fresh core/LAN/RPC Maven metadata at 12:58 UTC still lists 0.8.0-rc7 published
-  October 23, before upstream #524 merged October 25; mobile comparative benefits
-  are unmeasured. See [the RPC/lifecycle decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
+The [separate diagnostic integration](audits/2026-10-29-INPUT-DIAGNOSTIC-INTEGRATION.md)
+retains the reviewed copy-only harness, repairs independently reproduced output-
+symlink/suffix gaps and includes all artifact/worker controls in ordinary readiness.
+At this source-preparation checkpoint, clean `b0773085` passes strict full local
+checks (1,889 Desktop, 681 Android per variant, 120 GitHub-test, 768 release
+controls), all 439 readiness methods (six Apple-only Linux skips), and actual owned-
+copy Desktop execution: ten recorder/Nav3 methods plus 60 unchanged public-pointer
+journeys before/after observation. The old-scope sensitivity failure is retained.
+Final documentation-source gates and fresh hosted/native qualification follow;
+[existing #284](https://github.com/Apdelrahman1911/parlor/issues/284) records protected
+integration/actual-main acceptance separately from original input causality.
 
-Only standard free public-repository runners are used. No extra agents,
-paid infrastructure, weakened verification or Store release. Historical results
-are preserved [verbatim here](archives/history/PROJECT_STATUS_2026-10-29_5456d76a.md);
-use live linked checks and exact-source reports, not those checkpoints, as evidence.
+## Current diagnostic integration qualification
+
+[Draft #289](https://github.com/Apdelrahman1911/parlor/pull/289) targets main.
+Its first production attempt40930610448 fails iOS readiness before KMP/Swift tests:
+imported controls require historical Git objects absent from the shallow lane.
+Actual missing-history RED is retained; eight hash-bound full original-file fixtures
+make the software controls hermetic without new fetches, newer-source fallback or
+production workflow changes. All 20 affected methods and seven fixture adversaries
+execute successfully without those objects. Native diagnostics still archive the
+actual original Git source, not these fixtures. New complete counts: 84 standalone
+and 446 ordinary readiness methods. Fresh final-source/full-hosted/native acceptance
+and protected merge remain; first failed source never qualifies. See the scoped
+report and #284 for live acceptance; original input causality stays separate.
+
+## Outstanding acceptance gates
+
+- **Release:** #230 Store identity/ownership; #258 Strict Complete Protection
+  remains **0PASS/6FAIL**; signing, legal/security and external Store approvals.
+- **Physical recovery:** #251/#252/#253 Android/iOS admission, selected-seat
+  restoration/deletion, locked storage, calls/lock/Wi-Fi/process death,
+  simultaneous recovery and energy. Host death ends the room; no host migration
+  or indefinite iOS LAN hosting.
+- **Six-game acceptance:** #259/#260 complete physical LAN/gameplay/accessibility,
+  hidden-information isolation, large text/RTL and CPU/battery/thermal matrices.
+- **Native/tooling:** #267/#276 original input causality; #284 diagnostic integration.
+  Closed #6 covers separate-process transport automation, not physical phones.
+- **RPC:** retain reviewed P2pKit0.7.0-rc3 single-connection messaging. Fresh correct
+  Maven RPC metadata lists0.8.0-rc7 published before upstream #524 merged; no
+  reproducible published implementation/mobile comparative benefit is established.
+  See [the decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
+
+Only standard free public runners; no new agents, paid infrastructure, cache/billing
+increase, weaker verification or Store release. Historical checkpoints remain
+[preserved](archives/README.md), not certificates for a newer checkout.
