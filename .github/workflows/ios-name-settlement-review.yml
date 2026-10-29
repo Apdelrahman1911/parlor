@@ -1,0 +1,53 @@
+name: Frozen iOS name-settlement review (not qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-name-settlement-review-2026-10-29]
+
+concurrency:
+  group: frozen-ios-name-settlement-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    # One standard free public runner. No app/Simulator, signing or cache writes.
+    runs-on: macos-15
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Check out reviewed reader and exact source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify immutable intake and public-only export controls
+        shell: bash
+        run: |
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_name_settlement_review.py -v
+      - name: Decode existing failed result without executing the application
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_name_settlement.py \
+            --output "$RUNNER_TEMP/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Retain checked public screenshots and result bindings only
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: frozen-name-review-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}/receipt.json
+            ${{ runner.temp }}/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}/extracted-inputs.json
+            ${{ runner.temp }}/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}/summary.json
+            ${{ runner.temp }}/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}/tests.json
+            ${{ runner.temp }}/parlor-frozen-name-${{ github.run_id }}-${{ github.run_attempt }}/public-settlement-*.png
