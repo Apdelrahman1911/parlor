@@ -1,5 +1,12 @@
 # RPC and mobile lifecycle assessment — 2026-10-25
 
+## October 30 publication follow-up
+
+[The published rc8 reassessment](2026-10-30-PUBLISHED-RPC-REASSESSMENT.md) verifies
+post-#524 publication and target-byte availability. The rc7 observations below
+remain dated evidence, not the latest publication status. The decision to retain
+Parlor's current single-connection graph remains; no mobile RPC benefit is measured.
+
 ## Scope and decision
 
 Source inspected: Parlor `39aacd31` (PR #256), including app lifecycle bridges,
