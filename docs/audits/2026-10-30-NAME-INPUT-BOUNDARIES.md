@@ -125,3 +125,28 @@ Source archives were read-only research inputs, not new dependencies or causal
 proof. Apple's [UIKeyInput.insertText](https://developer.apple.com/documentation/uikit/uikeyinput/inserttext(_:))
 and [UIResponder.isFirstResponder](https://developer.apple.com/documentation/uikit/uiresponder/isfirstresponder)
 document public contracts, not evidence that the original input executed.
+
+## First actual Apple execution: source-set visibility failure
+
+[Diagnostic41009071161](https://github.com/Apdelrahman1911/parlor/actions/runs/41009071161)
+at harness `bf825359` finishes **failed/incomplete**, not qualified. Independent
+readback matches the exact original archive and both built-source plans, runtime
+iOS18.5/22F77/iPhone16Pro and owned cleanup receipts. The unmodified original app
+passes both existing English/Arabic journeys, zero skips. The Compose copy fails
+`:composeApp:compileKotlinIosSimulatorArm64`: common `NameInputScreen` cannot
+resolve `PIN05ObserveInput`, which was declared only in `iosMain`. Subsequent
+Composable-context errors are consequences of that missing common declaration.
+The native arm did not run; no failed-input capture or causal conclusion exists.
+ZIP SHA256 `c8bc400c028ab0d7bfe3a40a573f7e6b16fc427a14db08e6d4681e4fcc5075f1`.
+
+Correct the copied provider with a common `@Composable expect` declaration and
+its matching platform `actual` implementation, following Kotlin's
+[source-set visibility contract](https://kotlinlang.org/docs/multiplatform/multiplatform-expect-actual.html).
+Do not move platform-only request APIs into common code or make common code
+depend on an iOS declaration. Preserve the single public-field provider, forwarding,
+capture schema, original input/success paths and all existing bounds. Add a plan
+regression; execute the copied recorder in `commonTest` and the actual provider in
+`desktopTest`, rather than putting both into one Desktop source set and masking
+the original visibility defect. Fresh corrected-source controls and Apple
+application linkage are required before accepting this repair. Original failure
+evidence remains failed; no workflow retry, longer predicate or shipping edit.

@@ -94,6 +94,22 @@ class NameInputPlanControls(unittest.TestCase):
                 self.assertIn('    val pin05Owner = remember { Any() }', changed)
                 self.assertEqual(changed.count('ParlorTextField('), 1)
 
+    def test_common_name_import_has_expected_provider_with_matching_platform_actual(self):
+        sources, digests = originals()
+        for arm in ('compose', 'native'):
+            with self.subTest(arm=arm):
+                plan = name.render(sources, digests, arm=arm)
+                self.assertTrue(name.RECORDER.startswith('composeApp/src/commonMain/'))
+                self.assertTrue(name.INTERCEPTOR.startswith('composeApp/src/iosMain/'))
+                self.assertIn('import androidx.compose.runtime.Composable\n', plan[name.RECORDER])
+                self.assertEqual(plan[name.RECORDER].count(
+                    '@Composable\nexpect fun PIN05ObserveInput(content: @Composable () -> Unit)'), 1)
+                self.assertEqual(plan[name.INTERCEPTOR].count(
+                    '@Composable\nactual fun PIN05ObserveInput(content: @Composable () -> Unit)'), 1)
+                self.assertNotIn('InterceptPlatformTextInput', plan[name.RECORDER])
+                self.assertNotIn('onEditCommand', plan[name.RECORDER])
+                self.assertIn('import com.parlor.app.inputcopy.PIN05ObserveInput\n', plan[name.NAME])
+
     def test_native_queries_are_post_failure_bounded_public_booleans_only(self):
         sources, digests = originals()
         compose = name.render(sources, digests, arm='compose')[name.CONTAINER]

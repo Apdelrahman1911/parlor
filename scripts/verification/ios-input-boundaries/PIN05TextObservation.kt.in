@@ -1,5 +1,6 @@
 package com.parlor.app.inputcopy
 
+import androidx.compose.runtime.Composable
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
@@ -95,5 +96,9 @@ open class PIN05Recorder {
         })
     }.toString()
 }
+
+/** Common callers cannot reference a function declared only in iosMain. */
+@Composable
+expect fun PIN05ObserveInput(content: @Composable () -> Unit)
 
 object PIN05Observation : PIN05Recorder()

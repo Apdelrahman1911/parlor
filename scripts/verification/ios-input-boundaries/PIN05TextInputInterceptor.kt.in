@@ -34,7 +34,7 @@ fun PIN05Interceptor(recorder: PIN05Recorder): PlatformTextInputInterceptor =
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PIN05ObserveInput(content: @Composable () -> Unit) {
+actual fun PIN05ObserveInput(content: @Composable () -> Unit) {
     val interceptor = remember { PIN05Interceptor(PIN05Observation) }
     InterceptPlatformTextInput(interceptor, content)
 }
