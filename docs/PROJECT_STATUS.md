@@ -56,9 +56,27 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
 - [Supplementary name-format controls](audits/2026-10-30-SUPPLEMENTARY-NAME-CONTROLS.md),
   [#293](https://github.com/Apdelrahman1911/parlor/issues/293): actual original
   policy reproduces two failures; corrected eight methods pass, including all127
-  Unicode17 supplementary format scalars. Implemented locally; broader affected,
-  final-source and native/production qualification remain required. Intentional
-  case-sensitive names remain unchanged; no identity/keyboard repair is inferred.
+  Unicode17 supplementary format scalars. Exact `8e44800b` strict local
+  `productionCheck allTests` passes in35m55s:1,907 Desktop,692 Android per
+  Debug/Release and120 GitHub-test methods, all17 aggregates, Detekt/lint/R8/AAB,
+  shell dispatch and768 release controls. Three existing LAN skips and one exact
+  local Linux procfs capability skip remain. Native KMP readback verifies719
+  methods/137 classes, zero failures/skips and all eight name-policy methods.
+  **[Draft PR294](https://github.com/Apdelrahman1911/parlor/pull/294) is not
+  qualified:** its required full Swift suite fails before the Ghamza Host-name
+  Back tap,22 PASS/1 FAIL. Local/KMP passes cannot substitute for this gate.
+  Case-sensitive names are unchanged; no identity/keyboard repair is inferred.
+
+[Ghamza's public-information audit](audits/2026-10-30-GHAMZA-PUBLIC-INFORMATION.md)
+executes1,440 production-bytecode final-guess scenarios and960 earlier Social
+deductions. Public per-seat reports plus the last-Guest trigger make the final
+accusation mechanically certain; no private role map is needed. Existing #260
+retains this P2 balance/UX limitation, not a raw private-slice leak. Two additive
+common tests document the information model; fresh entire-module Desktop and
+all-source module Detekt pass22 methods/seven classes, zero failures/skips.
+This preparation is separate from the earlier exact-source full/native counts
+above and is not protected-main acceptance. Established shipping rules remain
+unchanged pending a justified, separately specified variant.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
 **merged and independently main-qualified through PR290**; follow
@@ -152,11 +170,17 @@ outcomes and capture custody remain unverified. Fresh final-source checks pass:
 transport385 methods (three existing LAN skips). Actual unsafe-heap/quiet-build/
 incomplete-state mutants fail their original assertions; the restored suite passes.
 One distinct [bounded-head41039233217](https://github.com/Apdelrahman1911/parlor/actions/runs/41039233217)
-is dispatched on the same standard free runner/source/runtime/device. Existing
-[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6520307035)
-retains both original failures and the new experiment; it remains open.
-No production benchmark, UIKit neutrality or failure causality is inferred;
-original failures remain failed and no workflow retry was requested.
+finishes successful on the same standard free runner/source/runtime/device.
+Independent retained readback verifies1,199 original inputs and2 EN/AR PASS per
+original/Compose/native arm, zero failures/skips. ZIP SHA256
+`f33f175942d65b3e2924e6fca23f89bd72b3dd993744f40174774db7a5ea8c02`.
+Build observations767.141/188.818/128.878s share caches; test observations are
+524.636/515.016/568.040s. These are sequential single observations, not a
+production/mobile comparative benchmark. Successful paths export no failed-input
+capture, so failure-only neutrality, full60-journey acceptance, original input
+causality and the prior build timeout remain unverified. Existing
+[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6521240049)
+retains those distinctions and remains open; no workflow retry was requested.
 See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
@@ -179,6 +203,38 @@ only a visible overlay in that frame, **not** stale-lookup or runtime causality.
 No deadline increase, replayed gestures or removed settlement checks. Original
 failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
 
+[PR29441040656557](https://github.com/Apdelrahman1911/parlor/actions/runs/41040656557)
+also remains failed: Ghamza's English Host-name Back predicate obtains identical
+48×48 frames at `(24,86)` but enabled true then false; sequential samples take
+3.8823/5.2466s and the last enabled resolution retries twice before triage.
+Shipping Back has no dynamic disabled input. This does not establish actual
+application-disabled state, lost typing or the original #267 Host-event cause.
+Seven other producers and the original optimized Apple Release join pass.
+The separate [canonical decoder41049774590](https://github.com/Apdelrahman1911/parlor/actions/runs/41049774590)
+independently binds1,283 original objects/all23 methods. The original public PNG
+and sampled movie frames were actually viewed: empty Host name, normal-looking
+Back, no visible keyboard/tutorial/overlay. Samples are not continuous playback
+or independently aligned XCTest clocks. A distinct bounded numeric-only
+[query reader41052217632](https://github.com/Apdelrahman1911/parlor/actions/runs/41052217632)
+passes on standard free macos-15. Independent readback binds all1,283 original
+objects/all23 methods and18 fixed query observations, including resolution
+retries1/2. Only start times exist; finish/duration/error evidence is absent,
+not proof of successful lookup or cause. Reader ZIP SHA256
+`27abd887d1b6c388c7580395d383e27734127e7e0db293acfeda4b5d6dccda6a`.
+The original PNG was actually viewed again and matches its prior hash exactly.
+See [the readback report](audits/2026-10-30-IOS-BACK-QUERY-READBACK.md).
+No app replay, relaxed predicate, extra tap, longer deadline or merge is admitted.
+
+Pinned Compose1.10.3 source also starts an accessibility `CADisplayLink` whose
+two-second cleanup depends on semantic updates, reads and focus. This is a
+confirmed upstream source mechanism/potential idle-work risk, **not measured
+Parlor CPU/energy or a confirmed CI cause**. Upstream
+[PR3539](https://github.com/JetBrains/compose-multiplatform-core/pull/3539) remains
+open/unmerged; its author's device measurements are not Parlor execution.
+Existing [#252](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6522090424)
+records the review. No accessibility disabling, unpublished implementation copy,
+blind dependency upgrade or unrelated background mode is introduced.
+
 ## Outstanding acceptance gates
 
 - **Release:** #230 Store identity/ownership; #258 Strict Complete Protection
@@ -194,9 +250,14 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
   neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
   scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
 - **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
-  October 29, 21:15 UTC publication recheck still lists 0.8.0-rc7, published October 23
-  before upstream #524 merged October 25; no reproducible post524 publication or
-  comparative mobile benefit established. See [the decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
+  The October30 reassessment verifies Maven Central0.8.0-rc8 now includes upstream
+  #524; **publication is no longer the blocker**. RPC owns a separate kit, with no
+  demonstrated borrowed-kit adapter or comparative mobile benefit. Parlor rc8
+  linkage and host/client mobile benchmarks have not executed. Retain the existing
+  pinned single-connection transport rather than add an unverified extra network
+  layer. Existing [#252](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6521496595)
+  records publication evidence; [the prior architecture decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md)
+  remains distinct from this newer publication reassessment.
 
 Only standard free public runners (documented 20 total / five macOS ceilings, no allocation
 guarantee), no paid infrastructure/additional agents, weakened verification or
