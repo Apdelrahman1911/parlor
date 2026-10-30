@@ -54,8 +54,8 @@ FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 PUBLIC_SETUP_PAIR_REVIEW = "ios-public-setup-pair-review.yml"
 PUBLIC_SETUP_PAIR_REVIEW_SHA256 = "c949768c410c07d91c249f1e6044165224e275106314fff736454d1f81961688"
 PUBLIC_SETUP_PAIR_REVIEW_COMPANIONS = {
-    'review_public_setup_pair_commit.py': '0c5f6afdba7a000b73194dfca8690f687dc71227e797d50f831eec509fe30d10',
-    'test_public_setup_pair_commit_review.py': 'cbeda3506087175ae2fbaabb4ae817f0134b61d3dbb1fd4704ed8d15fb492f3f',
+    'review_public_setup_pair_commit.py': '4c39679c5a5fb0e8e4a65e1e614cb666b0d743b543e711c1a35a81dcaf6393af',
+    'test_public_setup_pair_commit_review.py': '01e4d28f1f8cbf6638cff29fbbdeb5c00e97071065a851c50a5954252757643d',
 }
 
 ALLOWED_ACTIONS = {

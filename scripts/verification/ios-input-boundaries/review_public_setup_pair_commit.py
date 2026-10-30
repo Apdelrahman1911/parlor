@@ -87,6 +87,24 @@ FAILURES = {
         'en', TITLE, FAILURE, 'Tap "Open Ghamza', 'Your name'),
 }
 
+# Exact public Ghamza tap titles in the immutable original producer log. English
+# completes Host/name/Back, then opens the catalog entry again for Join; Arabic
+# fails after its first Host tap. No extra gesture or post-Ghamza typing is eligible.
+PUBLIC_SETUP_TAPS = {
+    METHOD: (
+        'Tap "افتح غمزة, غمزة, سيب الموبايل. وركّز في العيون., 3–12 لاعبين, نفس الواي فاي · جهاز لكل لاعب" Button',
+        'Tap "افتح غرفة وأظهر الرمز لأصدقائك للانضمام., استضف غرفة, أنشئ الرمز وتولَّ قيادة اللعبة., هاتف لكل لاعب" Button',
+    ),
+    'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()': (
+        'Tap "Open Ghamza, Ghamza, Phones down. Eyes open., 3–12 players, Same Wi-Fi · own devices" Button',
+        'Tap "Open a room and show a code your friends can join., Host a Room, Create the code and lead the game., One phone per player" Button',
+        'Tap "Continue and retry the real local-network operation., Continue" Button',
+        'Tap "Return to the home screen." Button',
+        'Tap "Open Ghamza, Ghamza, Phones down. Eyes open., 3–12 players, Same Wi-Fi · own devices" Button',
+        'Tap "Enter the host\'s room code to join their table., Join a Room, Enter the host’s six-character code., One phone per player" Button',
+    ),
+}
+
 def public_catalog_lines(raw):
     """Only exact source-emitted six-field settlement observations, never labels/values."""
     require(isinstance(raw, str) and len(raw.encode()) <= 1024 * 1024)
@@ -123,7 +141,10 @@ def verify_public_setup_failure(activities, method):
     require(titles.count(marker) == 1 and len(failures) == 1 and
             failures[0].startswith('XCTAssertEqual failed:') and failure in failures[0])
     opened = [i for i, title in enumerate(titles) if title.startswith(game_tap)]
-    require(len(opened) == 1)
+    expected_taps = PUBLIC_SETUP_TAPS[method]
+    require(len(opened) == sum(title.startswith(game_tap) for title in expected_taps))
+    actual_taps = tuple(title for title in titles[opened[0]:] if title.startswith('Tap '))
+    require(actual_taps == expected_taps)
     typed = [title for title in titles[:opened[0]] if title.startswith('Type ')]
     # Only the fixed earlier Dominoes public fixture may have been typed. The
     # failing Ghamza iteration has no input, submitted name/code or game state.
@@ -133,6 +154,7 @@ def verify_public_setup_failure(activities, method):
             titles.index(marker) > opened[0])
     return dict(nodes=visited, earlier_synthetic_typing_count=len(typed),
                 failing_game='ghamza', failed_method=method,
+                catalog_openings=len(opened), exact_public_setup_taps=len(actual_taps),
                 scope='Exact public setup iteration, not touch delivery or query causality')
 
 

@@ -52,3 +52,21 @@ properly registered with exact hash/companion controls, not a wildcard exception
 Final-source broader software checks and the hosted decoder remain required.
 Successful decoding would be evidence review, **not application qualification,
 native causality, a repair or authorization to merge**.
+
+## Decoder sequence correction (not a native repair)
+
+[Initial decoder41141641236](https://github.com/Apdelrahman1911/parlor/actions/runs/41141641236)
+failed closed after six successful official commands. It independently matched
+all1,307 unchanged objects/all23 methods and accepted Arabic eligibility, but
+removed every partially curated PNG when English eligibility rejected. No image
+from that incomplete decoder is accepted or viewed.
+
+Root cause: the reader required one Ghamza opening in both locales. The original
+English journey correctly opens Ghamza for Host, returns Home, then opens it for
+Join; Arabic fails after its first Host. The correction requires the **exact two
+Arabic/six English original public tap titles and order**, with exactly one/two
+catalog openings respectively. Extra/missing/reordered taps and any post-Ghamza
+typing remain rejected. Existing privacy/intake/source/device/outcome/deadline
+checks and upload allowlist are unchanged. Two new sequence/title controls add
+coverage; missing/tampered/duplicated gestures remain negative tests. A fresh
+reader head is required; original decoder/app failures remain failed.

@@ -15,7 +15,7 @@ WORKFLOW = '.github/workflows/ios-public-setup-pair-review.yml'
 WORKFLOW_SHA256 = 'c949768c410c07d91c249f1e6044165224e275106314fff736454d1f81961688'
 BINDINGS = {
     'scripts/verification/ios-input-boundaries/review_public_setup_pair_commit.py':
-        '0c5f6afdba7a000b73194dfca8690f687dc71227e797d50f831eec509fe30d10',
+        '4c39679c5a5fb0e8e4a65e1e614cb666b0d743b543e711c1a35a81dcaf6393af',
     'scripts/verification/ios-input-boundaries/review_public_catalog_commit.py':
         '97c3d176a3adf366156c6aa5bb12f246e6956e4def075e94e0c2f45aa627fe0e',
     'scripts/verification/ios-input-boundaries/review_frozen_result.py':
@@ -57,7 +57,8 @@ def results():
 
 def activities(method):
     _, title, failure, tap, _ = review.FAILURES[method]
-    return dict(testIdentifier=method, children=[dict(title=tap + ' public Button'), dict(title=title),
+    return dict(testIdentifier=method, children=[
+        *[dict(title=value) for value in review.PUBLIC_SETUP_TAPS[method]], dict(title=title),
         dict(title='XCTAssertEqual failed: ' + failure, isAssociatedWithFailure=True)])
 
 
@@ -137,6 +138,8 @@ class PublicSetupPairReviewTests(unittest.TestCase):
             result = review.verify_public_setup_failure(activities(method), method)
             self.assertEqual(result['failing_game'], 'ghamza')
             self.assertNotIn('Passed', json.dumps(result))
+            self.assertEqual(result['exact_public_setup_taps'], len(review.PUBLIC_SETUP_TAPS[method]))
+            self.assertEqual(result['catalog_openings'], 1 if method == review.METHOD else 2)
 
     def test_only_fixed_earlier_synthetic_input_is_eligible(self):
         for method, (_, _, _, _, field) in review.FAILURES.items():
@@ -155,6 +158,29 @@ class PublicSetupPairReviewTests(unittest.TestCase):
             for data in candidates:
                 with self.subTest(method=method), self.assertRaises(ValueError):
                     review.verify_public_setup_failure(data, method)
+
+    def test_english_host_then_join_requires_both_catalog_openings_in_exact_order(self):
+        method = next(m for m in review.FAILURES if m != review.METHOD)
+        data = activities(method)
+        self.assertEqual(review.verify_public_setup_failure(data, method)['catalog_openings'], 2)
+        for first, second in ((0, 1), (2, 3), (4, 5)):
+            changed = copy.deepcopy(data)
+            changed['children'][first], changed['children'][second] = (
+                changed['children'][second], changed['children'][first])
+            with self.subTest(swapped=(first, second)), self.assertRaises(ValueError):
+                review.verify_public_setup_failure(changed, method)
+        for index in range(6):
+            changed = copy.deepcopy(data); changed['children'].pop(index)
+            with self.subTest(missing=index), self.assertRaises(ValueError):
+                review.verify_public_setup_failure(changed, method)
+
+    def test_public_tap_titles_match_exact_original_producer_log_not_prefix_only(self):
+        for method in review.FAILURES:
+            for index in range(len(review.PUBLIC_SETUP_TAPS[method])):
+                for suffix in (' unexpected', ' private payload'):
+                    data = activities(method); data['children'][index]['title'] += suffix
+                    with self.subTest(method=method, index=index, suffix=suffix), self.assertRaises(ValueError):
+                        review.verify_public_setup_failure(data, method)
 
     def test_attachment_export_is_always_one_of_the_two_exact_public_methods(self):
         for method in review.FAILURES:
