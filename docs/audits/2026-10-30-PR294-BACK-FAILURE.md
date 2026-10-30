@@ -55,3 +55,21 @@ The separate bounded name diagnostic41039233217 passes2 EN/AR cases per arm,
 zero skips, but cannot qualify this failed full23-case run, failed-only capture,
 60-journey neutrality, timeout cause or mobile performance. Physical recovery,
 Strict Complete Protection and Store identity/security gates remain independent.
+
+## First decoder rejection and scoped parser correction
+
+[Reader41047930093](https://github.com/Apdelrahman1911/parlor/actions/runs/41047930093)
+finishes failed, not qualified. All four official xcresult queries exit0;
+source-bound summary/nodes verify23 methods,22 PASS/1 FAIL. The reader rejects
+while collecting more than256 activity titles from the128,352-byte English
+journey. No public PNG is uploaded. This is an incidental diagnostic title-ledger
+bound, not another application failure or native cause.
+
+The correction stops retaining unrelated titles. It keeps only scalar counts,
+the two exact original synthetic typing operations and the exact sole eligible
+failure/screenshot; traversal remains bounded to16,384 nodes/depth24 and4KiB per
+title. Private/extra/reordered typing,duplicate failures/screenshots and unsafe
+exports still reject. Executed controls include512 irrelevant public activities
+and oversized/deep/duplicate/private counterexamples. Older readers remain
+unchanged. A distinct corrected-source decoder may re-read the same immutable
+result; no application test, gesture, deadline or failing workflow is retried.

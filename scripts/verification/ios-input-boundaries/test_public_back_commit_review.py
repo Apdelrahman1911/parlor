@@ -229,5 +229,30 @@ class PublicBackCommitReviewTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             review.attachments.verify_public_failure(activity, frozen.METHOD)
 
+    def test_long_public_journey_does_not_retain_an_unbounded_title_ledger(self):
+        activity = dict(testIdentifier=review.METHOD, children=[
+            *[dict(title="Find unrelated public control") for _ in range(512)],
+            *[dict(title=x) for x in review.TYPED_TITLES], dict(title=review.TITLE),
+            dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)])
+        review.verify_public_back_failure(activity, review.METHOD)
+        for title in ("Type private value", review.TYPED_TITLES[0]):
+            changed = activity | dict(children=activity['children'] + [dict(title=title)])
+            with self.assertRaises(ValueError):
+                review.verify_public_back_failure(changed, review.METHOD)
+
+    def test_traversal_depth_count_title_size_and_duplicate_failure_remain_bounded(self):
+        activity = dict(testIdentifier=review.METHOD, children=[
+            *[dict(title=x) for x in review.TYPED_TITLES], dict(title=review.TITLE),
+            dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)])
+        deep = dict(title="Find public control")
+        for _ in range(25):
+            deep = dict(children=[deep])
+        for extras in ([deep], [dict(title="x" * 4097)],
+                       [dict(title="Find control") for _ in range(16384)],
+                       [dict(title=review.TITLE)],
+                       [dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)]):
+            with self.assertRaises(ValueError):
+                review.verify_public_back_failure(activity | dict(children=activity['children'] + extras), review.METHOD)
+
 if __name__ == '__main__':
     unittest.main()

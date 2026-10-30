@@ -96,25 +96,36 @@ def public_back_lines(raw):
 def verify_public_back_failure(activities, method):
     """Exact failed public setup, one source-pinned synthetic input; no other typing."""
     require(method == METHOD and activities.get('testIdentifier') == method)
-    titles, failures = [], []
+    # The full English journey includes an earlier complete game's public
+    # navigation. Do not retain every irrelevant activity title in a256-entry
+    # list: the real128,352-byte result exceeded that incidental ledger bound.
+    # Keep only scalar counters and the two source-pinned typing operations;
+    # total traversal/depth/title bytes and all export eligibility stay bounded.
+    visited, attachment_count, failure_count, typed = 0, 0, 0, []
     def visit(node, depth=0):
-        require(depth <= 24)
+        nonlocal visited, attachment_count, failure_count
+        visited += 1
+        require(visited <= 16384 and depth <= 24)
         if isinstance(node, dict):
             if 'title' in node:
                 title = node['title']
-                require(isinstance(title, str) and len(title.encode()) <= 4096 and len(titles) < 256)
-                titles.append(title)
+                require(isinstance(title, str) and len(title.encode()) <= 4096)
+                if title == TITLE:
+                    attachment_count += 1
+                    require(attachment_count == 1)
+                if title.startswith('Type '):
+                    require(len(typed) < len(TYPED_TITLES) and title == TYPED_TITLES[len(typed)])
+                    typed.append(title)
                 if node.get('isAssociatedWithFailure') is True:
-                    failures.append(title)
+                    failure_count += 1
+                    require(failure_count == 1 and title.startswith('XCTAssertEqual failed:') and FAILURE in title)
             for child in node.values():
                 visit(child, depth + 1)
         elif isinstance(node, list):
             for child in node:
                 visit(child, depth + 1)
     visit(activities)
-    require(titles.count(TITLE) == 1 and len(failures) == 1 and
-            failures[0].startswith('XCTAssertEqual failed:') and FAILURE in failures[0] and
-            [title for title in titles if title.startswith('Type ')] == TYPED_TITLES)
+    require(attachment_count == failure_count == 1 and typed == TYPED_TITLES)
 
 
 def validate_metadata(run, artifact):
