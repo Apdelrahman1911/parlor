@@ -1,6 +1,6 @@
 # Project status — October 30, 2026
 
-## Latest protected merge — distinct main verification pending
+## Latest independently qualified protected main (PR294)
 
 [PR294](https://github.com/Apdelrahman1911/parlor/pull/294) normally merged at
 19:48 UTC as `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
@@ -16,8 +16,12 @@ The51.4-minute wall time including queues is one source-bound free-runner
 observation, **not** a matched-source hybrid/mobile benchmark.
 Distinct automatic
 [actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
-is still pending at this local integration's preparation. Do not substitute
-PR evidence for main acceptance or claim a native keyboard/root-cause repair.
+independently qualifies the exact merged source: all eight producers/original
+optimized Apple Release join, the same complete native/runtime methods and
+source/artifact/cleanup custody. Qualification SHA256
+`57216eff6c013b37862e153645e91fdd5cf4f4f17edf927983f487b124cc1249`.
+This is distinct main acceptance, not a native keyboard/root-cause repair,
+physical-device or Store qualification.
 
 ## Prior independently qualified main (PR298)
 
@@ -60,19 +64,33 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   wire leak is demonstrated. Prior clean union `f4cd89e4` qualifies locally:
   1,911 Desktop /696 Android per Debug/Release /120 GitHub-test,777 release
   controls and450 readiness methods. Its receipts and v7 reader remain historical.
-  New local normal incorporation of protected main `35288a72` inherits the scalar
-  correction unchanged; only status/inventory conflicts require resolution.
-  This **unpublished preparation** needs fresh exact-union full local and hosted
-  qualification. Former PR298 review base is never a merge destination: retarget
-  to protected main only after separate main acceptance; keep #299/#301 open
-  through distinct actual-main verification.
+  Normally published current-main head `22c67a6c` has a genuine
+  [full41126885894](https://github.com/Apdelrahman1911/parlor/actions/runs/41126885894)
+  iOS runtime failure: **22 Swift PASS /1FAIL**, first Arabic Dominoes Home-card
+  settlement before any game-opening tap/name input/networking. All760 KMP
+  Simulator methods pass without skips; seven other producers and the optimized
+  Apple join passing cannot qualify the whole run. The immutable original
+  [decoder41135902911](https://github.com/Apdelrahman1911/parlor/actions/runs/41135902911)
+  is independently verified, not app execution or causal repair. No blind retry,
+  longer deadline, replayed tap, skipped check or merge. #299/#301 stay open.
+  A new **local, unpublished** normal integration retains all six ownership
+  files unchanged and adds [two partial-card pointer regressions](audits/2026-10-30-CATALOG-PARTIAL-POINTER.md)
+  from `7efcbd8b`:203 Compose Desktop methods and type-aware test Detekt pass,
+  including all201 prior methods and an executed two-failure dispatch-loss
+  negative control. These common UI tests do not reproduce native query causality.
+  Incorporate independently accepted current main and reverify the final union
+  before publication/required hosted/native/protected/post-main qualification.
+  PR300 already targets protected main; former review branches are not merge destinations.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) retains the
   separate [authored-text correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
-  Unpublished local `06adeb2d` incorporates the scalar parent and main normally;
-  all three authored files and16 scalar files are retained. Fresh strict local
-  gates qualify1,950 Desktop /735 Android per Debug/Release /120 GitHub-test,
-  777 release and450 readiness methods. This is not hosted/native/main or physical
-  rendering acceptance. #293 stays open; never merge into the unprotected stack.
+  Current main-based head `40ae511d` groups that policy, the exact two Ghamza
+  regressions/report-only review from295 and dated RPC documentation. Fresh exact
+  local gates qualify1,952 Desktop /737 Android per Debug/Release /120 GitHub-test,
+  777 release and450 readiness methods. Fresh full
+  [41135053853](https://github.com/Apdelrahman1911/parlor/actions/runs/41135053853)
+  is running;764 native methods remain expectations until independently read back.
+  This is not hosted/main or physical rendering acceptance. #293 stays open;
+  keep295 unchanged until protected296 plus distinct main acceptance.
 - [Draft PR295](https://github.com/Apdelrahman1911/parlor/pull/295) retains Ghamza
   public-transcript privacy regressions in unpublished local `b8e9db72`.
   Fresh strict local gates qualify1,943 Desktop /728 Android per Debug/Release
