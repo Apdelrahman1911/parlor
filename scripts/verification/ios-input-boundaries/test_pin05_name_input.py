@@ -79,6 +79,21 @@ class NameInputPlanControls(unittest.TestCase):
         for forbidden in ('launch {', 'delay(', 'TextInputService(', 'println(', 'commands.toList', 'catch ('):
             self.assertNotIn(forbidden, interceptor)
 
+    def test_interceptor_is_scoped_to_exact_public_field_not_application_or_screen(self):
+        sources, digests = originals()
+        for arm in ('compose', 'native'):
+            with self.subTest(arm=arm):
+                plan = name.render(sources, digests, arm=arm)
+                self.assertNotIn('PIN05ObserveInput', plan[name.MAIN])
+                self.assertEqual(plan[name.MAIN].count('    App()\n'), 1)
+                changed = plan[name.NAME]
+                self.assertEqual(changed.count('PIN05ObserveInput {'), 1)
+                self.assertIn('                    PIN05ObserveInput {\n                        ParlorTextField(', changed)
+                self.assertIn('                        )\n                    }\n                }\n            },\n            actions = {', changed)
+                self.assertIn('    HeroBackdrop(modifier = modifier.fillMaxSize()) {', changed)
+                self.assertIn('    val pin05Owner = remember { Any() }', changed)
+                self.assertEqual(changed.count('ParlorTextField('), 1)
+
     def test_native_queries_are_post_failure_bounded_public_booleans_only(self):
         sources, digests = originals()
         compose = name.render(sources, digests, arm='compose')[name.CONTAINER]

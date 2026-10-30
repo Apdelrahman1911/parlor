@@ -31,7 +31,9 @@ selector, typing/tap replay, retry, extended predicate, permission grant or room
 start is introduced. Diagnostic success cannot qualify production or a benchmark.
 
 The public `InterceptPlatformTextInput` API wraps only mounted public-name
-requests. Other/private screens receive the identical request unwrapped.
+requests, with its composition provider installed around the single public
+`ParlorTextField`, not `App` or the whole screen. Other/private siblings never
+inherit that provider, even while a public name remains mounted.
 Each original command list forwards once synchronously, without copying/storing
 commands, launching a coroutine, or catching the original exception/cancellation.
 Mount-ordered ownership prevents outgoing entries disarming their successors and
@@ -52,7 +54,7 @@ owned fixture sources retire and private daemon stop exits0. Restored XML SHA256
 One case-sensitive local receipt-guard mistake is retained and independently
 corrected from the executed assertion/XML, not rerun as a production failure.
 
-Seventeen new software controls cover exact plans, fixtures/templates, ownership,
+Eighteen new software controls cover exact plans, fixtures/templates, ownership,
 closed schemas, profile selection and compiler-command failures. The Apple SDK
 control typechecks both copied containers/drivers using an explicitly labelled
 three-signature Swift bridge stub: **not actual Kotlin Native linkage**. Linux
@@ -85,6 +87,34 @@ fail-closed. Additional mutations reject profile removal/addition and
 non-catalog defaults. All175 focused workflow/native-continuation controls
 pass on Linux. A fresh complete strict gate is still required on the final
 corrected commit; none of this establishes native input causality.
+
+## Public-field scope regression
+
+Before publishing, an additional actual Compose/Skiko control mounted the
+complete copied public Name screen alongside an empty synthetic private editor.
+Real focus started exactly one platform input session. The field-scoped observer
+recorded no private session. An executed application-wide-provider counterfactual
+failed that same zero-session assertion while the public owner remained mounted:
+owner presence alone does not identify which field requested input. This was an
+unpublished diagnostic-scope risk, not a shipping input repair or evidence that
+private user content had been collected.
+
+Move the provider from `App` to the exact public name field. All original
+sanitization, confirmation, focus-clearing and keyboard-hiding actions remain
+single and unchanged. Seven actual copied Kotlin/Skiko controls pass, the global
+counterfactual fails, and restored seven pass again, zero skips. Restored XML
+SHA256 `15071e9c964ca5a79a163bd80d611ce419e2eba525717f89fd75188a1efcd6a6`.
+The first added control had an overload-argument compilation mistake; using the
+explicit `timeoutMillis` parameter fixes it without extending its five-second
+software-control bound or changing the original ten-second native predicate.
+Original failed evidence remains retained.
+
+The prior corrected commit `1a29bbed` independently passed full strict
+`productionCheck allTests`:1,904 Desktop,689 Android Debug and Release each,
+120 GitHub-test and768 release controls. Its cold local duration after authorized
+cache removal is not a hosted-runner benchmark. The final field-scope correction
+requires fresh affected/full gates and actual Apple execution; none of these
+software controls prove native neutrality or resolve #267/#276.
 
 ## API basis
 

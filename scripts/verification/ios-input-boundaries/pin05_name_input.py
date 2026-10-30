@@ -38,7 +38,7 @@ MAX_BYTES = 128 * 1024
 TEMPLATES = {
     'PIN05TextObservation.kt.in': '88ceae03dc07cba145d32c8c6c8de58de1b976f3d3183ca8ab6174461a3a6efe',
     'PIN05TextInputInterceptor.kt.in': '282e8795c19940e4013f0173f694b0fbaebd44408aa5674c75e3984575aa8f48',
-    'PIN05TextInputControlTest.kt.in': '77bcea0365b83978baac69a8d85657eda3ba2b53714209ddd5f96c97791e5a38',
+    'PIN05TextInputControlTest.kt.in': '8c8ad29cfacdfb0721d5d93382c702d86cd0b36ee60edfa431622f11da43e949',
     'PIN02Capture.swift.in': '4a3814846d15f854f2e7ad2510fa04795a220ed55f0d65793ee185e8d5716433',
     'PIN02FailureRequest.swift.in': '07a613781ea793d323f7a54aede4dba8c94281bbc0ff94b18b437e1d71391740',
 }
@@ -89,13 +89,11 @@ def render(sources, digests, *, arm):
     result = dict(sources)
     main = once(sources[MAIN], 'import androidx.compose.ui.window.ComposeUIViewController\n',
                 'import androidx.compose.ui.window.ComposeUIViewController\n'
-                'import com.parlor.app.inputcopy.PIN05ObserveInput\n'
                 'import com.parlor.app.inputcopy.PIN05Observation\n')
     main = once(main, '        startKoinOnce()\n',
                 '        PIN05Observation.clock = { platform.Foundation.NSProcessInfo.processInfo.systemUptime * 1000.0 }\n'
                 f'        PIN05Observation.nativeMode = {1 if arm == "native" else 0}\n'
                 '        startKoinOnce()\n')
-    main = once(main, '    App()\n', '    PIN05ObserveInput { App() }\n')
     main += '''
 fun PIN05InputSnapshot(): String {
     check(platform.Foundation.NSThread.isMainThread)
@@ -115,7 +113,8 @@ fun PIN05RejectNativeStatus() {
                 'import androidx.compose.runtime.Composable\n'
                 'import androidx.compose.runtime.DisposableEffect\n'
                 'import androidx.compose.runtime.SideEffect\n'
-                'import com.parlor.app.inputcopy.PIN05Observation\n')
+                'import com.parlor.app.inputcopy.PIN05Observation\n'
+                'import com.parlor.app.inputcopy.PIN05ObserveInput\n')
     name = once(name, '    var name by remember { mutableStateOf(initial) }\n',
                 '    var name by remember { mutableStateOf(initial) }\n'
                 '    val pin05Owner = remember { Any() }\n'
@@ -128,6 +127,16 @@ fun PIN05RejectNativeStatus() {
                 '                            PIN05Observation.callback(pin05Owner, 0, input.isEmpty())\n'
                 '                            name = RoomInputPolicy.sanitizeDisplayNameInput(input)\n'
                 '                            PIN05Observation.callback(pin05Owner, 1, name.isEmpty())\n')
+    # Scope to this one public field, not an armed owner across the application.
+    begin = name.index('                    ParlorTextField(\n')
+    end = name.index('                }\n            },\n            actions = {', begin)
+    field = name[begin:end]
+    require(field.startswith('                    ParlorTextField(\n') and
+            field.endswith('                    )\n'), 'Exact public field boundary changed')
+    scoped = ('                    PIN05ObserveInput {\n' +
+              ''.join('    ' + line for line in field.splitlines(keepends=True)) +
+              '                    }\n')
+    name = name[:begin] + scoped + name[end:]
     result[NAME] = name
     container = pin02_capture.render_container(sources[CONTAINER])
     require(container.endswith('\n' + templates['PIN02Capture.swift.in']),

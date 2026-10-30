@@ -1,6 +1,26 @@
 package com.parlor.app.inputcopy
 
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.InterceptPlatformTextInput
+import androidx.compose.ui.platform.PlatformTextInputInterceptor
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.AppLanguage
+import com.parlor.designsystem.localization.ProvideAppLanguage
+import com.parlor.designsystem.theme.ParlorTheme
+import kotlinx.coroutines.awaitCancellation
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.PlatformTextInputMethodRequest
 import androidx.compose.ui.platform.PlatformTextInputSession
@@ -28,7 +48,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 /** Actual copied Kotlin/Skiko implementation controls, not native keyboard delivery. */
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalTestApi::class)
 class PIN05TextInputControlTest {
     @Test
     fun same_command_list_is_forwarded_once_and_cancellation_is_preserved() = runTest {
@@ -157,6 +177,49 @@ class PIN05TextInputControlTest {
         invalid.callback(owner, 0, true)
         assertEquals(1, (json(invalid).getValue("invalid") as JsonPrimitive).int)
         assertEquals(1, rows(invalid).size)
+    }
+
+    @Test
+    fun private_sibling_session_bypasses_public_observer_while_name_is_mounted() = runComposeUiTest {
+        val observeWholeTree = false // Executed counterfactual toggles ONLY this fixture root.
+        var requests = 0
+        setContent {
+            ProvideAppLanguage(AppLanguage.English) {
+                ParlorTheme {
+                    InterceptPlatformTextInput(
+                        remember {
+                            PlatformTextInputInterceptor { _, _ ->
+                                requests++ // Invocation only; never read/store request properties.
+                                awaitCancellation()
+                            }
+                        },
+                    ) {
+                        val content: @Composable () -> Unit = {
+                            Row {
+                                Box(Modifier.size(400.dp, 600.dp)) {
+                                    PIN05NameInputScreenFixture(false, "", {}, {})
+                                }
+                                BasicTextField(
+                                    value = "", onValueChange = {},
+                                    modifier = Modifier.size(260.dp, 100.dp).testTag("pin05-private-sibling"),
+                                )
+                            }
+                        }
+                        if (observeWholeTree) PIN05ObserveInput(content) else content()
+                    }
+                }
+            }
+        }
+        waitForIdle()
+        assertTrue(PIN05Observation.owner() != null, "Public name must remain mounted for this control")
+        assertEquals(0, requests, "No session may be inferred before actual focus")
+        onNodeWithTag("pin05-private-sibling").performClick()
+        waitUntil(timeoutMillis = 5_000) { requests == 1 }
+        onNodeWithTag("pin05-private-sibling").assertIsFocused()
+        assertEquals(
+            0, kinds(PIN05Observation).count { it == 2 },
+            "Only the public name field may observe text sessions; private siblings must bypass it",
+        )
     }
 
     private fun recorder() = PIN05Recorder().apply { clock = { 10.0 } }
