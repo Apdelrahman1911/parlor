@@ -1,6 +1,41 @@
 # Project status — October 30, 2026
 
-## Completed checkpoint and evidence
+## Latest independently qualified checkpoint
+
+[PR292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
+`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, tree
+`4d27c827b8189ffc49af8a07547c64e272af89c1`. Distinct automatic
+[actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
+independently qualifies all eight producers/original optimized Apple Release join:
+23 Swift /716 source-derived KMP Simulator /450 readiness methods, zero Apple
+skips, exact source/artifact/native/cleanup custody. Qualification SHA256
+`3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
+All nine name-setup pointer methods execute on all four Desktop hosts. This accepts
+regression tests, not a native keyboard repair or the original #267/#276 cause.
+The workflow's52.6 minutes including queues is one source-bound free-runner
+observation, not statistical/device benchmarking; hybrid draft291 remains unqualified.
+
+## Current unmerged follow-ups
+
+- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
+  authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
+  local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
+  release controls, with three established LAN skips and one exact local procfs
+  capability skip;450 software readiness methods/six Apple-only Linux skips.
+  This is not hosted/native/main or physical rendering qualification. #293 stays
+  open;295 is unchanged. [Source-bound report](https://github.com/Apdelrahman1911/parlor/blob/65f4a8eecc2fc8205b30d594e6d5712959c75e3a/docs/audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
+- PR294's fresh changed-source41079982618 Linux job fails during the late API34
+  image installation, after successful full root gates and the Release smoke
+  invocation. The whole run cannot qualify, regardless of other producer results.
+  [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
+  missing upfront API34 provisioning/revision pin; a separate main-based scoped
+  correction preserves both runtime lanes, Release optimizations and free runners.
+  Nine new software controls plus88 existing workflow methods pass; final-source
+  full/runtime/native/protected integration remains required. The failed archive's
+  bytes are unavailable; a current valid official download does not establish its
+  cause. No blind retry, parent merge or Store release occurred.
+
+## Prior accepted checkpoint (PR290)
 
 [PR #290](https://github.com/Apdelrahman1911/parlor/pull/290) normally merged as
 `26eb15b630d9348fa5964b012c27a703e6c4fe06`, qualified tree
