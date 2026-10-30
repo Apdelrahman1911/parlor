@@ -106,14 +106,26 @@ not run. This diagnostic source-set defect is not a shipping keyboard diagnosis.
 Original ZIP SHA256
 `c8bc400c028ab0d7bfe3a40a573f7e6b16fc427a14db08e6d4681e4fcc5075f1`.
 
-Local corrected harness `def043d3` adds the common `@Composable expect` provider
+Corrected harness `def043d3` adds the common `@Composable expect` provider
 and matching platform `actual`, retaining field-only scope, forwarding, privacy
 schemas and all original input/deadline paths. Seven actual copied controls pass
 with the recorder in `commonTest` and provider in `desktopTest`; the whole-tree
 counterfactual fails its private-sibling assertion and restored seven pass.
-Complete common-caller compiler sensitivity, corrected final-source gates and
-fresh Apple application linkage remain pending. Prior full gates/468 readiness
-controls are evidence for `bf825359`, not certification of the corrected harness.
+Complete copied Name screen and recorder in `commonTest`, platform provider in
+`desktopTest`: seven PASS; removing the common contract reproduces compiler
+rejection before runtime; restored seven PASS. Fresh affected strict suites run
+201 shipping Compose/385 docs-sensitive transport methods (three existing LAN
+skips),768 release controls (one unavailable local Linux procfs child-list
+capability, **not an Apple-only skip**). Full469 readiness and107 standalone
+controls pass with seven/four exact Apple-only skips. Unaffected full graph reuse
+stays bound to `bf825359`; it is not relabeled as newly executed final-source tests.
+
+One explicit [corrected-head diagnostic41017156382](https://github.com/Apdelrahman1911/parlor/actions/runs/41017156382)
+now runs on the same standard free runner/source/runtime/device. Independent
+final-source/template/actual-control/readback evidence qualifies its local
+preparation, not Apple app linkage, three-arm outcomes or capture custody, which
+remain pending. Existing [#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6516950898)
+is updated with the separate failure and exact correction; it remains open.
 No production benchmark, UIKit neutrality or failure causality is inferred;
 original failures remain failed and no workflow retry was requested.
 See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
@@ -174,3 +186,9 @@ checkout and active diagnostic worktree remain. Current checks regenerate
 disposable caches/build outputs; retire those only after their processes stop and
 important results are retained. Cleanup does not complete the overhaul or its
 physical/security/Store gates.
+
+After corrected-source tests stop and their logs/XML are retained, an additional
+**4.08 GiB** of regenerated build/Gradle caches and2.7MB of script bytecode are
+retired. Main plus active diagnostic checkouts total approximately3.4GiB, including
+retained unresolved evidence; global Gradle state is16KiB. This later reclamation
+is regenerated data, not an additional unique portion of the original project.
