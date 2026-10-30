@@ -71,6 +71,15 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   its719-method KMP pass and successful read-only decoder do not qualify that run
   or explain its cause. PR294 remains draft/unmerged. Intentional
   case-sensitive names remain unchanged; no identity/keyboard repair is inferred.
+- [Authored-text scalar correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md)
+  extends the same #293 finding to case summaries and Whodunit public payload
+  text/tags. Actual original typed regressions reproduce six failures across
+  nine methods; corrected complete content30 /Whodunit382 Desktop methods and
+  both modules' all-source Detekt pass, zero failures/errors/skips. The policy
+  shares scalar safety, not display-name normalization/length limits. This is
+  local preparation on the PR294 stack, not parent/native/main qualification.
+  Fresh final-source/full/native integration remains a separate gate; no remote
+  content, unsafe bundled data, physical rendering or native Back cause is claimed.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
 **merged and independently main-qualified through PR290**; follow
