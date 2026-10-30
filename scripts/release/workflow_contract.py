@@ -147,6 +147,49 @@ def validation_step(text: str, name: str) -> str:
     return text.split(marker, 1)[1].split("\n      - ", 1)[0]
 
 
+def verify_android_sdk_provisioning(text: str, job_name: str = "desktop-android") -> None:
+    """Both existing runtime lanes must be provisioned/revision-checked up front."""
+    if job_name not in {"desktop-android", "preflight"}:
+        fail("Android SDK provisioning has an unreviewed job")
+    job = validation_job(text, job_name)
+    block = validation_step(job, "Install pinned Android SDK packages")
+    expected = r'''        timeout-minutes: 11
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          managed_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)
+          test "$managed_device_image" = "system-images;android-35;google_apis;x86_64"
+          navigation_device_image=$(jq -r '.toolchains.android_navigation_device.system_image_package' config/release-policy.json)
+          test "$navigation_device_image" = "system-images;android-34;google_apis;x86_64"
+          # Install both required lanes before spending time on compilation.
+          # Do not let AGP fetch an unreviewed/missing image halfway through tests.
+          /usr/bin/timeout --signal=TERM --kill-after=10s 600s \
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "platform-tools" \
+            "emulator" \
+            "$managed_device_image" \
+            "$navigation_device_image"
+          image_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
+          image_properties="${ANDROID_HOME}/system-images/android-34/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_navigation_device.system_image_revision' config/release-policy.json)"
+'''
+    if job_name == "desktop-android":
+        expected = "        if: " + ANDROID_RUNTIME_SCOPE + "\n" + expected
+    if block != expected:
+        fail("Android SDK provisioning must retain bounded installation of both reviewed images and exact revision guards")
+
+
 def validation_job(text: str, name: str) -> str:
     """Keep checks inside one job even when lifecycle step names are shared."""
     marker = f"\n  {name}:\n"
@@ -936,6 +979,7 @@ def verify_validation(text: str) -> None:
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
     verify_android_runtime_smoke("production-verification.yml", text)
+    verify_android_sdk_provisioning(text)
     desktop_android_marker = "\n  desktop-android:"
     next_job_marker = "\n  desktop-linux-arm64:"
     if desktop_android_marker not in text or next_job_marker not in text:
@@ -1218,6 +1262,7 @@ def verify_candidate(text: str) -> None:
     if "secrets." in preflight:
         fail("candidate control/preflight job must not receive or reference Store secrets")
     verify_android_runtime_smoke("testing-candidate.yml preflight", preflight)
+    verify_android_sdk_provisioning(text, "preflight")
     if "candidate_sha" not in text or "^[0-9a-f]{40}$" not in text:
         fail("candidate workflow does not require an exact full commit SHA")
     if "testing-android" not in text or "testing-ios" not in text:
@@ -1328,6 +1373,11 @@ def verify_policy() -> None:
     }
     if managed_device != expected_managed_device:
         fail("release policy does not pin the reviewed Android managed device")
+    expected_navigation_device = dict(expected_managed_device, api_level=34,
+                                      system_image_package="system-images;android-34;google_apis;x86_64",
+                                      system_image_revision="14")
+    if policy.get("toolchains", {}).get("android_navigation_device") != expected_navigation_device:
+        fail("release policy does not pin the reviewed Android navigation managed device")
     if android["debug_application_id"] == android["store_application_id"]:
         fail("Android Debug identity is not isolated")
     if ios["debug_bundle_id"] == ios["store_bundle_id"]:
