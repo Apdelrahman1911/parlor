@@ -36,16 +36,25 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 - [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) /
   [Issue299 roster ownership](audits/2026-10-30-INITIAL-ROSTER-OWNERSHIP.md):
   four common regressions reproduce Mafia/Whodunit caller-mutable roster aliasing;
-  scoped code `4564ffe2` owns/validates one snapshot. Clean committed `3cef73e3`
+  scoped code `4564ffe2` owns/validates one snapshot. Main-integrated clean `15aa4d05`
   passes complete strict local gates:1,908 Desktop /693 Android per Debug/Release
   /120 GitHub-test /777 release /450 readiness methods. Only three established
   LAN, one exact procfs-capability and six Apple-only Linux readiness skips remain.
-  This branch now incorporates merged main `71c3f7cc` locally without code or
-  gameplay changes; fresh exact-source verification remains required. Its current
-  PR review base is the former PR298 branch, **never a merge destination**;
-  retarget to main and require full fresh hosted/native/protected verification.
-  No transport privacy bypass or physical incident is demonstrated. #299 stays open
-  until separate scoped actual-main acceptance.
+  PR300 now groups the related #299/#301 input-ownership corrections locally;
+  fresh exact-union full/hosted/native/protected/actual-main gates remain required.
+  Its former PR298 review base is **never a merge destination**; retarget to main
+  before qualification. No transport privacy bypass or physical incident is
+  demonstrated. #299 stays open until scoped actual-main acceptance.
+- [Issue301 host coordinator input ownership](audits/2026-10-30-HOST-COORDINATOR-INPUT-OWNERSHIP.md):
+  original caller-owned peer/start collections reproduce three exact assertion
+  failures. Scoped `7518ad1c` captures fixed authorization/outbound seats and the
+  validated start roster. Complete affected preparation passes166 Desktop /163
+  Android per Debug/Release and explicit type-aware Detekt, zero failures/skips.
+  Fresh final-clean full/hosted/native/protected/actual-main qualification remains
+  required; no external exploit, private wire delivery or physical incident is
+  demonstrated. #301 stays open; its correction is grouped in draft PR300, not a
+  separate hosted matrix. Independent preparation receipts do not qualify the union.
+  Original failed/pending hosted runs are not relabeled successes.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
   authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
   local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
@@ -59,8 +68,8 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
   missing upfront API34 provisioning/revision pin; a separate main-based scoped
   correction preserves both runtime lanes, Release optimizations and free runners.
-  PR298's protected merge/complete PR qualification are recorded above, with
-  distinct actual-main acceptance pending at preparation. The failed archive's
+  PR298's protected merge/complete PR qualification are recorded above;
+  distinct actual-main acceptance remains pending at preparation. The failed archive's
   bytes are unavailable; a current valid official download does not establish its
   cause. No blind retry, parent merge or Store release occurred.
 
