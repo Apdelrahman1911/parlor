@@ -28,6 +28,7 @@ internal class AppLifecycleRoomCoordinator(
     private val scope: CoroutineScope,
     private val nowMillis: () -> Long = { kotlin.time.Clock.System.now().toEpochMilliseconds() },
     private val onFailure: (Exception) -> Unit = {},
+    private val elapsedMillis: () -> Long = ::platformRecoveryElapsedMillis,
 ) {
     private data class ActiveRoom(
         val registrationId: String,
@@ -44,6 +45,7 @@ internal class AppLifecycleRoomCoordinator(
         val startedAt: Long,
         val deadline: Long,
         val connection: RetainedRoomConnection,
+        val budget: ConnectionGraceBudget,
         var job: Job? = null,
     )
 
@@ -59,14 +61,19 @@ internal class AppLifecycleRoomCoordinator(
         } ?: return
         val deadline = atEpochMillis + CONNECTION_GRACE_MS
         val observedAt = nowMillis()
-        val connection = if (observedAt in atEpochMillis until deadline) {
+        val budget = ConnectionGraceBudget(atEpochMillis, deadline, observedAt, elapsedMillis)
+        val connection = if (budget.remaining(observedAt) > 0L) {
             attemptRetention { owner.room.retainInBackground(atEpochMillis, deadline) }
         } else null
         if (connection == null) {
-            owner.room.appBackgrounded(atEpochMillis, maxOf(atEpochMillis, observedAt))
+            owner.room.appBackgrounded(atEpochMillis, maxOf(atEpochMillis, budget.observedAt(observedAt)))
             return
         }
-        val pending = Retention(owner, atEpochMillis, deadline, connection)
+        if (budget.remaining(nowMillis()) <= 0L) {
+            owner.room.appBackgrounded(atEpochMillis, budget.observedAt(nowMillis()))
+            return
+        }
+        val pending = Retention(owner, atEpochMillis, deadline, connection, budget)
         val accepted = stateMutex.withLock {
             if (activeRoom !== owner) false else true.also { retention = pending }
         }
@@ -83,10 +90,14 @@ internal class AppLifecycleRoomCoordinator(
         val room = owner?.room ?: return
         val observedAt = maxOf(atEpochMillis, nowMillis())
         if (pending != null && pending.owner === owner) {
-            val restored = observedAt in pending.startedAt until pending.deadline &&
-                attemptRetention { room.resumeRetainedConnection(observedAt) } == true
+            val restored = pending.budget.remaining(observedAt) > 0L &&
+                attemptRetention { room.resumeRetainedConnection(observedAt) } == true &&
+                pending.budget.remaining(nowMillis()) > 0L
             if (restored) return
-            room.appBackgrounded(pending.startedAt, maxOf(observedAt, nowMillis()))
+            val recoveryObservedAt = pending.budget.observedAt(maxOf(observedAt, nowMillis()))
+            room.appBackgrounded(pending.startedAt, recoveryObservedAt)
+            room.appForegrounded(maxOf(recoveryObservedAt, nowMillis()))
+            return
         }
         room.appForegrounded(maxOf(observedAt, nowMillis()))
     }
@@ -99,7 +110,7 @@ internal class AppLifecycleRoomCoordinator(
         try {
             val previous = stateMutex.withLock { retention.also { retention = null } }
             previous?.job?.cancel()
-            previous?.let { it.owner.room.appBackgrounded(it.startedAt, nowMillis()) }
+            previous?.let { it.owner.room.appBackgrounded(it.startedAt, it.budget.observedAt(nowMillis())) }
             val backgroundedAt = stateMutex.withLock {
                 activeRoom = ActiveRoom(registrationId, room)
                 lastBackgroundedAt.takeIf { appIsBackgrounded }
@@ -129,7 +140,7 @@ internal class AppLifecycleRoomCoordinator(
 
     private suspend fun startRetention(pending: Retention) {
         val job = scope.launch(start = CoroutineStart.LAZY) {
-            val lost = withTimeoutOrNull((pending.deadline - nowMillis()).coerceAtLeast(1L)) {
+            val lost = withTimeoutOrNull(pending.budget.remaining(nowMillis())) {
                 pending.connection.health.first { !it }
                 true
             } == true
@@ -142,7 +153,8 @@ internal class AppLifecycleRoomCoordinator(
                         } else false
                     }
                     if (ownsRoom) {
-                        val observedAt = if (lost) nowMillis() else maxOf(nowMillis(), pending.deadline)
+                        val elapsedObservedAt = pending.budget.observedAt(nowMillis())
+                        val observedAt = if (lost) elapsedObservedAt else maxOf(elapsedObservedAt, pending.deadline)
                         pending.owner.room.appBackgrounded(pending.startedAt, observedAt)
                     }
                 }

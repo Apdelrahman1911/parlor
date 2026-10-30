@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 class AppLifecycleConnectionGraceTest {
     @Test
     fun shortReturnValidatesWithoutSuspendingAndCancelsOldTimer() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom()
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -29,7 +29,7 @@ class AppLifecycleConnectionGraceTest {
 
     @Test
     fun fifteenSecondDeadlineIsNotExtendedByDuplicateBackground() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom()
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -46,7 +46,7 @@ class AppLifecycleConnectionGraceTest {
 
     @Test
     fun knownLossSuspendsImmediatelyNotAtTheGraceDeadline() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom()
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -62,7 +62,7 @@ class AppLifecycleConnectionGraceTest {
     @Test
     fun elapsedDeadlineIsCheckedWhenTheSchedulerNeverRanWhileAsleep() = runTest {
         var wallTime = 0L
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { wallTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { wallTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom()
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -75,7 +75,7 @@ class AppLifecycleConnectionGraceTest {
 
     @Test
     fun replacementGetsNoFreshGraceAndOldTimerCannotSuspendIt() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val old = GraceRoom()
         val replacement = GraceRoom()
         coordinator.register("one", old)
@@ -96,7 +96,7 @@ class AppLifecycleConnectionGraceTest {
 
     @Test
     fun failedValidationUsesOriginalBackgroundTimeForHardRecovery() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom(validates = false)
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -108,7 +108,7 @@ class AppLifecycleConnectionGraceTest {
 
     @Test
     fun closingRoomCancelsRetentionAndNeverRevivesIt() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime })
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime })
         val room = GraceRoom()
         coordinator.register("one", room)
         coordinator.backgrounded(0L)
@@ -121,7 +121,56 @@ class AppLifecycleConnectionGraceTest {
         assertEquals(0, room.validations)
     }
 
-    private class GraceRoom(private val validates: Boolean = true) : AppLifecycleAwareRoom, RetainedRoomConnection {
+    @Test
+    fun elapsedDeadlineRejectsRetainedValidationBeforeThePendingTimerRuns() = runTest {
+        var elapsed = 0L
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { 0L }, elapsedMillis = { elapsed })
+        val room = GraceRoom()
+        coordinator.register("one", room)
+        coordinator.backgrounded(0L)
+        elapsed = 15_000L
+        coordinator.foregrounded(0L)
+        assertEquals(0, room.validations)
+        assertEquals(listOf(0L to 15_000L), room.suspensions)
+        assertEquals(listOf(15_000L), room.foregrounds)
+    }
+
+    @Test
+    fun delayedTimerStartsWithOnlyTheOriginalElapsedRemainder() = runTest {
+        var offset = 0L
+        val coordinator = AppLifecycleRoomCoordinator(
+            backgroundScope, { testScheduler.currentTime }, elapsedMillis = { testScheduler.currentTime + offset },
+        )
+        val room = GraceRoom()
+        coordinator.register("one", room)
+        coordinator.backgrounded(0L)
+        offset = 10_000L
+        runCurrent()
+        advanceTimeBy(4_999L)
+        runCurrent()
+        assertEquals(emptyList(), room.suspensions)
+        advanceTimeBy(1L)
+        runCurrent()
+        assertEquals(listOf(0L to 15_000L), room.suspensions)
+    }
+
+    @Test
+    fun aSlowRetentionCallCannotStartAFreshTimerAfterItsElapsedBudget() = runTest {
+        var elapsed = 0L
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, { 0L }, elapsedMillis = { elapsed })
+        val room = GraceRoom(onRetain = { elapsed = 20_000L })
+        coordinator.register("one", room)
+        coordinator.backgrounded(0L)
+        assertEquals(listOf(0L to 20_000L), room.suspensions)
+        coordinator.foregrounded(0L)
+        assertEquals(0, room.validations)
+        assertEquals(listOf(0L), room.foregrounds)
+    }
+
+    private class GraceRoom(
+        private val validates: Boolean = true,
+        private val onRetain: () -> Unit = {},
+    ) : AppLifecycleAwareRoom, RetainedRoomConnection {
         override val health = MutableStateFlow(true)
         val suspensions = mutableListOf<Pair<Long, Long>>()
         val foregrounds = mutableListOf<Long>()
@@ -130,6 +179,7 @@ class AppLifecycleConnectionGraceTest {
 
         override suspend fun retainInBackground(atEpochMillis: Long, deadlineEpochMillis: Long): RetainedRoomConnection {
             retentions++
+            onRetain()
             return this
         }
 

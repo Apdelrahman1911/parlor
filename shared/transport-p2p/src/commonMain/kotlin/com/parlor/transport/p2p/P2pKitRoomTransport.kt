@@ -188,9 +188,9 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         capacity = APP_LIFECYCLE_EVENT_CAPACITY,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    private val lifecycleRooms = AppLifecycleRoomCoordinator(scope, ::nowMillis) {
+    private val lifecycleRooms = AppLifecycleRoomCoordinator(scope, ::nowMillis, onFailure = {
         diagnostics.event(P2pDiagnosticEventName.CLEANUP_FAILED, reason = P2pDiagnosticReason.LIFECYCLE)
-    }
+    })
 
     init {
         scope.launch {
@@ -1823,7 +1823,7 @@ internal class HostP2pRoom(
     private val _pendingAdmissions = MutableStateFlow<List<PendingAdmission>>(emptyList())
     private val _peerEvents = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 64)
     private val _lifecycle = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
-    private val connectionRetention = BackgroundConnectionRetention(currentTimeMillis)
+    private val connectionRetention = BackgroundConnectionRetention(currentTimeMillis, recoveryElapsedMillis)
 
     override val info = _info.asStateFlow()
     override val members = _members.asStateFlow()
@@ -3856,7 +3856,7 @@ internal class PeerP2pRoom(
     )
     private val _peerEvents = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 64)
     private val _lifecycle = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
-    private val connectionRetention = BackgroundConnectionRetention(currentTimeMillis)
+    private val connectionRetention = BackgroundConnectionRetention(currentTimeMillis, recoveryElapsedMillis)
 
     override val info = _info.asStateFlow()
     override val members = _members.asStateFlow()

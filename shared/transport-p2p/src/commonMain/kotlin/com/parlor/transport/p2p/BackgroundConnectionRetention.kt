@@ -16,7 +16,10 @@ internal interface RetainedRoomConnection {
 }
 
 /** One bounded, never-retired set of authenticated sockets; not OS background execution. */
-internal class BackgroundConnectionRetention(private val nowMillis: () -> Long) {
+internal class BackgroundConnectionRetention(
+    private val nowMillis: () -> Long,
+    private val elapsedMillis: () -> Long = ::platformRecoveryElapsedMillis,
+) {
     private class Registration(val validator: ForegroundConnectionValidator)
 
     private sealed interface Presence {
@@ -25,8 +28,7 @@ internal class BackgroundConnectionRetention(private val nowMillis: () -> Long) 
     }
 
     private class Retained(
-        val startedAt: Long,
-        val deadline: Long,
+        val budget: ConnectionGraceBudget,
         val sessions: List<P2pSession>,
         val registration: Registration,
     ) : Presence, RetainedRoomConnection {
@@ -64,7 +66,9 @@ internal class BackgroundConnectionRetention(private val nowMillis: () -> Long) 
         suspendLocked()
         val owner = registration.value?.takeIf { it.validator.ready } ?: return@withLock null
         if (sessions.isEmpty()) return@withLock null
-        val retained = Retained(startedAt, deadline, sessions.toList(), owner)
+        val retained = Retained(
+            ConnectionGraceBudget(startedAt, deadline, nowMillis(), elapsedMillis), sessions.toList(), owner,
+        )
         if (!eligible(retained, nowMillis())) return@withLock null
         presence.value = retained
         retained
@@ -79,7 +83,7 @@ internal class BackgroundConnectionRetention(private val nowMillis: () -> Long) 
         val retained = presence.value as? Retained ?: return false
         val observedAt = maxOf(atEpochMillis, nowMillis())
         if (!eligible(retained, observedAt)) return false
-        return withTimeoutOrNull(minOf(VALIDATION_TIMEOUT_MS, retained.deadline - observedAt)) {
+        return withTimeoutOrNull(minOf(VALIDATION_TIMEOUT_MS, retained.budget.remaining(observedAt))) {
             if (!retained.registration.validator.validate() || !eligible(retained, maxOf(atEpochMillis, nowMillis()))) {
                 return@withTimeoutOrNull false
             }
@@ -108,7 +112,7 @@ internal class BackgroundConnectionRetention(private val nowMillis: () -> Long) 
     }
 
     private fun eligible(retained: Retained, observedAt: Long): Boolean =
-        observedAt >= retained.startedAt && observedAt < retained.deadline &&
+        retained.budget.remaining(observedAt) > 0L &&
             retained.healthy() && registration.value === retained.registration && retained.registration.validator.ready
 
     private companion object {

@@ -54,6 +54,12 @@ The later 15:26 UTC checkpoint at source `5958f928` is retained unchanged in
 It predates PR #288 post-merge acceptance and completion of the original-runtime
 diagnostic. Neither this snapshot nor a later diagnostic pass qualifies new source.
 
+The subsequent accumulated status at merged source `c81f75b4` is preserved
+byte-for-byte in
+[history/PROJECT_STATUS_2026-10-29_c81f75b4.md](history/PROJECT_STATUS_2026-10-29_c81f75b4.md).
+It still described PR #289 as draft and predates that merge's actual-main acceptance.
+Its original relative links and historical result boundaries are unchanged.
+
 ## Preservation and reproduction
 
 The pre-cleanup layout is available at commit

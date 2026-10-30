@@ -183,7 +183,39 @@ Old diagnostics do not qualify a newer candidate. No extra agents or paid
 infrastructure are used; local cache reuse is not a controlled speed benchmark.
 
 Original iOS26.2 diagnostic40889770560 has six passes, but none triggered failed-
-only captures/exports. Recorder callbacks/export pipeline, full60-journey neutrality
+only captures/exports. Recorder callbacks/export pipeline, full 60-journey neutrality
 and original input causality remain unproven. #267/#276, physical six-game lifecycle/
 accessibility/energy, #258 Strict Complete Protection and Store ownership/signing/
 legal/security approvals remain separate gates.
+
+
+## Protected integration and distinct actual-main acceptance
+
+[PR #289](https://github.com/Apdelrahman1911/parlor/pull/289) normally merged at
+22:19 UTC as `c81f75b4f119a6a896cedf89fc13511c10f24cb2`, tree
+`5229e18fb2f74a69086b9210addc7883a0ef45ce`. Fresh
+[PR40953635018](https://github.com/Apdelrahman1911/parlor/actions/runs/40953635018)
+and **distinct automatic
+[actual-main40964941119](https://github.com/Apdelrahman1911/parlor/actions/runs/40964941119)**
+each independently qualify all eight producers/original Apple Release join,
+23 Swift / 708 source-derived KMP Simulator / 450 ordinary readiness methods,
+zero macOS skips and exact source/artifact/native/output custody. Main qualification
+SHA256 `cd2e6822b689c28177efb7b82b919fb3600ec2bd800ae72b70c53af8a9820327`.
+Ruleset 20910226 remains active without bypass actors. Scoped #284 is now closed;
+historical failed/cancelled runs retain their original outcomes.
+
+Separate current-harness40953628450 independently matches the three frozen
+original/Compose/native source plans and EN/AR outcomes: two passes per arm,
+zero failures/skips, owned cleanup receipts and archive custody. ZIP SHA256
+`f8ac28ea9a96a6e50d9a72b63b8adef0a32067dc1ac614aca6b8d9a969951537`.
+Consistent producer cleanup is not independently live re-attested cleanup.
+Actual runtime is iOS18.5/22F77/iPhone16Pro Simulator, Xcode26.3/17C529.
+
+The prior production40940007224 remains 22 Swift PASS / 1 FAIL: English Dominoes
+Join/name settlement, before tap/keyboard/typing/networking. The read-only original
+xcresult decoder40955026246 matches all 1,247 objects / 23 Swift identifiers; its one
+actually viewed public screenshot contains no keyboard/tutorial/alert/overlay.
+This is not stale-lookup causality, main-thread liveness or event-delivery evidence.
+#267/#276 original input cause, failed-only capture/export and full 60-journey
+neutrality, #258 protection, physical-game/lifecycle/energy and Store gates remain.
+No deadline increase, replayed input, omitted checks, paid infrastructure or release.
