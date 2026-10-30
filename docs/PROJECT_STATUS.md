@@ -1,25 +1,24 @@
-# Project status — October 29, 2026
+# Project status — October 30, 2026
 
 ## Completed checkpoint and evidence
 
-[PR #289](https://github.com/Apdelrahman1911/parlor/pull/289) normally merged at
-22:19 UTC as `c81f75b4f119a6a896cedf89fc13511c10f24cb2`, qualified tree
-`5229e18fb2f74a69086b9210addc7883a0ef45ce`. Fresh
-[PR production40953635018](https://github.com/Apdelrahman1911/parlor/actions/runs/40953635018)
-independently passes all eight producers/the original Apple Release join,
-**23 Swift, 708 source-derived KMP Simulator and 450 ordinary readiness methods**,
+[PR #290](https://github.com/Apdelrahman1911/parlor/pull/290) normally merged as
+`26eb15b630d9348fa5964b012c27a703e6c4fe06`, qualified tree
+`c936c0157f571e949bb3ac3fce03c0a576b3e59b`.
+[PR40972918577](https://github.com/Apdelrahman1911/parlor/actions/runs/40972918577)
+independently qualifies all eight producers/the original optimized Apple Release
+join, **23 Swift /716 source-derived KMP Simulator /450 ordinary readiness methods**,
 zero macOS skips and exact source/artifact/native/output custody. Qualification
-SHA256 `40260aaa1e77947055301bd0522a1a7aecc038fc120b65cc53c43753457770bd`.
+SHA256 `36c1b4e70f39119702afd82013968564c47da982a95c293901fd09373c0c8f27`.
 
-The **distinct automatic
-[actual-main40964941119](https://github.com/Apdelrahman1911/parlor/actions/runs/40964941119)
-independently qualifies that exact merge**: all eight producers/original Apple
-Release join, **23 Swift / 708 KMP Simulator / 450 ordinary readiness methods**,
-zero macOS skips and exact source/artifact/native/output custody. Qualification
-SHA256 `cd2e6822b689c28177efb7b82b919fb3600ec2bd800ae72b70c53af8a9820327`.
-Scoped #284 is closed after protected merge and distinct main acceptance; original
-input causality remains separate. This is not PR-pass substitution or certification
-of the subsequently prepared short-grace candidate. Protections remain active.
+The distinct automatic
+[actual-main40979550743](https://github.com/Apdelrahman1911/parlor/actions/runs/40979550743)
+independently qualifies that exact merge with the same complete counts/custody;
+qualification SHA256
+`adba10d36861ac678aeb7d722c8455fef6da022c227d21471571731e6e0efe79`.
+This is not PR-pass substitution or certification of newer work. PR289's copied
+diagnostic integration and scoped #284 closure remain accepted; original input
+causality stays separate. Protections remain active.
 PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
 
 ## Application and verification repairs
@@ -36,9 +35,9 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   hash-bound original-file software fixtures work in shallow hosted checkouts.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
-**locally prepared, not merged at this checkpoint**; follow
-[#252](https://github.com/Apdelrahman1911/parlor/issues/252) for later accepted
-source and exact verification. Actual host/peer fault tests reproduce remote
+**merged and independently main-qualified through PR290**; follow
+[#252](https://github.com/Apdelrahman1911/parlor/issues/252) for physical-device
+acceptance still required. Actual host/peer fault tests reproduce remote
 command eligibility and retained validation exceeding15 elapsed seconds when
 wall clocks/timers are stale. Immutable elapsed stamps fix those paths and carry
 spent time into hard recovery. Combined local `f3784375` / tree `1c165500` passes strict
@@ -47,8 +46,8 @@ full gates: 1,901 Desktop (three existing LAN skips),689 Android per Debug/Relea
 all 450 readiness methods (six Apple-only Linux skips). Its 388.2 seconds uses caches,
 not a cold/hosted benchmark. A tree-identical normal local merge `102b38ae` aligns
 with `c81f75b4`; old receipts remain bound to `f378`, not relabeled as final-source tests.
-Final source/documentation, hosted Apple/runtime, protected PR and distinct
-actual-main verification remain required.
+That local preparation receipt remains historical; final-source checks, protected
+PR290 and distinct actual-main verification above supply accepted-source evidence.
 
 Three fresh real pinned-P2pKit Linux host/peer Resume pairs at `f378` pass, six
 natural zero exits, selected seat/game/version, credential rotation/revocation,
@@ -60,6 +59,20 @@ JVMs/in-memory stores are not phones, short-grace faults, OS sleep, process deat
 game reducers or mobile energy measurements.
 
 ## Native-input investigation
+
+[Draft PR291 ARM baseline40987141694](https://github.com/Apdelrahman1911/parlor/actions/runs/40987141694)
+finishes **failed**,22 Swift PASS/1FAIL: Arabic Egyptian Dominoes Join/name after
+the single full typing synthesis. Seven other producers/original optimized Apple
+join pass, but the whole run cannot qualify a hybrid benchmark. Separate read-only
+[decoder40994699843](https://github.com/Apdelrahman1911/parlor/actions/runs/40994699843)
+passes; independent readback matches1,257 original objects/all23 identifiers.
+Actually viewed original image/movie samples show empty Arabic name and keyboard,
+not the earlier visible QuickPath overlay. These are not native causal proof.
+The [shared-UI return regression report](audits/2026-10-30-NAME-INPUT-RETURN.md)
+records nine local methods/15 added journeys and an executed input-loss negative
+control. Tests are locally prepared, not a shipping keyboard fix or merged
+qualification. Keep PR291 draft and #276/#267 open; no blind rerun, longer deadline,
+replayed input or hybrid dispatch from a failed baseline.
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
 independently matches all three frozen original/Compose/native plans and EN/AR
