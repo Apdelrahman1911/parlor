@@ -33,6 +33,12 @@ PUBLIC_TEXT_REVIEW_COMPANIONS = {
     "review_public_text_commit.py": "5c40db8fba05f4a80f22acb9b84620d0130bd870a7ed4ee25fbbd17fc2175808",
     "test_public_text_commit_review.py": "57ae0242d2050f6c2db84a613df568d1cba51bb97a5dfab6692ccb65c8a89279",
 }
+PUBLIC_BACK_REVIEW = "ios-public-back-review.yml"
+PUBLIC_BACK_REVIEW_SHA256 = "755493e19d26f5c63bde2d002345491718bbb72612dd731aaeea81118260b9ef"
+PUBLIC_BACK_REVIEW_COMPANIONS = {
+    'review_public_back_commit.py': 'd8823e7daa620b42e6e001f12d1397359eeb93ebb1e652353b18d465304f0e03',
+    'test_public_back_commit_review.py': 'e887b9d283a1e442f450e48d116c076a9d763e14e0f886f23badb0b8c1421d24',
+}
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -90,7 +96,7 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW}
+    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -141,6 +147,16 @@ def verify_public_text_review(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Public text review companion must retain its exact reviewed immutable intake/export controls: {name}")
+
+
+def verify_public_back_review(text: str) -> None:
+    verify_common(PUBLIC_BACK_REVIEW, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_BACK_REVIEW_SHA256:
+        fail("Public Back review must retain its exact reviewed read-only, free-runner, non-production workflow")
+    for name, digest in PUBLIC_BACK_REVIEW_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Public Back review companion must retain its exact reviewed immutable intake/export controls: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1771,6 +1787,8 @@ def main() -> int:
     verify_input_investigation(files["ios-input-investigation.yml"])
     if PUBLIC_TEXT_REVIEW in files:
         verify_public_text_review(files[PUBLIC_TEXT_REVIEW])
+    if PUBLIC_BACK_REVIEW in files:
+        verify_public_back_review(files[PUBLIC_BACK_REVIEW])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)
