@@ -71,8 +71,33 @@ XML is not accepted. No mutant shipping source is committed.
 
 This covers shared callback/state delivery, **not UIKit keyboard delivery,
 native causal repair, physical-device behavior or production qualification**.
-Final-source full local gates and fresh hosted verification remain required
-before integrating these tests. Preserve native selectors, single typing,
+At the original preparation checkpoint, final-source full local gates and fresh
+hosted verification remained required before integrating these tests. The later
+accepted-source evidence is recorded below; it does not certify newer changes. Preserve native selectors, single typing,
 exact full-value checks, original deadlines, architectures and Release
 optimizations. PR291 stays draft; ARM remains the fastest qualified tested
 configuration. No paid runner, additional agent, bypass or Store release.
+
+
+## Protected integration and distinct actual-main verification
+
+[PR #292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged at
+04:53 UTC on October30 as `d566a576abad59c8c67ddba1798aa6dd30b6ce44`,
+tree `4d27c827b8189ffc49af8a07547c64e272af89c1`.
+Both fresh [PR40997730125](https://github.com/Apdelrahman1911/parlor/actions/runs/40997730125)
+and distinct automatic
+[actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
+independently qualify all eight producers/original optimized Apple Release join,
+23 Swift /716 KMP Simulator /450 ordinary readiness methods, zero Apple skips
+and exact source/artifact/native/output custody. All nine changed pointer methods
+pass on the four Desktop hosts. Main qualification SHA256
+`3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
+
+The fully qualified main workflow takes52.6 minutes on the standard free runners;
+queues/cache observations are retained. This is a single observation, not an
+identical-source Intel comparison, a guarantee or a physical-device benchmark.
+The failed draft PR291 ARM baseline remains failed. The separate copy-only
+PIN05 investigation41009071161 runs against that exact failed source/runtime/device;
+its actual outcomes and original failed-only capture custody remain pending.
+Neither accepted shared-UI regression tests nor a green general CI run prove
+native input causality. #267/#276, physical and Store/security gates stay open.

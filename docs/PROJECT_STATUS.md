@@ -1,6 +1,26 @@
 # Project status — October 30, 2026
 
-## Completed checkpoint and evidence
+## Latest independently qualified checkpoint
+
+[PR #292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
+`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, qualified tree
+`4d27c827b8189ffc49af8a07547c64e272af89c1`.
+The distinct automatic
+[actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
+independently qualifies all eight producers and the original optimized Apple
+Release join: **23 Swift /716 source-derived KMP Simulator /450 ordinary readiness
+methods**, zero Apple skips and exact source/artifact/native/output custody.
+Qualification SHA256 `3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
+All nine name-setup pointer methods also execute on all four Desktop hosts.
+This accepts the regression tests, not a native keyboard repair or the original
+#267/#276 cause. No protected merge bypass or release occurred.
+
+That fully qualified main workflow took **52.6 minutes** on standard free runners,
+including queues. This is one source-bound observation, not a statistical/device
+benchmark or a guaranteed future duration. The ARM profile remains the fastest
+qualified tested configuration; draft PR291's hybrid alternative remains unmeasured.
+
+## Prior accepted checkpoint (PR290)
 
 [PR #290](https://github.com/Apdelrahman1911/parlor/pull/290) normally merged as
 `26eb15b630d9348fa5964b012c27a703e6c4fe06`, qualified tree
@@ -69,10 +89,24 @@ passes; independent readback matches1,257 original objects/all23 identifiers.
 Actually viewed original image/movie samples show empty Arabic name and keyboard,
 not the earlier visible QuickPath overlay. These are not native causal proof.
 The [shared-UI return regression report](audits/2026-10-30-NAME-INPUT-RETURN.md)
-records nine local methods/15 added journeys and an executed input-loss negative
-control. Tests are locally prepared, not a shipping keyboard fix or merged
-qualification. Keep PR291 draft and #276/#267 open; no blind rerun, longer deadline,
-replayed input or hybrid dispatch from a failed baseline.
+records nine methods/15 added journeys and an executed input-loss negative
+control. PR292 and its distinct actual-main run now accept those regression tests,
+not a shipping keyboard fix or resolution of that failed baseline. Keep PR291
+draft and #276/#267 open; no blind rerun, longer deadline, replayed input or hybrid
+dispatch from a failed baseline.
+
+A separate exact-source
+[PIN05 name-input diagnostic41009071161](https://github.com/Apdelrahman1911/parlor/actions/runs/41009071161)
+is running on standard free macos-15, harness `bf825359`, against failed source
+`c11d8ca1` /tree `cf57bb25`, iOS18.5/iPhone16Pro. It is copy-only and performs one
+ordinary attempt per original/Compose/native arm. The observer provider wraps
+only the public name field; seven actual copied Kotlin/Skiko scope controls pass,
+an executed whole-tree-provider counterfactual fails, and restored seven pass.
+Final strict local gates and468 readiness controls pass (seven exact Apple-only
+Linux skips). The runner reports its SDK/privacy preflight passed; complete native
+outcomes, failed-only capture custody and independent readback remain pending.
+No production benchmark, UIKit neutrality or failure causality is inferred.
+See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
 independently matches all three frozen original/Compose/native plans and EN/AR
