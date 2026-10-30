@@ -1,0 +1,55 @@
+name: Frozen iOS public setup-pair review (not qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-pr296-public-setup-review-2026-10-30]
+
+concurrency:
+  group: frozen-ios-public-setup-pair-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    # One standard free runner; no app, Simulator, signing or cache writes.
+    runs-on: macos-15
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Check out immutable reader and exact source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify intake, public-only export and free-runner controls
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/release/workflow_contract.py
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_public_setup_pair_commit_review.py -v
+      - name: Decode the original two failures without application execution
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_public_setup_pair_commit.py \
+            --output "$RUNNER_TEMP/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Retain only checked public screenshots and result bindings
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: frozen-setup-pair-review-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/receipt.json
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/extracted-inputs.json
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/summary.json
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/tests.json
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/public-ar-*.png
+            ${{ runner.temp }}/parlor-frozen-setup-pair-${{ github.run_id }}-${{ github.run_attempt }}/public-en-*.png
