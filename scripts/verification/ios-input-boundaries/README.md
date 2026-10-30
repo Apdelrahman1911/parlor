@@ -5,7 +5,43 @@ Investigation tooling for [#267](https://github.com/Apdelrahman1911/parlor/issue
 The original lost Host event occurred on iOS26.2; later iOS18.5 passes do not
 establish its cause. Keep the original failed source/event/recording evidence.
 
-## What is implemented
+## PIN06 — frozen PR296 public setup boundaries
+
+`pin06_public_setup_pair.py` binds failed application `40ae511d` / tree
+`1ef599d6`, its seven original source hashes, and existing observer templates.
+The separate `ios-public-setup-boundaries.yml` runs one original, Compose-only,
+and Compose+native arm on one standard free `macos-15` runner, Xcode26.3/17C529,
+iOS18.5/iPhone16Pro. No production gate is replaced; the generic investigation
+workflow and shipping driver remain unchanged.
+
+Original EN/AR methods, selectors, swipes, single taps, predicates, ten-second
+budgets, typing and networking tripwire remain. Only the two exact localized
+permission prefixes pass their existing app owner into the settlement helper;
+other controls retain the default `nil`. After the original settlement **fails**,
+the copied helper requests the same bounded, once-only PIN02 export, then keeps
+the original failed assertion. Host/catalog failure capture remains. No capture
+wait runs on the successful path. Public scene-phase enums are retained during
+permission/name stages; touches remain armed only in the picker/catalog.
+
+All arms use the reviewed bounded build preparation:3GiB heap, one Gradle worker,
+no parallel Gradle, in-process Kotlin, one Xcode job, verbose build stages, and
+Simulator boot **after** linkage. The45-minute build,15-minute scoped execution,
+and three-hour aggregate deadlines are unchanged. Dependency verification,
+compiler optimizations and actual test semantics are not weakened. Restored
+dependencies are read-only; no diagnostic cache is saved.
+
+Eight software controls cover exact original-driver restoration, failed-only
+capture, privacy, stale-source/profile/template rejection and resource settings.
+The Apple-only control typechecks the actual generated Swift driver; Linux skips
+that unavailable SDK, rather than claiming native execution. Application linkage,
+failed captures and source/product/device/result/cleanup readback are separate
+requirements. Two ordinary release controls reject altered privileges, paid
+runners, retries/bypasses, broad uploads and changed/redirected companions.
+
+This is a narrow investigation, **not** a shipping fix, full60-journey neutrality,
+native causal conclusion, physical-device benchmark or acceptance of failed296/300.
+
+## Existing PIN01 implementation
 
 `pin01_copy.render` validates four exact source digests and unambiguous anchors,
 then returns an additive transformation plan. It performs **no filesystem writes,

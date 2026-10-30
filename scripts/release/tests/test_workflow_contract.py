@@ -19,6 +19,55 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_frozen_public_setup_boundaries_require_exact_free_readonly_copy_only_workflow(self) -> None:
+        path = workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SETUP_BOUNDARIES
+        text = path.read_text()
+        workflow_contract.verify_public_setup_boundaries(text)
+        for before, after in (
+            ('runs-on: macos-15', 'runs-on: macos-15-large'),
+            ('runs-on: macos-15', 'runs-on: self-hosted'),
+            ('contents: read', 'contents: write'),
+            ('actions: read', 'actions: write'),
+            ('persist-credentials: false', 'persist-credentials: true'),
+            ('cancel-in-progress: false', 'cancel-in-progress: true'),
+            ('timeout-minutes: 190', 'timeout-minutes: 240'),
+            ('--source 40ae511df882cb29070a94ef3c25f95c1b4ba93e', '--source ${{ github.sha }}'),
+            ('--profile public-setup-pair', '--profile catalog'),
+            ('--runtime com.apple.CoreSimulator.SimRuntime.iOS-18-5',
+             '--runtime com.apple.CoreSimulator.SimRuntime.iOS-26-2'),
+            ('--device com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro',
+             '--device com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'),
+            ('actions/cache/restore@', 'actions/cache/save@'),
+            ('if: always()', 'if: success()'),
+            ('if-no-files-found: error', 'if-no-files-found: warn'),
+            ('/native/attachments', '/**'),
+            ('--profile public-setup-pair --output', '--profile public-setup-pair || true # --output'),
+            ('-m unittest discover', '-m unittest discover --failfast'),
+        ):
+            changed = text.replace(before, after, 1)
+            self.assertNotEqual(changed, text, before)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_setup_boundaries(changed)
+        self.assertNotIn('workflow_dispatch:', text)
+        self.assertNotIn('secrets.', text)
+        self.assertNotIn('productionCheck', text)
+        self.assertNotIn('productionAppleCheck', text)
+
+    def test_frozen_public_setup_boundaries_reject_changed_or_redirected_companions(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SETUP_BOUNDARIES).read_text()
+        for name in workflow_contract.PUBLIC_SETUP_BOUNDARIES_COMPANIONS:
+            target = workflow_contract.ROOT / 'scripts/verification/ios-input-boundaries' / name
+            original = Path.read_bytes
+            def changed(path):
+                return original(path) + b'\n' if path == target else original(path)
+            with self.subTest(name=name), patch.object(Path, 'read_bytes', changed), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_setup_boundaries(text)
+            original_symlink = Path.is_symlink
+            def redirected(path):
+                return True if path == target else original_symlink(path)
+            with self.subTest(name=name), patch.object(Path, 'is_symlink', redirected), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_setup_boundaries(text)
+
     def test_darwin_capability_requires_both_exact_free_hosts_and_native_receipt_control(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         job = workflow_contract.validation_job(workflow, "darwin-host-capability")

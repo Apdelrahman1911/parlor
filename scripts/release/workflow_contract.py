@@ -57,6 +57,20 @@ PUBLIC_SETUP_PAIR_REVIEW_COMPANIONS = {
     'review_public_setup_pair_commit.py': '4c39679c5a5fb0e8e4a65e1e614cb666b0d743b543e711c1a35a81dcaf6393af',
     'test_public_setup_pair_commit_review.py': '01e4d28f1f8cbf6638cff29fbbdeb5c00e97071065a851c50a5954252757643d',
 }
+# Separate copy-only native investigation. It never qualifies a production lane
+# or changes the existing generic workflow; only this exact frozen profile runs.
+PUBLIC_SETUP_BOUNDARIES = "ios-public-setup-boundaries.yml"
+PUBLIC_SETUP_BOUNDARIES_SHA256 = "c11f8f0f8041ebcf91ed8081d76c8665bff4a64f30eced70c10bbc128dd4a163"
+PUBLIC_SETUP_BOUNDARIES_COMPANIONS = {
+    'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a',
+    'test_pin06_public_setup_pair.py': '2edb46c6ca6cc27276aca8a2f5a5cb1e195305ce001a980dd414574fa92159d7',
+    'run_pin03.py': '151be767605493da0709ac3f8990ae497955c36c48c78599354aa88fc3e112d6',
+    'pin01_copy.py': 'acf6e21c400287459740469c624ae589a791be39e3381898f150647caa07f385',
+    'pin01_receipts.py': '2d778db5298bd2ac6e594bd5d4c389dc5f812c32e24ae77fb3467c36b7a98848',
+    'pin02_capture.py': '4ed9b4257263e88abc640cf904243adfd6bce00787e93a9e468bc5648ba15f0f',
+    'pin03_catalog_copy.py': '0092a943ca2103f4ecf829cb574b976d1d767f2fa340687335738b710cfce6c7',
+    'frozen_sources.py': '6402b9fc49298d143d1893dd6b609079b96fbeeb9672432816cd9357ff310962',
+}
 
 ALLOWED_ACTIONS = {
     "actions/checkout",
@@ -111,7 +125,8 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW, PUBLIC_SETUP_PAIR_REVIEW}
+    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
+                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -192,6 +207,16 @@ def verify_public_setup_pair_review(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Public setup-pair review companion must retain its exact reviewed immutable intake/export controls: {name}")
+
+
+def verify_public_setup_boundaries(text: str) -> None:
+    verify_common(PUBLIC_SETUP_BOUNDARIES, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_SETUP_BOUNDARIES_SHA256:
+        fail("Public setup boundaries must retain the exact frozen-source, free-runner, copy-only workflow")
+    for name, digest in PUBLIC_SETUP_BOUNDARIES_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Public setup boundaries companion differs from reviewed source-copy controls: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1828,6 +1853,8 @@ def main() -> int:
         verify_public_catalog_review(files[PUBLIC_CATALOG_REVIEW])
     if PUBLIC_SETUP_PAIR_REVIEW in files:
         verify_public_setup_pair_review(files[PUBLIC_SETUP_PAIR_REVIEW])
+    if PUBLIC_SETUP_BOUNDARIES in files:
+        verify_public_setup_boundaries(files[PUBLIC_SETUP_BOUNDARIES])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)
