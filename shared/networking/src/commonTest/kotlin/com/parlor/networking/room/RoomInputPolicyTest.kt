@@ -60,4 +60,42 @@ class RoomInputPolicyTest {
         assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", " Alice ")))
         assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "   ")))
     }
+
+    @Test
+    fun supplementary_format_controls_are_rejected_by_name_and_roster_validation() {
+        supplementaryFormatCodePoints().forEach { codePoint ->
+            val format = supplementaryScalar(codePoint)
+            assertFalse(RoomInputPolicy.isValidDisplayName("Alice$format"), codePoint.toString(16))
+            assertFalse(RoomInputPolicy.isValidDisplayName(format), codePoint.toString(16))
+            assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "Alice$format")))
+            assertEquals("Alice", RoomInputPolicy.sanitizeDisplayNameInput("Ali${format}ce"))
+        }
+    }
+
+    @Test
+    fun discarded_supplementary_format_controls_do_not_consume_the_input_length_budget() {
+        val languageTag = supplementaryScalar(0xE0001)
+        assertEquals("A".repeat(31) + "B", RoomInputPolicy.sanitizeDisplayNameInput("A".repeat(31) + languageTag + "B"))
+        assertEquals("عبد الرحمن", RoomInputPolicy.sanitizeDisplayNameInput("عبد${languageTag} الرحمن"))
+    }
+
+    @Test
+    fun supplementary_letters_emoji_and_variation_marks_remain_valid() {
+        listOf(0x10400, 0x1F3B2, 0xE0100).forEach { codePoint ->
+            val name = "Alice" + supplementaryScalar(codePoint)
+            assertTrue(RoomInputPolicy.isValidDisplayName(name), codePoint.toString(16))
+            assertEquals(name, RoomInputPolicy.sanitizeDisplayNameInput(name))
+        }
+        assertTrue(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "alice", "عبد الرحمن")))
+    }
+
+    // All 127 supplementary Cf scalars in UnicodeData 17.0.0; no network at test time.
+    private fun supplementaryFormatCodePoints(): List<Int> =
+        listOf(0x110BD, 0x110CD, 0xE0001) + (0x13430..0x1343F) +
+            (0x1BCA0..0x1BCA3) + (0x1D173..0x1D17A) + (0xE0020..0xE007F)
+
+    private fun supplementaryScalar(codePoint: Int): String {
+        val payload = codePoint - 0x10000
+        return charArrayOf((0xD800 + (payload shr 10)).toChar(), (0xDC00 + (payload and 0x3FF)).toChar()).concatToString()
+    }
 }

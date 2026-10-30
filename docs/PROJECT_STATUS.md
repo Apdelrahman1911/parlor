@@ -1,20 +1,37 @@
 # Project status — October 30, 2026
 
-## Latest merged checkpoint — main verification pending
+## Latest protected merge — distinct main verification pending
+
+[PR294](https://github.com/Apdelrahman1911/parlor/pull/294) normally merged at
+19:48 UTC as `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
+`00d87afce8588263a13733e9140340faac6d522a`.
+[Fresh PR41110715660](https://github.com/Apdelrahman1911/parlor/actions/runs/41110715660)
+independently qualifies all eight producers/original optimized Apple Release join,
+23 Swift /753 source-derived KMP Simulator /450 readiness methods, zero Apple
+skips, exact source/artifact/native/cleanup custody,1,941 Desktop /726 Android
+per Debug/Release /120 GitHub-test and777 release controls. Both navigation lanes
+execute: three API35 Release and three API34 Debug methods. Qualification SHA256
+`8abf82e001842b5a0bfc0075a752318b5dda61d164907585e85c19ba470c1538`.
+The51.4-minute wall time including queues is one source-bound free-runner
+observation, **not** a matched-source hybrid/mobile benchmark.
+Distinct automatic
+[actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
+is still pending at this local integration's preparation. Do not substitute
+PR evidence for main acceptance or claim a native keyboard/root-cause repair.
+
+## Prior independently qualified main (PR298)
 
 [PR298](https://github.com/Apdelrahman1911/parlor/pull/298) normally merged as
 `71c3f7cc6b8c792b8d8c061d2e35fbe771f8dfe1`, tree
-`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`.
-[PR41090361352](https://github.com/Apdelrahman1911/parlor/actions/runs/41090361352)
-independently qualifies all eight producers/optimized Apple Release join, exact
-source/artifact/native/cleanup custody,23 Swift /716 KMP Simulator /450 readiness
-methods, and three API35 Release plus three API34 Debug navigator methods.
-Qualification SHA256
-`bed3bfe30226ea81f711ee3f924a6a04cfc30ef0eb11a7f8377a2201afbff919`.
-Its distinct automatic
+`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`. Distinct automatic
 [actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
-remains pending at this integration's preparation; **do not substitute PR
-success for main acceptance**. #297 stays open until that separate readback.
+independently qualifies all eight producers/original optimized Apple Release join,
+23 Swift /716 KMP Simulator /450 readiness methods, zero Apple skips,
+777 release controls and both actual Android navigator lanes with successful
+supervision/cleanup. Qualification SHA256
+`83469030473de7ef4b3b028669bc735a78e4d659251f01dc8eeb286592758bc7`.
+Scoped #297 is closed after this distinct main acceptance; do not replay closure.
+Its75.1 minutes including queues is a source-bound observation, not a comparison.
 
 ## Prior independently qualified main (PR292)
 
@@ -33,45 +50,40 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 
 ## Current unmerged follow-ups
 
-- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) /
-  [Issue299 roster ownership](audits/2026-10-30-INITIAL-ROSTER-OWNERSHIP.md):
-  four common regressions reproduce Mafia/Whodunit caller-mutable roster aliasing;
-  scoped code `4564ffe2` owns/validates one snapshot. Main-integrated clean `15aa4d05`
-  passes complete strict local gates:1,908 Desktop /693 Android per Debug/Release
-  /120 GitHub-test /777 release /450 readiness methods. Only three established
-  LAN, one exact procfs-capability and six Apple-only Linux readiness skips remain.
-  PR300 now groups the related #299/#301 input-ownership corrections locally;
-  fresh exact-union full/hosted/native/protected/actual-main gates remain required.
-  Its former PR298 review base is **never a merge destination**; retarget to main
-  before qualification. No transport privacy bypass or physical incident is
-  demonstrated. #299 stays open until scoped actual-main acceptance.
-- [Issue301 host coordinator input ownership](audits/2026-10-30-HOST-COORDINATOR-INPUT-OWNERSHIP.md):
-  original caller-owned peer/start collections reproduce three exact assertion
-  failures. Scoped `7518ad1c` captures fixed authorization/outbound seats and the
-  validated start roster. Complete affected preparation passes166 Desktop /163
-  Android per Debug/Release and explicit type-aware Detekt, zero failures/skips.
-  Fresh final-clean full/hosted/native/protected/actual-main qualification remains
-  required; no external exploit, private wire delivery or physical incident is
-  demonstrated. #301 stays open; its correction is grouped in draft PR300, not a
-  separate hosted matrix. Independent preparation receipts do not qualify the union.
-  Original failed/pending hosted runs are not relabeled successes.
-- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
-  authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
-  local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
-  release controls, with three established LAN skips and one exact local procfs
-  capability skip;450 software readiness methods/six Apple-only Linux skips.
-  This is not hosted/native/main or physical rendering qualification. #293 stays
-  open;295 is unchanged. [Source-bound report](https://github.com/Apdelrahman1911/parlor/blob/65f4a8eecc2fc8205b30d594e6d5712959c75e3a/docs/audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
-- PR294's fresh changed-source41079982618 Linux job fails during the late API34
-  image installation, after successful full root gates and the Release smoke
-  invocation. The whole run cannot qualify, regardless of other producer results.
-  [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
-  missing upfront API34 provisioning/revision pin; a separate main-based scoped
-  correction preserves both runtime lanes, Release optimizations and free runners.
-  PR298's protected merge/complete PR qualification are recorded above;
-  distinct actual-main acceptance remains pending at preparation. The failed archive's
-  bytes are unavailable; a current valid official download does not establish its
-  cause. No blind retry, parent merge or Store release occurred.
+- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) groups
+  [#299 initializer ownership](audits/2026-10-30-INITIAL-ROSTER-OWNERSHIP.md) and
+  [#301 coordinator ownership](audits/2026-10-30-HOST-COORDINATOR-INPUT-OWNERSHIP.md).
+  All four game initializer/test files and both coordinator/test files are
+  retained byte-identically from independently corrected preparations. Seven
+  common regressions cover subsequent caller mutations; no deep-output or
+  atomic concurrent-copy guarantee, external authentication bypass or private
+  wire leak is demonstrated. Prior clean union `f4cd89e4` qualifies locally:
+  1,911 Desktop /696 Android per Debug/Release /120 GitHub-test,777 release
+  controls and450 readiness methods. Its receipts and v7 reader remain historical.
+  New local normal incorporation of protected main `35288a72` inherits the scalar
+  correction unchanged; only status/inventory conflicts require resolution.
+  This **unpublished preparation** needs fresh exact-union full local and hosted
+  qualification. Former PR298 review base is never a merge destination: retarget
+  to protected main only after separate main acceptance; keep #299/#301 open
+  through distinct actual-main verification.
+- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) retains the
+  separate [authored-text correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
+  Unpublished local `06adeb2d` incorporates the scalar parent and main normally;
+  all three authored files and16 scalar files are retained. Fresh strict local
+  gates qualify1,950 Desktop /735 Android per Debug/Release /120 GitHub-test,
+  777 release and450 readiness methods. This is not hosted/native/main or physical
+  rendering acceptance. #293 stays open; never merge into the unprotected stack.
+- [Draft PR295](https://github.com/Apdelrahman1911/parlor/pull/295) retains Ghamza
+  public-transcript privacy regressions in unpublished local `b8e9db72`.
+  Fresh strict local gates qualify1,943 Desktop /728 Android per Debug/Release
+  /120 GitHub-test /777 release /450 readiness methods. Final public-report
+  inference is an established-rules balance limitation, not a silent rules change.
+  The copied iOS Back-query report is historical prose only, not a diagnostic
+  implementation. Current-main/hosted/native/protected acceptance remains required.
+- Original failed41079982618 remains failed and unqualified. Reviewed upfront
+  dual-image provisioning is merged through298, with both runtime lanes and Release
+  optimizations preserved; #297 closure does not prove the unavailable failed
+  archive's cause. No blind CI retry, protection bypass or Store release occurred.
 
 ## Prior accepted checkpoint (PR290)
 
@@ -146,6 +158,12 @@ records nine local methods/15 added journeys and an executed input-loss negative
 control. Tests are locally prepared, not a shipping keyboard fix or merged
 qualification. Keep PR291 draft and #276/#267 open; no blind rerun, longer deadline,
 replayed input or hybrid dispatch from a failed baseline.
+
+PR294's additional copy-only input experiments and original failures remain
+[source-bound in its prior status](https://github.com/Apdelrahman1911/parlor/blob/b758f25d4f83c0c05e99526f4f2239ce0bd60336/docs/PROJECT_STATUS.md#native-input-investigation).
+Their source-set/compiler and bounded-build diagnostics do not qualify shipping
+input, erase original failures or certify this integration. Existing #267/#276
+remain open; no copied diagnostic code is imported into production here.
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
 independently matches all three frozen original/Compose/native plans and EN/AR
