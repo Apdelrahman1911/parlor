@@ -39,6 +39,13 @@ PUBLIC_BACK_REVIEW_COMPANIONS = {
     'review_public_back_commit.py': 'c4413b77424fea299302495ab40b9dc2886c8343056ad56297e6286a3b6cfe45',
     'test_public_back_commit_review.py': 'facb78dfb2ec3979e514eefe0c48cdc894ea95ed0404ea06ae35c023837236b1',
 }
+# Separate exact decoder for the PR300 catalog failure. Not a production gate.
+PUBLIC_CATALOG_REVIEW = "ios-public-catalog-review.yml"
+PUBLIC_CATALOG_REVIEW_SHA256 = "cd4642f114adc20cf5b9280b5ec085e774f65905b99fb8e039040249fcab6747"
+PUBLIC_CATALOG_REVIEW_COMPANIONS = {
+    "review_public_catalog_commit.py": "97c3d176a3adf366156c6aa5bb12f246e6956e4def075e94e0c2f45aa627fe0e",
+    "test_public_catalog_commit_review.py": "912943d70f5c0ecd9adec8f2257754ef17ac12ffe1f389f5283223dbad984d4a",
+}
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -96,7 +103,7 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW}
+    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -157,6 +164,16 @@ def verify_public_back_review(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Public Back review companion must retain its exact reviewed immutable intake/export controls: {name}")
+
+
+def verify_public_catalog_review(text: str) -> None:
+    verify_common(PUBLIC_CATALOG_REVIEW, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_CATALOG_REVIEW_SHA256:
+        fail("Public catalog review must retain its exact reviewed read-only, free-runner, non-production workflow")
+    for name, digest in PUBLIC_CATALOG_REVIEW_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Public catalog review companion must retain its exact reviewed immutable intake/export controls: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1789,6 +1806,8 @@ def main() -> int:
         verify_public_text_review(files[PUBLIC_TEXT_REVIEW])
     if PUBLIC_BACK_REVIEW in files:
         verify_public_back_review(files[PUBLIC_BACK_REVIEW])
+    if PUBLIC_CATALOG_REVIEW in files:
+        verify_public_catalog_review(files[PUBLIC_CATALOG_REVIEW])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)
