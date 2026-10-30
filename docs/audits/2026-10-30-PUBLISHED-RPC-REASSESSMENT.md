@@ -102,7 +102,7 @@ its dated rc7 observations; do not use them to deny the now-published rc8 graph.
 Production dependency verification, current game/privacy/recovery contracts and
 #251–253/#258–260 physical/security gates remain unchanged.
 
-## Current-main/documentation-union addendum — 21:10 UTC
+## Current-main/documentation-union addendum — 21:05 UTC
 
 PR294 normally merged as `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
 `00d87afce8588263a13733e9140340faac6d522a`. Its separate

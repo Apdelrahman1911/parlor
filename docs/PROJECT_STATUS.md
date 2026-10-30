@@ -207,9 +207,10 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
   reassessment now confirms Central's post-#524 `0.8.0-rc8` publication and
   publisher/target-byte parity; absence of publication is no longer the deferral
   reason. No comparative mobile benefit or replacement shipping graph is qualified;
-  additional connection/trust ownership remains unjustified. Publication report is
-  prepared separately; the [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md)
-  retains its dated rc7 observations, not a denial of rc8 availability.
+  additional connection/trust ownership remains unjustified. The
+  [publication report](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md) retains
+  dated byte/source checks; the [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md)
+  retains historical rc7 observations, not a denial of rc8 availability.
 
 Only standard free public runners (documented 20 total / five macOS ceilings, no allocation
 guarantee), no paid infrastructure/additional agents, weakened verification or
