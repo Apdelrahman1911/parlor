@@ -1,6 +1,6 @@
 # Project status — October 30, 2026
 
-## Latest protected merge — distinct main verification pending
+## Latest independently qualified protected main (PR294)
 
 [PR294](https://github.com/Apdelrahman1911/parlor/pull/294) normally merged at
 19:48 UTC as `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
@@ -16,8 +16,12 @@ The51.4-minute wall time including queues is one source-bound free-runner
 observation, **not** a matched-source hybrid/mobile benchmark.
 Distinct automatic
 [actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
-is still pending at this local integration's preparation. Do not substitute
-PR evidence for main acceptance or claim a native keyboard/root-cause repair.
+independently qualifies the exact merged source with the same complete methods,
+all eight producers, optimized Apple Release join and source/artifact/native/cleanup
+custody. Qualification SHA256
+`57216eff6c013b37862e153645e91fdd5cf4f4f17edf927983f487b124cc1249`.
+This is distinct main acceptance, not PR-pass substitution, physical-device evidence
+or a native keyboard/root-cause repair.
 
 ## Prior independently qualified main (PR298)
 
@@ -50,38 +54,40 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 
 ## Current unmerged follow-ups
 
+- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) groups #299/#301
+  initializer/coordinator input ownership. Head `22c67a6c` normally incorporates
+  accepted main `35288a72`; all six ownership source/test files and16 scalar files
+  are unchanged. Fresh exact-source full local checks pass **1,948 Desktop /733
+  Android per Debug/Release /120 GitHub-test**,777 release and450 readiness methods
+  with only established local skips. Retargeted to protected **main** and normally
+  FF-pushed; fresh [full41126885894](https://github.com/Apdelrahman1911/parlor/actions/runs/41126885894)
+  is running at21:03 UTC. **760 native methods are expectations until executed**.
+  Keep #299/#301 open through all-eight/native/runtime/join/custody qualification,
+  protected merge and distinct actual-main acceptance. No deep-output immutability,
+  atomic concurrent-copy, external authentication bypass or private-wire-leak claim.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is locally
   prepared to group the [authored-text scalar correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md)
-  with the small [Ghamza public-information regression](audits/2026-10-30-GHAMZA-PUBLIC-INFORMATION.md)
+  with the [Ghamza public-information regression](audits/2026-10-30-GHAMZA-PUBLIC-INFORMATION.md)
   originally published in [draft295](https://github.com/Apdelrahman1911/parlor/pull/295).
-  Three authored source/test files plus one Ghamza test file are retained
-  byte-identically; **one shipping policy change, three test files**, no game-rule
-  or wire-policy change. The historical iOS Back-query report remains prose only:
-  no diagnostic implementation is imported. Final public-transcript inference
-  documents an established-rules balance limitation, not a silent rules repair.
-  Eleven common methods are preserved. Prior separate exact local results remain
-  source-bound to `06adeb2d` (1,950 Desktop /735 Android per variant) and `b8e9db72`
-  (1,943 /728); their normal current-main history-only integrations retain those
-  exact trees. They do not qualify this new union. Fresh exact-source full local,
-  current protected-main integration/retargeting and all-eight/native/runtime/join/
-  custody checks remain mandatory. Neither review branch is a merge destination.
-  Keep295 draft until its work is demonstrably superseded through accepted main;
-  keep #293 and physical social-play/privacy #260 open pending their scoped gates.
-  Grouping these compatible small follow-ups avoids an extra complete hosted
-  matrix without omitting tests, architectures or Release optimizations.
-- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) separately
-  groups #299/#301 initializer/coordinator input ownership. New clean local
-  `22c67a6c` normally incorporates protected main `35288a72`; all six ownership
-  source/test files and16 scalar files are unchanged from reviewed sources.
-  Fresh full local checks and v10 source-bound reader preparation are running at
-  this note's preparation. Publication is guarded by separate actual-main41118248151
-  acceptance. Former PR298 review base is never a merge destination; fresh complete
-  hosted/native/protected and distinct actual-main checks remain required. No
-  deep-output immutability, atomic concurrent-copy, external authentication bypass
-  or private-wire-delivery claim is made.
+  **One shipping policy change, three test files**, eleven common additions;
+  the four reviewed implementation/test files remain byte-identical. No game-rule
+  change, extra connection or imported iOS diagnostic implementation. Exact prior
+  local union `beaac746` passes1,952 Desktop /737 Android per variant /120 GitHub-test,
+  all777 release and450 readiness methods with established local skips; receipt
+  SHA256 `eee1391a5f11a8b4e75aab61cfebfdb42f9dbb566215b3f957a297c7c6c98f2e`.
+  That receipt does **not** qualify the subsequent documentation union or a newer
+  main. Current-main integration, fresh exact-source local and all-eight hosted/
+  native/runtime/custody checks remain mandatory. Neither unprotected review branch
+  is a merge destination. Keep295 draft until its exact work is accepted through
+  protected main; #293 and physical/social-play #260 retain their applicable gates.
+- Small compatible [RPC publication/status documentation](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md)
+  is being grouped locally with296 to avoid an extra full hosted matrix without
+  removing tests, architectures or Release optimizations. Dated network/source
+  readbacks remain intact; retain shipping P2pKit0.7.0-rc3. Published rc8 availability
+  is confirmed, but no qualified replacement graph or measured mobile benefit exists.
 - Failed original41079982618 remains failed and unqualified. #297 closes only
   accepted upfront dual-image provisioning, not the unavailable archive's cause.
-  No blind CI retry, extra agent, paid runner, protection bypass or Store release.
+  No blind retry, additional agent, paid runner, protection bypass or Store release.
 
 ## Prior accepted checkpoint (PR290)
 
