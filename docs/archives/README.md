@@ -99,3 +99,11 @@ name-based deletion. `.gitattributes` preserves archive bytes across hosts.
   inventory together with its historical independent-review references.
 - Shipping resources, fonts, licenses and the branding source master remain in
   their existing application/source locations.
+
+## October30 grace checkpoint
+
+The exact pre-acceptance status bytes from main26eb15b6 are retained in
+[history/PROJECT_STATUS_2026-10-30_26eb15b6.md](history/PROJECT_STATUS_2026-10-30_26eb15b6.md),
+SHA256 `0e437645696a6c9d66f38cb91cfb32ff19ae60c334e93ea167804f28dbdf6c44`.
+Its prepared-only wording remains historical; current accepted source is recorded
+in `docs/PROJECT_STATUS.md` and the source-bound grace report.

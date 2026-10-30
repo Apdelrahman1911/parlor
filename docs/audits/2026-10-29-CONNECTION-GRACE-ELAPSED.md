@@ -113,3 +113,26 @@ run40964941119; its frozen checkouts are unchanged.
 Physical Android/iOS calls/lock/sleep/Wi-Fi/process death/simultaneous recovery,
 energy/thermal and #258 protected-storage acceptance remain unverified. No Store
 release, free-runner policy change or additional agents.
+
+## October30 protected integration and actual-main acceptance
+
+[PR #290](https://github.com/Apdelrahman1911/parlor/pull/290) normally merged at
+00:25UTC as `26eb15b630d9348fa5964b012c27a703e6c4fe06`, parents
+[c81f75b4,5b07d398], exact tree `c936c0157f571e949bb3ac3fce03c0a576b3e59b`.
+Fresh [PR40972918577](https://github.com/Apdelrahman1911/parlor/actions/runs/40972918577)
+and distinct automatic [main40979550743](https://github.com/Apdelrahman1911/parlor/actions/runs/40979550743)
+independently qualify all eight producers/the original Apple Release join,
+23 Swift/716 current-source KMP Simulator/450 readiness methods, zero macOS skips,
+all21 affected suites/336 Desktop methods and exact source/artifact/native/output
+custody. Actual UIKit runtime is iOS18.5/iPhone16Pro Simulator, not physical devices.
+PR qualification SHA256 `36c1b4e70f39119702afd82013968564c47da982a95c293901fd09373c0c8f27`;
+main SHA256 `adba10d36861ac678aeb7d722c8455fef6da022c227d21471571731e6e0efe79`. Protections remain active;
+no admin bypass, blind rerun, force push, weaker verification or Store publication.
+
+[#252's acceptance update](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6512607470)
+was read back with the issue still open. All physical host/client lifecycle,
+lock/Wi-Fi/process-death/recovery/energy gates remain. #258 Strict Complete
+Protection and #230 signing/ownership/legal/security/Store approval stay separate;
+#267/#276 original native input failures and causality remain unresolved.
+Historical intermediate/local receipts above remain bound to their original
+sources, not relabeled as final-source or physical qualification.

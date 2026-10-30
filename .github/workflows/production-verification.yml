@@ -19,10 +19,10 @@ on:
         default: full
         options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]
       apple_release_runner:
-        description: Free standard Apple Release runner for repeatable benchmarks (never a larger runner)
+        description: Free Apple Release profile; hybrid uses Intel only for x64 (never a larger runner)
         type: choice
         default: arm64
-        options: [arm64, intel]
+        options: [arm64, intel, hybrid]
       native_selection:
         description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)
         type: choice
@@ -1387,7 +1387,7 @@ jobs:
   ios-release-x64:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: iOS Release simulator x64
-    runs-on: ${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}
+    runs-on: ${{ (inputs.apple_release_runner == 'intel' || inputs.apple_release_runner == 'hybrid') && 'macos-15-intel' || 'macos-15' }}
     # Only this architecture links here; complete Apple analysis and the
     # normal Swift wrapper build remain in the simulator Release lane.
     timeout-minutes: 180

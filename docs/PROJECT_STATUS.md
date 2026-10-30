@@ -1,6 +1,26 @@
-# Project status — October 29, 2026
+# Project status — October 30, 2026
 
-## Completed checkpoint and evidence
+## Current accepted main and pending optimization
+
+[PR #290](https://github.com/Apdelrahman1911/parlor/pull/290) normally merged as
+`26eb15b630d9348fa5964b012c27a703e6c4fe06`, tree
+`c936c0157f571e949bb3ac3fce03c0a576b3e59b`. Fresh PR40972918577 and
+**distinct automatic [main40979550743](https://github.com/Apdelrahman1911/parlor/actions/runs/40979550743)**
+independently qualify all eight producers/the original Apple Release join,
+**23 Swift /716 source-derived KMP Simulator /450 readiness methods**, zero macOS
+skips and exact source/artifact/native/output custody. Actual UIKit runtime:
+iOS18.5/iPhone16Pro Simulator, Xcode26.3; not phones. Main qualification SHA256
+`adba10d36861ac678aeb7d722c8455fef6da022c227d21471571731e6e0efe79`. All21 affected recovery suites/336 Desktop methods
+execute on every Desktop host, with applicable common methods also on Android/iOS.
+
+The [free hybrid CI candidate](audits/2026-10-29-FREE-HYBRID-CI.md) adds an opt-in
+Intel x64 Release lane only. ARM remains the fastest fully qualified tested default;
+matched-source full hybrid benchmarking and final-source hosted acceptance are
+pending. Earlier local preparation passes strict full gates at573e9dde/treefecd2a12;
+those receipts do not certify subsequent documentation or a hosted benchmark.
+No production source, Release optimizations, required checks or paid runner changes.
+
+## Previous diagnostic integration acceptance
 
 [PR #289](https://github.com/Apdelrahman1911/parlor/pull/289) normally merged at
 22:19 UTC as `c81f75b4f119a6a896cedf89fc13511c10f24cb2`, qualified tree
@@ -35,29 +55,23 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   hidden/nested inputs, output symlinks and unregistered suffixes fail closed;
   hash-bound original-file software fixtures work in shallow hosted checkouts.
 
-The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
-**locally prepared, not merged at this checkpoint**; follow
-[#252](https://github.com/Apdelrahman1911/parlor/issues/252) for later accepted
-source and exact verification. Actual host/peer fault tests reproduce remote
-command eligibility and retained validation exceeding15 elapsed seconds when
-wall clocks/timers are stale. Immutable elapsed stamps fix those paths and carry
-spent time into hard recovery. Combined local `f3784375` / tree `1c165500` passes strict
-full gates: 1,901 Desktop (three existing LAN skips),689 Android per Debug/Release,
-120 GitHub-test,768 release controls (one platform skip),Detekt/lint/R8/AAB/inventory;
-all 450 readiness methods (six Apple-only Linux skips). Its 388.2 seconds uses caches,
-not a cold/hosted benchmark. A tree-identical normal local merge `102b38ae` aligns
-with `c81f75b4`; old receipts remain bound to `f378`, not relabeled as final-source tests.
-Final source/documentation, hosted Apple/runtime, protected PR and distinct
-actual-main verification remain required.
+The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is now
+accepted on actual main26eb15b6; [#252](https://github.com/Apdelrahman1911/parlor/issues/252#issuecomment-6512607470)
+retains physical acceptance separately. Immutable continuous-clock stamps bound
+command eligibility/retained validation to15 seconds and carry spent time into
+hard recovery; no renewed window, action replay, polling, extra thread/socket or
+background entitlement.
 
-Three fresh real pinned-P2pKit Linux host/peer Resume pairs at `f378` pass, six
-natural zero exits, selected seat/game/version, credential rotation/revocation,
-terminal delivery and cleanup. Receipt SHA256
-`13a16a1d25798ee453e3e8735e2207b14ac26a6fc804888522a01260d5965a5f`.
-Preparation explicitly lowers private Gradle workers 2 to 1/adds no-parallel; actual
-pair/helper/assertion/deadline source stays unchanged. These surviving same-machine
-JVMs/in-memory stores are not phones, short-grace faults, OS sleep, process death,
-game reducers or mobile energy measurements.
+Exact final source5b07d398 passes strict Linux `productionCheck allTests`:
+1,901 Desktop (three existing LAN skips),689 Android per Debug/Release,
+120 GitHub-test,768 release controls (one platform skip),Detekt/lint/R8/AAB/inventory
+and450 readiness methods (six Apple-only Linux skips). Fresh three real pinned-
+P2pKit Linux Resume host/peer pairs pass with six natural zero exits, selected seat,
+game/version/rotation/revocation/terminal/cleanup and1,146 runtime/six helper hashes.
+Receipt SHA256 `bd418b262949ddc97e97957a86628ead3398be219a05ce423efe9a383c3a6d12`.
+Preparation-only scheduling uses one Gradle worker/no-parallel; actual helpers and
+assertions are unchanged. Surviving same-machine JVMs/synthetic stores and cache
+reuse are not phones, process death, short-grace fault injection or energy evidence.
 
 ## Native-input investigation
 
@@ -96,7 +110,7 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
   neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
   scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
 - **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
-  October 29, 21:15 UTC publication recheck still lists 0.8.0-rc7, published October 23
+  October 29, 23:58 UTC publication recheck still lists 0.8.0-rc7, published October 23
   before upstream #524 merged October 25; no reproducible post524 publication or
   comparative mobile benefit established. See [the decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
 
