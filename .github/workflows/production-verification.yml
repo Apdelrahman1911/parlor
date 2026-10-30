@@ -130,6 +130,7 @@ jobs:
 
       - name: Install pinned Android SDK packages
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
+        timeout-minutes: 11
         shell: bash
         run: |
           set -euo pipefail
@@ -139,16 +140,26 @@ jobs:
           test -w /dev/kvm
           managed_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)
           test "$managed_device_image" = "system-images;android-35;google_apis;x86_64"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+          navigation_device_image=$(jq -r '.toolchains.android_navigation_device.system_image_package' config/release-policy.json)
+          test "$navigation_device_image" = "system-images;android-34;google_apis;x86_64"
+          # Install both required lanes before spending time on compilation.
+          # Do not let AGP fetch an unreviewed/missing image halfway through tests.
+          /usr/bin/timeout --signal=TERM --kill-after=10s 600s \
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" \
             "platforms;android-36" \
             "build-tools;36.0.0" \
             "platform-tools" \
             "emulator" \
-            "$managed_device_image"
+            "$managed_device_image" \
+            "$navigation_device_image"
           image_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"
           test -s "$image_properties"
           image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
           test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
+          image_properties="${ANDROID_HOME}/system-images/android-34/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_navigation_device.system_image_revision' config/release-policy.json)"
 
       - name: Record exact source and require a clean checkout
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
