@@ -17,6 +17,13 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 
 ## Current unmerged follow-ups
 
+- [Issue299 roster ownership](audits/2026-10-30-INITIAL-ROSTER-OWNERSHIP.md):
+  Mafia/Whodunit initializers retain caller-mutable rosters; four common regressions
+  fail against original source. Scoped code `4564ffe2` owns/validates one snapshot.
+  Corrected-source affected preparation passes687 Desktop /40 Android per
+  Debug/Release and explicit type-aware Detekt, zero failures/errors/skips.
+  Full final-clean/hosted/native/protected/actual-main acceptance remains required;
+  no transport privacy bypass or physical incident is demonstrated. #299 stays open.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
   authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
   local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
