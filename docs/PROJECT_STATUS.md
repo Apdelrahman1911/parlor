@@ -53,6 +53,12 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   and [copy-only diagnostic integration](audits/2026-10-29-INPUT-DIAGNOSTIC-INTEGRATION.md):
   hidden/nested inputs, output symlinks and unregistered suffixes fail closed;
   hash-bound original-file software fixtures work in shallow hosted checkouts.
+- [Supplementary name-format controls](audits/2026-10-30-SUPPLEMENTARY-NAME-CONTROLS.md),
+  [#293](https://github.com/Apdelrahman1911/parlor/issues/293): actual original
+  policy reproduces two failures; corrected eight methods pass, including all127
+  Unicode17 supplementary format scalars. Implemented locally; broader affected,
+  final-source and native/production qualification remain required. Intentional
+  case-sensitive names remain unchanged; no identity/keyboard repair is inferred.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
 **merged and independently main-qualified through PR290**; follow
@@ -131,16 +137,24 @@ The quiet377-byte log cannot diagnose compiler stage or memory pressure.
 Scoped Gradle/device/exact-Xcode cleanup receipts are consistent, but GitHub's
 finalizer reports a `clang-21` orphan; this is not full descendant quiescence.
 
-A copy-only bounded-profile correction is being qualified locally:3GiB Gradle
+A copy-only bounded-profile correction at
+[`94b0388f`](https://github.com/Apdelrahman1911/parlor/commit/94b0388f01e3892121ccf6a301addde916b842d0)
+qualifies its local preparation:3GiB Gradle
 heap, one worker, serial projects, in-process Kotlin compilation, one Xcode build
 job and Simulator boot after product verification. Build-stage logging/timing is
 enabled; test commands, single input, original predicates,2,700/900-second limits,
 Release optimizations and shipping architectures remain unchanged. Actual
 wrapper8.13/JDK21 software controls verify the daemon's limits; this minimal
 fixture is not Apple compilation or a benchmark. Native linkage, three-arm
-outcomes and capture custody remain unverified. Existing
-[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6516950898)
-retains the previous correction; it remains open.
+outcomes and capture custody remain unverified. Fresh final-source checks pass:
+768 release methods (one exact local Linux procfs capability skip),473 readiness
+(seven Apple-only skips),111 standalone controls (four Apple-only skips), strict
+transport385 methods (three existing LAN skips). Actual unsafe-heap/quiet-build/
+incomplete-state mutants fail their original assertions; the restored suite passes.
+One distinct [bounded-head41039233217](https://github.com/Apdelrahman1911/parlor/actions/runs/41039233217)
+is dispatched on the same standard free runner/source/runtime/device. Existing
+[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6520307035)
+retains both original failures and the new experiment; it remains open.
 No production benchmark, UIKit neutrality or failure causality is inferred;
 original failures remain failed and no workflow retry was requested.
 See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
@@ -204,6 +218,9 @@ physical/security/Store gates.
 
 After corrected-source tests stop and their logs/XML are retained, an additional
 **4.08 GiB** of regenerated build/Gradle caches and2.7MB of script bytecode are
-retired. Main plus active diagnostic checkouts total approximately3.4GiB, including
-retained unresolved evidence; global Gradle state is16KiB. This later reclamation
+retired. The07:22 UTC cleanup checkpoint totals approximately3.3GiB across the
+main and active diagnostic checkouts, including retained unresolved evidence;
+global Gradle state is16KiB at that checkpoint. Later active verification
+regenerates necessary private caches/build outputs; that is not a new cleanup
+failure or permission to delete running builds. This later reclamation
 is regenerated data, not an additional unique portion of the original project.

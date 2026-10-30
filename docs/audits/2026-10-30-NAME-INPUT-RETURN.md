@@ -128,3 +128,14 @@ native neutrality or hosted/mobile benchmark. Original tests, single typing,
 ten-second predicate, command limits, shipping source and Release graph stay
 unchanged. Final-source affected controls and a distinct Apple attempt remain
 required before accepting the new harness.
+
+The later final-source preparation at `94b0388f` passes473 readiness,111 standalone,
+768 release and385 strict transport methods, with seven/four Apple-only, one exact
+local Linux procfs and three existing LAN skips respectively. Actual wrapper/
+daemon limits and three executed regression mutants are verified. Distinct
+[bounded-head41039233217](https://github.com/Apdelrahman1911/parlor/actions/runs/41039233217)
+now investigates the same original source/runtime/device on a standard free
+runner. Apple linkage, three-arm/capture/cleanup outcomes remain pending; this is
+not production or speedup qualification. Existing
+[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6520307035)
+records the separate timeout and experiment without replacing original failures.
