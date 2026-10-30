@@ -13,6 +13,18 @@ executed October30, 09:29–10:41 UTC; this is not a fresh session benchmark.
 PR298 is independently qualified, but its distinct automatic actual-main CI is
 still pending at report preparation. This report does not qualify that run.
 
+## Main-acceptance addendum — 18:51 UTC
+
+The distinct [actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
+now independently qualifies all eight producers/optimized Apple Release join,
+23 Swift /716 KMP Simulator /450 readiness methods and both Android runtime lanes,
+with exact source/artifact/native/cleanup custody. Qualification SHA256:
+`83469030473de7ef4b3b028669bc735a78e4d659251f01dc8eeb286592758bc7`.
+Scoped297 is closed. This does not qualify a newer documentation tree, rc8 graph,
+mobile energy behavior or physical devices. The preceding report-preparation
+statement and original publication timestamps remain historical, not rewritten
+as later network reads. PR294's changed-source full41110715660 is separately pending.
+
 ## Independently retained publication evidence
 
 - Maven Central root metadata/POM/Gradle modules for core, LAN and RPC return
