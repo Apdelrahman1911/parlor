@@ -119,3 +119,14 @@ still required. None of the above is a new RPC network readback, rc8 transitive-
 qualification, comparative mobile benchmark or physical-device acceptance.
 The original publication timestamps and preceding preparation/addendum remain
 unchanged. Shipping core/LAN stay0.7.0-rc3; no RPC layer is added.
+
+## Independent follow-up after PR300 native failure
+
+The previously running original41126885894 iOS runtime producer now fails
+Arabic catalog settlement before the first game-opening tap,22 Swift PASS/1FAIL.
+No main300 acceptance exists; its pending dependent preparations were retired.
+The authored-text/Ghamza/RPC follow-up remains independently based on qualified
+main294 (`35288a72`, distinct41118248151) and will use its own fresh full-source
+local, hosted and protected/post-main gates. No failed-run retry, cause inference,
+new RPC benchmark, rc8 shipping adoption or release occurs. Earlier pending
+statements remain dated history; original publication bytes/timestamps are retained.

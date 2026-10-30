@@ -55,16 +55,19 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 ## Current unmerged follow-ups
 
 - [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) groups #299/#301
-  initializer/coordinator input ownership. Head `22c67a6c` normally incorporates
-  accepted main `35288a72`; all six ownership source/test files and16 scalar files
-  are unchanged. Fresh exact-source full local checks pass **1,948 Desktop /733
-  Android per Debug/Release /120 GitHub-test**,777 release and450 readiness methods
-  with only established local skips. Retargeted to protected **main** and normally
-  FF-pushed; fresh [full41126885894](https://github.com/Apdelrahman1911/parlor/actions/runs/41126885894)
-  is running at21:03 UTC. **760 native methods are expectations until executed**.
-  Keep #299/#301 open through all-eight/native/runtime/join/custody qualification,
-  protected merge and distinct actual-main acceptance. No deep-output immutability,
-  atomic concurrent-copy, external authentication bypass or private-wire-leak claim.
+  initializer/coordinator ownership. Its normally published current-main head
+  `22c67a6c` has a genuine [full41126885894](https://github.com/Apdelrahman1911/parlor/actions/runs/41126885894)
+  iOS runtime failure: **22 Swift PASS /1FAIL**, Arabic Egyptian Dominoes catalog
+  control settlement before the first game-opening tap, before name input/networking.
+  First complete existence/frame/enabled sample takes8.631 seconds; the next reports
+  absence after the unchanged10-second budget. This establishes a failed observer,
+  **not** native cause, a game-code regression or a caller-ownership repair failure.
+  Original job log SHA256 `bb20b419a1aa15f5972e78bae0919148de7408322e28bb82f4fc2875e0808563`;
+  immutable runtime ZIP SHA256 `512d7ca4b2bafcb4ead03fa99bc7fc8cd38d881e3c6cabdf15c198283e60abdd`.
+  Other completed producers cannot qualify the run. No blind retry, deadline/check
+  relaxation, partial-pass stitching or merge; #299/#301 and native #267/#276 stay
+  open. Dependent main300 preparations are retired without deleting source/evidence.
+  Fresh local1,948/733 results remain local, not full hosted/main acceptance.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is locally
   prepared to group the [authored-text scalar correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md)
   with the [Ghamza public-information regression](audits/2026-10-30-GHAMZA-PUBLIC-INFORMATION.md)
@@ -76,11 +79,11 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   all777 release and450 readiness methods with established local skips; receipt
   SHA256 `eee1391a5f11a8b4e75aab61cfebfdb42f9dbb566215b3f957a297c7c6c98f2e`.
   That receipt does **not** qualify the subsequent documentation union or a newer
-  main. Current-main integration, fresh exact-source local and all-eight hosted/
+  main. Independent accepted-main294 integration, fresh exact-source local and all-eight hosted/
   native/runtime/custody checks remain mandatory. Neither unprotected review branch
   is a merge destination. Keep295 draft until its exact work is accepted through
   protected main; #293 and physical/social-play #260 retain their applicable gates.
-- Small compatible [RPC publication/status documentation](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md)
+- Independent small [RPC publication/status documentation](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md)
   is being grouped locally with296 to avoid an extra full hosted matrix without
   removing tests, architectures or Release optimizations. Dated network/source
   readbacks remain intact; retain shipping P2pKit0.7.0-rc3. Published rc8 availability
