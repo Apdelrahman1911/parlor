@@ -97,15 +97,25 @@ dispatch from a failed baseline.
 
 A separate exact-source
 [PIN05 name-input diagnostic41009071161](https://github.com/Apdelrahman1911/parlor/actions/runs/41009071161)
-is running on standard free macos-15, harness `bf825359`, against failed source
-`c11d8ca1` /tree `cf57bb25`, iOS18.5/iPhone16Pro. It is copy-only and performs one
-ordinary attempt per original/Compose/native arm. The observer provider wraps
-only the public name field; seven actual copied Kotlin/Skiko scope controls pass,
-an executed whole-tree-provider counterfactual fails, and restored seven pass.
-Final strict local gates and468 readiness controls pass (seven exact Apple-only
-Linux skips). The runner reports its SDK/privacy preflight passed; complete native
-outcomes, failed-only capture custody and independent readback remain pending.
-No production benchmark, UIKit neutrality or failure causality is inferred.
+finishes **failed/incomplete** on standard free macos-15, harness `bf825359`,
+against failed source `c11d8ca1` /tree `cf57bb25`, iOS18.5/22F77/iPhone16Pro.
+Independent source/result readback finds both unmodified original English/Arabic
+journeys passing, zero skips. The Compose copy fails compilation: common
+`NameInputScreen` calls a provider declared only in `iosMain`; the native arm does
+not run. This diagnostic source-set defect is not a shipping keyboard diagnosis.
+Original ZIP SHA256
+`c8bc400c028ab0d7bfe3a40a573f7e6b16fc427a14db08e6d4681e4fcc5075f1`.
+
+Local corrected harness `def043d3` adds the common `@Composable expect` provider
+and matching platform `actual`, retaining field-only scope, forwarding, privacy
+schemas and all original input/deadline paths. Seven actual copied controls pass
+with the recorder in `commonTest` and provider in `desktopTest`; the whole-tree
+counterfactual fails its private-sibling assertion and restored seven pass.
+Complete common-caller compiler sensitivity, corrected final-source gates and
+fresh Apple application linkage remain pending. Prior full gates/468 readiness
+controls are evidence for `bf825359`, not certification of the corrected harness.
+No production benchmark, UIKit neutrality or failure causality is inferred;
+original failures remain failed and no workflow retry was requested.
 See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
@@ -152,3 +162,15 @@ guarantee), no paid infrastructure/additional agents, weakened verification or
 Release deoptimization. Local Linux lacks Xcode and physical mobile devices.
 Historical checkpoints remain [preserved](archives/README.md), never certificates
 for newer source. Source/tests/build wiring take precedence over this checkpoint.
+
+## Local storage maintenance
+
+Owner-authorized cleanup receipts record approximately **101.2 GiB reclaimed**
+and **43 inactive worktrees removed**, without forced removal. Source/history,
+credentials, installed toolchains, retained failure artifacts and verification
+receipts remain; removed worktree heads and unique uncommitted work have safety
+references. Git connectivity and unchanged `AGENTS.md` checks pass. Only the main
+checkout and active diagnostic worktree remain. Current checks regenerate
+disposable caches/build outputs; retire those only after their processes stop and
+important results are retained. Cleanup does not complete the overhaul or its
+physical/security/Store gates.

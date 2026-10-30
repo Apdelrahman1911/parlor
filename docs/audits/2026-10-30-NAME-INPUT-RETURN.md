@@ -97,7 +97,12 @@ The fully qualified main workflow takes52.6 minutes on the standard free runners
 queues/cache observations are retained. This is a single observation, not an
 identical-source Intel comparison, a guarantee or a physical-device benchmark.
 The failed draft PR291 ARM baseline remains failed. The separate copy-only
-PIN05 investigation41009071161 runs against that exact failed source/runtime/device;
-its actual outcomes and original failed-only capture custody remain pending.
+PIN05 investigation41009071161 finishes failed/incomplete against that exact
+failed source/runtime/device: both original journeys pass, but the Compose copy
+cannot compile its common caller against an iOS-only provider; the native arm
+does not run. The corrected common `expect`/platform `actual` diagnostic contract
+requires fresh verification and Apple linkage. No failed-input capture exists
+from that attempt, and its narrow original passes do not resolve the full failed
+baseline or prove native input delivery neutrality.
 Neither accepted shared-UI regression tests nor a green general CI run prove
 native input causality. #267/#276, physical and Store/security gates stay open.
