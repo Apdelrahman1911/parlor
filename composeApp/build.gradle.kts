@@ -368,12 +368,14 @@ android {
                     apiLevel = 35
                     systemImageSource = "google"
                     require64Bit = true
+                    testedAbi = "x86_64"
                 }
                 create("pixel2Api34") {
                     device = "Pixel 2"
                     apiLevel = 34
                     systemImageSource = "google"
                     require64Bit = true
+                    testedAbi = "x86_64"
                 }
             }
         }
