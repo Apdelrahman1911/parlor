@@ -87,6 +87,31 @@ class MultiplayerSetupPointerTest {
         }
     }
 
+    @Test
+    fun returning_from_an_untouched_host_name_then_joining_commits_the_single_full_input() {
+        for (binding in bindings()) {
+            for (language in AppLanguage.entries) {
+                verifyHostReturnThenPeerInput(binding, language, hostInput = null, peerInput = "Table Test")
+            }
+        }
+    }
+
+    @Test
+    fun a_new_peer_entry_does_not_reuse_the_previous_host_name() {
+        for (binding in bindings()) {
+            for (language in AppLanguage.entries) {
+                verifyHostReturnThenPeerInput(binding, language, hostInput = "Host Fixture", peerInput = "Table Test")
+            }
+        }
+    }
+
+    @Test
+    fun arabic_unicode_input_survives_return_and_equal_peer_launch_recreation() {
+        for (binding in bindings()) {
+            verifyHostReturnThenPeerInput(binding, AppLanguage.Arabic, hostInput = "مضيف تجريبي", peerInput = "أحمد")
+        }
+    }
+
     private fun verifyChoices(choice: SetupChoice, gesture: SetupGesture) {
         for (binding in bindings()) {
             for (language in AppLanguage.entries) verifyChoice(binding, language, choice, gesture)
@@ -165,6 +190,71 @@ class MultiplayerSetupPointerTest {
                 assertEquals(0, transport.operations)
             }
         }
+
+    /** Shared callback/state boundary only: Desktop text injection is not native IME delivery. */
+    private fun verifyHostReturnThenPeerInput(
+        binding: GameShellBinding,
+        language: AppLanguage,
+        hostInput: String?,
+        peerInput: String,
+    ) = runComposeUiTest {
+        val transport = SetupNetworkTripwire()
+        var visible by mutableStateOf(true)
+        var generation by mutableStateOf(0)
+        var exits = 0
+        setContent {
+            KoinApplication(application = { modules(module { single<RoomTransport> { transport } }) }) {
+                CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
+                    ProvideAppLanguage(language) {
+                        ParlorTheme(reducedMotion = true) {
+                            Box(Modifier.size(320.dp, 740.dp)) {
+                                if (visible) {
+                                    val launch = remember(generation) { GameShellLaunch.New(binding.definition.id) }
+                                    binding.Content(
+                                        launch,
+                                        {
+                                            exits++
+                                            visible = false
+                                        },
+                                        GameShellBackRequest.Initial,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        val copy = setupCopy(language)
+        onNodeWithContentDescription(copy.host).performScrollTo().send(SetupGesture.Press)
+        assertNameDestination(copy, SetupChoice.Host)
+        if (hostInput != null) {
+            onNodeWithText(copy.nameField).performTextInput(hostInput)
+            onNodeWithText(copy.nameField).assertTextContains(hostInput, substring = false)
+            onNodeWithContentDescription(copy.hostConfirm).assertIsEnabled()
+        }
+        val back = if (language == AppLanguage.Arabic) "العودة إلى الشاشة الرئيسية." else "Return to the home screen."
+        onNodeWithContentDescription(back).performScrollTo().send(SetupGesture.Press)
+        onNodeWithText(copy.nameField).assertDoesNotExist()
+        runOnIdle {
+            assertEquals(1, exits)
+            visible = true
+            generation++
+        }
+        onNodeWithContentDescription(copy.join).performScrollTo().send(SetupGesture.Press)
+        assertNameDestination(copy, SetupChoice.Join)
+        if (hostInput != null) onNodeWithText(hostInput).assertDoesNotExist()
+        onNodeWithText(copy.nameField).performTextInput(peerInput)
+        onNodeWithText(copy.nameField).assertTextContains(peerInput, substring = false)
+        onNodeWithContentDescription(copy.peerConfirm).assertIsEnabled()
+        runOnIdle { generation++ }
+        onNodeWithText(copy.nameField).assertTextContains(peerInput, substring = false)
+        onNodeWithContentDescription(copy.peerConfirm).assertIsEnabled()
+        runOnIdle {
+            assertEquals(1, exits)
+            assertEquals(0, transport.operations)
+        }
+    }
 
     private fun ComposeUiTest.assertNameDestination(copy: SetupCopy, choice: SetupChoice) {
         onNodeWithText(copy.nameField).assertExists()

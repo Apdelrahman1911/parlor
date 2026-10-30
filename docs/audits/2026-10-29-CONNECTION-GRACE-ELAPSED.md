@@ -106,10 +106,20 @@ JVMs/in-memory stores do not execute short-grace faults, mobile APIs or OS sleep
 
 ## Required integration and remaining limits
 
-Accepted-base alignment is complete; final documentation/source rechecks, protected PR integration,
-fresh Apple linkage/runtime and distinct automatic actual-main verification remain
-before merge. PR #289 is normally merged and independently qualifies its distinct actual-main
-run40964941119; its frozen checkouts are unchanged.
+Accepted-base alignment and protected integration are complete through
+[PR #290](https://github.com/Apdelrahman1911/parlor/pull/290), normal merge
+`26eb15b630d9348fa5964b012c27a703e6c4fe06` / tree
+`c936c0157f571e949bb3ac3fce03c0a576b3e59b`.
+[PR40972918577](https://github.com/Apdelrahman1911/parlor/actions/runs/40972918577)
+and the distinct automatic
+[actual-main40979550743](https://github.com/Apdelrahman1911/parlor/actions/runs/40979550743)
+each independently qualify all eight producers/the original optimized Apple
+Release join,23 Swift/716 source-derived KMP Simulator/450 ordinary readiness
+methods, zero macOS skips and exact source/artifact/native/output custody.
+Actual-main qualification SHA256
+`adba10d36861ac678aeb7d722c8455fef6da022c227d21471571731e6e0efe79`.
+Earlier local and PR289 receipts remain bound to their original source; no frozen
+checkout is rewritten or newer checkout certified by a historical pass.
 Physical Android/iOS calls/lock/sleep/Wi-Fi/process death/simultaneous recovery,
 energy/thermal and #258 protected-storage acceptance remain unverified. No Store
 release, free-runner policy change or additional agents.
