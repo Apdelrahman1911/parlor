@@ -78,8 +78,12 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   from `7efcbd8b`:203 Compose Desktop methods and type-aware test Detekt pass,
   including all201 prior methods and an executed two-failure dispatch-loss
   negative control. These common UI tests do not reproduce native query causality.
-  Incorporate independently accepted current main and reverify the final union
-  before publication/required hosted/native/protected/post-main qualification.
+  Current accepted main `35288a72` is already its merge base. The union at
+  `b4d63d8f` is local/unpublished; the pointer-only lineage has independently
+  retained full local evidence (1,943 Desktop /726 Android per Debug/Release),
+  not final-union or native acceptance. Reverify the exact final union and
+  resolve native causality before publication/required hosted/native/protected/
+  post-main qualification. Do not publish this preparation as a blind CI retry.
   PR300 already targets protected main; former review branches are not merge destinations.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) retains the
   separate [authored-text correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
@@ -88,7 +92,18 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   local gates qualify1,952 Desktop /737 Android per Debug/Release /120 GitHub-test,
   777 release and450 readiness methods. Fresh full
   [41135053853](https://github.com/Apdelrahman1911/parlor/actions/runs/41135053853)
-  is running;764 native methods remain expectations until independently read back.
+  **failed**:21 Swift PASS/2FAIL, all764 KMP Simulator methods PASS/zero skips.
+  Arabic Ghamza Host fails its original transition after one synthesized tap;
+  English Ghamza Join permission Continue fails settlement **before any tap**.
+  Seven other producers and the optimized Apple Release join cannot qualify
+  this whole run. The corrected read-only
+  [decoder41143154363](https://github.com/Apdelrahman1911/parlor/actions/runs/41143154363)
+  independently matches all1,307 original objects/all23 unchanged Swift outcomes.
+  Actually viewed original settled PNGs and movie-tail samples show no visible
+  blocking keyboard/tutorial/alert/privacy overlay; this is not query/callback
+  causality or a repair. [Source-bound readback](audits/2026-10-30-IOS-PUBLIC-SETUP-PAIR-READBACK.md)
+  distinguishes the original failures from successful decoding and local probes.
+  No failed application CI retry, deadline change, repeated tap or merge occurred.
   This is not hosted/main or physical rendering acceptance. #293 stays open;
   keep295 unchanged until protected296 plus distinct main acceptance.
 - [Draft PR295](https://github.com/Apdelrahman1911/parlor/pull/295) retains Ghamza
