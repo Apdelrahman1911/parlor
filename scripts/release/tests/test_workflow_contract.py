@@ -975,6 +975,10 @@ class WorkflowContractTest(unittest.TestCase):
             ("SimRuntime.iOS-26-2", "SimRuntime.iOS-18-5"),
             ("SimDeviceType.iPhone-17-Pro", "SimDeviceType.iPhone-16-Pro"),
             ('--profile "$PARLOR_INPUT_PROFILE"', '--profile catalog'),
+            ("options: [catalog, original-host, name-input]", "options: [catalog, original-host]"),
+            ("options: [catalog, original-host, name-input]", "options: [catalog, original-host, name-input, retry]"),
+            ("default: catalog", "default: name-input"),
+            ("default: catalog", "default: original-host"),
         ):
             changed = workflow.replace(before, after)
             self.assertNotEqual(changed, workflow)

@@ -67,6 +67,25 @@ keyboard repair or causal conclusion; #267/#276 stay open, PR291 stays draft.
 Standard free public runners only; no paid infrastructure, additional agent,
 weakened production check, dependency change or Store release.
 
+## Local gate correction
+
+The first full strict local gate at `dca8c183` failed release automation,
+not gameplay compilation: two archived cleanup-schema fixtures were absent
+from the sparse diagnostic checkout, and the evidence-only workflow's exact
+hash registration had not been updated for its reviewed additional profile.
+The original failed log and XML reports remain retained. Materializing only
+the unchanged tracked `ios-readiness-15/16` fixtures fixes the local checkout;
+no source fixture, expected result or production workflow changes.
+
+The reviewed workflow diff is solely the profile description and added
+`name-input` choice, with catalog still the default. Register its exact
+SHA256 `98669fcb515e1009a7307b7e3b31373539e6072ec2584f9296f4025aa22e1d85`;
+existing privilege/runner/trigger/source/runtime/retry/upload guards remain
+fail-closed. Additional mutations reject profile removal/addition and
+non-catalog defaults. All175 focused workflow/native-continuation controls
+pass on Linux. A fresh complete strict gate is still required on the final
+corrected commit; none of this establishes native input causality.
+
 ## API basis
 
 Pinned Compose1.10.3 UI/Foundation source inspection identifies public

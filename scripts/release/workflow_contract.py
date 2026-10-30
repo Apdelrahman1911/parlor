@@ -23,7 +23,7 @@ EXPECTED = {
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
-INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+INPUT_INVESTIGATION_SHA256 = "98669fcb515e1009a7307b7e3b31373539e6072ec2584f9296f4025aa22e1d85"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
