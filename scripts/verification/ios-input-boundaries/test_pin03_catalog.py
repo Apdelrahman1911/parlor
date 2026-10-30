@@ -1,11 +1,14 @@
 """Executed source-copy/privacy/result controls, not native acceptance."""
 import copy
+import ast
 import hashlib
 import io
 import json
 import os
+import inspect
 from pathlib import Path
 import tarfile
+import shlex
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -35,6 +38,60 @@ def snapshot():
 
 
 class CopyControls(unittest.TestCase):
+    def test_bounded_environment_overrides_arbitrary_options_but_preserves_runner_tracking(self):
+        inherited = dict(HOME='/public/home', RUNNER_TRACKING_ID='unchanged-task',
+                         GRADLE_OPTS='-Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=-Xmx99g')
+        before = dict(inherited)
+        environment = runner.diagnostic_environment(inherited, Path('/owned/registry'), Path('/owned/jvm tmp'))
+        options = shlex.split(environment.pop('GRADLE_OPTS'))
+        self.assertEqual(environment, {k: v for k, v in before.items() if k != 'GRADLE_OPTS'})
+        self.assertEqual(inherited, before)
+        self.assertEqual(options, [
+            '-Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process',
+            '-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC',
+            '-Dorg.gradle.workers.max=1', '-Dorg.gradle.parallel=false',
+            '-Dorg.gradle.daemon.registry.base=/owned/registry', '-Djava.io.tmpdir=/owned/jvm tmp'])
+
+    def test_build_command_preserves_destination_and_settings_without_quiet_or_test_changes(self):
+        base = ['/usr/bin/xcodebuild', '-quiet', '-project', 'iosApp/iosApp.xcodeproj',
+                '-scheme', 'iosApp', '-configuration', 'Debug', '-sdk', 'iphonesimulator',
+                '-destination', 'platform=iOS Simulator,id=' + SIMULATOR,
+                '-parallel-testing-enabled', 'NO', '-maximum-concurrent-test-simulator-destinations', '1']
+        before = list(base)
+        self.assertEqual(runner.build_command(base), [arg for arg in base if arg != '-quiet'] + [
+            '-jobs', '1', '-showBuildTimingSummary', 'build-for-testing'])
+        self.assertEqual(base, before)
+        test = runner.test_command(base, Path('/owned/tests.xcresult'))
+        self.assertEqual(test[:len(base)], base)
+        self.assertNotIn('-showBuildTimingSummary', test)
+        self.assertNotIn('-jobs', test)
+        self.assertEqual(test.count('test-without-building'), 1)
+
+    def test_build_verifies_the_original_product_before_boot_and_unchanged_test_launch(self):
+        source = inspect.getsource(runner.main)
+        syntax = ast.parse(source)
+        calls = [node for node in ast.walk(syntax) if isinstance(node, ast.Call)]
+        line = lambda name: next(node.lineno for node in calls if isinstance(node.func, ast.Name) and node.func.id == name)
+        self.assertLess(line('diagnostic_environment'), line('build_command'))
+        self.assertLess(line('build_command'), line('test_command'))
+        self.assertLess(source.index("arm + '-binary-architecture'"), source.index("('boot', simulator_id)"))
+        self.assertLess(source.index("('bootstatus', simulator_id, '-b')"), source.index('command(test_command(base, result)'))
+        self.assertEqual(source.count("('boot', simulator_id)"), 1)
+        self.assertEqual(source.count("('bootstatus', simulator_id, '-b')"), 1)
+        self.assertIn("arm + '-build', 2700, dest / 'build.log'", source)
+        self.assertIn("arm + '-tests', 900, dest / 'test.log'", source)
+
+    def test_exception_marks_incomplete_before_existing_finally_cleanup_without_swallowing_cancellation(self):
+        syntax = ast.parse(inspect.getsource(runner.main))
+        handler = next(node for node in ast.walk(syntax) if isinstance(node, ast.ExceptHandler)
+                       and isinstance(node.type, ast.Name) and node.type.id == 'BaseException'
+                       and any(isinstance(child, ast.Raise) for child in node.body))
+        assignments = [node for node in handler.body if isinstance(node, ast.Assign)]
+        self.assertEqual(len(assignments), 1)
+        self.assertEqual(ast.unparse(assignments[0]), "state['result'] = 'INCOMPLETE'")
+        self.assertIsInstance(handler.body[-1], ast.Raise)
+        self.assertIsNone(handler.body[-1].exc)
+
     def test_failed_attachment_exports_select_exact_tests_not_failure_association(self):
         english = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()'
         arabic = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'

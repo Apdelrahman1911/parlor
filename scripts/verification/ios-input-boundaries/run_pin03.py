@@ -13,6 +13,7 @@ from pathlib import Path, PurePosixPath
 import platform
 import plistlib
 import re
+import shlex
 import signal
 import stat
 import subprocess
@@ -41,6 +42,28 @@ ROOTS = ('build.gradle.kts', 'settings.gradle.kts', 'gradle.properties', 'gradle
 TESTS = tuple('iosAppUITests/IOSAppLaunchUITests/' + name for name in (
     'testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish',
     'testAdditionalGamesExposeOnlyMultiplayerSetupInArabic'))
+
+
+def diagnostic_environment(inherited, registry, temporary):
+    """Bound build concurrency, not compiler optimizations or test semantics.
+
+    These client system properties also reach the original Xcode Gradle phase.
+    Keep runner tracking intact; replace, rather than append arbitrary options.
+    """
+    options = [
+        '-Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process',
+        '-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC',
+        '-Dorg.gradle.workers.max=1', '-Dorg.gradle.parallel=false',
+        '-Dorg.gradle.daemon.registry.base=' + str(registry),
+        '-Djava.io.tmpdir=' + str(temporary),
+    ]
+    return dict(inherited, GRADLE_OPTS=shlex.join(options))
+
+
+def build_command(base):
+    """Retain compiler/task stages if the unchanged 45-minute build fails."""
+    return [argument for argument in base if argument != '-quiet'] + [
+        '-jobs', '1', '-showBuildTimingSummary', 'build-for-testing']
 
 
 def failed_method_exports(result, destination, outcomes):
@@ -350,11 +373,13 @@ def main():
                  archive_sha256=sha(archive), runtime=args.runtime, device=args.device, xcode=xcode, sdk=sdk,
                  original_inputs=manifest, arms=[], result='NOT_QUALIFIED',
                  scope='Existing EN/AR additional-game journeys only, not 60-journey neutrality, original iOS26.2 cause, production CI or physical acceptance')
-    environment = dict(os.environ)
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
-    environment['GRADLE_OPTS'] = environment.get('GRADLE_OPTS', '') + \
-        ' -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process' + \
-        ' -Dorg.gradle.daemon.registry.base=' + str(registry) + ' -Djava.io.tmpdir=' + str(jtmp)
+    environment = diagnostic_environment(os.environ, registry, jtmp)
+    state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
+        gradle_parallel=False, kotlin_compiler='in-process', xcode_jobs=1,
+        verbose_build=True, boot_after_build=True, build_timeout_seconds=2700,
+        test_timeout_seconds=900, scope='Uniform copy-only resource/observation profile; '
+        'not a shipping build change, timeout extension or compiler-stage diagnosis')
     def checkpoint():
         partial = out / 'state.writing'
         partial.write_text(json.dumps(state | {'commands': commands.rows}, indent=2))
@@ -391,15 +416,12 @@ def main():
         try:
             simulator_id = simulator.create(prefix, claim, backend)
             row['simulator'] = simulator_id
-            for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
-                if backend.run(*operation)[0]:
-                    raise RuntimeError('Owned Simulator boot failed')
             base = ['/usr/bin/xcodebuild', '-quiet', '-project', 'iosApp/iosApp.xcodeproj',
                     '-scheme', 'iosApp', '-configuration', 'Debug', '-sdk', 'iphonesimulator',
                     '-destination', 'platform=iOS Simulator,id=' + simulator_id,
                     '-derivedDataPath', str(out / 'derived'), '-parallel-testing-enabled', 'NO',
                     '-maximum-concurrent-test-simulator-destinations', '1']
-            code, _ = command([*base, 'build-for-testing'], arm + '-build', 2700, dest / 'build.log')
+            code, _ = command(build_command(base), arm + '-build', 2700, dest / 'build.log')
             row['build_exit'] = code
             verify_inputs(copy, inputs)
             if code:
@@ -419,6 +441,11 @@ def main():
             if rc or archs.decode().strip() != 'arm64':
                 raise RuntimeError('Actual Debug wrapper is not the declared ARM64 image')
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
+            # Building for an explicit available destination does not require a
+            # running Simulator. Avoid competing with its RAM/CPU during linkage.
+            for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
+                if backend.run(*operation)[0]:
+                    raise RuntimeError('Owned Simulator boot failed')
             result = dest / 'tests.xcresult'
             code, _ = command(test_command(base, result),
                               arm + '-tests', 900, dest / 'test.log',
@@ -482,6 +509,7 @@ def main():
                 row['captures'] = captures
         except BaseException as error:
             row.update(result='INVESTIGATION_FAILED', error_type=type(error).__name__)
+            state['result'] = 'INCOMPLETE'
             raise
         finally:
             commands.finalizing = True

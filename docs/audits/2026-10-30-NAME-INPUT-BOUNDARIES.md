@@ -150,3 +150,48 @@ regression; execute the copied recorder in `commonTest` and the actual provider 
 the original visibility defect. Fresh corrected-source controls and Apple
 application linkage are required before accepting this repair. Original failure
 evidence remains failed; no workflow retry, longer predicate or shipping edit.
+
+## Corrected-head execution: original build timeout
+
+[Diagnostic41017156382](https://github.com/Apdelrahman1911/parlor/actions/runs/41017156382)
+at harness `def043d3` also finishes **failed/incomplete**, for a different reason.
+Independent original-artifact readback matches the source archive and unmodified
+original-arm input manifest. Its build reaches the unchanged2,700-second command
+limit, is terminated and reaped. **No application product, XCTest result, Compose
+arm or native arm exists.** The corrected common provider was not compiled.
+ZIP SHA256 `ddac2f18d293d36026ce17f9dffe34363016d49df9b1840078e4251a89b76eed`.
+
+The quiet377-byte build log contains only destination warnings and `BUILD
+INTERRUPTED`; it cannot identify compiler stage, a deadlock or memory pressure.
+The same original archive previously built in1,763.8 seconds, but that single
+successful observation neither diagnoses this timeout nor justifies a blind retry.
+Gradle stop and owned-device/exact-Xcode cleanup receipts are internally consistent.
+GitHub's finalizer additionally reports a `clang-21` orphan: the scoped Xcode
+receipts do **not** establish quiescence of every Kotlin Native descendant.
+
+The next copied investigation uses one uniform bounded build profile for all
+three arms:3GiB Gradle heap, one worker, serial Gradle projects, in-process Kotlin
+compiler and one Xcode build job. Boot the same owned Simulator only **after**
+building and validating the ARM64 product, avoiding concurrent Simulator load
+during linkage. Remove build-only `-quiet` and request the build timing summary
+so future failures retain task/compiler stages. Tests keep their existing command,
+single input synthesis and ten-second predicate; build/test limits remain2,700/900
+seconds. Exceptions now checkpoint `INCOMPLETE` before the existing cleanup and
+rethrow, including cancellation. Shipping source, Release optimization,
+architectures, dependencies, production workflows and privileges are unchanged.
+This is a resource/observability experiment, not a confirmed keyboard or timeout
+repair. Fresh affected controls and a distinct new-head Apple execution are
+required; original failures remain failed.
+
+Actual wrapper8.13/JDK21 software execution, using original `gradle.properties`
+and a minimal dependency-free fixture, verifies `-Xmx3g`, one Gradle worker,
+serial projects, in-process compiler selection and inherited JVM temporary path
+in the single-use daemon. Its first fixture incorrectly referenced the Gradle
+script from a configuration-cache closure; the retained failure is corrected by
+capturing primitive configuration values, not by disabling the cache. This does
+not compile the Apple app or establish a mobile/hosted performance improvement.
+The111 standalone controls pass with four exact Apple-only Linux skips;70 owned
+cleanup controls pass. Executed heap-bound, quiet-build and incomplete-state
+mutants fail their original assertions; the restored suite passes again. Existing
+actual common-caller/field-privacy evidence remains bound to `def043d3` because
+those copied templates and shipping sources did not change.
