@@ -1,6 +1,22 @@
 # Project status — October 30, 2026
 
-## Latest independently qualified checkpoint
+## Latest merged checkpoint — main verification pending
+
+[PR298](https://github.com/Apdelrahman1911/parlor/pull/298) normally merged as
+`71c3f7cc6b8c792b8d8c061d2e35fbe771f8dfe1`, tree
+`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`.
+[PR41090361352](https://github.com/Apdelrahman1911/parlor/actions/runs/41090361352)
+independently qualifies all eight producers/optimized Apple Release join, exact
+source/artifact/native/cleanup custody,23 Swift /716 KMP Simulator /450 readiness
+methods, and three API35 Release plus three API34 Debug navigator methods.
+Qualification SHA256
+`bed3bfe30226ea81f711ee3f924a6a04cfc30ef0eb11a7f8377a2201afbff919`.
+Its distinct automatic
+[actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
+remains pending at this integration's preparation; **do not substitute PR
+success for main acceptance**. #297 stays open until that separate readback.
+
+## Prior independently qualified main (PR292)
 
 [PR292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
 `d566a576abad59c8c67ddba1798aa6dd30b6ce44`, tree
@@ -17,6 +33,15 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
 
 ## Current unmerged follow-ups
 
+- [Issue301 host coordinator input ownership](audits/2026-10-30-HOST-COORDINATOR-INPUT-OWNERSHIP.md):
+  original caller-owned peer/start collections reproduce three exact assertion
+  failures. Scoped `7518ad1c` captures fixed authorization/outbound seats and the
+  validated start roster. Complete affected preparation passes166 Desktop /163
+  Android per Debug/Release and explicit type-aware Detekt, zero failures/skips.
+  Fresh final-clean full/hosted/native/protected/actual-main qualification remains
+  required; no external exploit, private wire delivery or physical incident is
+  demonstrated. #301 stays open. PR294/300 main integrations are prepared locally;
+  their original failed/pending hosted runs are not relabeled successes.
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
   authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
   local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
@@ -30,8 +55,8 @@ observation, not statistical/device benchmarking; hybrid draft291 remains unqual
   [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
   missing upfront API34 provisioning/revision pin; a separate main-based scoped
   correction preserves both runtime lanes, Release optimizations and free runners.
-  Nine new software controls plus88 existing workflow methods pass; final-source
-  full/runtime/native/protected integration remains required. The failed archive's
+  PR298's protected merge/complete PR qualification are recorded above;
+  distinct actual-main acceptance remains pending at preparation. The failed archive's
   bytes are unavailable; a current valid official download does not establish its
   cause. No blind retry, parent merge or Store release occurred.
 
@@ -144,9 +169,12 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
   neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
   scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
 - **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
-  October 29, 21:15 UTC publication recheck still lists 0.8.0-rc7, published October 23
-  before upstream #524 merged October 25; no reproducible post524 publication or
-  comparative mobile benefit established. See [the decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
+  October30 publication/source readback confirms upstream
+  [0.8.0-rc8](https://github.com/p2pKit/P2pKit/tree/6c85fdc2977386e572830c243f9aa8bb17d84ec3)
+  includes #524; publication is no longer the reason to defer. No comparative
+  mobile benefit or qualified replacement graph is established. A separate
+  detailed documentation reassessment is locally prepared; the
+  [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md) retains dated rc7 evidence.
 
 Only standard free public runners (documented 20 total / five macOS ceilings, no allocation
 guarantee), no paid infrastructure/additional agents, weakened verification or
