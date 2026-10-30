@@ -73,3 +73,11 @@ exports still reject. Executed controls include512 irrelevant public activities
 and oversized/deep/duplicate/private counterexamples. Older readers remain
 unchanged. A distinct corrected-source decoder may re-read the same immutable
 result; no application test, gesture, deadline or failing workflow is retried.
+
+The corrected-ledger [reader41048520573](https://github.com/Apdelrahman1911/parlor/actions/runs/41048520573)
+also rejects, now at exact attachment/failure/typing eligibility, not the title
+ledger. Four original queries and23-case readback still succeed; no PNG is
+uploaded. Actual field attribution is unresolved. A distinct observation-only
+revision retains fixed-marker numeric counters on rejection, never raw titles,
+values or the activity graph. Original eligibility and failed exit remain intact;
+it is not another application run or an assumed native repair.

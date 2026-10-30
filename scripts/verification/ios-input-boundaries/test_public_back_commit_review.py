@@ -254,5 +254,22 @@ class PublicBackCommitReviewTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 review.verify_public_back_failure(activity | dict(children=activity['children'] + extras), review.METHOD)
 
+    def test_unresolved_native_schema_retains_only_fixed_public_numeric_counters(self):
+        activity = dict(testIdentifier=review.METHOD, children=[
+            *[dict(title=x) for x in review.TYPED_TITLES],
+            dict(name=review.TITLE, unrelated="private value must not be retained"),
+            dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)])
+        with self.assertRaises(review.BackEligibilityError) as caught:
+            review.verify_public_back_failure(activity, review.METHOD)
+        metadata = caught.exception.metadata
+        self.assertEqual(set(metadata), {"nodes", "screenshot_title_count", "failure_title_count",
+                                         "synthetic_typing_title_count", "fixed_public_marker_fields"})
+        self.assertEqual(metadata["screenshot_title_count"], 0)
+        self.assertEqual(metadata["failure_title_count"], 1)
+        self.assertEqual(metadata["synthetic_typing_title_count"], 2)
+        self.assertEqual(metadata["fixed_public_marker_fields"]["name"], 1)
+        for secret in ("private value", review.TITLE, *review.TYPED_TITLES):
+            self.assertNotIn(secret, json.dumps(metadata))
+
 if __name__ == '__main__':
     unittest.main()

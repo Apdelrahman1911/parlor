@@ -93,6 +93,13 @@ def public_back_lines(raw):
     return lines
 
 
+class BackEligibilityError(ValueError):
+    """Fixed public-marker counters only, never arbitrary titles/typed values."""
+    def __init__(self, metadata):
+        super().__init__('Frozen public Back eligibility unresolved')
+        self.metadata = metadata
+
+
 def verify_public_back_failure(activities, method):
     """Exact failed public setup, one source-pinned synthetic input; no other typing."""
     require(method == METHOD and activities.get('testIdentifier') == method)
@@ -102,11 +109,15 @@ def verify_public_back_failure(activities, method):
     # Keep only scalar counters and the two source-pinned typing operations;
     # total traversal/depth/title bytes and all export eligibility stay bounded.
     visited, attachment_count, failure_count, typed = 0, 0, 0, []
+    marker_fields = {key: 0 for key in ('title', 'name', 'displayName', 'text', 'message', 'emittedOutput')}
     def visit(node, depth=0):
         nonlocal visited, attachment_count, failure_count
         visited += 1
         require(visited <= 16384 and depth <= 24)
         if isinstance(node, dict):
+            for key in marker_fields:
+                if node.get(key) == TITLE:
+                    marker_fields[key] += 1
             if 'title' in node:
                 title = node['title']
                 require(isinstance(title, str) and len(title.encode()) <= 4096)
@@ -125,7 +136,10 @@ def verify_public_back_failure(activities, method):
             for child in node:
                 visit(child, depth + 1)
     visit(activities)
-    require(attachment_count == failure_count == 1 and typed == TYPED_TITLES)
+    if not (attachment_count == failure_count == 1 and typed == TYPED_TITLES):
+        raise BackEligibilityError(dict(nodes=visited, screenshot_title_count=attachment_count,
+            failure_title_count=failure_count, synthetic_typing_title_count=len(typed),
+            fixed_public_marker_fields=marker_fields))
 
 
 def validate_metadata(run, artifact):
@@ -315,6 +329,8 @@ def main():
             image.unlink()
         receipt['result'] = 'REJECTED'
         receipt['error_type'] = type(error).__name__
+        if isinstance(error, BackEligibilityError):
+            receipt['back_eligibility'] = error.metadata
         raise
     finally:
         require(all(sha((inputs / name).read_bytes()) == digest for name, digest in manifest.items()))
