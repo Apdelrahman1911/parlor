@@ -1,24 +1,70 @@
 # Project status — October 30, 2026
 
-## Latest independently qualified checkpoint
+## Latest merged checkpoint — main verification pending
 
-[PR #292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
-`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, qualified tree
-`4d27c827b8189ffc49af8a07547c64e272af89c1`.
-The distinct automatic
+[PR298](https://github.com/Apdelrahman1911/parlor/pull/298) normally merged as
+`71c3f7cc6b8c792b8d8c061d2e35fbe771f8dfe1`, tree
+`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`.
+[PR41090361352](https://github.com/Apdelrahman1911/parlor/actions/runs/41090361352)
+independently qualifies all eight producers/optimized Apple Release join, exact
+source/artifact/native/cleanup custody,23 Swift /716 KMP Simulator /450 readiness
+methods, and three API35 Release plus three API34 Debug navigator methods.
+Qualification SHA256
+`bed3bfe30226ea81f711ee3f924a6a04cfc30ef0eb11a7f8377a2201afbff919`.
+Its distinct automatic
+[actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
+remains pending at this integration's preparation; **do not substitute PR
+success for main acceptance**. #297 stays open until that separate readback.
+
+## Prior independently qualified main (PR292)
+
+[PR292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
+`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, tree
+`4d27c827b8189ffc49af8a07547c64e272af89c1`. Distinct automatic
 [actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
-independently qualifies all eight producers and the original optimized Apple
-Release join: **23 Swift /716 source-derived KMP Simulator /450 ordinary readiness
-methods**, zero Apple skips and exact source/artifact/native/output custody.
-Qualification SHA256 `3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
-All nine name-setup pointer methods also execute on all four Desktop hosts.
-This accepts the regression tests, not a native keyboard repair or the original
-#267/#276 cause. No protected merge bypass or release occurred.
+independently qualifies all eight producers/original optimized Apple Release join:
+23 Swift /716 source-derived KMP Simulator /450 readiness methods, zero Apple
+skips, exact source/artifact/native/cleanup custody. Qualification SHA256
+`3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
+All nine name-setup pointer methods execute on all four Desktop hosts. This accepts
+regression tests, not a native keyboard repair or the original #267/#276 cause.
+The workflow's52.6 minutes including queues is one source-bound free-runner
+observation, not statistical/device benchmarking; hybrid draft291 remains unqualified.
 
-That fully qualified main workflow took **52.6 minutes** on standard free runners,
-including queues. This is one source-bound observation, not a statistical/device
-benchmark or a guaranteed future duration. The ARM profile remains the fastest
-qualified tested configuration; draft PR291's hybrid alternative remains unmeasured.
+## Current unmerged follow-ups
+
+- [Draft PR294](https://github.com/Apdelrahman1911/parlor/pull/294) now has a
+  **local, unpublished integration** of merged main `71c3f7cc`. Only status and
+  generated-inventory conflicts required resolution; the shared scalar-safe
+  admission/game-label code and all its regression methods are retained unchanged.
+  Current dual-image provisioning is inherited without weakening either runtime
+  lane. Fresh exact-source local and complete hosted/native checks remain required;
+  this preparation is not actual-main acceptance, a keyboard repair or a CI retry.
+  [Scalar-boundary evidence](audits/2026-10-30-GAME-DISPLAY-SCALARS.md) retains the
+  original policy/game failures, exhaustive common controls and qualified local
+  `4a9994f5` result (1,941 Desktop /726 Debug /726 Release /120 GitHub-test).
+- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) isolates the
+  Mafia/Whodunit initial roster from later caller mutations (#299). Its current
+  review base is the merged PR298 branch, **not a merge destination**. Full local
+  preparation passes; retargeting to main and fresh hosted/native qualification
+  remain required before protected integration and scoped closure.
+- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
+  authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
+  local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
+  release controls, with three established LAN skips and one exact local procfs
+  capability skip;450 software readiness methods/six Apple-only Linux skips.
+  This is not hosted/native/main or physical rendering qualification. #293 stays
+  open;295 is unchanged. [Source-bound report](https://github.com/Apdelrahman1911/parlor/blob/65f4a8eecc2fc8205b30d594e6d5712959c75e3a/docs/audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
+- PR294's fresh changed-source41079982618 Linux job fails during the late API34
+  image installation, after successful full root gates and the Release smoke
+  invocation. The whole run cannot qualify, regardless of other producer results.
+  [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
+  missing upfront API34 provisioning/revision pin; a separate main-based scoped
+  correction preserves both runtime lanes, Release optimizations and free runners.
+  PR298's protected merge and complete PR qualification are recorded above;
+  its distinct actual-main acceptance is still pending. The failed archive's
+  bytes are unavailable; a current valid official download does not establish its
+  cause. No blind retry, parent merge or Store release occurred.
 
 ## Prior accepted checkpoint (PR290)
 
@@ -53,24 +99,6 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
   and [copy-only diagnostic integration](audits/2026-10-29-INPUT-DIAGNOSTIC-INTEGRATION.md):
   hidden/nested inputs, output symlinks and unregistered suffixes fail closed;
   hash-bound original-file software fixtures work in shallow hosted checkouts.
-- [Supplementary name-format controls](audits/2026-10-30-SUPPLEMENTARY-NAME-CONTROLS.md),
-  [#293](https://github.com/Apdelrahman1911/parlor/issues/293): actual original
-  policy reproduces two failures; corrected eight methods pass, including all127
-  Unicode17 supplementary format scalars. The
-  [shared game-label correction](audits/2026-10-30-GAME-DISPLAY-SCALARS.md) extends
-  the same pure core policy to all six games and the four existing game-ID checks.
-  Original game-boundary execution reproduces20 failures across24 methods;
-  corrected34 additions run in every applicable local Desktop/Android suite.
-  Clean `4a9994f5` passes strict full Linux gates:1,941 Desktop,726 Android per
-  Debug/Release,120 GitHub-test and768 release methods, with three established
-  LAN skips and one exact Linux procfs capability skip. The original kernel OOM
-  remains failed; the new smaller private serial profile passes without changing
-  shipping/CI settings. Final-doc affected checks, fresh full/native/optimized
-  Release CI and protected integration remain required. PR294's original
-  `41040656557` is still22 Swift PASS/1FAIL before English Ghamza Host-name Back;
-  its719-method KMP pass and successful read-only decoder do not qualify that run
-  or explain its cause. PR294 remains draft/unmerged. Intentional
-  case-sensitive names remain unchanged; no identity/keyboard repair is inferred.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is
 **merged and independently main-qualified through PR290**; follow
@@ -107,69 +135,16 @@ passes; independent readback matches1,257 original objects/all23 identifiers.
 Actually viewed original image/movie samples show empty Arabic name and keyboard,
 not the earlier visible QuickPath overlay. These are not native causal proof.
 The [shared-UI return regression report](audits/2026-10-30-NAME-INPUT-RETURN.md)
-records nine methods/15 added journeys and an executed input-loss negative
-control. PR292 and its distinct actual-main run now accept those regression tests,
-not a shipping keyboard fix or resolution of that failed baseline. Keep PR291
-draft and #276/#267 open; no blind rerun, longer deadline, replayed input or hybrid
-dispatch from a failed baseline.
+records nine local methods/15 added journeys and an executed input-loss negative
+control. Tests are locally prepared, not a shipping keyboard fix or merged
+qualification. Keep PR291 draft and #276/#267 open; no blind rerun, longer deadline,
+replayed input or hybrid dispatch from a failed baseline.
 
-A separate exact-source
-[PIN05 name-input diagnostic41009071161](https://github.com/Apdelrahman1911/parlor/actions/runs/41009071161)
-finishes **failed/incomplete** on standard free macos-15, harness `bf825359`,
-against failed source `c11d8ca1` /tree `cf57bb25`, iOS18.5/22F77/iPhone16Pro.
-Independent source/result readback finds both unmodified original English/Arabic
-journeys passing, zero skips. The Compose copy fails compilation: common
-`NameInputScreen` calls a provider declared only in `iosMain`; the native arm does
-not run. This diagnostic source-set defect is not a shipping keyboard diagnosis.
-Original ZIP SHA256
-`c8bc400c028ab0d7bfe3a40a573f7e6b16fc427a14db08e6d4681e4fcc5075f1`.
-
-Corrected harness `def043d3` adds the common `@Composable expect` provider
-and matching platform `actual`, retaining field-only scope, forwarding, privacy
-schemas and all original input/deadline paths. Seven actual copied controls pass
-with the recorder in `commonTest` and provider in `desktopTest`; the whole-tree
-counterfactual fails its private-sibling assertion and restored seven pass.
-Complete copied Name screen and recorder in `commonTest`, platform provider in
-`desktopTest`: seven PASS; removing the common contract reproduces compiler
-rejection before runtime; restored seven PASS. Fresh affected strict suites run
-201 shipping Compose/385 docs-sensitive transport methods (three existing LAN
-skips),768 release controls (one unavailable local Linux procfs child-list
-capability, **not an Apple-only skip**). Full469 readiness and107 standalone
-controls pass with seven/four exact Apple-only skips. Unaffected full graph reuse
-stays bound to `bf825359`; it is not relabeled as newly executed final-source tests.
-
-One explicit [corrected-head diagnostic41017156382](https://github.com/Apdelrahman1911/parlor/actions/runs/41017156382)
-finishes **failed/incomplete**: the unmodified original app build reaches the
-unchanged2,700-second limit and is terminated/reaped. Independent retained ZIP
-readback matches the same original archive/input manifest. No app product,
-XCTest result, Compose arm or native arm exists; the corrected common provider
-was not compiled. ZIP SHA256
-`ddac2f18d293d36026ce17f9dffe34363016d49df9b1840078e4251a89b76eed`.
-The quiet377-byte log cannot diagnose compiler stage or memory pressure.
-Scoped Gradle/device/exact-Xcode cleanup receipts are consistent, but GitHub's
-finalizer reports a `clang-21` orphan; this is not full descendant quiescence.
-
-A copy-only bounded-profile correction at
-[`94b0388f`](https://github.com/Apdelrahman1911/parlor/commit/94b0388f01e3892121ccf6a301addde916b842d0)
-qualifies its local preparation:3GiB Gradle
-heap, one worker, serial projects, in-process Kotlin compilation, one Xcode build
-job and Simulator boot after product verification. Build-stage logging/timing is
-enabled; test commands, single input, original predicates,2,700/900-second limits,
-Release optimizations and shipping architectures remain unchanged. Actual
-wrapper8.13/JDK21 software controls verify the daemon's limits; this minimal
-fixture is not Apple compilation or a benchmark. Native linkage, three-arm
-outcomes and capture custody remain unverified. Fresh final-source checks pass:
-768 release methods (one exact local Linux procfs capability skip),473 readiness
-(seven Apple-only skips),111 standalone controls (four Apple-only skips), strict
-transport385 methods (three existing LAN skips). Actual unsafe-heap/quiet-build/
-incomplete-state mutants fail their original assertions; the restored suite passes.
-One distinct [bounded-head41039233217](https://github.com/Apdelrahman1911/parlor/actions/runs/41039233217)
-is dispatched on the same standard free runner/source/runtime/device. Existing
-[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6520307035)
-retains both original failures and the new experiment; it remains open.
-No production benchmark, UIKit neutrality or failure causality is inferred;
-original failures remain failed and no workflow retry was requested.
-See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
+PR294's additional copy-only input experiments and original failures remain
+[source-bound in its prior status](https://github.com/Apdelrahman1911/parlor/blob/b758f25d4f83c0c05e99526f4f2239ce0bd60336/docs/PROJECT_STATUS.md#native-input-investigation).
+Their source-set/compiler and bounded-build diagnostics do not qualify shipping
+input, erase original failures or certify this integration. Existing #267/#276
+remain open; no copied diagnostic code is imported into production here.
 
 [Current-harness40953628450](https://github.com/Apdelrahman1911/parlor/actions/runs/40953628450)
 independently matches all three frozen original/Compose/native plans and EN/AR
@@ -206,33 +181,15 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
   neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
   scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
 - **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
-  October 29, 21:15 UTC publication recheck still lists 0.8.0-rc7, published October 23
-  before upstream #524 merged October 25; no reproducible post524 publication or
-  comparative mobile benefit established. See [the decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md).
+  October30 publication/source readback confirms upstream
+  [0.8.0-rc8](https://github.com/p2pKit/P2pKit/tree/6c85fdc2977386e572830c243f9aa8bb17d84ec3)
+  includes #524; publication is no longer the reason to defer. No comparative
+  mobile benefit or qualified replacement graph is established. A separate
+  detailed documentation reassessment is locally prepared; the
+  [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md) retains dated rc7 evidence.
 
 Only standard free public runners (documented 20 total / five macOS ceilings, no allocation
 guarantee), no paid infrastructure/additional agents, weakened verification or
 Release deoptimization. Local Linux lacks Xcode and physical mobile devices.
 Historical checkpoints remain [preserved](archives/README.md), never certificates
 for newer source. Source/tests/build wiring take precedence over this checkpoint.
-
-## Local storage maintenance
-
-Owner-authorized cleanup receipts record approximately **101.2 GiB reclaimed**
-and **43 inactive worktrees removed**, without forced removal. Source/history,
-credentials, installed toolchains, retained failure artifacts and verification
-receipts remain; removed worktree heads and unique uncommitted work have safety
-references. Git connectivity and unchanged `AGENTS.md` checks pass. Only the main
-checkout and active diagnostic worktree remain. Current checks regenerate
-disposable caches/build outputs; retire those only after their processes stop and
-important results are retained. Cleanup does not complete the overhaul or its
-physical/security/Store gates.
-
-After corrected-source tests stop and their logs/XML are retained, an additional
-**4.08 GiB** of regenerated build/Gradle caches and2.7MB of script bytecode are
-retired. The07:22 UTC cleanup checkpoint totals approximately3.3GiB across the
-main and active diagnostic checkouts, including retained unresolved evidence;
-global Gradle state is16KiB at that checkpoint. Later active verification
-regenerates necessary private caches/build outputs; that is not a new cleanup
-failure or permission to delete running builds. This later reclamation
-is regenerated data, not an additional unique portion of the original project.
