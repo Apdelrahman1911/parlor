@@ -1,10 +1,10 @@
 package com.parlor.games.mafia.domain.rules
 
+import com.parlor.core.text.DisplayNamePolicy
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.settings.MafiaSettings
-import com.parlor.networking.room.RoomInputPolicy
 
 /**
  * Authoritative, UI-independent boundary for starting or restoring a Mafia session.
@@ -25,7 +25,7 @@ object MafiaSessionRules {
         if (players.withIndex().any { (expectedSeat, player) -> player.seat != expectedSeat }) {
             return false
         }
-        if (!RoomInputPolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
+        if (!DisplayNamePolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
             return false
         }
         return true

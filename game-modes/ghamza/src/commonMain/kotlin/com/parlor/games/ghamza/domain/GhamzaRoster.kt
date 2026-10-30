@@ -1,5 +1,7 @@
 package com.parlor.games.ghamza.domain
 
+import com.parlor.core.text.DisplayNamePolicy
+import com.parlor.core.text.DisplayTextScalars
 import com.parlor.engine.state.Player
 
 /** Matches the shared admission contract without importing transport into the rules. */
@@ -7,7 +9,6 @@ object GhamzaRoster {
     const val MIN_PLAYERS = 3
     const val MAX_PLAYERS = 12
     private const val MAX_PLAYER_ID_LENGTH = 64
-    private const val MAX_DISPLAY_NAME_LENGTH = 32
 
     fun isValidRoster(players: List<Player>): Boolean {
         if (players.size !in MIN_PLAYERS..MAX_PLAYERS) return false
@@ -19,28 +20,8 @@ object GhamzaRoster {
     }
 
     fun isValidPlayerId(value: String): Boolean =
-        value.isNotBlank() && value.length <= MAX_PLAYER_ID_LENGTH && value.hasSafeCharacters()
+        value.isNotBlank() && value.length <= MAX_PLAYER_ID_LENGTH && DisplayTextScalars.containsOnlySafeScalars(value)
 
     fun isValidDisplayName(value: String): Boolean =
-        value == value.trim() && value.isNotEmpty() &&
-            value.length <= MAX_DISPLAY_NAME_LENGTH && value.hasSafeCharacters()
-
-    private fun String.hasSafeCharacters(): Boolean {
-        var index = 0
-        while (index < length) {
-            val character = this[index]
-            when {
-                character.isISOControl() || character.category == CharCategory.FORMAT -> return false
-                character in '\uD800'..'\uDBFF' -> {
-                    if (getOrNull(index + 1)?.let { it in '\uDC00'..'\uDFFF' } != true) return false
-                    index += SURROGATE_PAIR_LENGTH
-                }
-                character in '\uDC00'..'\uDFFF' -> return false
-                else -> index++
-            }
-        }
-        return true
-    }
-
-    private const val SURROGATE_PAIR_LENGTH = 2
+        value == DisplayNamePolicy.normalizeDisplayName(value) && DisplayNamePolicy.isValidDisplayName(value)
 }
