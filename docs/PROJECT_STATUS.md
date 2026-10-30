@@ -121,11 +121,26 @@ controls pass with seven/four exact Apple-only skips. Unaffected full graph reus
 stays bound to `bf825359`; it is not relabeled as newly executed final-source tests.
 
 One explicit [corrected-head diagnostic41017156382](https://github.com/Apdelrahman1911/parlor/actions/runs/41017156382)
-now runs on the same standard free runner/source/runtime/device. Independent
-final-source/template/actual-control/readback evidence qualifies its local
-preparation, not Apple app linkage, three-arm outcomes or capture custody, which
-remain pending. Existing [#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6516950898)
-is updated with the separate failure and exact correction; it remains open.
+finishes **failed/incomplete**: the unmodified original app build reaches the
+unchanged2,700-second limit and is terminated/reaped. Independent retained ZIP
+readback matches the same original archive/input manifest. No app product,
+XCTest result, Compose arm or native arm exists; the corrected common provider
+was not compiled. ZIP SHA256
+`ddac2f18d293d36026ce17f9dffe34363016d49df9b1840078e4251a89b76eed`.
+The quiet377-byte log cannot diagnose compiler stage or memory pressure.
+Scoped Gradle/device/exact-Xcode cleanup receipts are consistent, but GitHub's
+finalizer reports a `clang-21` orphan; this is not full descendant quiescence.
+
+A copy-only bounded-profile correction is being qualified locally:3GiB Gradle
+heap, one worker, serial projects, in-process Kotlin compilation, one Xcode build
+job and Simulator boot after product verification. Build-stage logging/timing is
+enabled; test commands, single input, original predicates,2,700/900-second limits,
+Release optimizations and shipping architectures remain unchanged. Actual
+wrapper8.13/JDK21 software controls verify the daemon's limits; this minimal
+fixture is not Apple compilation or a benchmark. Native linkage, three-arm
+outcomes and capture custody remain unverified. Existing
+[#276](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6516950898)
+retains the previous correction; it remains open.
 No production benchmark, UIKit neutrality or failure causality is inferred;
 original failures remain failed and no workflow retry was requested.
 See the [exact diagnostic report](https://github.com/Apdelrahman1911/parlor/blob/bf825359dbfdb41c6934ae91166c5f4eea3e4ef3/docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).

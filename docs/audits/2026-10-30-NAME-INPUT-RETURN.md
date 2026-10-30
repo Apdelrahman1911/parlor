@@ -106,3 +106,25 @@ from that attempt, and its narrow original passes do not resolve the full failed
 baseline or prove native input delivery neutrality.
 Neither accepted shared-UI regression tests nor a green general CI run prove
 native input causality. #267/#276, physical and Store/security gates stay open.
+
+## Corrected diagnostic stopped before runtime
+
+[Corrected-head41017156382](https://github.com/Apdelrahman1911/parlor/actions/runs/41017156382)
+at `def043d3` finishes failed/incomplete when the **unmodified original arm's
+build** times out at the unchanged2,700-second limit. Exact archive/input readback
+and scoped cleanup receipts match. There is no app product or executed XCTest;
+the corrected Compose provider and native arm never run. Retained original ZIP
+SHA256 `ddac2f18d293d36026ce17f9dffe34363016d49df9b1840078e4251a89b76eed`.
+The377-byte quiet log does not identify a compiler stage or memory cause. GitHub
+also reports a `clang-21` orphan after the narrower exact-Xcode/device cleanup;
+do not claim all descendants were quiescent.
+
+The next copy-only harness bounds Gradle to3GiB/one worker/serial projects and
+Xcode to one build job, boots the same Simulator after product validation, and
+retains build stages/timing. Actual wrapper/daemon controls verify the resource
+properties; standalone tests reject unsafe-option, quiet-log and incomplete-state
+mutants. This is preparation, not a confirmed timeout/input fix, Apple linkage,
+native neutrality or hosted/mobile benchmark. Original tests, single typing,
+ten-second predicate, command limits, shipping source and Release graph stay
+unchanged. Final-source affected controls and a distinct Apple attempt remain
+required before accepting the new harness.
