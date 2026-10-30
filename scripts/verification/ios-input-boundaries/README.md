@@ -158,3 +158,22 @@ ordinary discovery (84 standalone/446 ordinary readiness controls). These fixtur
 bytes are test inputs only; native diagnostics still materialize the explicitly
 selected actual Git commit. No architecture, Release optimization, dependency,
 shipping observer or production-workflow change is needed.
+
+## PIN05 — original failed name-input profile
+
+`--profile name-input --source c11d8ca100a7e522878fff85bedb1f1dc9077c54`
+requires iOS18.5/iPhone16Pro and the existing exact ARM64 Apple toolchain. See
+[the boundary report](../../../docs/audits/2026-10-30-NAME-INPUT-BOUNDARIES.md).
+The pure four-file renderer guards original/template bytes. Public input-session
+and callback observation forwards the original command list once; it never
+stores text/commands or observes private screens. Capture is requested only
+**after the original name-value predicate fails**, not after an earlier Host
+reachability failure. Native sampling is public bounded responder booleans only.
+
+The driver, selectors, one typing synthesis, full-value predicate and deadline
+remain unchanged. Three ordinary original/Compose/native attempts are diagnostic,
+not production qualification, neutrality or causal proof. Software fixture and
+actual copied Kotlin negative controls cannot replace native linkage/execution.
+The new Apple SDK control uses an explicit bridge stub and is labelled accordingly.
+Workflow dispatch must specify this profile and all exact inputs; existing
+catalog/original-Host defaults and production workflows are unchanged.

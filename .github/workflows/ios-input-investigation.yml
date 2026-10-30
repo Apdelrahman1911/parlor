@@ -18,9 +18,9 @@ on:
         required: true
         default: com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro
       profile:
-        description: Catalog investigation, or exact original #267 Host source/runtime/device (no fallback)
+        description: Catalog, original Host, or exact failed name-input source/runtime/device (no fallback)
         type: choice
-        options: [catalog, original-host]
+        options: [catalog, original-host, name-input]
         default: catalog
 
 concurrency:

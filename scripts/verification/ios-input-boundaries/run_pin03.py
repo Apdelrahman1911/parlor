@@ -26,6 +26,7 @@ import pin01_receipts
 import pin02_capture
 import pin03_catalog_copy as catalog
 import pin04_original_host as original_host
+import pin05_name_input as name_input
 import public_attachments
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -146,7 +147,8 @@ def verify_inputs(copy, manifest):
 def apply_arm(copy, original, manifest, arm, *, previous, renderer=catalog.render):
     verify_inputs(copy, previous)
     plan = renderer(original, {p: manifest[p] for p in original}, arm=arm)
-    if arm == 'original' and (copy / pin01_copy.ADDITION).exists():
+    if arm == 'original' and any((copy / path).exists() for path in (
+            pin01_copy.ADDITION, name_input.RECORDER, name_input.INTERCEPTOR)):
         raise ValueError('Original arm cannot reuse an observed source copy')
     for path, content in plan.items():
         target = copy / path
@@ -224,7 +226,7 @@ def result_label(arm, kind):
     return arm + '-result-' + kind
 
 
-def decode_capture(raw, tokens, simulator_id, bundle):
+def decode_capture(raw, tokens, simulator_id, bundle, *, profile='catalog'):
     if len(raw) > pin02_capture.MAX_BYTES:
         raise ValueError('Oversized capture')
     value = json.loads(raw, object_pairs_hook=pin01_receipts.reject_duplicates,
@@ -234,7 +236,7 @@ def decode_capture(raw, tokens, simulator_id, bundle):
     if type(value['token']) is not str or value['token'] not in tokens or \
             not pin02_capture.UUID.fullmatch(value['token']):
         raise ValueError('Capture without a retained failed-request token')
-    result = catalog.decode_snapshot(json.dumps(value['snapshot'], allow_nan=False).encode())
+    result = decoder_for_profile(profile)(json.dumps(value['snapshot'], allow_nan=False).encode())
     # Validate original envelope independently; only the declared snapshot
     # catalog enums differ from PIN02. Never loosen its production/test decoder.
     translated = dict(value, snapshot={'schema': 1, 'nativeMode': value['snapshot']['nativeMode'],
@@ -282,7 +284,26 @@ def renderer_for_profile(profile, source, runtime, device):
     if profile == 'original-host' and (source, runtime, device) == (
             original_host.FROZEN_SOURCE, original_host.RUNTIME, original_host.DEVICE):
         return original_host.render
-    raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
+    if profile == 'name-input' and (source, runtime, device) == (
+            name_input.SOURCE, name_input.RUNTIME, name_input.DEVICE):
+        return name_input.render
+    raise ValueError('Investigation requires its exact registered source/runtime/device; no fallback')
+
+
+def inputs_for_profile(profile):
+    if profile in ('catalog', 'original-host'):
+        return catalog.MODIFIED
+    if profile == 'name-input':
+        return name_input.MODIFIED
+    raise ValueError('Explicit registered diagnostic profile required')
+
+
+def decoder_for_profile(profile):
+    if profile in ('catalog', 'original-host'):
+        return catalog.decode_snapshot
+    if profile == 'name-input':
+        return name_input.decode_snapshot
+    raise ValueError('Explicit registered diagnostic profile required')
 
 
 def main():
@@ -290,7 +311,7 @@ def main():
     parser.add_argument('--source', required=True)
     parser.add_argument('--runtime', required=True)
     parser.add_argument('--device', required=True)
-    parser.add_argument('--profile', choices=('catalog', 'original-host'), default='catalog')
+    parser.add_argument('--profile', choices=('catalog', 'original-host', 'name-input'), default='catalog')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     renderer = renderer_for_profile(args.profile, args.source, args.runtime, args.device)
@@ -312,16 +333,19 @@ def main():
     if sdk != '26.2':
         raise RuntimeError('Actual Simulator SDK differs from qualified compiler profile')
     config = apple.configuration(ROOT)
+    source_tree = subprocess.check_output(['git', 'rev-parse', args.source + '^{tree}'], cwd=ROOT).decode().strip()
+    if args.profile == 'name-input' and source_tree != name_input.TREE:
+        raise ValueError('Original failed name-input tree differs; no fallback')
     out.mkdir(mode=0o700)
     copy = out / 'source'; copy.mkdir(mode=0o700)
     archive = subprocess.check_output(['git', 'archive', args.source, *ROOTS,
                                       *(p.rstrip('/') for p in PREFIXES)], cwd=ROOT)
     manifest = materialize(archive, copy)
-    original = {p: (copy / p).read_text() for p in catalog.MODIFIED}
+    original = {p: (copy / p).read_text() for p in inputs_for_profile(args.profile)}
     bundle = json.loads((copy / 'config/release-policy.json').read_text())['applications']['ios']['debug_bundle_id']
     if not bundle.endswith('.debug'):
         raise ValueError('Debug bundle only')
-    state = dict(source=args.source, profile=args.profile,
+    state = dict(source=args.source, source_tree=source_tree, profile=args.profile,
                  harness=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
                  archive_sha256=sha(archive), runtime=args.runtime, device=args.device, xcode=xcode, sdk=sdk,
                  original_inputs=manifest, arms=[], result='NOT_QUALIFIED',
@@ -452,7 +476,7 @@ def main():
                                 path.stat().st_nlink != 1 or path.stat().st_size > pin02_capture.MAX_BYTES:
                             raise ValueError('Unsafe or oversized owned capture')
                         raw = read_capture(path)
-                        decoded = decode_capture(raw, tokens, simulator_id, bundle)
+                        decoded = decode_capture(raw, tokens, simulator_id, bundle, profile=args.profile)
                         (dest / ('capture-' + token + '.json')).write_bytes(raw)
                         captures.append(decoded)
                 row['captures'] = captures
