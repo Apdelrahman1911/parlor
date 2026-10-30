@@ -73,7 +73,7 @@ PublicTextValueTests/testWhitespaceCaseAndArabicCharactersAreNotRewritten()
 
 
 
-TITLE = 'Failed public Back commit'
+TITLE = 'Failed public control settlement before tap'
 TYPED_TITLES = ["Type 'Table Test' into \"Your name\" TextView", "Type '\n' into \"Your name\" TextView"]
 FAILURE = 'Public setup control must stop scrolling before it is tapped'
 
@@ -121,7 +121,7 @@ def verify_public_back_failure(activities, method):
             if 'title' in node:
                 title = node['title']
                 require(isinstance(title, str) and len(title.encode()) <= 4096)
-                if title in (TITLE, WRAPPED_TITLE):
+                if title == TITLE:
                     attachment_count += 1
                     require(attachment_count == 1)
                 if title.startswith('Type '):

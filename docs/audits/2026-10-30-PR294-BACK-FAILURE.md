@@ -91,3 +91,20 @@ A scoped correction accepts only that exact source-bound wrapped activity or
 the original bare spelling; arbitrary prefixes/suffixes and duplicate markers
 still fail. It does not assume the corrected native decode will pass or change
 any application test/gesture/settlement budget. Original failures remain retained.
+
+### Correction of the preceding field-attribution hypothesis
+
+The original copied reader accidentally bound `TITLE` to `Failed public Back
+commit` through a blanket string replacement. That is not the original
+`public_attachments.TITLE` or the producer's screenshot name. Consequently the
+zero-marker counters above describe the **wrong requested marker**, not proof
+of a changed native field schema. The proposed wrapped-title local preparation
+also fails software checks (undefined marker and self-consistent fixture
+assumptions); it is not published or qualified and is not a production defect.
+
+Correct the exact canonical marker and add an independently literal regression
+that agrees with the unchanged original attachment helper/producer source,
+not a fixture constructed only from the reader constant. Preserve bare exact
+matching,duplicate/private/typing/source/export bounds; do not admit an
+unverified wrapper. Earlier failed results and local preparation logs remain
+retained. Actual native decode and original application cause are still pending.
