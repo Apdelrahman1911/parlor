@@ -56,8 +56,20 @@ PR #256 already merged as `81ee9b7b`; do not replay earlier integrations.
 - [Supplementary name-format controls](audits/2026-10-30-SUPPLEMENTARY-NAME-CONTROLS.md),
   [#293](https://github.com/Apdelrahman1911/parlor/issues/293): actual original
   policy reproduces two failures; corrected eight methods pass, including all127
-  Unicode17 supplementary format scalars. Implemented locally; broader affected,
-  final-source and native/production qualification remain required. Intentional
+  Unicode17 supplementary format scalars. The
+  [shared game-label correction](audits/2026-10-30-GAME-DISPLAY-SCALARS.md) extends
+  the same pure core policy to all six games and the four existing game-ID checks.
+  Original game-boundary execution reproduces20 failures across24 methods;
+  corrected34 additions run in every applicable local Desktop/Android suite.
+  Clean `4a9994f5` passes strict full Linux gates:1,941 Desktop,726 Android per
+  Debug/Release,120 GitHub-test and768 release methods, with three established
+  LAN skips and one exact Linux procfs capability skip. The original kernel OOM
+  remains failed; the new smaller private serial profile passes without changing
+  shipping/CI settings. Final-doc affected checks, fresh full/native/optimized
+  Release CI and protected integration remain required. PR294's original
+  `41040656557` is still22 Swift PASS/1FAIL before English Ghamza Host-name Back;
+  its719-method KMP pass and successful read-only decoder do not qualify that run
+  or explain its cause. PR294 remains draft/unmerged. Intentional
   case-sensitive names remain unchanged; no identity/keyboard repair is inferred.
 
 The [short-grace correction](audits/2026-10-29-CONNECTION-GRACE-ELAPSED.md) is

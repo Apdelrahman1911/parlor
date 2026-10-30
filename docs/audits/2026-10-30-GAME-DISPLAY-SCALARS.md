@@ -65,11 +65,38 @@ Focused log SHA256:
 Local original/corrected source, XML and log receipts remain in the task's
 untracked custody directory. No failed evidence is overwritten.
 
+4. Clean committed `4a9994f5` / tree `92bcbc7c`: strict complete Linux
+   `productionCheck allTests` **passes**. Independent readback retains every
+   class/method from the qualified original `8e44800b` suite and verifies all34
+   additions on each applicable Desktop/Android target: **1,941 Desktop,
+   726 Android Debug,726 Android Release and120 GitHub-test methods**, zero
+   failures/errors. All17 module aggregates, Detekt/type-aware analysis,
+   lint/R8/unsigned AAB, shell dispatch, workflow/inventory and768 release
+   controls pass. Three existing Desktop LAN skips and one exact local Linux
+   procfs child-list capability skip remain. Separate450 readiness software
+   controls pass with six exact Apple-only Linux skips; this is not Apple runtime.
+
+The first full invocation at the same source failed: the kernel killed its
+3GiB-heap daemon at4,072,616KiB anonymous RSS. That failed receipt remains failed.
+A new private serial invocation caps the outer heap at2GiB, metaspace at768MiB,
+code cache at256MiB and visible processors at2; no shipping/CI setting, fixture,
+assertion or verification task changed. Gradle reports10m18s with caches;
+210 of1,668 actionable tasks execute. The observed daemon high-water RSS is
+3,081,068KiB across26 samples, not total-build or mobile memory. This is neither
+a cold-build benchmark nor evidence for changing the qualified hosted profile.
+Owned daemon stop exits0; unrelated concurrent processes remain untouched.
+
+Successful full log SHA256:
+`6e7193d4f8056c8fe732c8f2a4b285f06b0b3c43e1a78a7fde8c0d6552d1287b`.
+
 ## Integration gates still required
 
-Fresh final-source `productionCheck allTests`, full native/architecture/optimized
-Release CI and protected-main acceptance remain separate gates. Focused JVM
-execution cannot qualify Apple runtime behavior. PR294's original iOS Back-query
-failure remains unresolved; this label correction is **not its causal repair**.
+The complete local result above binds to `4a9994f5`, not subsequent documentation
+commits. Recheck docs-sensitive transport and release/inventory controls after
+those edits. Fresh final-head full native/architecture/optimized Release CI and
+protected-main acceptance remain separate gates. JVM execution and Linux Apple
+frontend compilation cannot qualify Apple runtime behavior. PR294's original
+iOS Back-query failure remains unresolved; this label correction is **not its
+causal repair**.
 Do not relax the native predicates, retry CI blindly or merge a stacked branch
 to avoid checks. Store and physical-device acceptance remain blocked separately.
