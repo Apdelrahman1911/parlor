@@ -64,6 +64,57 @@ def results():
 
 
 class PublicBackCommitReviewTests(unittest.TestCase):
+    def query_activity(self, extra):
+        return dict(testIdentifier=review.METHOD, children=[
+            dict(title="Type 'Table Test' into \"Your name\" TextView"),
+            dict(title="Type '\n' into \"Your name\" TextView"),
+            *extra,
+            dict(title='Failed public control settlement before tap'),
+            dict(title='XCTAssertEqual failed: ' + review.FAILURE, isAssociatedWithFailure=True)])
+
+    def test_original_back_queries_retry_and_errors_export_only_fixed_categories_and_numbers(self):
+        original = self.query_activity([
+            dict(title='Find the "Return to the home screen." Button', startTime=1.0, finishTime=2.0, duration=1.0),
+            dict(title='Find the "Return to the home screen." Button (retry 1)'),
+            dict(title='Find the "Return to the home screen." Button (retry 2)'),
+            dict(title='Failed to get matching snapshot: No matches found; XCTestErrorDomain Code=1001; private=SECRET'),
+            dict(title='Checking existence of `"Return to the home screen." Button`'),
+            dict(title='Tap "Return to the home screen." Button'),
+            dict(title='Find the "Private button SECRET" Button', startTime=float('nan'))])
+        result = review.public_back_query_observations(original, review.METHOD)
+        self.assertEqual([r['kind'] for r in result['queries']], ['resolve', 'resolve', 'resolve', 'exists', 'tap'])
+        self.assertEqual([r['retry'] for r in result['queries']], [0, 1, 2, 0, 0])
+        self.assertEqual(result['queries'][0]['timing'], dict(startTime=1.0, finishTime=2.0, duration=1.0))
+        self.assertEqual(result['xctest_error_codes'], [1001])
+        self.assertEqual(result['error_marker_counts']['no_matches'], 1)
+        self.assertEqual(result['error_marker_counts']['snapshot_failure'], 1)
+        self.assertNotIn('SECRET', json.dumps(result))
+        self.assertNotIn('Return to the home screen', json.dumps(result))
+
+    def test_absent_or_iso_timing_does_not_become_success_or_clock_alignment(self):
+        activity = self.query_activity([dict(title='Find the "Return to the home screen." Button',
+                                            startTime='2026-10-30T11:05:22Z')])
+        result = review.public_back_query_observations(activity, review.METHOD)
+        self.assertEqual(result['queries'][0]['timing'], dict(startTime=None, finishTime=None, duration=None))
+        self.assertEqual(result['query_time_field_counts'], dict(startTime=1, finishTime=0, duration=0))
+        self.assertEqual(result['xctest_error_codes'], [])
+        self.assertNotIn('2026-', json.dumps(result))
+        self.assertNotIn('success', json.dumps(result).lower())
+
+    def test_query_numbers_bounds_and_exact_public_eligibility_fail_closed(self):
+        for value in (True, -1, float('nan'), float('inf'), 10 ** 12 + 1, {}, 'x' * 65):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                review.public_back_query_observations(self.query_activity([
+                    dict(title='Find the "Return to the home screen." Button', duration=value)]), review.METHOD)
+        with self.assertRaises(ValueError):
+            review.public_back_query_observations(self.query_activity([
+                dict(title='Find the "Return to the home screen." Button')] * 65), review.METHOD)
+        with self.assertRaises(ValueError):
+            review.public_back_query_observations(self.query_activity([
+                dict(title='Type private SECRET')]), review.METHOD)
+        with self.assertRaises(ValueError):
+            review.public_back_query_observations(self.query_activity([]), 'foreign')
+
     def test_exact_failed_production_run_and_immutable_artifact_only(self):
         run, artifact = metadata()
         review.validate_metadata(run, artifact)

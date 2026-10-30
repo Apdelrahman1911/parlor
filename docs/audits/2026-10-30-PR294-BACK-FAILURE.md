@@ -27,7 +27,8 @@ Producer checkout is GitHub's synthetic PR merge
 `458359122259690bffc9de69445ce456b3baa4da`, with the same `a1d6ddc7` tree.
 Original producer log SHA256
 `3f369c2944ef597a88e6a7928557516b66a810806170303afe24ecc02eb5e38d`.
-Independent original xcresult decoding/visual review is **pending**.
+Independent original xcresult decoding/visual review is recorded below. The
+original required application run remains failed.
 
 A distinct optional read-only decoder is prepared on
 `diagnostic/ios-pr294-back-review-2026-10-30`, separate from shipping PR294.
@@ -108,3 +109,36 @@ not a fixture constructed only from the reader constant. Preserve bare exact
 matching,duplicate/private/typing/source/export bounds; do not admit an
 unverified wrapper. Earlier failed results and local preparation logs remain
 retained. Actual native decode and original application cause are still pending.
+
+## Canonical decoder and actual visual review
+
+[Canonical reader41049774590](https://github.com/Apdelrahman1911/parlor/actions/runs/41049774590)
+passes at `66dbf79c`/tree `44341b7c`. Independent readback checks **1,283 unchanged
+original xcresult objects**, all23 source-derived methods (22 PASS/1 FAIL), exact
+source/artifact/driver/owned runtime and output custody. Reader ZIP SHA256
+`df349e201641539aa2f82dfb8fbf8434ca6a51901fea4354132320c049def59c`.
+
+The original274,172-byte,1206×2622 public PNG was actually viewed: English
+Host setup, empty name, normal-looking Back and disabled Continue to Table;
+no visible keyboard, tutorial, alert or overlay. PNG SHA256
+`d388912483a5a24ba38e4a4e140be9349f961f7e4a8ecea35be279dc8e04297a`.
+The original17,178,094-byte movie is independently hash-bound, SHA256
+`5e6c81d58aa7d89b3b2a78aaa816a2f899f32178453c572b15be545d4be7c31c`.
+Local four-second PTS samples through92s and the final96.2s frame show earlier
+Dominoes Host/Back/Join and complete synthetic name, then relaunch/Ghamza public
+setup and an empty Host name frame. These are sampled frames, not continuously
+viewed video or independently aligned XCTest clocks. Raw movies are not uploaded.
+
+This rules out only an obvious visible overlay in the observed frames. It does
+not prove Back's native enabled state, callback delivery, accessibility-generation
+identity, resource pressure or cause. In the original log, the final enabled
+lookup contains **two internal resolution retries** and failure-triage snapshot
+requests. A nonthrowing false result alone does not establish an application
+disabled condition; shipping Back has no dynamic disabled input.
+
+An additive read-only activity observer is prepared to retain only fixed
+Back-query categories, retry numbers, numeric timing where available and fixed
+error-marker/code counts. Missing native timing/errors stay unknown; no raw
+activity, label, hierarchy, value or error-description export. Its native
+execution remains pending. It leaves original source, ten-second predicates,
+typing/taps, full method coverage and failure disposition unchanged.

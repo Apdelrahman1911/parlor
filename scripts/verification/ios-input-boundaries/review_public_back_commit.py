@@ -142,6 +142,85 @@ def verify_public_back_failure(activities, method):
             fixed_public_marker_fields=marker_fields))
 
 
+def public_back_query_observations(activities, method):
+    """Fixed categories/numbers from the eligible original test, never raw errors.
+
+    XCTest's nonthrowing isEnabled result cannot distinguish a disabled control
+    from failed resolution. Retain original query/retry/error evidence without
+    querying a live app, changing the test, or publishing the activity graph.
+    Missing timing or error evidence is unknown, not a successful query.
+    """
+    verify_public_back_failure(activities, method)
+    rows, codes, visited = [], set(), 0
+    markers = {key: 0 for key in ('no_matches', 'multiple_matches', 'snapshot_failure',
+                                  'query_timeout', 'app_not_running')}
+    spellings = {
+        'no_matches': 'no matches found',
+        'multiple_matches': 'multiple matching elements found',
+        'snapshot_failure': 'failed to get matching snapshot',
+        'query_timeout': 'timed out',
+        'app_not_running': 'application is not running',
+    }
+    time_fields = {key: 0 for key in ('startTime', 'finishTime', 'duration')}
+    target = '"Return to the home screen." Button'
+
+    def numeric_time(value):
+        if value is None:
+            return None
+        if type(value) in (int, float):
+            require(math.isfinite(value) and 0 <= value <= 10 ** 12)
+            return value
+        # Some xcresulttool schemas use ISO8601 dates. Do not preserve them or
+        # infer a clock relation; the source-bound log retains its own timing.
+        require(isinstance(value, str) and len(value) <= 64)
+        return None
+
+    def visit(node, depth=0):
+        nonlocal visited
+        visited += 1
+        require(visited <= 16384 and depth <= 24)
+        if isinstance(node, dict):
+            title = node.get('title')
+            if title is not None:
+                require(isinstance(title, str) and len(title.encode()) <= 4096)
+                lowered = title.lower()
+                for key, spelling in spellings.items():
+                    markers[key] += int(spelling in lowered)
+                for match in re.findall(r'\bXCTestErrorDomain\s+Code=(-?\d{1,10})\b', title):
+                    code = int(match)
+                    require(-(2 ** 31) <= code < 2 ** 31 and len(codes | {code}) <= 16)
+                    codes.add(code)
+                kind = None
+                if target in title:
+                    if title.startswith('Find the '):
+                        kind = 'resolve'
+                    elif title.startswith('Checking existence of '):
+                        kind = 'exists'
+                    elif title.startswith('Tap '):
+                        kind = 'tap'
+                    elif title.startswith('Check for interrupting elements affecting '):
+                        kind = 'interruptions'
+                if kind is not None:
+                    require(len(rows) < 64)
+                    timing = {}
+                    for key in time_fields:
+                        time_fields[key] += int(key in node)
+                        timing[key] = numeric_time(node.get(key))
+                    retry = re.search(r' \(retry ([12])\)$', title)
+                    rows.append(dict(kind=kind, retry=int(retry[1]) if retry else 0,
+                                     timing=timing))
+            for value in node.values():
+                visit(value, depth + 1)
+        elif isinstance(node, list):
+            for value in node:
+                visit(value, depth + 1)
+    visit(activities)
+    return dict(nodes=visited, queries=rows, error_marker_counts=markers,
+                xctest_error_codes=sorted(codes), query_time_field_counts=time_fields,
+                scope='Original fixed-category activity evidence; no live query, '
+                      'raw title/error/label/value export or causal qualification')
+
+
 def validate_metadata(run, artifact):
     require(run['id'] == RUN and run['head_sha'] == SOURCE and run['run_attempt'] == 1 and
             run['status'] == 'completed' and run['conclusion'] == 'failure' and
@@ -314,6 +393,7 @@ def main():
             (out / (kind + '.json')).write_bytes(raw)
         receipt['actual_results'] = verify_results(decoded['summary'], decoded['tests'])
         verify_public_back_failure(decoded['activities'], METHOD)
+        receipt['back_query_observations'] = public_back_query_observations(decoded['activities'], METHOD)
         helptext = read(['help', 'export', 'attachments'], 'attachments-help')
         attachments.verify_export_help(helptext)
         exported = out / 'decoded-attachments'; exported.mkdir(mode=0o700)
