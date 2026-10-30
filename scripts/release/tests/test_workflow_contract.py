@@ -951,6 +951,82 @@ class WorkflowContractTest(unittest.TestCase):
     def test_repository_workflows_satisfy_release_contract(self) -> None:
         self.assertEqual(workflow_contract.main(), 0)
 
+    def test_public_text_review_is_optional_and_unknown_workflows_still_fail_closed(self) -> None:
+        name = "ios-public-text-review.yml"
+        with TemporaryDirectory() as directory:
+            workflows = Path(directory)
+            for required in workflow_contract.EXPECTED:
+                (workflows / required).write_text("name: reviewed\n")
+            with patch.object(workflow_contract, "WORKFLOWS", workflows):
+                self.assertNotIn(name, workflow_contract.load_files())
+                (workflows / name).write_bytes((workflow_contract.ROOT / ".github/workflows" / name).read_bytes())
+                self.assertIn(name, workflow_contract.load_files())
+                (workflows / "ios-unreviewed-reader.yml").write_text("name: bypass\n")
+                with self.assertRaisesRegex(RuntimeError, "Unreviewed workflow"):
+                    workflow_contract.load_files()
+
+    def test_public_text_review_rejects_runner_permission_trigger_upload_and_execution_drift(self) -> None:
+        workflow = (workflow_contract.WORKFLOWS / "ios-public-text-review.yml").read_text()
+        workflow_contract.verify_public_text_review(workflow)
+        for before, after in (
+            ("runs-on: macos-15", "runs-on: macos-15-large"),
+            ("runs-on: macos-15", "runs-on: self-hosted"),
+            ("timeout-minutes: 10", "timeout-minutes: 180"),
+            ("contents: read", "contents: write"),
+            ("actions: read", "actions: write"),
+            ("contents: read", "contents: read\n  id-token: write"),
+            ("branches: [diagnostic/ios-public-text-review-2026-10-30]", "branches: [main]"),
+            ("cancel-in-progress: false", "cancel-in-progress: true"),
+            ("persist-credentials: false", "persist-credentials: true"),
+            ("fetch-depth: 0", "fetch-depth: 1"),
+            ("review_public_text_commit.py", "run_pin03.py"),
+            ("/public-settlement-*.png", "/decoded-attachments/**"),
+            ("/tests.json", "/activities.json"),
+            ("if-no-files-found: error", "if-no-files-found: warn"),
+            ("scripts/release/workflow_contract.py", "scripts/release/workflow_contract.py || true"),
+            ("--output", "--retry --output"),
+            ("run: |", "run: |\n          xcrun simctl boot all"),
+        ):
+            changed = workflow.replace(before, after, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_text_review(changed)
+
+    def test_public_text_review_requires_exact_intake_reader_and_control_companions(self) -> None:
+        workflow = (workflow_contract.WORKFLOWS / "ios-public-text-review.yml").read_text()
+        names = ("review_public_text_commit.py", "test_public_text_commit_review.py")
+        originals = {name: (workflow_contract.ROOT / "scripts/verification/ios-input-boundaries" / name).read_bytes()
+                     for name in names}
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            companions = root / "scripts/verification/ios-input-boundaries"
+            companions.mkdir(parents=True)
+            for name, raw in originals.items():
+                (companions / name).write_bytes(raw)
+            with patch.object(workflow_contract, "ROOT", root):
+                workflow_contract.verify_public_text_review(workflow)
+                for name, raw in originals.items():
+                    path = companions / name
+                    path.write_bytes(raw + b"\n# unreviewed intake or export drift\n")
+                    with self.subTest(name=name), self.assertRaisesRegex(RuntimeError, "companion"):
+                        workflow_contract.verify_public_text_review(workflow)
+                    path.unlink()
+                    with self.assertRaisesRegex(RuntimeError, "companion"):
+                        workflow_contract.verify_public_text_review(workflow)
+                    original = root / name
+                    original.write_bytes(raw)
+                    path.symlink_to(original)
+                    with self.assertRaisesRegex(RuntimeError, "companion"):
+                        workflow_contract.verify_public_text_review(workflow)
+                    path.unlink()
+                    path.write_bytes(raw)
+
+    def test_public_text_review_optional_profile_is_checked_by_the_full_contract(self) -> None:
+        with patch.object(workflow_contract, "verify_public_text_review",
+                          wraps=workflow_contract.verify_public_text_review) as review:
+            self.assertEqual(workflow_contract.main(), 0)
+            review.assert_called_once_with((workflow_contract.WORKFLOWS / "ios-public-text-review.yml").read_text())
+
     def test_input_investigation_registration_rejects_privilege_runner_trigger_retry_and_upload_drift(self) -> None:
         workflow = (workflow_contract.WORKFLOWS / "ios-input-investigation.yml").read_text()
         workflow_contract.verify_input_investigation(workflow)

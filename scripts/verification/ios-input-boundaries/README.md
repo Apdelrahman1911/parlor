@@ -158,3 +158,26 @@ ordinary discovery (84 standalone/446 ordinary readiness controls). These fixtur
 bytes are test inputs only; native diagnostics still materialize the explicitly
 selected actual Git commit. No architecture, Release optimization, dependency,
 shipping observer or production-workflow change is needed.
+
+## Frozen public text-commit review
+
+`review_public_text_commit.py` is a separate read-only decoder for the failed
+[PR #291 run40987141694](https://github.com/Apdelrahman1911/parlor/actions/runs/40987141694).
+It is **not application execution or qualification**. Only its fixed diagnostic
+branch triggers one standard free `macos-15` job, bounded to ten minutes. The
+release workflow contract pins this optional workflow and both reader/control
+files; every other unreviewed workflow remains forbidden.
+
+The reader requires the exact failed run, artifact digest, original producer tree,
+driver, owned Simulator, all23native methods and unchanged xcresult objects.
+It exports bounded PNGs only after verifying the exact Arabic failed test and its
+single synthetic `Table Test` input. Numeric query observations and original movie
+hash/size metadata are retained; raw recordings, activities and other attachments
+are not uploaded. No app build/launch, event replay, Simulator allocation, cache
+write, signing or production-result substitution occurs. An image captured after
+the failed deadline cannot alone establish input-delivery or query causality.
+
+```bash
+python3 -B scripts/release/workflow_contract.py
+python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_public_text_commit_review.py -v
+```

@@ -24,6 +24,15 @@ EXPECTED = {
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
 INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+# Optional, source-bound decoder of one existing failed result. This profile is
+# not a release gate and grants no execution, cache, signing or write privilege.
+# Any change to its workflow, immutable intake, or export controls needs review.
+PUBLIC_TEXT_REVIEW = "ios-public-text-review.yml"
+PUBLIC_TEXT_REVIEW_SHA256 = "311d0cf79767d929dfac625dac3cf6f1f929c6bb7e87f157f9dd176f917b59a0"
+PUBLIC_TEXT_REVIEW_COMPANIONS = {
+    "review_public_text_commit.py": "5c40db8fba05f4a80f22acb9b84620d0130bd870a7ed4ee25fbbd17fc2175808",
+    "test_public_text_commit_review.py": "57ae0242d2050f6c2db84a613df568d1cba51bb97a5dfab6692ccb65c8a89279",
+}
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -81,10 +90,10 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED
+    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
-    return {name: (WORKFLOWS / name).read_text(encoding="utf-8") for name in EXPECTED}
+    return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
 
 
 def verify_action_pins(name: str, text: str) -> None:
@@ -122,6 +131,16 @@ def verify_input_investigation(text: str) -> None:
     verify_common("ios-input-investigation.yml", text)
     if hashlib.sha256(text.encode("utf-8")).hexdigest() != INPUT_INVESTIGATION_SHA256:
         fail("Input investigation must retain its exact reviewed read-only, free-runner, non-production workflow")
+
+
+def verify_public_text_review(text: str) -> None:
+    verify_common(PUBLIC_TEXT_REVIEW, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_TEXT_REVIEW_SHA256:
+        fail("Public text review must retain its exact reviewed read-only, free-runner, non-production workflow")
+    for name, digest in PUBLIC_TEXT_REVIEW_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Public text review companion must retain its exact reviewed immutable intake/export controls: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1750,6 +1769,8 @@ def main() -> int:
         verify_common(name, text)
     verify_validation(files["production-verification.yml"])
     verify_input_investigation(files["ios-input-investigation.yml"])
+    if PUBLIC_TEXT_REVIEW in files:
+        verify_public_text_review(files[PUBLIC_TEXT_REVIEW])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)
