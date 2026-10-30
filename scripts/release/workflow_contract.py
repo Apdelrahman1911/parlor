@@ -36,8 +36,8 @@ PUBLIC_TEXT_REVIEW_COMPANIONS = {
 PUBLIC_BACK_REVIEW = "ios-public-back-review.yml"
 PUBLIC_BACK_REVIEW_SHA256 = "755493e19d26f5c63bde2d002345491718bbb72612dd731aaeea81118260b9ef"
 PUBLIC_BACK_REVIEW_COMPANIONS = {
-    'review_public_back_commit.py': '15c7c6cb2eb120a08f02569c365f7728289e761d4eef0fb575b7c40d15503067',
-    'test_public_back_commit_review.py': 'ddb37852170ea456797c0cf90bb9c3f269d79fcda5667005048f7a0aa683f149',
+    'review_public_back_commit.py': '55f6269d6abf17e416eafafb4ad85c132d904ca32629c998e46e7c0e256565bd',
+    'test_public_back_commit_review.py': 'c4efb685879b5ff7f0864b67eefa159522871d29af314e2a9b4b0bf480dbc7c6',
 }
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}

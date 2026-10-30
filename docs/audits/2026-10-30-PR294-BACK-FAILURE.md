@@ -81,3 +81,13 @@ uploaded. Actual field attribution is unresolved. A distinct observation-only
 revision retains fixed-marker numeric counters on rejection, never raw titles,
 values or the activity graph. Original eligibility and failed exit remain intact;
 it is not another application run or an assumed native repair.
+
+[Numeric observation41049112412](https://github.com/Apdelrahman1911/parlor/actions/runs/41049112412)
+remains failed/export-ineligible. It traverses2,356 nodes, verifies the two exact
+synthetic typing titles and sole failure, but finds no bare screenshot title in
+its six fixed-marker fields. The retained producer log spells that activity
+`Added attachment named 'Failed public control settlement before tap'`.
+A scoped correction accepts only that exact source-bound wrapped activity or
+the original bare spelling; arbitrary prefixes/suffixes and duplicate markers
+still fail. It does not assume the corrected native decode will pass or change
+any application test/gesture/settlement budget. Original failures remain retained.

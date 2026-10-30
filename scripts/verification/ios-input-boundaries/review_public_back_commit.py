@@ -121,7 +121,7 @@ def verify_public_back_failure(activities, method):
             if 'title' in node:
                 title = node['title']
                 require(isinstance(title, str) and len(title.encode()) <= 4096)
-                if title == TITLE:
+                if title in (TITLE, WRAPPED_TITLE):
                     attachment_count += 1
                     require(attachment_count == 1)
                 if title.startswith('Type '):

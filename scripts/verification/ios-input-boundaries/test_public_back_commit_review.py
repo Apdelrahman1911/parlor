@@ -271,5 +271,21 @@ class PublicBackCommitReviewTests(unittest.TestCase):
         for secret in ("private value", review.TITLE, *review.TYPED_TITLES):
             self.assertNotIn(secret, json.dumps(metadata))
 
+    def test_exact_source_logged_attachment_activity_wrapper_not_a_generic_suffix(self):
+        activity = dict(testIdentifier=review.METHOD, children=[
+            *[dict(title=x) for x in review.TYPED_TITLES], dict(title=review.WRAPPED_TITLE),
+            dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)])
+        review.verify_public_back_failure(activity, review.METHOD)
+        for title in ("prefix " + review.WRAPPED_TITLE, review.WRAPPED_TITLE + " private", review.TITLE):
+            changed = activity | dict(children=activity['children'] + [dict(title=title)])
+            with self.assertRaises(ValueError):
+                review.verify_public_back_failure(changed, review.METHOD)
+        for title in ("prefix " + review.WRAPPED_TITLE, review.WRAPPED_TITLE + " private"):
+            changed = activity | dict(children=[
+                *[dict(title=x) for x in review.TYPED_TITLES], dict(title=title),
+                dict(title="XCTAssertEqual failed: " + review.FAILURE, isAssociatedWithFailure=True)])
+            with self.assertRaises(ValueError):
+                review.verify_public_back_failure(changed, review.METHOD)
+
 if __name__ == '__main__':
     unittest.main()
