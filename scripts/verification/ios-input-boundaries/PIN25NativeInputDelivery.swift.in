@@ -1,0 +1,207 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN25_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+
+/// COPY ONLY. Observe the original UIKit mutation/responder calls, not text.
+/// Never ask for an input value, manufacture a key event, or repair a session.
+final class PIN25NativeInputDelivery {
+    private let armed: () -> Bool
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private var installed = false
+    private var attempted = false
+    private var installation = [0, 0, 0]
+    private static var owner: PIN25NativeInputDelivery?
+    private static let capacity = 4096
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    /// The pinned Compose source declares a direct CMPEditMenuView subclass
+    /// implementing UITextInput. Do not guess its generated Kotlin class name.
+    /// Inspect raw runtime Class storage before retaining validated Cocoa types.
+    func install() -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.owner == nil, let runtime = dlopen(nil, RTLD_LAZY) else { return false }
+        defer { dlclose(runtime) }
+        typealias Superclass = @convention(c) (UnsafeRawPointer) -> UnsafeRawPointer?
+        typealias ClassName = @convention(c) (UnsafeRawPointer) -> UnsafePointer<CChar>
+        guard let superSymbol = dlsym(runtime, "class_getSuperclass"),
+              let nameSymbol = dlsym(runtime, "class_getName"),
+              let inputProtocol = NSProtocolFromString("UITextInput") else { return false }
+        let superclass = unsafeBitCast(superSymbol, to: Superclass.self)
+        let name = unsafeBitCast(nameSymbol, to: ClassName.self)
+        var count: UInt32 = 0
+        guard let classes = objc_copyClassList(&count) else { return false }
+        let storage = UnsafeMutableRawPointer(classes)
+        defer { free(storage) }
+        guard count <= 100000 else { return false }
+        var matches: [AnyClass] = []
+        for index in 0..<Int(count) {
+            let candidate = storage.load(fromByteOffset: index * MemoryLayout<UnsafeRawPointer>.stride,
+                                         as: UnsafeRawPointer.self)
+            guard let parent = superclass(candidate), String(cString: name(parent)) == "CMPEditMenuView" else { continue }
+            var ancestor: UnsafeRawPointer? = parent
+            var cocoa = false
+            var view = false
+            for _ in 0..<32 {
+                guard let current = ancestor else { break }
+                let currentName = String(cString: name(current))
+                if currentName == "UIView" { view = true }
+                if currentName == "NSObject" { cocoa = true; break }
+                ancestor = superclass(current)
+            }
+            guard cocoa && view else { continue }
+            let validated = unsafeBitCast(candidate, to: AnyClass.self)
+            if class_conformsToProtocol(validated, inputProtocol) { matches.append(validated) }
+        }
+        installation = [Int(count), matches.count, 1]
+        guard matches.count == 1, let target = matches.first else { return false }
+        return installVerifiedTarget(target)
+    }
+
+    private static func type(_ value: UnsafeMutablePointer<CChar>?) -> String {
+        guard let value else { return "" }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    private static func signature(_ method: Method, returns: String, arguments: [String]) -> Bool {
+        guard method_getNumberOfArguments(method) == arguments.count,
+              type(method_copyReturnType(method)) == returns else { return false }
+        return arguments.enumerated().allSatisfy { index, expected in
+            type(method_copyArgumentType(method, UInt32(index))) == expected
+        }
+    }
+
+    /// Internal exact-ABI control entry. Production-copy discovery must pass
+    /// Cocoa lineage and protocol checks above before reaching this method.
+    fileprivate func installVerifiedTarget(_ target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.owner == nil, let parent = class_getSuperclass(target) else { return false }
+        let selectors = ["insertText:", "replaceRange:withText:", "setMarkedText:selectedRange:",
+                         "deleteBackward", "becomeFirstResponder", "resignFirstResponder"].map(NSSelectorFromString)
+        let arguments = [["@", ":", "@"], ["@", ":", "@", "@"],
+                         ["@", ":", "@", "{_NSRange=QQ}"], ["@", ":"], ["@", ":"], ["@", ":"]]
+        let methods = selectors.compactMap { class_getInstanceMethod(target, $0) }
+        guard methods.count == selectors.count else { return false }
+        var inherited: [Bool] = []
+        for index in methods.indices {
+            guard Self.signature(methods[index], returns: index < 4 ? "v" : "B", arguments: arguments[index]),
+                  method_getTypeEncoding(methods[index]) != nil else { return false }
+            let parentMethod = class_getInstanceMethod(parent, selectors[index])
+            let same = parentMethod.map {
+                unsafeBitCast(method_getImplementation($0), to: UInt.self) ==
+                    unsafeBitCast(method_getImplementation(methods[index]), to: UInt.self)
+            } ?? false
+            // Input mutators must belong to the verified Compose leaf.
+            guard index >= 4 || !same else { return false }
+            inherited.append(same)
+        }
+        typealias Insert = @convention(c) (AnyObject, Selector, AnyObject) -> Void
+        typealias Replace = @convention(c) (AnyObject, Selector, AnyObject, AnyObject) -> Void
+        typealias Marked = @convention(c) (AnyObject, Selector, AnyObject?, NSRange) -> Void
+        typealias Delete = @convention(c) (AnyObject, Selector) -> Void
+        typealias Responder = @convention(c) (AnyObject, Selector) -> Bool
+        let insert = unsafeBitCast(method_getImplementation(methods[0]), to: Insert.self)
+        let replace = unsafeBitCast(method_getImplementation(methods[1]), to: Replace.self)
+        let marked = unsafeBitCast(method_getImplementation(methods[2]), to: Marked.self)
+        let delete = unsafeBitCast(method_getImplementation(methods[3]), to: Delete.self)
+        let become = unsafeBitCast(method_getImplementation(methods[4]), to: Responder.self)
+        let resign = unsafeBitCast(method_getImplementation(methods[5]), to: Responder.self)
+        let insertBlock: @convention(block) (AnyObject, AnyObject) -> Void = { [weak self] object, text in
+            self?.record(kind: 1, phase: 0)
+            insert(object, selectors[0], text) // Same object argument; once, synchronously.
+            self?.record(kind: 1, phase: 1)
+        }
+        let replaceBlock: @convention(block) (AnyObject, AnyObject, AnyObject) -> Void = { [weak self] object, range, text in
+            self?.record(kind: 2, phase: 0)
+            replace(object, selectors[1], range, text)
+            self?.record(kind: 2, phase: 1)
+        }
+        let markedBlock: @convention(block) (AnyObject, AnyObject?, NSRange) -> Void = { [weak self] object, text, range in
+            self?.record(kind: 3, phase: 0)
+            marked(object, selectors[2], text, range)
+            self?.record(kind: 3, phase: 1)
+        }
+        let deleteBlock: @convention(block) (AnyObject) -> Void = { [weak self] object in
+            self?.record(kind: 4, phase: 0)
+            delete(object, selectors[3])
+            self?.record(kind: 4, phase: 1)
+        }
+        let becomeBlock: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            self?.record(kind: 5, phase: 0)
+            let result = become(object, selectors[4])
+            self?.record(kind: 5, phase: 1, flag: result)
+            return result
+        }
+        let resignBlock: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            self?.record(kind: 6, phase: 0)
+            let result = resign(object, selectors[5])
+            self?.record(kind: 6, phase: 1, flag: result)
+            return result
+        }
+        let replacements = [imp_implementationWithBlock(insertBlock), imp_implementationWithBlock(replaceBlock),
+                            imp_implementationWithBlock(markedBlock), imp_implementationWithBlock(deleteBlock),
+                            imp_implementationWithBlock(becomeBlock), imp_implementationWithBlock(resignBlock)]
+        Self.owner = self // Owned process lifetime; never unhook an in-flight original call.
+        for index in methods.indices {
+            if inherited[index] {
+                guard class_addMethod(target, selectors[index], replacements[index], method_getTypeEncoding(methods[index])) else {
+                    installation[2] = 2
+                    return false // Incomplete installation rejects evidence; no fallback/retry.
+                }
+            } else {
+                method_setImplementation(methods[index], replacements[index])
+            }
+        }
+        installation[2] = 3
+        installed = true
+        return true
+    }
+
+    private func record(kind: Int, phase: Int, flag: Bool = false) {
+        guard Thread.isMainThread, armed() else { return }
+        guard rows.count < Self.capacity else { overflow = min(1000000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(kind), Double(phase), flag ? 1 : 0])
+    }
+
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "installation": installation, "overflow": overflow, "rows": rows]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]), raw.count <= 524288 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin25-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("delivery.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+
+    #if PIN25_CONTROL
+    func controlSnapshot() -> [String: Any] { ["installed": installed, "overflow": overflow, "rows": rows] }
+    #endif
+}
+#endif

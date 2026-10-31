@@ -416,3 +416,28 @@ assertion (not the first complete-value assertion). A partial value or missing
 request cannot substitute for complete failure-only exports. All original
 native/root/frame/motion/text companions and custody checks remain mandatory;
 this proves adapter capability, not the earlier natural failure's cause.
+
+## Original UIKit input delivery (PIN25)
+
+The real PIN22 Arabic failure predates the text-session adapter. A passing
+observed PIN23 journey cannot locate the original loss, and a sentinel only
+proves capture capability. PIN25 adds the missing **native delivery boundary**:
+original `insertText`, `replaceRange`, `setMarkedText`, delete and first-responder
+calls, before/after, with only timestamps, method categories and responder return
+bits. Arguments are forwarded once synchronously; no characters, ranges,
+objects, lengths, values, UIKit queries or corrective input are retained.
+
+Discovery uses raw runtime metadata to validate the pinned Compose
+`CMPEditMenuView`/`UITextInput`/Cocoa lineage, then verifies every Objective-C
+signature before modifying that unique leaf. Inherited methods are added only
+on the leaf; UIKit/superclass implementations stay untouched. Buffers and exports
+are bounded, main-thread/public-name-scoped and failure-only. Actual Apple ABI
+controls verify struct/nil/object forwarding, original calls and parent isolation.
+
+Only the unresolved Arabic original journey and the changed native-delivery
+sentinel execute; English and completed Kotlin forwarding controls are not
+replayed. All existing source, product, original assertion, text/native/root/
+frame/motion and owned cleanup gates remain required. A sentinel requires actual
+native text delivery and the original successful focus return. Empty native
+arrival rows on a natural failure are evidence to investigate, not a manufactured
+pass. No shipping correction, neutrality or physical acceptance is implied.
