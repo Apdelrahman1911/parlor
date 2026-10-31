@@ -124,9 +124,9 @@ def validate_stimulus(value, captured_ms):
     return value
 
 
-def accept_native_export(out, state):
-    native.accept_capability_export(out, state, profile=PROFILE,
-        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE), method=METHOD)
+def accept_stimulus_export(out, state, *, profile, renderer, method):
+    native.accept_capability_export(out, state, profile=profile,
+        renderer=renderer, method=method)
     root.accept_root_companions(out, state)
     destination = out / 'native'
     candidates = []
@@ -164,3 +164,8 @@ def accept_native_export(out, state):
         with target.open('x') as f:
             json.dump(report, f, indent=2)
     return RESULT
+
+
+def accept_native_export(out, state):
+    return accept_stimulus_export(out, state, profile=PROFILE,
+        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE), method=METHOD)

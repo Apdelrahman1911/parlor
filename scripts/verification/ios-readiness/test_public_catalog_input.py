@@ -23,11 +23,12 @@ def load_tests(loader, _tests, _pattern):
              'test_pin15_combined_xcode': '_parlor_combined_xcode_controls',
              'test_pin16_aggregate_context': '_parlor_aggregate_context_controls',
              'test_pin17_observer_comparison': '_parlor_observer_comparison_controls',
-             'test_pin18_root_idle_stimulus': '_parlor_root_idle_stimulus_controls'}
+             'test_pin18_root_idle_stimulus': '_parlor_root_idle_stimulus_controls',
+             'test_pin19_settled_catalog_idle': '_parlor_settled_catalog_idle_controls'}
     for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
                  'pin04_original_host', 'public_attachments', 'frozen_sources',
                  'pin06_public_setup_pair', 'pin07_failure_control', 'pin07_native_adapter', 'run_pin03', 'current_boundary_adapter', 'pin08_accessibility', 'pin09_native_boundary',
-                 'pin10_root_boundary', 'pin11_root_observations', 'pin11_public_failure_coverage', 'pin12_public_boundaries', 'pin13_original_cohort', 'pin14_original_resources', 'pin15_combined_xcode', 'pin16_aggregate_context', 'pin17_observer_comparison', 'pin18_root_idle_stimulus', *tests):
+                 'pin10_root_boundary', 'pin11_root_observations', 'pin11_public_failure_coverage', 'pin12_public_boundaries', 'pin13_original_cohort', 'pin14_original_resources', 'pin15_combined_xcode', 'pin16_aggregate_context', 'pin17_observer_comparison', 'pin18_root_idle_stimulus', 'pin19_settled_catalog_idle', *tests):
         path = folder / (name + '.py')
         key = tests.get(name, name)
         module = sys.modules.get(key)

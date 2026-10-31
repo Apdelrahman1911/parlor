@@ -355,3 +355,17 @@ the failed deadline cannot alone establish input-delivery or query causality.
 python3 -B scripts/release/workflow_contract.py
 python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_public_text_commit_review.py -v
 ```
+
+## Settled catalog idle control (PIN19)
+
+PIN18 independently retained one nil root write during a 2510ms public-AX-silent
+interval, but its first Host sample was absent and its final sample enabled.
+That is not the original enabled-to-disabled failure or proof of timer causality.
+PIN19 instead observes the settled Word Impostor card with cloned original
+reachability/settlement helpers (only the final tap omitted), inserts the one
+explicit 2500ms synthetic interval, then uses the original single opening/Host
+taps and forced Host-transition failure. Original application methods, assertions,
+deadlines and dependencies stay unchanged. A positive enabled/nonzero baseline
+is mandatory; either later status is retained without declaring a shipping fix.
+The separate diagnostic branch runs on standard free `macos-15`, preserving
+failure-only exports, actual SDK typechecks and all source/product/cleanup checks.
