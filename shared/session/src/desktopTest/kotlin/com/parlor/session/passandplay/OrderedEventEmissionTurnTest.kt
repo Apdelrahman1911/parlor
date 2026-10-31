@@ -12,9 +12,9 @@ import kotlin.test.assertFalse
 class OrderedEventEmissionTurnTest {
     @Test
     fun later_batch_waits_for_the_complete_earlier_batch() = runBlocking {
-        val root = CompletableDeferred<Unit>().also { it.complete(Unit) }
-        val firstDone = CompletableDeferred<Unit>()
-        val secondDone = CompletableDeferred<Unit>()
+        val root = EventEmissionCompletion().also { it.complete() }
+        val firstDone = EventEmissionCompletion()
+        val secondDone = EventEmissionCompletion()
         val releaseFirst = CompletableDeferred<Unit>()
         val emitted = mutableListOf<Int>()
         val first = OrderedEventEmissionTurn(root, firstDone, listOf(1, 2))
@@ -40,9 +40,9 @@ class OrderedEventEmissionTurnTest {
 
     @Test
     fun cancelled_batch_releases_its_successor() = runBlocking {
-        val root = CompletableDeferred<Unit>()
-        val cancelledDone = CompletableDeferred<Unit>()
-        val successorDone = CompletableDeferred<Unit>()
+        val root = EventEmissionCompletion()
+        val cancelledDone = EventEmissionCompletion()
+        val successorDone = EventEmissionCompletion()
         val cancelled = OrderedEventEmissionTurn(root, cancelledDone, listOf(1))
         val successor = OrderedEventEmissionTurn(cancelledDone, successorDone, listOf(2))
         val emitted = mutableListOf<Int>()
@@ -50,7 +50,12 @@ class OrderedEventEmissionTurnTest {
         val cancelledJob = async { cancelled.emitTo { event -> emitted.add(event) } }
         yield()
         cancelledJob.cancelAndJoin()
-        successor.emitTo { event -> emitted.add(event) }
+        val successorJob = async { successor.emitTo { event -> emitted.add(event) } }
+        yield()
+        assertFalse(successorJob.isCompleted, "Cancellation cannot release an unfinished predecessor")
+        assertEquals(emptyList(), emitted)
+        root.complete()
+        successorJob.await()
 
         assertEquals(listOf(2), emitted)
     }
