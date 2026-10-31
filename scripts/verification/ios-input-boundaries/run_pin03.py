@@ -328,15 +328,16 @@ def completed_exit_code(result):
         'PUBLIC_FAILURE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_FULL_COHORT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_RESOURCE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'COMBINED_XCODE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -356,6 +357,8 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         import pin13_original_cohort as control
     elif original_resources:
         import pin14_original_resources as control
+    elif combined_execution:
+        import pin15_combined_xcode as control
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -412,17 +415,20 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     if control:
         state['scope'] = control.SCOPE
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
-    environment = control.build_environment(os.environ, registry, jtmp) if original_resources else \
+    environment = control.build_environment(os.environ, registry, jtmp) if original_resources or combined_execution else \
         diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
         gradle_parallel=False, kotlin_compiler='in-process', xcode_jobs=1,
         verbose_build=True, boot_after_build=True, build_timeout_seconds=2700,
         test_timeout_seconds=900, scope='Uniform copy-only resource profile; '
         'not a shipping build change, timeout extension or device benchmark')
-    if original_resources:
+    if original_resources or combined_execution:
         state['build_profile'].update(gradle_heap_bytes=6 * 1024**3, gradle_workers='original-default',
             gradle_parallel=True, xcode_jobs='original-default', boot_after_build=False,
             scope=control.SCOPE)
+    if combined_execution:
+        state['build_profile'].update(combined_xcode=True, combined_timeout_seconds=3600,
+            product_manifest_stage='after-combined-command')
     def checkpoint():
         partial = out / 'state.writing'
         partial.write_text(json.dumps(state | {'commands': commands.rows}, indent=2))
@@ -464,20 +470,37 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     '-destination', 'platform=iOS Simulator,id=' + simulator_id,
                     '-derivedDataPath', str(out / 'derived'), '-parallel-testing-enabled', 'NO',
                     '-maximum-concurrent-test-simulator-destinations', '1']
-            if original_resources:
+            if original_resources or combined_execution:
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Original booted-build Simulator unavailable')
                 row['kernel_resources'] = {'before-build': control.observe_resources(command, dest, 'before-build')}
-            selected_build = control.build_command(base) if original_resources else build_command(base)
-            code, _ = command(selected_build, arm + '-build', 2700, dest / 'build.log')
-            if original_resources:
-                row['kernel_resources']['after-build'] = control.observe_resources(command, dest, 'after-build')
-            row['build_exit'] = code
-            verify_inputs(copy, inputs)
-            if code:
-                row['result'] = 'BUILD_FAILED'
-                break
+            result = dest / 'tests.xcresult'
+            if combined_execution:
+                # A distinct causal profile uses the original single Xcode build/test
+                # process. No first build, post-link pause, or second test invocation.
+                base += ['-destination-timeout', '120']
+                code, _ = command(selected_test_command(base, result),
+                    arm + '-build-and-tests', 3600, dest / 'test.log',
+                    environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
+                row.update(combined_exit=code, test_exit=code,
+                    result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED',
+                    product_manifest_stage='after-combined-command')
+                row['kernel_resources']['after-tests'] = control.observe_resources(command, dest, 'after-tests')
+                verify_inputs(copy, inputs)
+                if code not in (0, 65):
+                    row['result'] = 'COMBINED_COMMAND_FAILED'
+                    break
+            else:
+                selected_build = control.build_command(base) if original_resources else build_command(base)
+                code, _ = command(selected_build, arm + '-build', 2700, dest / 'build.log')
+                if original_resources:
+                    row['kernel_resources']['after-build'] = control.observe_resources(command, dest, 'after-build')
+                row['build_exit'] = code
+                verify_inputs(copy, inputs)
+                if code:
+                    row['result'] = 'BUILD_FAILED'
+                    break
             products = out / 'derived/Build/Products/Debug-iphonesimulator'
             apps = [p for p in products.glob('*.app') if (p / 'Info.plist').is_file() and
                     plistlib.loads((p / 'Info.plist').read_bytes()).get('CFBundleIdentifier') == bundle]
@@ -494,15 +517,15 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
             # Keep the explicitly owned device shut down during linkage; Xcode
             # can build for that available destination without competing for RAM.
-            if not original_resources:
+            if not (original_resources or combined_execution):
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Owned Simulator boot failed')
-            result = dest / 'tests.xcresult'
-            code, _ = command(selected_test_command(base, result),
-                              arm + '-tests', 900, dest / 'test.log',
-                              environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
-            row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
+            if not combined_execution:
+                code, _ = command(selected_test_command(base, result),
+                                  arm + '-tests', 900, dest / 'test.log',
+                                  environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
+                row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
             if original_resources:
                 row['kernel_resources']['after-tests'] = control.observe_resources(command, dest, 'after-tests')
             verify_inputs(copy, inputs)
@@ -517,6 +540,11 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                 (dest / (kind + '.json')).write_bytes(raw)
             row['methods'] = selected_verify_results(json.loads((dest / 'summary.json').read_bytes()),
                                             json.loads((dest / 'tests.json').read_bytes()), simulator_id, code)
+            if combined_execution:
+                # All23 actual executed native outcomes establish that compilation
+                # succeeded. This is NOT a fabricated standalone build exit receipt.
+                row['build_exit'] = 0
+                row['build_success_evidence'] = 'all23-executed-native-outcomes'
             if arm != 'original' and code:
                 attachments = dest / 'attachments'; attachments.mkdir()
                 rc, helptext = command(['/usr/bin/xcrun', 'xcresulttool', 'help', 'export', 'attachments'],
@@ -550,9 +578,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     raise RuntimeError('Explicit owned Debug sandbox unavailable')
                 sandbox = Path(raw.decode().strip()).resolve(strict=True)
                 captures = []
-                if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources:
+                if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                     row['companion_captures'] = []
-                if root_capability or root_boundary or public_boundary or original_cohort or original_resources:
+                if root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                     row['root_companion_captures'] = []
                 for token in sorted(tokens):
                     path = sandbox / 'tmp' / ('parlor-pin02-' + token) / 'capture.json'
@@ -564,10 +592,10 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         decoded = decode_capture(raw, tokens, simulator_id, bundle)
                         (dest / ('capture-' + token + '.json')).write_bytes(raw)
                         captures.append(decoded)
-                        if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources:
+                        if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                             row['companion_captures'].append(control.retain_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
-                        if root_capability or root_boundary or public_boundary or original_cohort or original_resources:
+                        if root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                             row['root_companion_captures'].append(control.retain_root_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                 row['captures'] = captures

@@ -58,7 +58,7 @@ def verify_results(summary, tests, simulator_id, code):
     return methods
 
 
-def accept_observations(out, state, *, profile, arms, renderer, result_verifier=None):
+def accept_observations(out, state, *, profile, arms, renderer, result_verifier=None, command_verifier=None):
     """Shared source/product/result/custody validation, not a qualification gate.
 
     Entry points still bind their own exact profile, arms and copied-source plan.
@@ -121,9 +121,12 @@ def accept_observations(out, state, *, profile, arms, renderer, result_verifier=
                 cleanup.get('workers_after', {}).get('result') == 'PASS' and
                 cleanup.get('simulator', {}).get('result') == 'PASS' and
                 cleanup['simulator'].get('udid') == row['simulator'], 'Actual owned cleanup required')
-        for label, code in ((arm + '-build', 0), (arm + '-tests', row['test_exit']), (arm + '-gradle-stop', 0)):
-            selected = [p for p in state['commands'] if p.get('label') == label]
-            require(len(selected) == 1 and selected[0].get('exit_code') == code, 'Single original command required')
+        if command_verifier is None:
+            for label, code in ((arm + '-build', 0), (arm + '-tests', row['test_exit']), (arm + '-gradle-stop', 0)):
+                selected = [p for p in state['commands'] if p.get('label') == label]
+                require(len(selected) == 1 and selected[0].get('exit_code') == code, 'Single original command required')
+        else:
+            command_verifier(state, row)
     require(state['commands'] and all(p.get('status') == 'EXITED' and p.get('direct_child_reaped') and
             not p.get('signals') for p in state['commands']), 'Every current child must exit and be reaped')
     return True

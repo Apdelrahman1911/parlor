@@ -5,6 +5,28 @@ Investigation tooling for [#267](https://github.com/Apdelrahman1911/parlor/issue
 The original lost Host event occurred on iOS26.2; later iOS18.5 passes do not
 establish its cause. Keep the original failed source/event/recording evidence.
 
+## PIN15 — original combined Xcode process boundary
+
+PIN14's original6GiB/parallel/booted-build experiment passed all23 native cases;
+its validated kernel snapshots show swap use, **not a memory-pressure cause**.
+Production41180128325 used one `xcodebuild test` process, whereas PIN14 separated
+`build-for-testing` and `test-without-building`. PIN15 investigates that omitted
+boundary with one original combined action, retaining every PIN14 copied app,
+driver and observer byte, all23 cases/order, original selectors/actions, exact
+text predicates, ten-second assertion budgets, networking tripwire and cleanup.
+
+The combined process uses the existing summed2700+900-second command budget;
+it cannot build first or replay tests. Two read-only numeric kernel snapshots
+cover before-build and after-tests. No after-build pause is inserted. Product
+hashes are explicitly **post-command**; actual23-case execution establishes
+compilation, not a fabricated separate build-exit receipt. All source, product,
+native outcome, failure-only companion, original order and ownership controls
+remain mandatory. Five portable rejection controls also join ordinary readiness.
+
+The distinct free `macos-15` workflow is observation-only. PIN15 does not restore
+the preceding KMP workload, certify instrumentation neutrality, identify original
+causality, qualify PR296/300, repair shipping code or verify physical devices.
+
 ## PIN06 — frozen PR296 public setup boundaries
 
 `pin06_public_setup_pair.py` binds failed application `40ae511d` / tree
