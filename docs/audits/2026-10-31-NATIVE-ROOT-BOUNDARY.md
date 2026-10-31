@@ -43,6 +43,11 @@ nil setter/getter preservation; Simulator SDK typecheck and full copied-app
 synthetic capability remain required. Only after independent capability acceptance
 may PIN11 interpret original EN/AR root observations. No extra touch recognizer,
 AX query, timer, action, selector, timeout, or original assertion is introduced.
+Its failure-only settlement log additionally emits the already-computed start
+uptime, permitting direct comparison with native getter/root intervals. This
+uses no new clock read or successful-path work; original sample collection and
+waiters remain unchanged. Post-failure screenshots are not substituted for this
+boundary timeline.
 
 ## Status and next decisions
 

@@ -39,8 +39,15 @@ class RootObservationControls(unittest.TestCase):
             originals,pair.INPUTS,arm='compose')
         plan=observed.renderer_for_profile(observed.PROFILE,observed.SOURCE,pair.RUNTIME,pair.DEVICE)(
             originals,pair.INPUTS,arm='compose')
-        self.assertEqual(plan[pin02_capture.DRIVER],base[pin02_capture.DRIVER])
-        self.assertEqual([p for p in plan if plan[p]!=base[p]],[pin02_capture.CONTAINER])
+        driver=plan[pin02_capture.DRIVER]
+        self.assertEqual(driver.replace(observed.FAILURE_CLOCK_LOG,observed.OLD_FAILURE_LOG),
+                         base[pin02_capture.DRIVER])
+        self.assertEqual(set(p for p in plan if plan[p]!=base[p]),
+                         {pin02_capture.CONTAINER,pin02_capture.DRIVER})
+        self.assertIn('if result != .completed {',driver)
+        self.assertIn('uptimeStartedMs=\\(started * 1000)',driver)
+        self.assertEqual(driver.count('ProcessInfo.processInfo.systemUptime'),
+                         base[pin02_capture.DRIVER].count('ProcessInfo.processInfo.systemUptime'))
         self.assertNotIn('PIN01TouchObserver',plan[pin02_capture.CONTAINER])
         self.assertEqual(observed.test_command(['xcodebuild'],Path('/r')),boundary.test_command(['xcodebuild'],Path('/r')))
 
