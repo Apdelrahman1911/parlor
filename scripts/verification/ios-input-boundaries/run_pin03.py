@@ -308,15 +308,27 @@ def renderer_for_profile(profile, source, runtime, device):
     raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
 
 
-def main():
+def main(*, synthetic=False):
+    # The separate PIN07 entry point can select ONE known failed-export control.
+    # Ordinary profiles, methods and success criteria are unchanged.
+    if synthetic:
+        import pin07_native_adapter as control
+    else:
+        control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument('--source', required=True)
     parser.add_argument('--runtime', required=True)
     parser.add_argument('--device', required=True)
-    parser.add_argument('--profile', choices=('catalog', 'original-host', 'public-setup-pair'), default='catalog')
+    parser.add_argument('--profile', choices=(control.PROFILE,) if control else
+                        ('catalog', 'original-host', 'public-setup-pair'),
+                        required=bool(control), default=None if control else 'catalog')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    renderer = renderer_for_profile(args.profile, args.source, args.runtime, args.device)
+    renderer = control.renderer_for_profile(args.profile, args.source, args.runtime, args.device) if control else \
+        renderer_for_profile(args.profile, args.source, args.runtime, args.device)
+    selected_test_command = control.test_command if control else test_command
+    selected_verify_results = control.verify_results if control else verify_results
+    selected_exports = control.failed_method_exports if control else failed_method_exports
     if platform.system() != 'Darwin' or platform.machine() != 'arm64' or \
             not re.fullmatch('[0-9a-f]{40}', args.source) or \
             not re.fullmatch(r'com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9]+-[0-9]+', args.runtime) or \
@@ -336,7 +348,7 @@ def main():
         raise RuntimeError('Actual Simulator SDK differs from qualified compiler profile')
     config = apple.configuration(ROOT)
     source_tree = subprocess.check_output(['git', 'rev-parse', args.source + '^{tree}'], cwd=ROOT).decode().strip()
-    if args.profile == 'public-setup-pair' and source_tree != setup_pair.TREE:
+    if (control or args.profile == 'public-setup-pair') and source_tree != setup_pair.TREE:
         raise ValueError('Original failed public setup tree differs; no fallback')
     out.mkdir(mode=0o700)
     copy = out / 'source'; copy.mkdir(mode=0o700)
@@ -350,8 +362,11 @@ def main():
     state = dict(source=args.source, source_tree=source_tree, profile=args.profile,
                  harness=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
                  archive_sha256=sha(archive), runtime=args.runtime, device=args.device, xcode=xcode, sdk=sdk,
+                 debug_bundle=bundle,
                  original_inputs=manifest, arms=[], result='NOT_QUALIFIED',
                  scope='Existing EN/AR additional-game journeys only, not 60-journey neutrality, original iOS26.2 cause, production CI or physical acceptance')
+    if control:
+        state['scope'] = 'One intentionally failed synthetic public Host transition; capture custody only, not original cause, input neutrality, production qualification or physical acceptance'
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
     environment = diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
@@ -381,7 +396,7 @@ def main():
             raise RuntimeError('Investigation command did not finish')
         return row['exit_code'], stdout
     previous = manifest
-    for arm in catalog.ARMS:
+    for arm in ('native',) if control else catalog.ARMS:
         dest = out / arm; dest.mkdir()
         inputs = apply_arm(copy, original, manifest, arm, previous=previous, renderer=renderer)
         previous = inputs
@@ -426,7 +441,7 @@ def main():
                 if backend.run(*operation)[0]:
                     raise RuntimeError('Owned Simulator boot failed')
             result = dest / 'tests.xcresult'
-            code, _ = command(test_command(base, result),
+            code, _ = command(selected_test_command(base, result),
                               arm + '-tests', 900, dest / 'test.log',
                               environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
             row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
@@ -440,7 +455,7 @@ def main():
                 if rc:
                     raise RuntimeError('Original XCTest result decoding failed')
                 (dest / (kind + '.json')).write_bytes(raw)
-            row['methods'] = verify_results(json.loads((dest / 'summary.json').read_bytes()),
+            row['methods'] = selected_verify_results(json.loads((dest / 'summary.json').read_bytes()),
                                             json.loads((dest / 'tests.json').read_bytes()), simulator_id, code)
             if arm != 'original' and code:
                 attachments = dest / 'attachments'; attachments.mkdir()
@@ -449,7 +464,7 @@ def main():
                 if rc:
                     raise RuntimeError('Installed attachment export help unavailable')
                 public_attachments.verify_export_help(helptext)
-                exports = failed_method_exports(result, attachments, row['methods'])
+                exports = selected_exports(result, attachments, row['methods'])
                 row['attachment_test_ids'] = [argv[-1] for _, argv in exports]
                 for index, (directory, argv) in enumerate(exports):
                     directory.mkdir()
@@ -510,10 +525,18 @@ def main():
             checkpoint(); commands.finalizing = False
         if row['cleanup'] != 'PASS' or commands.signals:
             break
-    state['result'] = 'SCOPED_INVESTIGATION_COMPLETE' if len(state['arms']) == 3 and \
-        all(p['cleanup'] == 'PASS' and p['result'].startswith('JOURNEYS_') for p in state['arms']) else 'INCOMPLETE'
+    if control:
+        try:
+            state['result'] = control.accept_native_export(out, state | {'commands': commands.rows})
+        except (ValueError, KeyError, TypeError) as error:
+            state.update(result='INCOMPLETE', acceptance_error_type=type(error).__name__)
+            checkpoint()
+            raise
+    else:
+        state['result'] = 'SCOPED_INVESTIGATION_COMPLETE' if len(state['arms']) == 3 and \
+            all(p['cleanup'] == 'PASS' and p['result'].startswith('JOURNEYS_') for p in state['arms']) else 'INCOMPLETE'
     checkpoint()
-    return 0 if state['result'] == 'SCOPED_INVESTIGATION_COMPLETE' else 1
+    return 0 if state['result'] in ('SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY') else 1
 
 
 if __name__ == '__main__':

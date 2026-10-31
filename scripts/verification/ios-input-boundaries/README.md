@@ -63,16 +63,28 @@ skips on Linux. The strict numeric reader
 reports **no source/product/device/export custody or causal qualification**;
 fabricated software rows are never called native observations.
 
-There is **no runner, workflow, dispatch or native result** for this preparation.
-A future independently reviewed owned-copy adapter must select only
-`testPIN07SyntheticHostFailureCapture`, retain its actual failed exit/method/
-original assertion, validate the once-only ACK/token and real Kotlin export,
-and bind source/product/runtime/device/cleanup before reporting capture-only
-success. It must reject an earlier natural failure or a missing Host callback.
-Do not run the existing original two-method PIN06 adapter on this fault plan,
-retry the old application suite, call it a shipping repair, or waive #267/#276
-and full60-journey neutrality. The original held diagnostic branch is preserved.
+The separately selected `run_pin07.py` now reuses the existing owned-copy
+build/device/process/cleanup machinery. The exact read-only
+`ios-synthetic-failure-export.yml` selects one native arm and only
+`testPIN07SyntheticHostFailureCapture` on standard free `macos-15`, JDK21,
+Xcode26.3/17C529 and owned iOS18.5/iPhone16Pro. It cannot select a production
+method or natural profile. No cache saves, shipping observer or required-gate
+changes are made.
 
+Acceptance requires actual XCTest exit65, exactly one unexpected failed method
+at the original transition assertion, one post-failure ACK/token, real complete
+Kotlin buffer with catalog and Host callbacks, copied-source and built-product
+hashes, and exited/reaped commands with owned cleanup. Missing, duplicate,
+foreign, earlier or different failures reject. The unchanged ordinary runner
+still selects both EN/AR methods and all three arms. Seven portable collector
+controls and three workflow-contract controls cover these rejection boundaries.
+The seven collector controls join ordinary readiness.
+
+**Native execution pending:** software fixtures are not input or capture custody.
+Even an accepted hosted control is only `SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY`,
+never a shipping repair, natural reproduction, original cause, full60-journey
+neutrality, or acceptance of #267/#276/failed296/300. Original held diagnostics
+and failed workflow41180128325 remain retained.
 `pin01_copy.render` validates four exact source digests and unambiguous anchors,
 then returns an additive transformation plan. It performs **no filesystem writes,
 build, launch, device allocation, permission action or process cleanup**. Use only

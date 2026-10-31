@@ -3,7 +3,8 @@
 The completed PIN06 experiment produced no failed journey and therefore never
 exercised its failed-only export. This distinct plan intentionally suppresses a
 copied Host transition, AFTER recording its callback. It does not repair or
-reexecute the original failed app suite and has no native execution adapter.
+reexecute the original failed app suite. The separate PIN07 adapter owns execution;
+this module remains a pure plan/decoder and never allocates native resources.
 """
 import hashlib
 
