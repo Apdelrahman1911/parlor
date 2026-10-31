@@ -95,7 +95,7 @@ NATIVE_ROOT_OBSERVATIONS_COMPANIONS = {'run_pin11.py': 'fd44d919abec2435d0af34e8
 
 PUBLIC_FAILURE_COVERAGE_CONTROL = 'ios-public-failure-coverage-control.yml'
 PUBLIC_FAILURE_COVERAGE_CONTROL_SHA256 = 'b5a1e83f46e691d6967f45eb27ae13ac24cee19bd6184178db5974bb64251ab4'
-PUBLIC_FAILURE_COVERAGE_CONTROL_COMPANIONS = {'pin11_public_failure_coverage.py': '2bf8857f3a766c4ca3865bc7f1d5fd91b8c434331798135d753d25d89d823669', 'test_pin11_public_failure_coverage.py': '6777198a6e2928545ff5580617b0f465d0c61c55540933c6872c132516ed4e05'}
+PUBLIC_FAILURE_COVERAGE_CONTROL_COMPANIONS = {'pin11_public_failure_coverage.py': '5f64cd0d1379ea6d907f301239c730b3fb0131db58ba4019695eecdeb6ab881f', 'test_pin11_public_failure_coverage.py': 'e9754b8d297eb8aeab636912168f7efebe4222316155aa546146fa3f2c3aee61'}
 
 ALLOWED_ACTIONS = {
     "actions/checkout",

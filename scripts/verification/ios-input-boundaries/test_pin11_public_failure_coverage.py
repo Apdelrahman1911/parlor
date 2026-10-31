@@ -70,21 +70,24 @@ class PublicFailureCoverageControls(unittest.TestCase):
         self.assertEqual(expanded[pin02_capture.CONTAINER].count(coverage.AX_ARMED), 2)
         self.assertNotIn('PIN01TouchObserver', expanded[pin02_capture.CONTAINER])
 
-    def test_failed_method_exit_observes_only_failure_count_before_original_termination(self):
+    def test_record_hook_precedes_unchanged_abort_and_success_clears_only_public_scope(self):
         driver = coverage.extend(original_plan())[pin02_capture.DRIVER]
         self.assertIn(coverage.NEW_DEFER, driver)
         self.assertEqual(driver.count(coverage.NEW_DEFER), 1)
         scope = driver[driver.index(coverage.METHOD):driver.index(coverage.NEXT_METHOD)]
-        self.assertLess(scope.index('run.failureCount > 0'), scope.index('app.terminate()'))
-        self.assertEqual(scope.count('self.testRun'), 1)
-        self.assertNotIn('hasSucceeded', scope)
-        # Source preservation is not proof that XCTest's count is timely on Apple.
-        # That remains a required native control before this preparation is wired.
+        self.assertLess(scope.index('pin11PublicApp = nil'), scope.index('app.terminate()'))
+        self.assertNotIn('self.testRun', driver)
+        self.assertLess(scope.index('pin11PublicApp = app'), scope.index('app.launch()'))
+        self.assertEqual(driver.count('super.record(issue)'), 1)
+        self.assertLess(driver.index('pin11CapturePublicFailureOnce(app)'), driver.index('super.record(issue)'))
+        self.assertIn('Thread.isMainThread', coverage.HELPER)
+        self.assertIn('MainActor.assumeIsolated', coverage.HELPER)
+        self.assertNotIn('issue.', coverage.HELPER) # Never inspect description/attachments/private issue contents.
 
     def test_all_original_failed_requests_share_one_bounded_attempt_before_delivery(self):
         driver = coverage.extend(original_plan())[pin02_capture.DRIVER]
         self.assertEqual(driver.count('PIN02FailureRequest.captureAfterFailedTransition('), 1)
-        # Two existing app-owned requests plus the new public failure exit.
+        # Two existing app-owned requests plus the new failure record hook.
         # The helper definition has an underscored parameter, not another call.
         self.assertEqual(driver.count('pin11CapturePublicFailureOnce(app)'), 3)
         self.assertEqual(driver.count('pin11CapturePublicFailureOnce(pin06FailureOwner)'), 1)
@@ -131,13 +134,19 @@ class PublicFailureCoverageControls(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     @unittest.skipUnless(platform.system() == 'Darwin', 'Actual Apple XCTest runtime unavailable on Linux')
-    def test_actual_xctest_failure_count_is_available_in_swift_defer_before_termination(self):
-        # Real XCTest semantics, no stand-in counter or UIKit/application claim.
-        # If XCTest aborts without running Swift defer, this control MUST fail.
+    def test_actual_xctest_record_hook_captures_before_abort_without_relying_on_swift_defer(self):
+        # Retain the executed abort/defer counterexample. The new record hook
+        # must execute before XCTest aborts, without changing failure policy.
         source = '''import Foundation
 import XCTest
 final class PIN11ExitCountCase: XCTestCase {
     static var exits: [String: Int] = [:]
+    static var recorded = 0
+    override func record(_ issue: XCTIssue) {
+        precondition(Thread.isMainThread)
+        MainActor.assumeIsolated { Self.recorded += 1 }
+        super.record(issue)
+    }
     @objc func testPassingExit() {
         precondition(Thread.isMainThread)
         defer { Self.exits["pass"] = testRun?.failureCount }
@@ -150,9 +159,10 @@ final class PIN11ExitCountCase: XCTestCase {
         XCTFail("Intentional native failure-count capability only")
     }
     @objc func testZVerifyExitCounts() {
-        XCTAssertEqual(Self.exits, ["pass": 0, "fail": 1])
-        if Self.exits == ["pass": 0, "fail": 1] {
-            print("PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS")
+        XCTAssertEqual(Self.exits, ["pass": 0]) // The actual abort bypasses the failing Swift defer.
+        XCTAssertEqual(Self.recorded, 1) // The record hook must still have captured that original failure.
+        if Self.exits == ["pass": 0] && Self.recorded == 1 {
+            print("PIN11_ACTUAL_XCTEST_PRE_ABORT_RECORD_PASS")
         }
     }
 }
@@ -187,7 +197,7 @@ final class PIN11ExitCountCase: XCTestCase {
                 self.assertEqual(len(re.findall(r"Test Case [^\n]*" + name + r"[^\n]* " + result + r"\b", output)),
                                  1, output)
             self.assertIn('Intentional native failure-count capability only', output)
-            self.assertIn('PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS', output)
+            self.assertIn('PIN11_ACTUAL_XCTEST_PRE_ABORT_RECORD_PASS', output)
 
 
 if __name__ == '__main__':

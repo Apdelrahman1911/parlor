@@ -77,10 +77,26 @@ These are diagnostic coverage limitations, not established application causes.
 
 The separate **unwired** `pin11_public_failure_coverage.py` preparation separates
 public AX arming (Home/Setup/Permission/Name only) from unchanged pointer arming.
-It adds failure exit capture before existing public-method termination, using
-XCTest's in-process failure count. All explicit requests share a bounded once-only
-token guard; missing ACK never causes another request. Inverse/source controls
-preserve every action, assertion, query, waiter and clock read. Actual XCTest
-failure-count/defer behavior and Simulator SDK compatibility must pass on Apple
-before wiring this preparation. Its short native-control workflow does not build
-or launch Parlor and must not be described as gameplay/input qualification.
+All explicit requests share a bounded once-only token guard; missing ACK never
+causes another request. Inverse/source controls preserve every action, assertion,
+query, waiter and clock read.
+
+The actual XCTest-host control [41202475201](https://github.com/Apdelrahman1911/parlor/actions/runs/41202475201)
+failed: `continueAfterFailure=false` bypasses Swift defer. The intentional failure
+ran, the passing defer recorded zero, and the verification case failed because
+no failing defer ran. The proposed defer/failure-count capture is invalid and
+was never wired. Earlier controls separately exposed and corrected missing
+XCTestSwiftSupport linkage and an unsupported standalone XCTest runtime host.
+Original failures, native outcomes and artifact custody remain retained.
+
+The evidence-based correction captures in the supported `record(_ issue: XCTIssue)`
+hook **before** forwarding to `super.record(issue)` exactly once. It reads no issue
+content. Public-app ownership is scoped to the original public journey; success
+only clears ownership before original termination. The bounded once-only guard
+also prevents an explicit original capture followed by this hook from requesting
+again. Off-main recording fails closed without dispatching or blocking. The new
+actual XCTest control retains the abort/defer counterexample and requires exactly
+one pre-abort record hook, two native passes and one unchanged intentional failure.
+Actual Simulator SDK compatibility and this control must pass on Apple before
+wiring. The short control workflow does not build or launch Parlor and is not
+application input qualification. No original application cause or repair is claimed.
