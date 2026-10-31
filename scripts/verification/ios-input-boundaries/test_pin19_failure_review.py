@@ -58,6 +58,35 @@ def archive(extra=None):
 
 
 class PIN19FailureReviewControls(unittest.TestCase):
+    def test_exact_original_movie_can_be_attested_without_inventing_or_uploading_a_screenshot(self):
+        raw = b'\x00\x00\x00\x18ftyp' + b'public-fixture'
+        with tempfile.TemporaryDirectory() as temporary, \
+             patch.object(review, 'RECORDING_BYTES', len(raw)), \
+             patch.object(review, 'RECORDING_DIGEST', review.sha(raw)):
+            root = Path(temporary); exported = root / 'exported'; exported.mkdir()
+            dest = root / 'out'; dest.mkdir(); movie = exported / 'original.mp4'; movie.write_bytes(raw)
+            rows, recording = review.public_media_observations(exported, dest, {'object': review.sha(raw)})
+            self.assertEqual(rows, [])
+            self.assertEqual(recording['sha256'], review.sha(raw))
+            self.assertTrue(recording['original_object_bound'])
+            self.assertFalse(recording['uploaded']); self.assertFalse(recording['screenshot'])
+            self.assertEqual(list(dest.iterdir()), [])
+            with self.assertRaises(ValueError): review.public_media_observations(exported, dest, {})
+            movie.write_bytes(raw[:-1] + b'x')
+            with self.assertRaises(ValueError):
+                review.public_media_observations(exported, dest, {'object': review.sha(raw)})
+            movie.write_bytes(raw)
+            (exported / 'second.mov').write_bytes(raw)
+            with self.assertRaises(ValueError):
+                review.public_media_observations(exported, dest, {'object': review.sha(raw)})
+            (exported / 'second.mov').unlink(); movie.unlink()
+            movie.symlink_to(root / 'foreign')
+            with self.assertRaises(ValueError):
+                review.public_media_observations(exported, dest, {'object': review.sha(raw)})
+            movie.unlink(); (exported / 'manifest.json').write_text('{}')
+            with self.assertRaises(ValueError):
+                review.public_media_observations(exported, dest, {'object': review.sha(raw)})
+
     def test_source_renderer_receives_only_declared_bindings_not_entire_manifest(self):
         # Actual frozen application input graph, no app compilation/execution.
         archive = review.subprocess.check_output(['git', 'archive', review.SOURCE, *review.run_pin03.ROOTS,

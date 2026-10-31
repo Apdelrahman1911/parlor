@@ -39,6 +39,8 @@ BYTES, MAX_EXPANDED = 72737120, 512 * 1024 * 1024
 METHOD = 'IOSAppLaunchUITests/testPIN19SettledWordCatalogIdleCapture()'
 FAILURE = 'Public setup control is not reachable: Open Word Impostor'
 SIMULATOR = 'BD92BA41-02F8-41C2-B359-122C2A26CA05'
+RECORDING_BYTES = 9275051
+RECORDING_DIGEST = '2de438046c50e010f88d6cbf0c0243c7e060fed98f7f1be77089789b78e98f65'
 sha = lambda raw: hashlib.sha256(raw).hexdigest()
 
 
@@ -235,6 +237,34 @@ def original_object_digest(path, expected):
     return sha(b'')
 
 
+def public_media_observations(directory, destination, manifest):
+    # This exact reachability-failure branch attaches no explicit screenshot.
+    # The original xcresult instead contains its automatic public recording.
+    # Attest that original object, never manufacture an "original PNG", convert
+    # media on this runner, or upload a recording/raw attachment manifest.
+    require(directory.is_dir() and not directory.is_symlink() and
+            destination.is_dir() and not destination.is_symlink())
+    entries = sorted(directory.rglob('*'))
+    require(0 < len(entries) <= 64 and not any(p.is_symlink() for p in entries))
+    files = [p for p in entries if not p.is_dir()]
+    require(sum(p.lstat().st_size for p in files) <= attachments.MAX_TOTAL and
+            all(stat.S_ISREG(p.lstat().st_mode) and p.lstat().st_nlink == 1 for p in files))
+    images = [p for p in files if p.suffix.lower() == '.png']
+    recordings = [p for p in files if p.suffix.lower() in ('.mp4', '.mov')]
+    require(len(recordings) <= 1)
+    recording = None
+    if recordings:
+        raw = attachments.read_regular(recordings[0], RECORDING_BYTES)
+        require(len(raw) == RECORDING_BYTES and sha(raw) == RECORDING_DIGEST and
+                RECORDING_DIGEST in manifest.values() and raw[4:8] == b'ftyp')
+        recording = dict(bytes=RECORDING_BYTES, sha256=RECORDING_DIGEST,
+                         original_object_bound=True, uploaded=False, screenshot=False)
+    rows = attachments.curate_public_screenshots(directory, destination) if images else []
+    require(bool(rows) or recording is not None)
+    require(all(row['sha256'] in manifest.values() for row in rows))
+    return rows, recording
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument('--output', type=Path, required=True)
@@ -292,9 +322,10 @@ def main():
         exported = out / 'decoded-attachments'; exported.mkdir(mode=0o700)
         read(['export', 'attachments', '--path', str(result), '--output-path', str(exported), '--test-id', METHOD],
              'attachments-export')
-        rows = attachments.curate_public_screenshots(exported, out)
-        require(all(row['sha256'] in manifest.values() for row in rows))
+        rows, recording = public_media_observations(exported, out, manifest)
         receipt['public_screenshots'] = rows
+        receipt['original_screenshot_available'] = bool(rows)
+        receipt['public_recording'] = recording
         receipt['result'] = 'FROZEN_DIAGNOSTIC_HELPER_FAILURE_DECODED_NOT_QUALIFICATION'
     except BaseException as error:
         for image in out.glob('public-settlement-*.png'):
