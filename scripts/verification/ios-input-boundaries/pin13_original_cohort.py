@@ -106,8 +106,13 @@ retain_root_companion = public.retain_root_companion
 
 
 def accept_native_export(out, state):
-    boundary.accept_observation_export(out, state, profile=PROFILE,
-        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE), result_verifier=verify_results)
+    return accept_cohort_export(out, state, profile=PROFILE,
+        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE))
+
+
+def accept_cohort_export(out, state, *, profile, renderer):
+    boundary.accept_observation_export(out, state, profile=profile,
+        renderer=renderer, result_verifier=verify_results)
     root.accept_root_companions(out, state)
     # JSON case sets do not prove execution order. Bind the original four-case
     # prelude and both target methods directly to the retained original test log.

@@ -327,15 +327,16 @@ def completed_exit_code(result):
         'ROOT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'PUBLIC_FAILURE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_FULL_COHORT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'ORIGINAL_RESOURCE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -353,6 +354,8 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         import pin12_public_boundaries as control
     elif original_cohort:
         import pin13_original_cohort as control
+    elif original_resources:
+        import pin14_original_resources as control
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -409,12 +412,17 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     if control:
         state['scope'] = control.SCOPE
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
-    environment = diagnostic_environment(os.environ, registry, jtmp)
+    environment = control.build_environment(os.environ, registry, jtmp) if original_resources else \
+        diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
         gradle_parallel=False, kotlin_compiler='in-process', xcode_jobs=1,
         verbose_build=True, boot_after_build=True, build_timeout_seconds=2700,
         test_timeout_seconds=900, scope='Uniform copy-only resource profile; '
         'not a shipping build change, timeout extension or device benchmark')
+    if original_resources:
+        state['build_profile'].update(gradle_heap_bytes=6 * 1024**3, gradle_workers='original-default',
+            gradle_parallel=True, xcode_jobs='original-default', boot_after_build=False,
+            scope=control.SCOPE)
     def checkpoint():
         partial = out / 'state.writing'
         partial.write_text(json.dumps(state | {'commands': commands.rows}, indent=2))
@@ -456,7 +464,15 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     '-destination', 'platform=iOS Simulator,id=' + simulator_id,
                     '-derivedDataPath', str(out / 'derived'), '-parallel-testing-enabled', 'NO',
                     '-maximum-concurrent-test-simulator-destinations', '1']
-            code, _ = command(build_command(base), arm + '-build', 2700, dest / 'build.log')
+            if original_resources:
+                for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
+                    if backend.run(*operation)[0]:
+                        raise RuntimeError('Original booted-build Simulator unavailable')
+                row['kernel_resources'] = {'before-build': control.observe_resources(command, dest, 'before-build')}
+            selected_build = control.build_command(base) if original_resources else build_command(base)
+            code, _ = command(selected_build, arm + '-build', 2700, dest / 'build.log')
+            if original_resources:
+                row['kernel_resources']['after-build'] = control.observe_resources(command, dest, 'after-build')
             row['build_exit'] = code
             verify_inputs(copy, inputs)
             if code:
@@ -478,14 +494,17 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
             # Keep the explicitly owned device shut down during linkage; Xcode
             # can build for that available destination without competing for RAM.
-            for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
-                if backend.run(*operation)[0]:
-                    raise RuntimeError('Owned Simulator boot failed')
+            if not original_resources:
+                for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
+                    if backend.run(*operation)[0]:
+                        raise RuntimeError('Owned Simulator boot failed')
             result = dest / 'tests.xcresult'
             code, _ = command(selected_test_command(base, result),
                               arm + '-tests', 900, dest / 'test.log',
                               environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
             row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
+            if original_resources:
+                row['kernel_resources']['after-tests'] = control.observe_resources(command, dest, 'after-tests')
             verify_inputs(copy, inputs)
             if any(not (apps[0] / p).is_file() or (apps[0] / p).is_symlink() or
                    sha((apps[0] / p).read_bytes()) != digest for p, digest in product.items()):
@@ -531,9 +550,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     raise RuntimeError('Explicit owned Debug sandbox unavailable')
                 sandbox = Path(raw.decode().strip()).resolve(strict=True)
                 captures = []
-                if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort:
+                if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources:
                     row['companion_captures'] = []
-                if root_capability or root_boundary or public_boundary or original_cohort:
+                if root_capability or root_boundary or public_boundary or original_cohort or original_resources:
                     row['root_companion_captures'] = []
                 for token in sorted(tokens):
                     path = sandbox / 'tmp' / ('parlor-pin02-' + token) / 'capture.json'
@@ -545,10 +564,10 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         decoded = decode_capture(raw, tokens, simulator_id, bundle)
                         (dest / ('capture-' + token + '.json')).write_bytes(raw)
                         captures.append(decoded)
-                        if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort:
+                        if accessibility or native_boundary or root_capability or root_boundary or public_boundary or original_cohort or original_resources:
                             row['companion_captures'].append(control.retain_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
-                        if root_capability or root_boundary or public_boundary or original_cohort:
+                        if root_capability or root_boundary or public_boundary or original_cohort or original_resources:
                             row['root_companion_captures'].append(control.retain_root_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                 row['captures'] = captures

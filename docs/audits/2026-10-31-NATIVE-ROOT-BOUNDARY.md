@@ -160,3 +160,34 @@ must match every case. All other21 cases must pass; target failures require the
 unchanged complete failure-only companions. No retry/tap replay or production
 qualification is introduced. The explicit process classifier includes this new
 diagnostic label. Native execution and original input causality remain pending.
+
+## Original cohort accepted; material resource context remains unmeasured
+
+[41205968696](https://github.com/Apdelrahman1911/parlor/actions/runs/41205968696),
+exact`2037460c`, finished SUCCESS in26m36s. Independent published-source/product/
+API artifact/owned-cleanup acceptance verifies all23 original cases and their
+exact original order, zero failures/skips and zero failure-only exports. The
+process-status correction now executes natively without relabeling PIN12's failed
+run. Artifact13045681155 is8258822bytes, SHA256
+`b6d78c1def3197aa19fe2cabfa2b60c644d9f22bec29c286930de97f666af509`.
+No original failure/root timeline or shipping input correction follows.
+
+A material context difference is confirmed in frozen original source: Gradle
+uses`Xmx6g`/parallel=true/default workers; production boots the owned Simulator
+before the combined Xcode build/test. Successful copies used3GiB/serial/one
+worker and booted after linkage. **Heap caps do not measure RSS or prove memory
+pressure**. Original failure-time VM/RSS telemetry is absent; no such root cause
+is asserted. The four-container prelude itself creates no window, Compose root,
+Koin or network operation.
+
+PIN14 therefore measures this previously omitted original resource context,
+not another unchanged successful profile. Application/driver/case selection
+remain byte-identical to PIN13. Original source Gradle settings and default
+Xcode jobs are restored; the owned Simulator boots before building. Three bounded
+read-only Darwin VM/swap/capacity snapshots surround build and test. Only numeric
+selected counters are retained; no process arguments, player state, labels or
+values. All original source/product/order/failure/cleanup checks remain mandatory.
+No new input, tap retry, relaxed assertion, extended deadline, release change or
+physical claim. Kernel parser/command capability must pass on the actual standard
+free macOS runner before application execution. This remains an investigation,
+not a production configuration change or accepted causal explanation.
