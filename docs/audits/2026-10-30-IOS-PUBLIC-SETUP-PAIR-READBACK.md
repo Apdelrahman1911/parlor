@@ -78,42 +78,103 @@ The two redundant extracted recordings (36,109,621bytes) were deleted only after
 their exact originals were rehashed inside the preserved original ZIP. Contact
 sheets, provenance, commands, receipts and failure evidence remain retained.
 
-## Investigation and acceptance still required
+## Completed PIN06 probe — October 31
 
-A separate copy-only PIN06 probe was normally published at
-[`67f750904bfcfa5d7b1802fc2de1e8c5e6048d15`](https://github.com/Apdelrahman1911/parlor/commit/67f750904bfcfa5d7b1802fc2de1e8c5e6048d15).
-[41145628399](https://github.com/Apdelrahman1911/parlor/actions/runs/41145628399)
-is running against this exact failed application source, not as a production
-fix or qualification. Exact-source local controls pass169 input /782 release /
-458 readiness methods, with4/1/7 disclosed Linux platform skips respectively;
-all prior identities/outcomes remain. Software receipt SHA256
-`788eb6b0708942f4ff744a2d2c69e03202630adbf1e3baad38326125994ffc99`.
-The hosted control step reports success; copied application execution has not
-been independently read back. The probe retains the original/Compose/native
-arms and adds post-failure export only for the
-two exact localized permission prefixes. Original gestures, selectors, predicates,
-ten-second budgets, typing and network tripwire remain. Touch recording stops
-before permission/name stages; only public scene-phase enums remain available.
-Uniform bounded build preparation uses3GiB/one worker/no-parallel/in-process
-Kotlin, one Xcode job, verbose build stages and Simulator boot after linkage.
-This is resource discipline, not a measured performance or native-causal result.
+The copy-only probe at
+[`67f750904bfcfa5d7b1802fc2de1e8c5e6048d15`](https://github.com/Apdelrahman1911/parlor/commit/67f750904bfcfa5d7b1802fc2de1e8c5e6048d15)
+has completed:
+[41145628399](https://github.com/Apdelrahman1911/parlor/actions/runs/41145628399).
+Independent readback verifies the exact failed source/tree, all1,211 original
+copied-input hashes, unchanged original driver, each rendered observation plan,
+actual iOS18.5/22F77/iPhone16Pro ARM64 results and Xcode26.3/17C529/SDK26.2.
+All48 bounded direct-child commands are exited/reaped; task/toolchain/tracking,
+unique fresh-device adoption, native baselines and worker/device cleanup receipts
+match. These are retained producer receipts, not independent live process or
+binary re-attestation.
 
-Actual copied-source/product/runtime/results/cleanup must be independently read
-back before reporting probe execution. Full60-journey neutrality and physical
-verification remain separate. #267/#276/#293 and drafts295/296/300 remain open;
-#258 protection, #230 Store ownership/signing/approval and #251–253/#259/#260
+| Arm | Actual EN/AR methods | Build seconds | Test seconds |
+| --- | --- | ---: | ---: |
+| Original, unmodified failed source | 2 PASS /0 FAIL /0 skips | 780.582 | 573.426 |
+| Compose observation copy | 2 PASS /0 FAIL /0 skips | 148.940 | 556.663 |
+| Native + Compose observation copy | 2 PASS /0 FAIL /0 skips | 31.665 | 462.003 |
+
+All239 source-derived hosted preflight methods independently match:70 Apple
+hygiene plus169 input controls, **zero skips**, including actual SDK/Foundation
+controls and PIN06 Swift driver typecheck. Ten portable reader controls and63
+executed in-memory mutations of this actual retained artifact reject altered
+source/profile/methods, skips, duplicate commands, deadlines, ownership and
+cleanup. These software mutations do not execute Parlor or inject native faults.
+
+The original/Compose/native arms retain the original gestures, selectors,
+predicates, ten-second budgets, typing and network tripwire. Export admission
+only follows an already failed original permission/transition predicate. Touch
+recording stays picker/catalog-only; public scene enums extend through public
+permission/name stages. Build preparation uniformly uses3GiB/one worker,
+no parallel Gradle, in-process Kotlin, one Xcode job and boot after linkage.
+
+**No journey failed, so no failure request or numeric capture was produced.**
+This does not execute/qualify the failed-only capture path, locate either original
+failed boundary, prove full60-journey input neutrality, repair a keyboard or
+qualify either application PR. The unchanged source passing these scoped methods
+must not replace the original full-run21 PASS/2 FAIL. Sequential warm caches and
+different observation arms make these timings unsuitable as a matched-source CI,
+mobile or fastest-configuration benchmark. Production CI/Release settings and
+dependencies are unchanged; the runner is standard free public `macos-15`.
+
+| Completed probe evidence | SHA256 |
+| --- | --- |
+| Artifact13022542901 (8,689,748bytes) | `26a2a606d0f21779c3390a252abaf84345f349d5c614526c26b6cbc2c33c8d64` |
+| Direct completed-job log | `4a165ea17c8ec86e739c1fcf16f4ef4536438d57e22dc50b223bb806d097039c` |
+| Independent final scoped readback | `d8800fe4326e568e5aafe84f27dbbb2d9a92d3a78168f05ec38b98d462ebf34d` |
+
+The first cached `gh run view --job --log` read failed after a valid artifact
+retrieval. A separate read-only direct Jobs API read succeeded and was rehashed;
+no artifact redownload, workflow rerun or application execution followed.
+
+## Original chronology and independently continued ownership work
+
+An additional independent parse of the immutable original XCTest log matches
+all23 ordered identifiers/outcomes. Both failed additional-game methods are the
+**first app-host journeys**, after four detached UIKit container controls. All
+original keyboard app journeys and policy fixture suites run later; they cannot
+be an earlier chronological precondition. This does not establish container,
+XCTest-process, resource, lifecycle or input neutrality. Order receipt SHA256:
+`f7acb3c756a8c7906e237373e18940e61c321e2c44aec4b52d4a3e17f14b123b`.
+
+While the hosted probe ran, the unpublished PR300 ownership/pointer/report union
+`52bc7a823361ac1766e41b511a62b3de9512a8a6`, tree
+`f4c22663257faae29d7a26e46bb0e3b2c8d60ffd`, completed fresh strict local gates:
+1,950 Desktop /733 Android per Debug/Release /120 GitHub-test methods,777 release
+controls and450 ordinary readiness methods. All prior ownership/pointer identities
+and outcomes are retained; three established LAN, one exact procfs and six
+Apple-only Linux skips remain disclosed. Shipping ownership/test files are
+unchanged from corrected preparations. Local receipt SHA256:
+`67d7459296f658b6f2eff3f1c8919d3423244029dd1e08c1f3f29012a1161810`.
+The cached/serial371.7-second local observation is not hosted/device benchmarking.
+[Issue299 progress](https://github.com/Apdelrahman1911/parlor/issues/299#issuecomment-6536320927)
+retains #299/#301 as open. This local union was **not published as a blind retry**.
+
+## Acceptance still required
+
+#267/#276 causality and failed-only observation remain unresolved. Obtain exact
+failed-boundary evidence before proposing a shipping input/framework correction;
+retain original actions and verification budgets. Full60-journey neutrality,
+complete fresh hosted/native qualification, protected integration and distinct
+post-main acceptance remain separate. PR296/300 remain draft/open/unmerged;
+#293/#299/#301 and295 are not closed or superseded by this scoped pass.
+#258 protection, #230 Store identity/signing/approval and #251–253/#259/#260
 physical LAN/recovery/gameplay/RTL/accessibility/energy gates are unaffected.
-Only standard free public runners; no weakened checks or Store release.
+No physical-device, energy, Store or production-complete claim is made.
 
-[Issue276 evidence update](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6535672850)
+[Issue276 original evidence update](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6535672850)
 links the original failures and successful reader without conflating them.
 
 ## Report publication boundary
 
 This report-only branch is based on accepted main `35288a72`. It does not carry
 the pending ownership/test union, change shipping code, rerun failed application
-CI or merge either blocked PR. Its new documentation still requires affected
-transport/configuration checks; the original main pass is not relabeled as
-qualification of this report branch. #276 now explicitly tracks reopened public
+CI or merge either blocked PR. Report-only updates require affected transport/configuration and inventory/workflow
+checks before publication; the original main pass is never relabeled as
+qualification of a newer report. #276 now explicitly tracks reopened public
 control/text settlement failures, retaining its corrected historical QuickPath
 evidence. #267 retains separate Host delivery scope.
