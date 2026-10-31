@@ -2,11 +2,13 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import platform
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import pin01_copy
 import pin02_capture
@@ -111,6 +113,64 @@ class NativeInputDeliveryControls(unittest.TestCase):
             with self.assertRaises(ValueError):delivery.accept_native_export(out,state)
             p.write_bytes(original);p.unlink()
             with self.assertRaises((ValueError,OSError)):delivery.accept_native_export(out,state)
+
+    def test_safe_incomplete_installation_is_retained_but_never_accepted(self):
+        for stages,overflow in (([0,0,0],0),([50000,0,1],0),([50000,2,1],0),
+                                ([50000,1,2],0),([50000,1,3],1)):
+            with self.subTest(stages=stages,overflow=overflow),tempfile.TemporaryDirectory() as temporary:
+                out=Path(temporary).resolve();sandbox=out/'sandbox';destination=out/'retained';destination.mkdir()
+                value=fixture();value.update(installed=False,installation=stages,overflow=overflow,rows=[])
+                raw=json.dumps(value).encode();legacy=dict(process=100,capturedMs=20)
+                path=sandbox/'tmp'/('parlor-pin25-'+value['token'])/'delivery.json'
+                path.parent.mkdir(parents=True);path.write_bytes(raw)
+                intake=dict(token=value['token'],simulator=value['simulator'],bundle=value['bundle'],legacy=legacy)
+                self.assertFalse(delivery.validate_delivery(raw,**intake)['complete'])
+                with patch.object(delivery.text,'retain_companion',return_value={'previous':'unchanged'}) as previous:
+                    self.assertEqual(delivery.retain_companion(sandbox,destination,**intake),{'previous':'unchanged'})
+                    previous.assert_called_once_with(sandbox,destination,value['token'],value['simulator'],value['bundle'],legacy)
+                retained=destination/('native-input-'+value['token']+'.json')
+                self.assertEqual(retained.read_bytes(),raw)
+                with self.assertRaises(ValueError):delivery.decode_delivery(retained.read_bytes(),**intake)
+                with self.assertRaises(FileExistsError),patch.object(delivery.text,'retain_companion',return_value={}):
+                    delivery.retain_companion(sandbox,destination,**intake)
+
+    def test_incomplete_does_not_bypass_privacy_process_clock_or_numeric_bounds(self):
+        for change in (lambda v:v.update(private='forbidden'),lambda v:v.update(process=101),
+                       lambda v:v.update(token='foreign'),lambda v:v.update(capturedMs=21),
+                       lambda v:v.update(installation=[0,0,True]),lambda v:v.update(installation=[0,0,4]),
+                       lambda v:v.update(overflow=1000001),lambda v:v.update(rows=[[1,1,0,'text']])):
+            with tempfile.TemporaryDirectory() as temporary:
+                out=Path(temporary).resolve();sandbox=out/'sandbox';destination=out/'retained';destination.mkdir()
+                value=fixture();value.update(installed=False,installation=[0,0,0],rows=[])
+                intake=dict(token=value['token'],simulator=value['simulator'],bundle=value['bundle'],
+                            legacy=dict(process=100,capturedMs=20))
+                path=sandbox/'tmp'/('parlor-pin25-'+value['token'])/'delivery.json'
+                path.parent.mkdir(parents=True);change(value);path.write_bytes(json.dumps(value).encode())
+                with self.assertRaises(ValueError),patch.object(delivery.text,'retain_companion',return_value={}):
+                    delivery.retain_companion(sandbox,destination,**intake)
+                self.assertEqual(list(destination.iterdir()),[])
+
+    def test_delivery_read_ceiling_preserves_owned_regular_immutable_file_requirements(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary).resolve();path=out/'delivery.json';path.write_bytes(b'x'*delivery.MAX_BYTES)
+            self.assertEqual(run_pin03.read_capture(path,maximum=delivery.MAX_BYTES),path.read_bytes())
+            path.write_bytes(b'x'*(delivery.MAX_BYTES+1))
+            with self.assertRaises(ValueError):run_pin03.read_capture(path,maximum=delivery.MAX_BYTES)
+            path.write_bytes(b'{}');link=out/'link';link.symlink_to(path)
+            with self.assertRaises(OSError):run_pin03.read_capture(link,maximum=delivery.MAX_BYTES)
+            hard=out/'hard';os.link(path,hard)
+            with self.assertRaises(ValueError):run_pin03.read_capture(path,maximum=delivery.MAX_BYTES)
+            hard.unlink();fifo=out/'fifo';os.mkfifo(fifo)
+            with self.assertRaises(ValueError):run_pin03.read_capture(fifo,maximum=delivery.MAX_BYTES)
+            for cap in (True,delivery.MAX_BYTES-1,delivery.MAX_BYTES+1):
+                with self.assertRaises(ValueError):run_pin03.read_capture(path,maximum=cap)
+            original_read=os.read
+            def mutate(fd,length):
+                part=original_read(fd,length)
+                if part:path.write_bytes(b'mutated')
+                return part
+            with patch.object(os,'read',side_effect=mutate),self.assertRaises(ValueError):
+                run_pin03.read_capture(path,maximum=delivery.MAX_BYTES)
 
     @unittest.skipUnless(platform.system()=='Darwin','Actual Objective-C/Apple SDK unavailable on Linux')
     def test_actual_objc_mutation_struct_nil_forwarding_and_parent_isolation(self):

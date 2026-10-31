@@ -441,3 +441,26 @@ frame/motion and owned cleanup gates remain required. A sentinel requires actual
 native text delivery and the original successful focus return. Empty native
 arrival rows on a natural failure are evidence to investigate, not a manufactured
 pass. No shipping correction, neutrality or physical acceptance is implied.
+
+## Native delivery intake correction (PIN26)
+
+PIN25 [run41247449255](https://github.com/Apdelrahman1911/parlor/actions/runs/41247449255)
+failed **after** XCTest: the owned-file reader did not allow PIN25's reviewed
+512KiB limit. The Arabic original passed and the control genuinely failed at
+its sentinel after the complete-value predicate passed. The missing native,
+root and motion companions cannot be reconstructed or called complete.
+
+PIN26 corrects that exact read-limit mismatch and separates bounded private-free
+shape intake from strict complete-installation acceptance. Incomplete numeric
+installation evidence survives cleanup, but still fails acceptance. Default
+legacy limits, no-follow/ownership/immutability checks, exact process/product/
+clock binding, all original companion gates and actual native delivery remain
+mandatory. Regression controls exercise real owned-file retention, not just
+fabricated decoder dictionaries.
+
+Only the existing sentinel executes to recover the evidence lost by that
+reader defect. The successful Arabic journey, English and unchanged Kotlin
+controls are not replayed. Native installation remains unverified until actual
+readback; startup registration timing is a candidate, not a demonstrated cause.
+Neither this diagnostic correction nor an isolated sentinel qualifies the
+application or resolves the original input Issues.

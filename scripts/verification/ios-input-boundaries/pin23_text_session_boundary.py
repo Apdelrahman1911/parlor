@@ -239,7 +239,9 @@ def accept_text_export(out,state,*,profile,renderer,cases,result):
         ('isolated-public-text-session-export-control',(CONTROL,),
          'ISOLATED_PUBLIC_TEXT_SESSION_EXPORT_COMPLETE_NOT_QUALIFICATION'),
         ('public-name-native-input-delivery',CASES,
-         'PUBLIC_NAME_NATIVE_INPUT_DELIVERY_COMPLETE_NOT_QUALIFICATION')),
+         'PUBLIC_NAME_NATIVE_INPUT_DELIVERY_COMPLETE_NOT_QUALIFICATION'),
+        ('isolated-native-input-delivery-export-control',(CONTROL,),
+         'ISOLATED_NATIVE_INPUT_DELIVERY_EXPORT_COMPLETE_NOT_QUALIFICATION')),
         'Exact original or isolated-control acceptance contract required')
     require(state['original_inputs'].get(NAME)==NAME_SHA256,'Actual original public-name source binding required')
     def selected_verifier(summary,tests,simulator,code):
