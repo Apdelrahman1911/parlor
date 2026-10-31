@@ -71,6 +71,8 @@ class NativeInputDeliveryControls(unittest.TestCase):
         self.assertEqual(source.count('insert(object, selectors[0], text)'),1)
         self.assertEqual(source.count('replace(object, selectors[1], range, text)'),1)
         self.assertEqual(source.count('marked(object, selectors[2], text, range)'),1)
+        self.assertEqual(source.count('began(object, selectors[6], presses, event)'),1)
+        self.assertEqual(source.count('ended(object, selectors[7], presses, event)'),1)
         self.assertIn('guard Thread.isMainThread, armed()',source)
         self.assertIn('O_EXCL | O_NOFOLLOW',source)
         self.assertIn('class_conformsToProtocol(validated, inputProtocol)',source)
@@ -87,7 +89,7 @@ class NativeInputDeliveryControls(unittest.TestCase):
             lambda v:v.update(installation=[50000,2,3]),lambda v:v.update(installation=[50000,1,2]),
             lambda v:v.update(installation=[True,1,3]),lambda v:v.update(rows=v['rows']*(delivery.MAX_ROWS+1)),
             lambda v:v['rows'][0].__setitem__(0,float('nan')),lambda v:v['rows'][0].__setitem__(1,True),
-            lambda v:v['rows'][0].__setitem__(1,7),lambda v:v['rows'][0].__setitem__(2,2),
+            lambda v:v['rows'][0].__setitem__(1,9),lambda v:v['rows'][0].__setitem__(2,2),
             lambda v:v['rows'][0].__setitem__(3,1),lambda v:v['rows'][-1].__setitem__(0,1),
             lambda v:v['rows'][-1].__setitem__(3,1)):
             value=fixture();change(value)
@@ -128,6 +130,7 @@ class PIN25Leaf: PIN25Parent {
     var replaceCalls = 0
     var markedCalls = 0
     var deleteCalls = 0
+    var pressCalls = 0
     @objc(insertText:) dynamic func insertText(_ text: AnyObject) {
         precondition(text === input); insertCalls += 1
     }
@@ -138,6 +141,12 @@ class PIN25Leaf: PIN25Parent {
         precondition(range == selected && (text == nil || text === input)); markedCalls += 1
     }
     @objc dynamic func deleteBackward() { deleteCalls += 1 }
+    @objc(pressesBegan:withEvent:) dynamic func pressesBegan(_ presses: AnyObject, withEvent event: AnyObject?) {
+        precondition(presses === rangeObject && event === input); pressCalls += 1
+    }
+    @objc(pressesEnded:withEvent:) dynamic func pressesEnded(_ presses: AnyObject, withEvent event: AnyObject?) {
+        precondition(presses === rangeObject && event == nil); pressCalls += 1
+    }
 }
 var armed = true
 let observer = PIN25NativeInputDelivery(armed: { armed })
@@ -149,16 +158,18 @@ leaf.replaceRange(rangeObject, withText: input)
 leaf.setMarkedText(input, selectedRange: selected)
 leaf.setMarkedText(nil, selectedRange: selected)
 leaf.deleteBackward()
+leaf.pressesBegan(rangeObject, withEvent: input)
+leaf.pressesEnded(rangeObject, withEvent: nil)
 precondition(!leaf.resignFirstResponder())
 let rows = observer.controlSnapshot()["rows"] as! [[Double]]
-precondition(rows.count == 14 && leaf.insertCalls == 1 && leaf.replaceCalls == 1 &&
-             leaf.markedCalls == 2 && leaf.deleteCalls == 1)
-precondition(rows[1][1...] == [5,1,1] && rows.last![1...] == [6,1,0])
+precondition(rows.count == 18 && leaf.insertCalls == 1 && leaf.replaceCalls == 1 &&
+             leaf.markedCalls == 2 && leaf.deleteCalls == 1 && leaf.pressCalls == 2)
+precondition(Array(rows[1][1...]) == [5,1,1] && Array(rows.last![1...]) == [6,1,0])
 precondition(PIN25Parent().becomeFirstResponder() && !PIN25Parent().resignFirstResponder())
-precondition((observer.controlSnapshot()["rows"] as! [[Double]]).count == 14)
+precondition((observer.controlSnapshot()["rows"] as! [[Double]]).count == 18)
 armed = false
 leaf.insertText(input)
-precondition(leaf.insertCalls == 2 && (observer.controlSnapshot()["rows"] as! [[Double]]).count == 14)
+precondition(leaf.insertCalls == 2 && (observer.controlSnapshot()["rows"] as! [[Double]]).count == 18)
 precondition(!observer.installVerifiedTarget(PIN25Leaf.self))
 precondition((observer.controlSnapshot()["overflow"] as! Int) == 0)
 print("ACTUAL_APPLE_INPUT_ABI_FORWARDING_AND_PARENT_ISOLATION_PASS_NOT_APP_QUALIFICATION")

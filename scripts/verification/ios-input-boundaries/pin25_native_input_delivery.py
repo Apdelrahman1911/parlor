@@ -22,7 +22,7 @@ SCOPE = ('Original Arabic journey with new original-call-only UIKit input/respon
          'all existing text/native/root/frame/motion gates; no English replay, input repair, '
          'changed assertions/deadlines, shipping qualification or physical acceptance')
 TEMPLATE = 'PIN25NativeInputDelivery.swift.in'
-TEMPLATE_SHA256 = '1f3a36e2b464e50a50fe50b8654a35f13195360273abc5935e05ef820467821c'
+TEMPLATE_SHA256 = 'cdc65db6af08d324bbbf47940a030c67998dce56745bd38d9409f9d690464a5a'
 MAX_BYTES, MAX_ROWS = 524288, 4096
 BRIDGE = '''
 fun PIN25PublicInputArmed(): Boolean = com.parlor.app.inputcopy.PIN05Observation.owner() != null
@@ -86,11 +86,12 @@ def decode_delivery(raw, *, token, simulator, bundle, legacy):
         text.require(type(row) is list and len(row)==4 and
             all(type(n) in (int,float) and math.isfinite(n) for n in row), 'Four numeric fields only')
         timestamp,kind,phase,flag=row
-        text.require(previous<=timestamp<=v['capturedMs'] and kind in range(1,7) and phase in (0,1) and flag in (0,1) and
+        text.require(previous<=timestamp<=v['capturedMs'] and kind in range(1,9) and phase in (0,1) and flag in (0,1) and
             (flag==0 or kind in (5,6) and phase==1),'Original ordered call kinds/phases/public return flags only')
         previous=timestamp
     return dict(sha256=hashlib.sha256(raw).hexdigest(),complete=True,rows=len(rows),
                 mutation_entries=sum(r[1] in (1,2,3,4) and r[2]==0 for r in rows),
+                press_entries=sum(r[1] in (7,8) and r[2]==0 for r in rows),
                 responder_entries=sum(r[1] in (5,6) and r[2]==0 for r in rows),
                 scope='Original public-name UIKit calls only; not text, ranges, identity or a cause verdict')
 
@@ -118,7 +119,7 @@ def accept_native_export(out,state):
         public=json.loads(frozen_sources._read(dest/('public-text-'+token+'.json'),text.MAX_BYTES))
         if public['syntheticControl']:
             rows=json.loads(raw)['rows']
-            text.require(any(r[1] in (1,2,3) and r[2]==0 for r in rows) and
+            text.require(any(r[1] in (1,2,3,7,8) and r[2]==0 for r in rows) and
                 any(r[1]==5 and r[2:]==[1,1] for r in rows),
                 'Sentinel requires actual UIKit text delivery and successful original focus return, not just a configured hook')
     return RESULT

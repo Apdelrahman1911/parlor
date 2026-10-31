@@ -422,7 +422,7 @@ this proves adapter capability, not the earlier natural failure's cause.
 The real PIN22 Arabic failure predates the text-session adapter. A passing
 observed PIN23 journey cannot locate the original loss, and a sentinel only
 proves capture capability. PIN25 adds the missing **native delivery boundary**:
-original `insertText`, `replaceRange`, `setMarkedText`, delete and first-responder
+original `insertText`, `replaceRange`, `setMarkedText`, delete, UIKit press and first-responder
 calls, before/after, with only timestamps, method categories and responder return
 bits. Arguments are forwarded once synchronously; no characters, ranges,
 objects, lengths, values, UIKit queries or corrective input are retained.

@@ -84,14 +84,16 @@ final class PIN25NativeInputDelivery {
         precondition(Thread.isMainThread)
         guard Self.owner == nil, let parent = class_getSuperclass(target) else { return false }
         let selectors = ["insertText:", "replaceRange:withText:", "setMarkedText:selectedRange:",
-                         "deleteBackward", "becomeFirstResponder", "resignFirstResponder"].map(NSSelectorFromString)
+                         "deleteBackward", "becomeFirstResponder", "resignFirstResponder",
+                         "pressesBegan:withEvent:", "pressesEnded:withEvent:"].map(NSSelectorFromString)
         let arguments = [["@", ":", "@"], ["@", ":", "@", "@"],
-                         ["@", ":", "@", "{_NSRange=QQ}"], ["@", ":"], ["@", ":"], ["@", ":"]]
+                         ["@", ":", "@", "{_NSRange=QQ}"], ["@", ":"], ["@", ":"], ["@", ":"],
+                         ["@", ":", "@", "@"], ["@", ":", "@", "@"]]
         let methods = selectors.compactMap { class_getInstanceMethod(target, $0) }
         guard methods.count == selectors.count else { return false }
         var inherited: [Bool] = []
         for index in methods.indices {
-            guard Self.signature(methods[index], returns: index < 4 ? "v" : "B", arguments: arguments[index]),
+            guard Self.signature(methods[index], returns: (4...5).contains(index) ? "B" : "v", arguments: arguments[index]),
                   method_getTypeEncoding(methods[index]) != nil else { return false }
             let parentMethod = class_getInstanceMethod(parent, selectors[index])
             let same = parentMethod.map {
@@ -99,7 +101,7 @@ final class PIN25NativeInputDelivery {
                     unsafeBitCast(method_getImplementation(methods[index]), to: UInt.self)
             } ?? false
             // Input mutators must belong to the verified Compose leaf.
-            guard index >= 4 || !same else { return false }
+            guard (4...5).contains(index) || !same else { return false }
             inherited.append(same)
         }
         typealias Insert = @convention(c) (AnyObject, Selector, AnyObject) -> Void
@@ -107,12 +109,15 @@ final class PIN25NativeInputDelivery {
         typealias Marked = @convention(c) (AnyObject, Selector, AnyObject?, NSRange) -> Void
         typealias Delete = @convention(c) (AnyObject, Selector) -> Void
         typealias Responder = @convention(c) (AnyObject, Selector) -> Bool
+        typealias Presses = @convention(c) (AnyObject, Selector, AnyObject, AnyObject?) -> Void
         let insert = unsafeBitCast(method_getImplementation(methods[0]), to: Insert.self)
         let replace = unsafeBitCast(method_getImplementation(methods[1]), to: Replace.self)
         let marked = unsafeBitCast(method_getImplementation(methods[2]), to: Marked.self)
         let delete = unsafeBitCast(method_getImplementation(methods[3]), to: Delete.self)
         let become = unsafeBitCast(method_getImplementation(methods[4]), to: Responder.self)
         let resign = unsafeBitCast(method_getImplementation(methods[5]), to: Responder.self)
+        let began = unsafeBitCast(method_getImplementation(methods[6]), to: Presses.self)
+        let ended = unsafeBitCast(method_getImplementation(methods[7]), to: Presses.self)
         let insertBlock: @convention(block) (AnyObject, AnyObject) -> Void = { [weak self] object, text in
             self?.record(kind: 1, phase: 0)
             insert(object, selectors[0], text) // Same object argument; once, synchronously.
@@ -145,9 +150,22 @@ final class PIN25NativeInputDelivery {
             self?.record(kind: 6, phase: 1, flag: result)
             return result
         }
+        // The same pinned view also forwards UIKit hardware/synthetic UIPresses
+        // into Compose. Absence of insertText alone does not exclude this route.
+        let beganBlock: @convention(block) (AnyObject, AnyObject, AnyObject?) -> Void = { [weak self] object, presses, event in
+            self?.record(kind: 7, phase: 0)
+            began(object, selectors[6], presses, event)
+            self?.record(kind: 7, phase: 1)
+        }
+        let endedBlock: @convention(block) (AnyObject, AnyObject, AnyObject?) -> Void = { [weak self] object, presses, event in
+            self?.record(kind: 8, phase: 0)
+            ended(object, selectors[7], presses, event)
+            self?.record(kind: 8, phase: 1)
+        }
         let replacements = [imp_implementationWithBlock(insertBlock), imp_implementationWithBlock(replaceBlock),
                             imp_implementationWithBlock(markedBlock), imp_implementationWithBlock(deleteBlock),
-                            imp_implementationWithBlock(becomeBlock), imp_implementationWithBlock(resignBlock)]
+                            imp_implementationWithBlock(becomeBlock), imp_implementationWithBlock(resignBlock),
+                            imp_implementationWithBlock(beganBlock), imp_implementationWithBlock(endedBlock)]
         Self.owner = self // Owned process lifetime; never unhook an in-flight original call.
         for index in methods.indices {
             if inherited[index] {
