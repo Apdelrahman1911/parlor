@@ -43,6 +43,35 @@ native causal conclusion, physical-device benchmark or acceptance of failed296/3
 
 ## Existing PIN01 implementation
 
+### Prepared PIN07 synthetic failed-export control — not executed natively
+
+PIN06's completed three-arm experiment had no failure and therefore did not
+exercise failed-only export. `pin07_failure_control.py` prepares a **different,
+explicitly selected** hash-bound copied-app control at the same frozen PR296
+application. It suppresses only the copied Host transition **after** recording
+its callback. One added English Ghamza method uses the unchanged public helpers,
+single actions and ten-second predicate; it must fail at the original transition
+assertion. Capture remains after failure and before that unchanged assertion.
+No private input, permission action, transport, retry or successful-path wait is
+added. The original PIN06 driver/methods and every other generated file are
+byte-exact after removing these two declared synthetic deltas.
+
+Eight portable controls verify source/profile bindings, inverse restoration,
+privacy, predicates, callback/delivery/stage evidence and rejection paths. A
+ninth actual-SDK Swift typecheck skips on Linux. The strict numeric reader
+reports **no source/product/device/export custody or causal qualification**;
+fabricated software rows are never called native observations.
+
+There is **no runner, workflow, dispatch or native result** for this preparation.
+A future independently reviewed owned-copy adapter must select only
+`testPIN07SyntheticHostFailureCapture`, retain its actual failed exit/method/
+original assertion, validate the once-only ACK/token and real Kotlin export,
+and bind source/product/runtime/device/cleanup before reporting capture-only
+success. It must reject an earlier natural failure or a missing Host callback.
+Do not run the existing original two-method PIN06 adapter on this fault plan,
+retry the old application suite, call it a shipping repair, or waive #267/#276
+and full60-journey neutrality. The original held diagnostic branch is preserved.
+
 `pin01_copy.render` validates four exact source digests and unambiguous anchors,
 then returns an additive transformation plan. It performs **no filesystem writes,
 build, launch, device allocation, permission action or process cleanup**. Use only
