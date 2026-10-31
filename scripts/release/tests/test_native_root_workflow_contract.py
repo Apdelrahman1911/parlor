@@ -1,5 +1,6 @@
 """Exact free, read-only root diagnostics; no shipping or verification waiver."""
 from pathlib import Path
+import re
 import unittest
 from unittest.mock import patch
 
@@ -19,17 +20,20 @@ class NativeRootWorkflowContractTest(unittest.TestCase):
     def test_runner_privilege_source_upload_trigger_or_failure_masking_rejects(self):
         for name,_,verify in self.profiles():
             text=(contract.WORKFLOWS/name).read_text()
+            budget = re.search(r'(?m)^    timeout-minutes: (\d+)$', text).group(1)
             for before,after in (('macos-15','macos-15-large'),('macos-15','self-hosted'),
                 ('contents: read','contents: write'),('actions: read','actions: write'),
                 ('  push:','  workflow_dispatch:'),('persist-credentials: false','persist-credentials: true'),
                 ('cancel-in-progress: false','cancel-in-progress: true'),
-                ('timeout-minutes: 75','timeout-minutes: 180'),('if: always()','if: success()'),
+                ('timeout-minutes: '+budget,'timeout-minutes: 180'),('if: always()','if: success()'),
                 ('if-no-files-found: error','if-no-files-found: warn'),
                 ('actions/cache/restore@','actions/cache/save@'),
                 ('--source 5029b3f48c2d012b34dd2748f809dc775276a622','--source ${{ github.sha }}'),
                 ('--output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"','--output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT" || true')):
+                changed = text.replace(before,after)
+                self.assertNotEqual(changed, text, 'Each rejection must mutate the actual reviewed workflow')
                 with self.subTest(name=name,before=before),self.assertRaises(RuntimeError):
-                    verify(text.replace(before,after))
+                    verify(changed)
 
     def test_changed_or_redirected_companions_reject(self):
         for name,companions,verify in self.profiles():

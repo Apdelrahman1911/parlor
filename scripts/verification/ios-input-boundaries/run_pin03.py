@@ -329,15 +329,16 @@ def completed_exit_code(result):
         'ORIGINAL_FULL_COHORT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_RESOURCE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'COMBINED_XCODE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'ORIGINAL_AGGREGATE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -359,6 +360,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         import pin14_original_resources as control
     elif combined_execution:
         import pin15_combined_xcode as control
+    elif aggregate_context:
+        import pin16_aggregate_context as control
+        combined_execution = True  # Reuse the unchanged single native action.
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -451,6 +455,12 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             raise RuntimeError('Investigation command did not finish')
         return row['exit_code'], stdout
     previous = manifest
+    if aggregate_context:
+        # Restore the omitted workload using the ORIGINAL sources before adding
+        # observers. Never execute instrumented KMP tests or replay for caching.
+        verify_inputs(copy, manifest)
+        control.execute_prelude(copy, out, state, command, checkpoint, ROOT, task, config, environment, commands)
+        verify_inputs(copy, manifest)
     for arm in control.ARMS if control else catalog.ARMS:
         dest = out / arm; dest.mkdir()
         inputs = apply_arm(copy, original, manifest, arm, previous=previous, renderer=renderer)

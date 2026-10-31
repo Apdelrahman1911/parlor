@@ -5,6 +5,30 @@ Investigation tooling for [#267](https://github.com/Apdelrahman1911/parlor/issue
 The original lost Host event occurred on iOS26.2; later iOS18.5 passes do not
 establish its cause. Keep the original failed source/event/recording evidence.
 
+## PIN16 — original KMP aggregate workload boundary
+
+Original41180128325 executed `productionIosSimulatorRuntimeTests` before its
+combined Xcode action. PIN15 deliberately omitted that workload. This distinct
+profile restores the exact frozen, **uninstrumented** aggregate invocation once
+before applying the byte-identical PIN15 application/driver/observer plan. Its
+149 source-hash-bound XML reports must contain all774 exact passing methods,
+without skips, filters, architecture changes or cache-warming replays. Bindings
+come from independently accepted original source/artifact evidence, not counts
+inferred from a later checkout. KMP's default device/standalone configuration is
+preserved; no Simulator-selection or dependency override is introduced.
+
+Before/after inventories retain only diagnostic UUIDs, runtime IDs, boot-state
+enums and availability, not names or arbitrary profiles. Existing devices are
+never adopted/deleted. Original aggregate worker cleanup precedes the one native
+build/test action. Failed aggregate logs/XML and failed-only native companions
+are retained. Native23 cases, actions, selectors, exact-value predicates and
+ten-second deadlines remain unchanged. Commands use the existing45-minute
+aggregate/build allowance and60-minute summed native budget on one free runner.
+
+This is workload-context observation, not original failure-time evidence,
+instrumentation neutrality, memory-pressure causality, a shipping fix, required
+application qualification, a successful physical-device result or phase closure.
+
 ## PIN15 — original combined Xcode process boundary
 
 PIN14's original6GiB/parallel/booted-build experiment passed all23 native cases;

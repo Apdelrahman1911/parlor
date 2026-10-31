@@ -1,0 +1,1976 @@
+{
+  "schema": 1,
+  "source": "5029b3f48c2d012b34dd2748f809dc775276a622",
+  "tree": "fcf9abf3dba3ee40c4c9aec7966260f8d848ff53",
+  "original_run": 41180128325,
+  "original_artifact": 13035726724,
+  "original_artifact_sha256": "e5031382aee151fc65dbe551a58fa1bc75e1feda3fb0becbab9e0f8ce30aff20",
+  "classes": [
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/AppBackPolicyTest.kt",
+      "source_sha256": "7c1b83bc476b43d0eafbaa7a69a9d52c1cf5b7138e9716dcde548512503bdea0",
+      "classname": "com.parlor.app.AppBackPolicyTest",
+      "methods": [
+        "guarded_game_exposes_only_its_current_entry_to_predictive_back",
+        "home_allows_the_platform_to_finish_the_application",
+        "registered_game_content_receives_back_and_owns_transactional_cleanup",
+        "settings_navigates_to_the_games_tab",
+        "unreadable_save_recovery_is_owned_by_nav_display"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppNavigationTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/AppNavigationTest.kt",
+      "source_sha256": "c0930ea93b93737a4f5cfeea0c6093ade231b7855bc5cb8ab8a24c1828cd50ad",
+      "classname": "com.parlor.app.AppNavigationTest",
+      "methods": [
+        "a_game_launch_is_process_local_and_cannot_be_bypassed_by_tab_selection",
+        "authorized_game_exit_clears_the_transient_launch_and_returns_home",
+        "duplicate_back_completion_cannot_pop_a_new_recovery_route",
+        "every_route_has_one_explicit_top_level_owner",
+        "game_route_requires_a_positive_entry_identity",
+        "predictive_navigation_uses_the_physical_swipe_edge",
+        "recovery_back_pops_only_the_games_stack",
+        "regular_navigation_directions_follow_the_logical_layout_direction",
+        "route_serial_names_round_trip_as_a_stable_contract",
+        "stale_callbacks_cannot_leave_a_replacement_route",
+        "top_level_stacks_are_non_empty_and_switch_independently"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/LocalResumeRouterTest.kt",
+      "source_sha256": "539cd98d09b53dfc849c5e3977de61adc061d0d06627f1a978a91c378e2c1570",
+      "classname": "com.parlor.app.LocalResumeRouterTest",
+      "methods": [
+        "cancellation_during_snapshot_routing_is_not_converted_to_a_data_error",
+        "coordinator_discards_only_after_an_explicit_recovery_action",
+        "coordinator_surfaces_an_unreadable_save_without_deleting_it",
+        "failed_discard_keeps_the_recovery_screen_and_reports_the_failure",
+        "invalidating_a_pending_resume_prevents_stale_navigation",
+        "only_the_latest_resume_request_generation_may_navigate",
+        "readable_outer_snapshot_still_routes_directly_to_its_registered_game",
+        "rejects_unknown_games_instead_of_decoding_them_as_whodunit",
+        "routes_each_shipping_game_from_the_authenticated_envelope",
+        "unreadable_outer_snapshot_routes_to_explicit_recovery_for_that_exact_save"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/MultiplayerRouteRestorationTest.kt",
+      "source_sha256": "6622cde53ce4851b7c9717d42eb9960d4ac5eeff04b8b0f67b30188ae121f38a",
+      "classname": "com.parlor.app.MultiplayerRouteRestorationTest",
+      "methods": [
+        "lastLightRestoresHostAndResumedPeerWithoutCentralGameDispatch",
+        "resumableMafiaRouteRestoresRegisteredBindingAndName",
+        "resumableWhodunitRouteRestoresRegisteredBindingAndName",
+        "unknown_or_unsupported_game_route_does_not_fall_through"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.ResumeDeletionCoordinatorTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/ResumeDeletionCoordinatorTest.kt",
+      "source_sha256": "65fc3eac42c905b636e0f6b648f033ba0c94e0fed05550ff08ef85ae2d726fd3",
+      "classname": "com.parlor.app.ResumeDeletionCoordinatorTest",
+      "methods": [
+        "busy_confirmation_cannot_cancel_or_start_a_second_deletion",
+        "confirmation_cancel_and_repeated_callbacks_only_delete_the_selected_local_save",
+        "multiplayer_deletion_uses_the_selected_opaque_handle_and_never_the_local_store",
+        "navigation_and_noncooperative_old_completions_cannot_refresh_or_replace_new_confirmation",
+        "storage_failure_keeps_confirmation_visible_and_cancellable"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.StartupMultiplayerRecoveryTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/StartupMultiplayerRecoveryTest.kt",
+      "source_sha256": "e58c2047d8bd871cfbc70f8bf3a684c0e8594c898ba136f3b94dd159a4cbe09c",
+      "classname": "com.parlor.app.StartupMultiplayerRecoveryTest",
+      "methods": [
+        "a_process_can_claim_only_one_automatic_attempt",
+        "an_initial_owned_launch_is_never_an_eligible_startup_catalog",
+        "concurrent_roots_cannot_claim_two_automatic_attempts",
+        "game_and_recovery_navigation_cannot_be_overridden_after_return_to_home",
+        "selecting_the_current_catalog_is_an_explicit_navigation_decision",
+        "settings_and_return_to_games_do_not_rearm_startup",
+        "startup_is_allowed_only_for_an_active_untouched_idle_unblocked_entry"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/di/GameShellCompositionTest.kt",
+      "source_sha256": "30d3e31540dc54a5af8f73dd2f28547e09da4b0dbf8c5ead2f8faed9cd3908e3",
+      "classname": "com.parlor.app.di.GameShellCompositionTest",
+      "methods": [
+        "composition_root_builds_shell_and_domain_registries_from_the_same_bindings"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/di/ProductionSessionSeedSourceTest.kt",
+      "source_sha256": "41eb90c87c4d8641a6463f6d293b9a41266c767aef473457d5e9579d29b86836",
+      "classname": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+      "methods": [
+        "application_binds_fresh_game_seeds_to_the_platform_csprng_boundary"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinatorTest.kt",
+      "source_sha256": "1d5869da010d83d86d3961e20b1ae52238933be43bfaa1cf3d5aa0e7bdd333c2",
+      "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+      "methods": [
+        "androidForegroundAndResumeWithoutFocusKeepPrivateContentCovered",
+        "backgroundAndForegroundEffectsAreIdempotent",
+        "backgroundBeforeFirstActiveStillProducesAConsistentSuspendResumePair",
+        "duplicateVisibilityCallbacksDoNotAdvancePrivacyEpoch",
+        "focusCannotRevealAnActivityBeforeItResumesOrResumeBackgroundTransport",
+        "foregroundSnapshotRetainsConcealmentAfterBriefInterruption",
+        "inactiveCoversPrivateContentWithoutChangingTransportState",
+        "inactiveThenBackgroundSuspendsExactlyOnceAndActiveResumesExactlyOnce",
+        "initialInactiveDoesNotInventForegroundOrBackgroundEvidence",
+        "processTrackerDoesNotFlapDuringConfigurationReplacement",
+        "processTrackerIgnoresDuplicateOwnerCallbacks",
+        "processTrackerKeepsProcessForegroundedWhileAnotherOwnerIsStarted",
+        "shortInactiveInterruptionNeverSuspendsTransport"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/GameShellRegistryExtensibilityTest.kt",
+      "source_sha256": "1f308db1fb045ee684e6f99211489705577488936a278e08e01a0359f2a8fab9",
+      "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+      "methods": [
+        "duplicate_shell_registration_fails_before_catalog_or_routing",
+        "multiplayer_resume_requires_the_registered_game_protocol_version",
+        "multiplayer_resume_without_observed_membership_fails_closed",
+        "picker_preserves_independent_host_join_and_local_capabilities",
+        "picker_uses_each_registered_games_player_bounds_instead_of_shared_copy",
+        "registry_rejects_a_multiplayer_contract_that_does_not_match_definition",
+        "router_rejects_launch_kinds_the_registered_binding_does_not_support",
+        "shell_back_requests_are_monotonic_nonnegative_events",
+        "third_game_participates_in_owned_host_and_peer_session_restoration",
+        "third_game_registers_in_catalog_and_exposes_shell_contract",
+        "third_game_snapshot_round_trips_and_resolves_local_resume",
+        "third_game_starts_locally_and_resolves_navigation_without_shell_branch"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/WhodunitShippedPlayerCountTest.kt",
+      "source_sha256": "971f92934acba3e928e25795c58119766b50356b4d7876205761f60cb37b1aa1",
+      "classname": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+      "methods": [
+        "releaseMultiplayerRangeMatchesTheOnlyBundledPlayerCount",
+        "releaseMultiplayerRangeRemainsWithinEngineCapabilities"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.DominoMultiplayerTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/DominoMultiplayerTest.kt",
+      "source_sha256": "545c7d6576114d46c4210558f729eb360b0b8e9425dd2e3aae449cc369bfd1a6",
+      "classname": "com.parlor.app.shell.game.multiplayer.DominoMultiplayerTest",
+      "methods": [
+        "complete_default_draw_block_and_team_matches_sync_every_move_score_and_rematch"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.GameActionSubmissionTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/GameActionSubmissionTest.kt",
+      "source_sha256": "e4516291a4c504a57c47df68ec6284a63a343bc3258dd2aa238eb33e76821c09",
+      "classname": "com.parlor.app.shell.game.multiplayer.GameActionSubmissionTest",
+      "methods": [
+        "ambiguous_transport_failure_recovers_the_receipt_without_automatically_replaying_the_action",
+        "connected_peer_cancels_queued_action_if_another_seat_recovers_before_the_ui_dispatcher_observes_it",
+        "one_hundred_thousand_rapid_clicks_reserve_only_one_command_until_receipt_and_snapshot_are_installed",
+        "skipped_paused_snapshot_still_invalidates_a_queued_action_after_recovery"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.GameBackPolicyTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/GameBackPolicyTest.kt",
+      "source_sha256": "d4bc62db5b76fb7498d51471d8d82d8ebde1743341588073aed803eaeb04f637",
+      "classname": "com.parlor.app.shell.game.multiplayer.GameBackPolicyTest",
+      "methods": [
+        "critical_operation_then_leave_confirmation_then_transient_then_guard_is_the_shared_back_order"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.GhamzaMultiplayerTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/GhamzaMultiplayerTest.kt",
+      "source_sha256": "7f590b07a2589e59684556f8ffdb06ec6ef84b20a2099aa66a400c5730cabc79",
+      "classname": "com.parlor.app.shell.game.multiplayer.GhamzaMultiplayerTest",
+      "methods": [
+        "private_roles_confirmed_attempts_final_guess_and_rematch_work_for_all_seat_and_attempt_counts"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerAuthorityTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerAuthorityTest.kt",
+      "source_sha256": "aa52141fa206337dc206389ab5d93ec77b0382206591924fe52a1333bdb44f00",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerAuthorityTest",
+      "methods": [
+        "dominoes_authenticates_actors_and_rejects_duplicate_stale_reordered_and_cross_game_commands",
+        "ghamza_authenticates_actors_and_rejects_duplicate_stale_reordered_and_cross_game_commands",
+        "word_impostor_authenticates_actors_and_rejects_duplicate_stale_reordered_and_cross_game_commands"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerConcurrentActionsTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerConcurrentActionsTest.kt",
+      "source_sha256": "145219586c0ecfa6dd3fe2a056e263d8f9c1ea70d8b3bbb77d467720fd144df6",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerConcurrentActionsTest",
+      "methods": [
+        "same_revision_physical_winks_are_serialized_without_losing_or_duplicating_attempts",
+        "simultaneous_private_votes_require_deliberate_retry_and_do_not_publish_partial_totals"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerMalformedSnapshotTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerMalformedSnapshotTest.kt",
+      "source_sha256": "d1c81a0cd091f2b867ae48db436a5e07f57625dd826c1908183d5a925c755351",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerMalformedSnapshotTest",
+      "methods": [
+        "malformed_payloads_wrong_recipient_slices_and_roster_replacement_never_install_in_any_game"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerProjectionTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerProjectionTest.kt",
+      "source_sha256": "e6794cff52d04688a587851aa8ff00bd1e82adbd23f37f0d929bd013a3a85f58",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerProjectionTest",
+      "methods": [
+        "projections_are_recipient_bound_and_host_entropy_never_leaves_the_authority"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerRecoveryTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerRecoveryTest.kt",
+      "source_sha256": "62fd0a3b9c05294007995d485bd7575873d157cb4359c0be0d92a18197edea8e",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerRecoveryTest",
+      "methods": [
+        "dominoes_preserves_hands_and_board_through_secure_start_rejoin_recreation_and_terminal_expiry",
+        "ghamza_preserves_private_roles_and_attempts_through_secure_start_rejoin_recreation_and_terminal_expiry",
+        "word_impostor_preserves_word_team_and_phase_through_secure_start_rejoin_recreation_and_terminal_expiry"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.MultiplayerRetentionTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/MultiplayerRetentionTest.kt",
+      "source_sha256": "639a5d079403df442b09d0f3b7d6026eaa7387bf4332ee9a89a21381d04cbfa9",
+      "classname": "com.parlor.app.shell.game.multiplayer.MultiplayerRetentionTest",
+      "methods": [
+        "all_three_games_reuse_frozen_settings_start_checkpoints_and_authority_after_ui_recreation"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.multiplayer.WordImpostorMultiplayerTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/multiplayer/WordImpostorMultiplayerTest.kt",
+      "source_sha256": "7b3473fb9729842636938ceec7a6e5476a929d306c626d53e6cc1bc3c90c517f",
+      "classname": "com.parlor.app.shell.game.multiplayer.WordImpostorMultiplayerTest",
+      "methods": [
+        "all_supported_seats_and_teams_complete_private_questions_votes_individual_guesses_and_rematch"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.home.HomeCatalogFilterTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/home/HomeCatalogFilterTest.kt",
+      "source_sha256": "e36fa42d0b2cb27a0a3bdbc267e6b531c974636b0115907539c49a89db19931c",
+      "classname": "com.parlor.app.shell.home.HomeCatalogFilterTest",
+      "methods": [
+        "capabilities_not_game_ids_drive_filters_including_future_solo_only_games",
+        "multiplayer_only_games_never_advertise_one_device_play"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.home.HomeCatalogScrollStateTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/home/HomeCatalogScrollStateTest.kt",
+      "source_sha256": "13a92cd0f7a260126238d4d368cfa62ddeadd9b6507862747c80b0e431cde5bf",
+      "classname": "com.parlor.app.shell.home.HomeCatalogScrollStateTest",
+      "methods": [
+        "absent_or_filtered_anchor_returns_to_the_catalog_heading_without_an_old_offset",
+        "malformed_platform_values_restore_a_safe_public_origin_without_throwing",
+        "platform_saved_state_contains_no_recovery_identifier_or_arbitrary_ui_key",
+        "platform_saver_retains_the_original_pending_anchor_during_loading",
+        "public_anchor_restores_against_current_recovery_rows_not_an_old_index"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailabilityTest.kt",
+      "source_sha256": "13d9d15f524e9a5f7faf662b5b283317824eef3dd0cc32895cc1ae6874387830",
+      "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+      "methods": [
+        "compatibleRecoveryRecordsAreExposedWithoutAnError",
+        "failedStoresAreReportedInsteadOfMasqueradingAsEmpty",
+        "localInventoryBoundsMetadataReadsWithoutLoadingSnapshotPayloads",
+        "localInventoryIdentifiesHealthyGamesAndRetainsUnreadableRecords",
+        "multiplayerRecoveryProbeStartsWhileLocalInventoryIsSlow",
+        "successfulSourceRemainsAvailableWhenTheOtherSourceFails",
+        "unsupportedLocalGameIsVisibleButMarksRecoverySourceUnavailable",
+        "unsupportedSavedMultiplayerRecordIsReportedAndCannotBeOpened"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/multiplayer/NameInputPolicyTest.kt",
+      "source_sha256": "50c45f1049946035a29a0d22c08914248699bba5b1680ccf079a30cdae6e91a1",
+      "classname": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+      "methods": [
+        "blankNamesCannotBeSubmittedAsASharedFallback",
+        "explicitNameIsTrimmedAndRemainsSubmittable"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcherTest.kt",
+      "source_sha256": "d13fa1c7b2da15046550b4e9f9047a8c335bf1a8e96604061339d4f34aebc055",
+      "classname": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+      "methods": [
+        "mutationOutlivesItsCallingScreenAndReportsPersistenceFailure",
+        "ownerCancellationIsNotConvertedIntoPersistenceFailure"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+      "source": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "source_sha256": "a730f7fe3063e6fb2802cef76d68c7a19b6f35afe82ffc642852bad386adf3f2",
+      "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+      "methods": [
+        "authenticatedCurrentLoadRemovesStaleLegacyOnlyAfterSuccessfulDecrypt",
+        "cancelledKeyReadPreservesBothCopiesAndOriginalCancellation",
+        "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy",
+        "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy",
+        "directReadProtectsMalformedLegacyWithoutPriorInventory",
+        "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard",
+        "failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard",
+        "keyReadFailureKeepsValidLegacyAndRemainsAnError",
+        "missingKeyKeepsValidLegacyButNeverFallsBackToIt",
+        "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation",
+        "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection",
+        "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt",
+        "recognizedDamagedCurrentRetainsValidLegacyDuringColdInventoryAndRetry",
+        "retryReappliesLegacyExclusionInsteadOfCachingIt"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+      "source": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "source_sha256": "84b6701e1adc272d2b822ca509e5c66bc8162143d78802c1d8c9732445e62cca",
+      "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+      "methods": [
+        "boundedReaderAcceptsAFileExactlyAtTheLimit",
+        "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes",
+        "commonCryptoRoundTripsAnEmptySnapshotPayload",
+        "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement",
+        "protectedSnapshotWithMissingKeyPreservesMatchingLegacyPlaintext",
+        "unreadableProtectedSnapshotPreservesMatchingLegacyPlaintext"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/storage/PlatformStorageMigrationTest.kt",
+      "source_sha256": "5a613acec44291488afd128d5a08b5328a675f88dacc3751ca604e742617ca54",
+      "classname": "com.parlor.app.storage.PlatformStorageMigrationTest",
+      "methods": [
+        "cancellation_is_not_downgraded_to_an_individual_migration_failure",
+        "one_corrupt_legacy_record_does_not_hide_or_skip_later_records"
+      ]
+    },
+    {
+      "path": "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "source": "composeApp/src/commonTest/kotlin/com/parlor/app/storage/SnapshotProtectionPolicyTest.kt",
+      "source_sha256": "2178434da72d0bdebd68b997a76a58ff2a3492c8f32bcaed1e39a18b4b6aec18",
+      "classname": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+      "methods": [
+        "authenticationTagOnlyPayloadIsValidForEmptyPlaintext",
+        "oversizedPlaintextIsClearedBeforeItIsRejected",
+        "plaintextExactlyAtTheMaximumIsAcceptedWithoutCopying",
+        "recordOneByteShorterThanAuthenticationTagIsRejected"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoDisplayScalarBoundaryTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoDisplayScalarBoundaryTest.kt",
+      "source_sha256": "68e9eec304b5ecd80050d2eea38300cb1ca5b3cc81745287c3ecb7f28f7e2b57",
+      "classname": "com.parlor.games.dominoes.DominoDisplayScalarBoundaryTest",
+      "methods": [
+        "authorityPersistenceRejectsFormatControlsInsteadOfChangingIdentity",
+        "identifierValidationRejectsUnsafeScalarsWithoutRewritingValidIds",
+        "initialStateRejectsSupplementaryFormatControls",
+        "publicSnapshotRejectsFormatControlsInsteadOfSilentlyRepairingTheName",
+        "supplementaryFormatControlsAreRejectedByNamesAndRosters",
+        "supplementaryLettersEmojiAndVariationMarksRemainCanonical"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoIntegrityTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoIntegrityTest.kt",
+      "source_sha256": "f3cdc005b1c69b5861048801398badd9c0875b4954dac8b274084f201dd7c9f9",
+      "classname": "com.parlor.games.dominoes.DominoIntegrityTest",
+      "methods": [
+        "deeply_nested_input_is_rejected_before_recursive_decoding",
+        "history_exhaustion_ends_without_scoring_or_revealing_and_has_a_valid_replay_proof",
+        "opening_snapshot_must_require_the_highest_double_in_the_leaders_own_hand"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoRecoveryJourneyTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoRecoveryJourneyTest.kt",
+      "source_sha256": "6bb00b020f31c3534eb5b747a6984472cf4796bf9e1e592a03af3745ebee1b10",
+      "classname": "com.parlor.games.dominoes.DominoRecoveryJourneyTest",
+      "methods": [
+        "interrupted_matches_have_the_same_tiles_scores_and_winners_as_uninterrupted_matches"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoRevisionTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoRevisionTest.kt",
+      "source_sha256": "97f1c4421626848befd27efe1a2480dc234b74d11d8a3e35249397e4ee43ba68",
+      "classname": "com.parlor.games.dominoes.DominoRevisionTest",
+      "methods": [
+        "default_settings_and_all_targets_are_canonical_and_teams_require_four_default_seats",
+        "opposite_seats_share_one_score_but_never_their_private_hands",
+        "reducer_automatically_ends_shutouts_and_targets_for_individuals_and_both_teammates",
+        "shutout_thresholds_apply_only_in_151_mode_against_all_zero_opponents",
+        "team_points_exclude_partner_and_blocked_totals_and_ties_are_combined",
+        "three_player_default_removes_only_double_blank_and_never_permits_drawing",
+        "two_player_default_has_exactly_the_draw_deal_moves_stock_and_scoring"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoRulesTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoRulesTest.kt",
+      "source_sha256": "891e0519e57478956a504bdb1122edb8d50a471b4488ea029934a4f0dff82902",
+      "classname": "com.parlor.games.dominoes.DominoRulesTest",
+      "methods": [
+        "allPlayerCountsAndVariantsFinishLegalHandsWithConservedTiles",
+        "authorityWrongTurnsDrawPassAndOldRoundsAreRejected",
+        "doubleSixSetAndEverySupportedDealAreDeterministic",
+        "matchAndRematchAdvanceTokensAndRefuseForgedSnapshots",
+        "recoveryPausesEverySeatAndAbortDoesNotExposeHandsOrAwardPoints"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.DominoVersionTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/DominoVersionTest.kt",
+      "source_sha256": "86464756ff53315b59d79b30725e6988e3d5e9c621f57f30ec4043007b429315",
+      "classname": "com.parlor.games.dominoes.DominoVersionTest",
+      "methods": [
+        "legacy_and_future_actions_projections_and_authority_snapshots_fail_closed"
+      ]
+    },
+    {
+      "path": "game-modes/egyptian-dominoes/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.dominoes.ui.DominoChainLayoutTest.xml",
+      "source": "game-modes/egyptian-dominoes/src/commonTest/kotlin/com/parlor/games/dominoes/ui/DominoChainLayoutTest.kt",
+      "source_sha256": "8bc1c300ded96e01136083cdfd1c3e11fe63b6497b90caee146b50b1ebf387d9",
+      "classname": "com.parlor.games.dominoes.ui.DominoChainLayoutTest",
+      "methods": [
+        "all_chain_lengths_and_double_heavy_turns_stay_connected_unique_and_nonoverlapping",
+        "duplicate_or_oversized_boards_fail_instead_of_hiding_a_tile"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaDisplayScalarBoundaryTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaDisplayScalarBoundaryTest.kt",
+      "source_sha256": "ebca4496a78af5d047806573084eda65da8efe4a7ff7eaba05564ec5bb19c6b2",
+      "classname": "com.parlor.games.ghamza.GhamzaDisplayScalarBoundaryTest",
+      "methods": [
+        "authorityPersistenceRejectsFormatControlsInsteadOfChangingIdentity",
+        "identifierValidationRejectsUnsafeScalarsWithoutRewritingValidIds",
+        "initialStateRejectsSupplementaryFormatControls",
+        "publicSnapshotRejectsFormatControlsInsteadOfSilentlyRepairingTheName",
+        "supplementaryFormatControlsAreRejectedByNamesAndRosters",
+        "supplementaryLettersEmojiAndVariationMarksRemainCanonical"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaIntegrityTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaIntegrityTest.kt",
+      "source_sha256": "d10a351ff63f4b0947677abdbacfe12f4e111bcb481765eee210f3d6b061419e",
+      "classname": "com.parlor.games.ghamza.GhamzaIntegrityTest",
+      "methods": [
+        "bounded_history_has_an_explicit_replayable_abort_instead_of_a_frozen_game",
+        "deeply_nested_input_is_rejected_before_recursive_decoding",
+        "fabricated_attempt_ledgers_and_legacy_scores_are_not_valid_public_snapshots",
+        "final_guess_cannot_assign_the_remaining_non_guesser_an_ordinary_role"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaRecoveryJourneyTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaRecoveryJourneyTest.kt",
+      "source_sha256": "53c5f7b29b5480d3ccb54a2b32eccbda9f4db3e4ae4288d2e31a8709cbdfddb6",
+      "classname": "com.parlor.games.ghamza.GhamzaRecoveryJourneyTest",
+      "methods": [
+        "ninety_complete_matches_preserve_roles_seats_and_outcomes_after_interruption"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaRulesTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaRulesTest.kt",
+      "source_sha256": "f60bb571e679974dc8e7966749e8c140e13570472e0536b1fa6c04658eac964a",
+      "classname": "com.parlor.games.ghamza.GhamzaRulesTest",
+      "methods": [
+        "allRoundAndLifeSettingsResetEliminationsWithoutCumulativeStateOrRoleExclusions",
+        "attemptsPhaseAuthorityAndLifecycleCannotBeForged",
+        "everyCountAttemptsAndGuessOutcome",
+        "strictCodecsRejectImpossibleResultsAndLegacyVersions"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaPublicInformationTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaPublicInformationTest.kt",
+      "source_sha256": "ece811bcd40310ee85e3f03d52ae1a5e892aff8de9d89e1c9a1bdbab39b9d00a",
+      "classname": "com.parlor.games.ghamza.GhamzaPublicInformationTest",
+      "methods": [
+        "finalGuestCanDeduceWinkerFromPublicReportsWithoutPrivateRoles",
+        "multipleLivesCanMakeWinkerDeducibleBeforeAnyElimination"
+      ]
+    },
+    {
+      "path": "game-modes/ghamza/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.ghamza.GhamzaVersionTest.xml",
+      "source": "game-modes/ghamza/src/commonTest/kotlin/com/parlor/games/ghamza/GhamzaVersionTest.kt",
+      "source_sha256": "f19e558c0efa34f2237a83fd7bc5d151e6ce0f1decbd3d88c8847bc1b3aaecfd",
+      "classname": "com.parlor.games.ghamza.GhamzaVersionTest",
+      "methods": [
+        "legacy_and_future_actions_projections_and_authority_snapshots_fail_closed"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.domain.LastLightReducerIntegrationTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/domain/LastLightReducerIntegrationTest.kt",
+      "source_sha256": "61619808640a168d8c32af4f7e2b5231e05a9560541e360f1e3f6217d3d7e91a",
+      "classname": "com.parlor.games.lastlight.domain.LastLightReducerIntegrationTest",
+      "methods": [
+        "aMissingEmptyHandClaimantPausesWithoutBeingSkippedAndReturnsWithTheSameHand",
+        "actorAuthorityRejectsImpersonationAndStaleSeatsButAnEliminatedHostCanAdvance",
+        "allSupportedRostersDealFivePrivateCardsAndMatchParlorNameBoundaries",
+        "explicitDepartureTerminatesAndNeverAwardsAWinnerOrRedistributesHiddenCards",
+        "fixedSeedsRunToFiniteWinnersThroughOnlyRecipientViews",
+        "illegalActionsAreAtomicAndAcceptedCountersOnlyTrackTheirOwnTransitions",
+        "projectionsCannotBecomeAReducerAuthority",
+        "unknownModesContentAndNoncanonicalSeatsAreRejectedBeforeDealing"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.domain.rules.LastLightAdversarialTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/domain/rules/LastLightAdversarialTest.kt",
+      "source_sha256": "020578cd6b881826328ad71dec1f62d8c7410890641e1209e48e106decfe14b1",
+      "classname": "com.parlor.games.lastlight.domain.rules.LastLightAdversarialTest",
+      "methods": [
+        "aBurnedOutNonemptyChallengerLosesOnlyTheirSeatAndKeepsTheirOtherCardsHidden",
+        "callerCollectionsAndRecipientViewsCannotRewriteAcceptedAuthorityStates",
+        "completeMatchesPreserveCardsPrivacyAndFiniteProgressForEveryTableSize",
+        "eliminatingTheOpenerRetiresUnplayedCardsWithoutRevealingThem",
+        "emptyHandClaimsRemainChallengeableAndTheFinalHolderCannotPlay",
+        "invalidTurnsAndSelectionsAreAtomicAndLeaveTheRandomStreamUntouched",
+        "malformedRostersFailBeforeAnyRandomOutcomeIsChosen",
+        "rejectedNoiseAndRepeatedViewsDoNotChangeLaterShufflesOrMatchResults"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.domain.LastLightDisplayScalarBoundaryTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/domain/LastLightDisplayScalarBoundaryTest.kt",
+      "source_sha256": "3bb79f421e4f6bd1065047d3b26c63d1fbcfced35a6f4c34d23137739f9026e8",
+      "classname": "com.parlor.games.lastlight.domain.LastLightDisplayScalarBoundaryTest",
+      "methods": [
+        "authoritySnapshotsRejectFormatControlsInsteadOfChangingIdentity",
+        "identifierValidationRejectsUnsafeScalarsWithoutRewritingValidIds",
+        "initialStateRejectsAllSupplementaryFormatControls",
+        "publicSnapshotsRejectFormatControlsInsteadOfRepairingThem",
+        "supplementaryFormatControlsAreRejectedByNamesAndRosters",
+        "supplementaryLettersEmojiAndVariationMarksRemainCanonical"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.protocol.LastLightActionCodecTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/protocol/LastLightActionCodecTest.kt",
+      "source_sha256": "7904e51e5d5d7dc8660f9a12f7e524e6a6044acc49fc13c5765388e44dbe3014",
+      "classname": "com.parlor.games.lastlight.protocol.LastLightActionCodecTest",
+      "methods": [
+        "actionVocabularyRoundTripsWithAStableVersionAndExplicitActor",
+        "malformedCountsDuplicateOrForgedIdentifiersCannotCrossTheActionCodec",
+        "unknownActionFieldsVersionsDuplicateKeysMalformedUtf8AndPayloadLimitsFailClosed"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.protocol.LastLightJsonResourceLimitTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/protocol/LastLightJsonResourceLimitTest.kt",
+      "source_sha256": "d3bd62c486eb02fc0f3ea5edb86f8bf608e108382df8676cd082bd8a52726dfa",
+      "classname": "com.parlor.games.lastlight.protocol.LastLightJsonResourceLimitTest",
+      "methods": [
+        "deeplyNestedCommandIsRejectedAsRecoverableInputFailure",
+        "deeplyNestedSnapshotIsRejectedWithoutRecursiveParsing"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.domain.rules.LastLightEngineTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/domain/rules/LastLightEngineTest.kt",
+      "source_sha256": "2d4f357b04ea71ab047620cd01f1da08d4872434027fb0b323dcd9ca13f11bdb",
+      "classname": "com.parlor.games.lastlight.domain.rules.LastLightEngineTest",
+      "methods": [
+        "aSafePenaltyPersistsThroughADealWithANewOpener",
+        "acceptingAnEarlierBluffLeavesOnlyTheLatestClaimChallengeable",
+        "anAllWildClaimIsTruthfulAndPenalizesOnlyTheChallenger",
+        "burnoutInATwoPlayerMatchFinishesWithoutAnotherDeal",
+        "matchingCardsAndWildsAreTruthfulTogether",
+        "oneMismatchingCardMakesTheEntireClaimABluff"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.protocol.LastLightProjectionTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/protocol/LastLightProjectionTest.kt",
+      "source_sha256": "7de87b510738419a74ba51c219987f064061f703c8c0de9bab87f6cea57cd2f4",
+      "classname": "com.parlor.games.lastlight.protocol.LastLightProjectionTest",
+      "methods": [
+        "allLegalPhasesAndEliminatedRecipientsPassStrictProjectionValidation",
+        "callerMutationsCannotRewriteProjectedOrCanonicalCollections",
+        "everyRecipientGetsOnlyTheirOwnHandAndNoHostAuthorityKeysOrCards",
+        "privatePeerValidationRejectsWrongSeatSlotsUndealtCardsDuplicatesAndStaleCards",
+        "publicAndPrivateWireFormatsRejectUnknownFieldsVersionsAndNoncanonicalPayloads",
+        "publicChallengeProofMustComeFromOneDealtHandAndFitItsRemainingCardCount",
+        "publicPeerValidationRejectsPrivateBucketsImpossibleTurnsAndFalsePlayProgress",
+        "revealedWildsAndOwnWildsMustFitTheSameThirtyCardDeck"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.snapshot.LastLightSnapshotRecoveryTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/snapshot/LastLightSnapshotRecoveryTest.kt",
+      "source_sha256": "ea1f5704ef0df29a7ce2fcf6dd95dc89909a19f14454d413ae06c4926663cdba",
+      "classname": "com.parlor.games.lastlight.snapshot.LastLightSnapshotRecoveryTest",
+      "methods": [
+        "aSnapshotCannotChangeIdentityModeVersionOrClaimADifferentPhase",
+        "aVerifiedLocalSnapshotRestoresExactlyItsSessionAndCanonicalState",
+        "localRecoveryRefusesPausedMultiplayerAndAlreadyCompletedMatches",
+        "missingStorageErrorsRemainTypedAndCancellationIsNeverSwallowed"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.awake.ScreenAwakeLeasesTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/awake/ScreenAwakeLeasesTest.kt",
+      "source_sha256": "310b21ac4ce89482bbb3ae8fa353feec87be0d626d284b7ee57acd45fefa092f",
+      "classname": "com.parlor.games.lastlight.ui.awake.ScreenAwakeLeasesTest",
+      "methods": [
+        "overlappingOwnersAndDuplicateDisposalCannotReleaseTheCurrentMatch",
+        "priorNativeSettingIsRestoredRatherThanAssumedFalse"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.snapshot.LastLightSnapshotCodecTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/snapshot/LastLightSnapshotCodecTest.kt",
+      "source_sha256": "76e126e3c1fc4af46b5977ff8e07bddbb6d708a7f7ec2f5a7e9326f38508a254",
+      "classname": "com.parlor.games.lastlight.snapshot.LastLightSnapshotCodecTest",
+      "methods": [
+        "acceptedHistoryCannotBeOmittedDuplicatedReorderedOrExtendedAfterTerminal",
+        "authorityRecoveryRefusesRedactedProjectionsAndMalformedOrUnboundedPayloads",
+        "connectionStateCanNeverRewritePrivateHandsOrSurviveATerminalTransition",
+        "rejectsCorruptedPrivateStateSeedFuseHistoryAndStructurallyPlausibleTurnChanges",
+        "restoredPendingClaimsRemainChallengeableAndOldRoundCardsCannotReturn",
+        "roundTripsPreserveEveryPhaseAndTheFutureAcrossProcessRecovery"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.random.LastLightRandomTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/random/LastLightRandomTest.kt",
+      "source_sha256": "a5e37f477e019cf04f2566b5aedaeca7181e282f64abb0ee5dd027d9c54c2cf1",
+      "classname": "com.parlor.games.lastlight.random.LastLightRandomTest",
+      "methods": [
+        "streamMatchesIndependentStandardHmacSha256Vectors",
+        "versionOneOpeningDealMatchesAnIndependentBoundedDrawSimulation"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.feedback.LastLightFeedbackControllerTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/feedback/LastLightFeedbackControllerTest.kt",
+      "source_sha256": "4db14a7e90fb91965db69f3f60af201f856621d84dd9de3895dd8fc421d557c2",
+      "classname": "com.parlor.games.lastlight.ui.feedback.LastLightFeedbackControllerTest",
+      "methods": [
+        "aNewOutcomeCancelsThePreviousPendingResult",
+        "backgroundCancelsResultAndForegroundDoesNotReplayIt",
+        "changingSessionCancelsOldResultAndResetsTheBaseline",
+        "closeCancelsPendingResultAndRejectsAllLaterFrames",
+        "disconnectedAndReconnectedSnapshotsAreSilentUntilANewAcceptedEvent",
+        "distinctAcceptedPlayIdsEmitEvenWhenClaimsAreIndistinguishable",
+        "firstAvailableGameAfterNullIsABaseline",
+        "initialAndRepeatedSnapshotsAreSilentAndNativeForegroundIsSynchronized",
+        "interruptionEpochCancelsFeedbackEvenWhenForegroundRemainsTrue",
+        "mergedAcceptedEventsProduceOnlyTheLatestChallengeAndItsDelayedVerdict",
+        "mutingBothPreferencesCancelsRatherThanDefersThePendingVerdict",
+        "pendingVerdictUsesCurrentIndependentPreferences",
+        "roundContinuationCancelsAResultThatHasBecomeHistory",
+        "soundAndHapticsAreIndependentAndEnablingDoesNotReplayMutedEvents",
+        "staleFramesCannotLowerTheAcceptedEventWatermark"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.feedback.LastLightFeedbackFrameTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/feedback/LastLightFeedbackFrameTest.kt",
+      "source_sha256": "c94570ff0cc164f7712952f205dcdd8718faa6ad147cfde2e14404040ff8c669",
+      "classname": "com.parlor.games.lastlight.ui.feedback.LastLightFeedbackFrameTest",
+      "methods": [
+        "finishedRecipientGetsWinnerCueOnlyForTheirOwnWin",
+        "previousRoundProofCannotBecomeFreshFeedback",
+        "privateHandAndActionChangesDoNotAlterTheFeedbackFrame",
+        "publicBurnoutSelectsTheResultCue",
+        "sharedDeviceExplicitlyCelebratesTheTableWinner"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.flow.multidevice.LastLightRecoveryStateTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/flow/multidevice/LastLightRecoveryStateTest.kt",
+      "source_sha256": "47df7390ed2212ba0841c26a97644a5f4f5f4e24671b8592686b42acf3f80e3f",
+      "classname": "com.parlor.games.lastlight.ui.flow.multidevice.LastLightRecoveryStateTest",
+      "methods": [
+        "connectedHostAndPeerNameTheSamePublicMissingPlayer",
+        "hostLossNamesThePublicHostBeforeAnyNewSnapshotCanArrive",
+        "localOfflineAndValidationDoNotClaimThatAnotherPlayerLeft",
+        "onlyReadyConnectedTablesWithoutMissingPlayersShowGameplay"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.flow.passandplay.LastLightLocalRecoveryTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/flow/passandplay/LastLightLocalRecoveryTest.kt",
+      "source_sha256": "d3e979ac61ca34e1e886442c5898e4b43ad0bb7ab65fe69572bb90db2ba40fb3",
+      "classname": "com.parlor.games.lastlight.ui.flow.passandplay.LastLightLocalRecoveryTest",
+      "methods": [
+        "failed_terminal_deletion_blocks_return_and_retry_cannot_resurrect_the_saved_match",
+        "local_names_use_exact_canonical_parlor_labels_and_validate_player_count",
+        "recovering_never_allocates_a_new_identity_or_embeds_entropy_in_the_id",
+        "rematch_uses_a_new_identity_and_secret_seed_and_old_session_cannot_modify_it",
+        "restored_match_keeps_every_future_deal_penalty_and_winner_identical"
+      ]
+    },
+    {
+      "path": "game-modes/last-light/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.lastlight.ui.flow.passandplay.LastLightLocalSubmissionTest.xml",
+      "source": "game-modes/last-light/src/commonTest/kotlin/com/parlor/games/lastlight/ui/flow/passandplay/LastLightLocalSubmissionTest.kt",
+      "source_sha256": "bb4375db45c9b304b5b3902a408d7c17c177d6b8dacd897ffb99cdf51973535d",
+      "classname": "com.parlor.games.lastlight.ui.flow.passandplay.LastLightLocalSubmissionTest",
+      "methods": [
+        "background_or_conflated_interruption_invalidates_queued_actions_and_requires_fresh_handoff",
+        "each_turn_requires_handoff_and_only_that_players_private_slice_crosses_the_ui_boundary",
+        "exit_confirmation_blocks_queued_and_new_actions_and_closes_only_after_a_successful_flush",
+        "exit_waits_for_an_already_started_submission_and_flushes_its_committed_result",
+        "failed_exit_flush_keeps_the_match_open_and_can_retry_without_losing_the_latest_action",
+        "live_platform_visibility_is_checked_even_before_compose_delivers_its_next_state",
+        "rapid_play_and_challenge_taps_reserve_only_one_submission_before_launch",
+        "rejected_action_is_reported_without_automatic_retry_or_private_handoff_skip"
+      ]
+    },
+    {
+      "path": "game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "source": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "source_sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "methods": [
+        "disabled_setting_rejects_repeat_and_allows_alternating_targets",
+        "enabled_setting_saves_same_living_target_for_four_consecutive_nights",
+        "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor",
+        "first_valid_target_cannot_be_replaced_or_skipped_later_that_night",
+        "repeat_and_self_protection_settings_are_independent",
+        "repeat_is_default_off_for_every_supported_player_count",
+        "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment",
+        "skipped_night_clears_previous_effective_target_but_consumes_submission"
+      ]
+    },
+    {
+      "path": "game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.protocol.MafiaJsonResourceLimitTest.xml",
+      "source": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/protocol/MafiaJsonResourceLimitTest.kt",
+      "source_sha256": "3a559a2cddea0fda21829f41c32e58b8ecbe4b2c5382f89fa5054b1b7831b448",
+      "classname": "com.parlor.games.mafia.protocol.MafiaJsonResourceLimitTest",
+      "methods": [
+        "deeplyNestedCommandIsRejectedAsRecoverableInputFailure",
+        "deeplyNestedSnapshotIsRejectedWithoutRecursiveParsing"
+      ]
+    },
+    {
+      "path": "game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "source": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "source_sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "methods": [
+        "death_of_previous_target_does_not_erase_last_effective_protection",
+        "doctor_eliminated_by_day_vote_retains_previous_night_binding",
+        "history_binding_also_applies_during_a_day_revote",
+        "initial_setup_role_assignment_and_first_night_have_no_previous_protection",
+        "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it",
+        "latest_binding_survives_history_capping_without_requiring_missing_predecessors",
+        "mafia_coordination_revote_preserves_doctor_history_and_own_submission",
+        "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history",
+        "normal_terminal_win_also_clears_private_history_without_discarding_host_history",
+        "null_effective_protection_cannot_be_replaced_by_an_old_legal_target",
+        "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs",
+        "private_previous_protection_must_match_retained_history_in_every_active_phase",
+        "repeated_protection_history_is_valid_only_with_setting_enabled",
+        "resumed_local_controller_enforces_the_persisted_repeat_setting",
+        "terminal_cleanup_does_not_require_historical_protection_to_be_erased"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.content.WhodunitAuthoredTextScalarBoundaryTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/content/WhodunitAuthoredTextScalarBoundaryTest.kt",
+      "source_sha256": "1bd5cb21bf0c9257a34ccefcfbcc6db39ff69acd4a657d6d522bb644b54f1192",
+      "classname": "com.parlor.games.whodunit.content.WhodunitAuthoredTextScalarBoundaryTest",
+      "methods": [
+        "clueTagsRejectEverySupplementaryFormatControl",
+        "publicIntroductionRejectsEverySupplementaryFormatControl",
+        "validSupplementaryArabicTextEmojiAndVariationMarksRemainUnchanged"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/domain/rules/WhodunitPolicyGoldenTest.kt",
+      "source_sha256": "cbcf1723e0e601982da7b71dc3a1cf9a1466fd85aaaa9a0e64aa257dab509893",
+      "classname": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+      "methods": [
+        "clueSelectionHasStableCrossPlatformGoldenSequences",
+        "roundResolutionPreservesExactNearestTieAndDefaultRules"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.protocol.WhodunitJsonResourceLimitTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/protocol/WhodunitJsonResourceLimitTest.kt",
+      "source_sha256": "38c6296e7595851ab2fc19b734d0f2abc94c2233275cdfec76cdf957aa38c30d",
+      "classname": "com.parlor.games.whodunit.protocol.WhodunitJsonResourceLimitTest",
+      "methods": [
+        "deeplyNestedCommandIsRejectedAsRecoverableInputFailure",
+        "deeplyNestedSnapshotIsRejectedWithoutRecursiveParsing"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/ui/WhodunitNetErrorMessageKeyTest.kt",
+      "source_sha256": "89c723b3f49be15417372929749ba78eec6091cbb4e16abc8722b2fe2e6a2116",
+      "classname": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+      "methods": [
+        "everyNetworkFailureKeepsItsActionableUiClassification"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerSessionFlowPolicyTest.kt",
+      "source_sha256": "829f8fcd09ac36e05138f958e5e7452025090293dde33e427d6b9495f3b84106",
+      "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+      "methods": [
+        "checkpointInstallationFailureStillDisablesConnectionRetry",
+        "failedLeaveDoesNotDisableConnectionRetry"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/ui/screens/setup/WhodunitCaseLanguageLabelTest.kt",
+      "source_sha256": "8a6fe1b8bc54e37b4f6f4cb8ad00a9f8cd32c73ac46570567f5676a26e5873bf",
+      "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+      "methods": [
+        "anotherLanguageUsesTheFallbackClassification",
+        "englishAndArabicUseTheirPrimaryBcp47Subtag"
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "source": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/ui/screens/setup/WhodunitModeChoiceTest.kt",
+      "source_sha256": "56835c63f0314bcb6a0dddf59831013c5f315974c733988b5c4f62217e3b8ae4",
+      "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+      "methods": [
+        "selected_case_controls_visible_modes_and_effective_player_bounds",
+        "unsupported_unknown_and_disjoint_modes_are_not_offered"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorDisplayScalarBoundaryTest.kt",
+      "source_sha256": "2609206bad056fabc281188ce4b64583c052976e206b2d0529bd069531357f1e",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest",
+      "methods": [
+        "authorityPersistenceRejectsFormatControlsInsteadOfChangingIdentity",
+        "identifierValidationRejectsUnsafeScalarsWithoutRewritingValidIds",
+        "initialStateRejectsSupplementaryFormatControls",
+        "publicSnapshotRejectsFormatControlsInsteadOfSilentlyRepairingTheName",
+        "supplementaryFormatControlsAreRejectedByNamesAndRosters",
+        "supplementaryLettersEmojiAndVariationMarksRemainCanonical"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorIntegrityTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorIntegrityTest.kt",
+      "source_sha256": "ff065f63de1edf1a5ae7f588a2e2deed6c096f9473568269156e1b5b9ada70bc",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorIntegrityTest",
+      "methods": [
+        "abort_cannot_be_used_to_smuggle_impossible_vote_totals_or_progress",
+        "bounded_history_aborts_without_revealing_the_word_votes_or_roles_and_still_restores",
+        "deeply_nested_input_is_rejected_before_recursive_decoding",
+        "private_guess_cannot_arrive_before_its_public_submission_count"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorRecoveryJourneyTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorRecoveryJourneyTest.kt",
+      "source_sha256": "65160f6c00672a1ca285eeea65b861d7f99c224da3126ce5e8bf72f21b4a7981",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorRecoveryJourneyTest",
+      "methods": [
+        "forty_two_complete_matches_preserve_private_ballots_guesses_scores_and_identity"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorRulesTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorRulesTest.kt",
+      "source_sha256": "719ad238e93edfe96642193df4490b16dbe59ca7882c95882e3c1d85908f9f9d",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorRulesTest",
+      "methods": [
+        "completeBanksHaveUniqueWordsQuestionsAndPlausibleChoices",
+        "disconnectedOrForgedActionsCannotAdvanceOrExposeASecret",
+        "everyPlayerAndImpostorCountCompletesAllPhasesPrivately",
+        "tiesFailIdentificationAndScoresFollowBothIndependentObjectives"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorScoringTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorScoringTest.kt",
+      "source_sha256": "7b6e3d3a32cb2aba8c2cde7a9bb7933793d09e7d54e4f947dcdcd85f271be27a",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorScoringTest",
+      "methods": [
+        "each_correct_voter_and_each_correct_guesser_get_independent_points_for_every_supported_size",
+        "multiple_rounds_accumulate_only_personal_points_and_snapshots_validate_own_ballot",
+        "tied_tallies_do_not_cancel_a_correct_individual_vote_or_successful_word_guess"
+      ]
+    },
+    {
+      "path": "game-modes/word-impostor/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.wordimpostor.WordImpostorVersionTest.xml",
+      "source": "game-modes/word-impostor/src/commonTest/kotlin/com/parlor/games/wordimpostor/WordImpostorVersionTest.kt",
+      "source_sha256": "88425939e0fbae0302a71e188e4443fc1c2493dd0f27527d36a129b90baeaee0",
+      "classname": "com.parlor.games.wordimpostor.WordImpostorVersionTest",
+      "methods": [
+        "legacy_and_future_actions_projections_and_authority_snapshots_fail_closed"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/datasource/OfflineRemoteCaseDataSourceTest.kt",
+      "source_sha256": "7746b4200cc3ad09cf35426c8669e26a40d1dd88fcaef255b8edb69436e657cd",
+      "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+      "methods": [
+        "bundled_only_policy_reports_remote_as_unreachable",
+        "ktor_source_does_not_convert_fatal_errors_into_network_failures",
+        "ktor_source_maps_non_success_status_before_deserializing_error_body",
+        "ktor_source_propagates_structured_cancellation",
+        "ktor_source_rejects_malformed_utf8_before_json_interpretation",
+        "ktor_source_rejects_oversized_chunked_bodies_before_json_decode",
+        "ktor_source_rejects_path_unsafe_ids_before_request"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/repository/DefaultCaseRepositoryTest.kt",
+      "source_sha256": "74f7af8d1ade22f4273fdfef92d7b91e61f771effb53f5bc9e2819a58c220d8b",
+      "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+      "methods": [
+        "corrupt_cached_case_is_invalidated_before_remote_fallback",
+        "corrupt_remote_case_falls_back_to_a_valid_bundled_copy",
+        "invalid_remote_case_is_not_cached_before_typed_validation",
+        "refresh_does_not_cache_a_failed_envelope_shape",
+        "refresh_rejects_a_fetched_case_that_does_not_match_its_manifest_identity",
+        "refresh_rejects_game_invalid_payload_before_cache_warming",
+        "refresh_reports_an_advertised_case_that_cannot_be_fetched",
+        "remote_case_identity_must_match_the_requested_case_before_caching",
+        "valid_remote_case_is_cached_only_after_validation"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/schema/IntRangePairSerializerTest.kt",
+      "source_sha256": "3ceb1d635be4ffa5df24bf08035a02fc483334cf256997d0e513a6036f4e1a1a",
+      "classname": "com.parlor.content.schema.IntRangePairSerializerTest",
+      "methods": [
+        "correctedDescriptorPreservesTheExistingWireFormat",
+        "descriptorMatchesTheJsonArrayWireShape"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.AuthoredTextScalarBoundaryTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/validation/AuthoredTextScalarBoundaryTest.kt",
+      "source_sha256": "c5c812e3daed1828d21f68542bdb2ede046d7cf62375106f8fd06de03fc5c65b",
+      "classname": "com.parlor.content.validation.AuthoredTextScalarBoundaryTest",
+      "methods": [
+        "authoredTextPreservesInternationalScalarsAndHasNoDisplayNameLengthCap",
+        "malformedSurrogatesAndBmpControlsRemainRejected",
+        "summarySubtitlesRejectEverySupplementaryFormatControl",
+        "summaryThemesRejectEverySupplementaryFormatControl",
+        "summaryTitlesRejectEverySupplementaryFormatControl",
+        "supplementaryFormatControlsAreRejectedByAuthoredTextPolicy"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/validation/CaseSummaryValidatorTest.kt",
+      "source_sha256": "0d7a01d886af752be1075180d478e6647b44857a28019561809c2aca72411660",
+      "classname": "com.parlor.content.validation.CaseSummaryValidatorTest",
+      "methods": [
+        "shape_validation_rejects_control_and_format_characters_in_display_data",
+        "shape_validation_rejects_path_traversal_and_duplicate_ids",
+        "shape_validation_rejects_wrong_game_and_oversized_display_data"
+      ]
+    },
+    {
+      "path": "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "source": "shared/content/src/commonTest/kotlin/com/parlor/content/validation/DefaultCaseValidatorBoundaryTest.kt",
+      "source_sha256": "a56b3a353c14036e560254537697cd99fbd11ff9dac7e63540290c4f577f893f",
+      "classname": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+      "methods": [
+        "blank_untrusted_game_id_is_a_typed_failure_not_an_exception",
+        "direct_envelope_validation_enforces_the_same_safe_shape_as_case_summaries",
+        "unverified_delivery_signature_is_rejected_instead_of_being_treated_as_trusted"
+      ]
+    },
+    {
+      "path": "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.result.ResultTest.xml",
+      "source": "shared/core/src/commonTest/kotlin/com/parlor/core/result/ResultTest.kt",
+      "source_sha256": "16a572c7a49ecbb78d940891d006e5a0f36c6bd47d1db73a2c8c63552b385ccd",
+      "classname": "com.parlor.core.result.ResultTest",
+      "methods": [
+        "flatMap_chains_success",
+        "flatMap_short_circuits_on_failure",
+        "getOrElse_falls_back_on_failure",
+        "getOrNull_returns_data_on_success",
+        "getOrNull_returns_null_on_failure",
+        "mapError_transforms_failure",
+        "map_preserves_failure",
+        "map_transforms_success",
+        "onFailure_runs_block_only_on_failure",
+        "onSuccess_runs_block_only_on_success"
+      ]
+    },
+    {
+      "path": "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.serialization.JsonNestingLimitTest.xml",
+      "source": "shared/core/src/commonTest/kotlin/com/parlor/core/serialization/JsonNestingLimitTest.kt",
+      "source_sha256": "cfc5c91f434cc3bdd298743ba41aaf6c6665269229f4f4f83bba5853b56d81db",
+      "classname": "com.parlor.core.serialization.JsonNestingLimitTest",
+      "methods": [
+        "acceptsTheFullSupportedDepth",
+        "acceptsUnicodeAndEscapedUnicodeWithoutCountingItsTextAsStructure",
+        "ignoresContainerCharactersInsideStringsAndEscapedQuotes",
+        "rejectsNegativeDepthRatherThanLettingItOffsetLaterNesting",
+        "rejectsOneLevelBeyondTheSupportedDepth",
+        "rejectsStackExhaustionPayloadInsideTheCommandByteLimit"
+      ]
+    },
+    {
+      "path": "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.text.DisplayNamePolicyTest.xml",
+      "source": "shared/core/src/commonTest/kotlin/com/parlor/core/text/DisplayNamePolicyTest.kt",
+      "source_sha256": "3c51f6648ac9fc03001723255327208f2f70c3628c28c1c12b74e086b949d6b6",
+      "classname": "com.parlor.core.text.DisplayNamePolicyTest",
+      "methods": [
+        "discarded_supplementary_format_controls_do_not_consume_the_input_length_budget",
+        "display_name_rosters_require_valid_canonical_exactly_distinct_names",
+        "display_name_sanitization_never_splits_a_unicode_surrogate_pair",
+        "display_names_support_international_text_but_reject_control_and_bidi_formatting",
+        "supplementary_format_controls_are_rejected_by_name_and_roster_validation",
+        "supplementary_letters_emoji_and_variation_marks_remain_valid"
+      ]
+    },
+    {
+      "path": "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.text.DisplayTextScalarsTest.xml",
+      "source": "shared/core/src/commonTest/kotlin/com/parlor/core/text/DisplayTextScalarsTest.kt",
+      "source_sha256": "8ccf825be070e26ab8e2a6668a5bd81bd88f68a54592c7012fd0d6ffa49419ac",
+      "classname": "com.parlor.core.text.DisplayTextScalarsTest",
+      "methods": [
+        "bmpSafetyRetainsTheExistingControlAndFormatContract",
+        "everySupplementaryScalarFollowsTheFrozenUnicode17FormatSet",
+        "everyUnpairedSurrogateIsRejectedAndSanitizedWithoutConsumingCapacity",
+        "invalidSupplementaryPairArgumentsFailClosed"
+      ]
+    },
+    {
+      "path": "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "source": "shared/core/src/commonTest/kotlin/com/parlor/core/versioning/SemVerTest.kt",
+      "source_sha256": "0ab94f049f7e0678cccbf8876c3258613a3e6a8b39c19340a36eb41da714ad9f",
+      "classname": "com.parlor.core.versioning.SemVerTest",
+      "methods": [
+        "parse_accepts_one_to_three_non_negative_integer_components",
+        "parse_rejects_missing_extra_negative_and_non_numeric_components"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.InPlaceBackTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/InPlaceBackTest.kt",
+      "source_sha256": "ac6748ad350bcc8fc0d9576a4bb3501c3ae776312db960a703499a641e009af6",
+      "classname": "com.parlor.designsystem.components.InPlaceBackTest",
+      "methods": [
+        "disposal_is_identity_scoped_and_registration_storage_is_bounded",
+        "inner_transient_consumes_once_before_outer_content_and_the_shell_guard"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorSafeAreaTest.kt",
+      "source_sha256": "6e895529dc66896941988788eb9bea90d31010de99724e447df7b47d1dd36bff",
+      "classname": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+      "methods": [
+        "visual spacing is added outside every safe-area edge"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastHostInsetsTest.kt",
+      "source_sha256": "91add9e5cfba1e8888793905d2204a3082605960d16503dce600cbcac7996211",
+      "classname": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+      "methods": [
+        "toast host keeps horizontal and bottom safe areas without adding a top inset"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "source_sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+      "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+      "methods": [
+        "adjacent_duplicate_message_is_coalesced",
+        "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it",
+        "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text",
+        "queue_is_bounded_and_keeps_the_latest_distinct_messages"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/SessionExitOverlayTest.kt",
+      "source_sha256": "1de9d66d580992b065e74b19f3b3ebb2e2c7346dd2c9c7311b8731b4b1e42cfd",
+      "classname": "com.parlor.designsystem.components.SessionExitOverlayTest",
+      "methods": [
+        "content starts after the measured affordance and both visual margins"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/icons/ParlorIconsTest.kt",
+      "source_sha256": "e2ce8ec7778d3bfab3a2a68554fec326e0bd26b6d8724985760504becff5fea6",
+      "classname": "com.parlor.designsystem.icons.ParlorIconsTest",
+      "methods": [
+        "directional_icons_mirror_with_layout_direction"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.icons.ParlorArtworkTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/icons/ParlorArtworkTest.kt",
+      "source_sha256": "6f3096ea0f2ca0de7ce32f397f0392f1a3a6c426a195657b295e13bac4c02f97",
+      "classname": "com.parlor.designsystem.icons.ParlorArtworkTest",
+      "methods": [
+        "artwork_is_cached_non_directional_and_uses_one_reviewed_viewport"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/SessionExitBackPolicyTest.kt",
+      "source_sha256": "61af3e38f32ca8c2dcb9fb9b3d8bfcb9172b04564faebb5b4a2309f93d9b5aff",
+      "classname": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+      "methods": [
+        "active_local_sessions_always_confirm_before_the_save_transaction",
+        "multiplayer_setup_exits_immediately_but_started_games_confirm"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/localization/AppLanguageSelectionTest.kt",
+      "source_sha256": "c483a517f4b0b7b4ce5f4832ca9b3d3c8dded76cabc4a3c9591778534e161739",
+      "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+      "methods": [
+        "explicit_override_wins_over_the_system_language",
+        "null_override_follows_a_supported_system_language",
+        "unsupported_system_language_falls_back_to_english"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.BidiArgumentTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/localization/BidiArgumentTest.kt",
+      "source_sha256": "a65f288a4b78e5badcac80b2357f4ff5b671d821589ab9b408bb558d48990de0",
+      "classname": "com.parlor.designsystem.localization.BidiArgumentTest",
+      "methods": [
+        "names_are_isolated_individually_without_reordering_or_normalizing_their_contents"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+      "source": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "source_sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+      "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+      "methods": [
+        "explicit_choice_after_restart_keeps_original_os_value_for_later_system",
+        "external_preference_changes_win_over_owned_cleanup",
+        "fallback_language_is_never_promoted_to_the_application_domain",
+        "interrupted_preparation_does_not_delete_an_unmodified_preference",
+        "interrupted_preparation_without_previous_value_keeps_fallback_unowned",
+        "interrupted_release_cannot_restore_over_a_new_os_preference",
+        "malformed_owner_record_cannot_clear_os_preferences",
+        "malformed_previous_value_is_never_installed_as_a_language_array",
+        "multiple_runtime_switches_restore_original_preference",
+        "system_after_interrupted_lifetime_removes_only_owned_override",
+        "unmarked_identical_values_are_not_claimed_or_removed"
+      ]
+    },
+    {
+      "path": "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "source": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/motion/ParlorMotionTest.kt",
+      "source_sha256": "0cd14fa6fdeceffbd6f4e0efe0eb3b74d008983cce8ca577c304afad75e79e06",
+      "classname": "com.parlor.designsystem.motion.ParlorMotionTest",
+      "methods": [
+        "either_app_or_system_preference_enables_reduced_motion",
+        "reduced_tokens_keep_only_a_short_fade_and_disable_continuous_cycles"
+      ]
+    },
+    {
+      "path": "shared/engine/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.registry.GameRegistryTest.xml",
+      "source": "shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt",
+      "source_sha256": "e16468873595153fc0c560146fd905df8b04cbb25842b9414c2f9fb3a2e5262b",
+      "classname": "com.parlor.engine.registry.GameRegistryTest",
+      "methods": [
+        "catalog_preserves_registration_order_and_lookup_returns_original_definitions",
+        "duplicate_ids_on_distinct_definitions_fail_before_a_catalog_is_published",
+        "empty_registry_has_no_catalog_or_lookup_entries",
+        "mutating_the_input_list_cannot_change_the_captured_catalog_or_lookup",
+        "registering_the_same_definition_twice_is_also_rejected"
+      ]
+    },
+    {
+      "path": "shared/engine/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.snapshot.GameSnapshotTest.xml",
+      "source": "shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt",
+      "source_sha256": "f6f32ce9109a6fcc73082931ba9857f356b001b3da41566080acc7a3ce9be91f",
+      "classname": "com.parlor.engine.snapshot.GameSnapshotTest",
+      "methods": [
+        "each_envelope_field_and_payload_or_metadata_change_affects_equality",
+        "equal_payload_bytes_use_content_equality_and_consistent_hash_codes",
+        "json_round_trip_preserves_the_exact_envelope_byte_values_and_metadata",
+        "legacy_envelope_without_metadata_restores_with_an_empty_map"
+      ]
+    },
+    {
+      "path": "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "source": "shared/engine-testing/src/commonTest/kotlin/com/parlor/engine/testing/fakes/RrSnapshotCodecTest.kt",
+      "source_sha256": "8f749e2fd0511b87106d71908419867a29d281850d4de40db5c5215be8b6a4c2",
+      "classname": "com.parlor.engine.testing.fakes.RrSnapshotCodecTest",
+      "methods": [
+        "malformed_payload_is_rejected_instead_of_fabricating_state",
+        "round_trip_preserves_the_complete_fixture_state"
+      ]
+    },
+    {
+      "path": "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "source": "shared/engine-testing/src/commonTest/kotlin/com/parlor/engine/testing/reducer/ReducerSmokeTest.kt",
+      "source_sha256": "a24e58b7736e9da7b05e1b203d8fb9f3f953ae0f7e471a4fea1913c8fafa0b31",
+      "classname": "com.parlor.engine.testing.reducer.ReducerSmokeTest",
+      "methods": [
+        "out_of_turn_announcement_is_rejected",
+        "reducer_runs_to_completion"
+      ]
+    },
+    {
+      "path": "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "source": "shared/engine-testing/src/commonTest/kotlin/com/parlor/engine/testing/registry/GameRegistryExtensibilityTest.kt",
+      "source_sha256": "4c54e4abad5f7ac84fc38f7db20d7b2d1f633572267485b8b59c2c898596c4a6",
+      "classname": "com.parlor.engine.testing.registry.GameRegistryExtensibilityTest",
+      "methods": [
+        "duplicate_game_ids_fail_during_registration",
+        "second_game_can_be_registered_resolved_and_exercised"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/protocol/ProtocolValidationTest.kt",
+      "source_sha256": "29c106a89a62708183ff23eb96c0fb574af35d36f620b1401bb2de94c664c4cd",
+      "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+      "methods": [
+        "enforces command identifiers sequence revision and payload cap",
+        "peer control messages require the unsequenced zero header domain",
+        "rejects incompatible protocol game and session",
+        "rejects unsafe wire identities even when an initial peer trusts the supplied session",
+        "session start identity metadata and phase sequences are strict",
+        "snapshot is atomic and independently caps public and private slices",
+        "snapshot request permits only the pre-snapshot minus-one sentinel",
+        "validates epoch and control message semantics"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/protocol/RoomMessageCodecTest.kt",
+      "source_sha256": "d74a2397575bd462e6daf24c14fc903ae578831417ba867b50fb6391b3614d16",
+      "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+      "methods": [
+        "admission offered matches its golden wire vector",
+        "client command matches its golden wire vector",
+        "player snapshot matches its golden wire vector",
+        "registered room message variants match the complete wire allowlist",
+        "rejects oversized encoded input before decode",
+        "round trips binary snapshot without JSON byte expansion",
+        "round trips every acknowledged session-start frame",
+        "round trips every transactional admission and resume frame",
+        "session starting matches its golden wire vector"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/room/LocalRoomRetryContractTest.kt",
+      "source_sha256": "22f8ffd9a7af568e40482acda39e8d107d1a8cb53f7b671cae072edb00c58ecb",
+      "classname": "com.parlor.networking.room.LocalRoomRetryContractTest",
+      "methods": [
+        "fallback retry close maps an ordinary adapter exception",
+        "fallback retry close propagates cancellation",
+        "fallback retry close propagates fatal errors"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/room/PeerSessionRetryPolicyTest.kt",
+      "source_sha256": "75b3c7f20e76bf4947745f658654d67265e17967f1b2c6bac72512df327a0f2a",
+      "classname": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+      "methods": [
+        "explicitly_resumed_flow_never_falls_back_to_fresh_room_code_admission",
+        "fresh_session_uses_join_until_a_post_admission_start_failure",
+        "resumed_retry_returns_to_resume_after_each_failed_start_transaction"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/room/RoomInputPolicyTest.kt",
+      "source_sha256": "d1d257a96c08e644f13631bd52d382a3b17b30a336e156509ac68e1782c76b43",
+      "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+      "methods": [
+        "discarded_supplementary_format_controls_do_not_consume_the_input_length_budget",
+        "display_name_rosters_require_valid_canonical_exactly_distinct_names",
+        "display_name_sanitization_never_splits_a_unicode_surrogate_pair",
+        "display_names_support_international_text_but_reject_control_and_bidi_formatting",
+        "room_code_normalization_drops_formatting_and_ambiguous_characters",
+        "room_codes_are_exact_unambiguous_ascii",
+        "supplementary_format_controls_are_rejected_by_name_and_roster_validation",
+        "supplementary_letters_emoji_and_variation_marks_remain_valid"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/security/SecureHashesTest.kt",
+      "source_sha256": "cfa028003ee7762d98925edfb05c05be5ab2eb1cbfe098e813330a8456b16d19",
+      "classname": "com.parlor.networking.security.SecureHashesTest",
+      "methods": [
+        "constant_time_comparison_handles_equal_unequal_and_different_lengths",
+        "sha256_matches_the_standard_abc_vector",
+        "sha256_supports_the_standard_empty_input_vector"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/security/SecureIdsTest.kt",
+      "source_sha256": "71d84c47f33a8f93c640ff8fdd4a23fb06e2f81dd1dd17e390e59eec4c92ec01",
+      "classname": "com.parlor.networking.security.SecureIdsTest",
+      "methods": [
+        "random_long_byte_conversion_preserves_all_64_random_bits",
+        "random_long_byte_conversion_rejects_partial_entropy"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.transport.BoundResumeDefaultTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/transport/BoundResumeDefaultTest.kt",
+      "source_sha256": "998d92c51a448026e4d44d4d4a316b7b79d4f8ea6dd3cf845377efb833b2b827",
+      "classname": "com.parlor.networking.transport.BoundResumeDefaultTest",
+      "methods": [
+        "unsupported_membership_resume_and_leave_never_fall_back_to_other_memberships",
+        "unsupported_selected_resume_never_falls_back_to_unbound_resume_or_metadata_preflight"
+      ]
+    },
+    {
+      "path": "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "source": "shared/networking/src/commonTest/kotlin/com/parlor/networking/transport/LocalNetworkAccessTest.kt",
+      "source_sha256": "945e3d95de122bd589c6d9c08f31834c20be51e3dffcba27e2fc2ec383ddfff3",
+      "classname": "com.parlor.networking.transport.LocalNetworkAccessTest",
+      "methods": [
+        "recovery_guidance_is_reserved_for_proven_or_unclassified_failures"
+      ]
+    },
+    {
+      "path": "shared/networking-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "source": "shared/networking-testing/src/commonTest/kotlin/com/parlor/networking/testing/InMemoryRoomBusTest.kt",
+      "source_sha256": "edeb29e1e44d1b4813fb729281c709878347d3a70e5aef87a32831a3d3d6dcbd",
+      "classname": "com.parlor.networking.testing.InMemoryRoomBusTest",
+      "methods": [
+        "broadcast skips a full peer without blocking other peers",
+        "direct send to an unknown peer fails instead of disappearing",
+        "peer event overflow is non blocking and observable",
+        "peer to host overflow is non blocking and observable"
+      ]
+    },
+    {
+      "path": "shared/networking-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.testing.ControlledStartRoomReentrancyTest.xml",
+      "source": "shared/networking-testing/src/commonTest/kotlin/com/parlor/networking/testing/ControlledStartRoomReentrancyTest.kt",
+      "source_sha256": "e65dacf6fd0c2d25f6abdaf1dd51d98dfd0f7c198ca5be6f7faae0554a573f01",
+      "classname": "com.parlor.networking.testing.ControlledStartRoomReentrancyTest",
+      "methods": [
+        "readyBookkeepingPrecedesSynchronousCommitAndSnapshot"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/BoundedPeerOutboxTest.kt",
+      "source_sha256": "9e5b76b8546d9f83715cf0a1dd230181cc2958c67177a97933156bd45d82d938",
+      "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+      "methods": [
+        "close racing terminal publication cannot strand the terminal caller",
+        "close waits for the in-flight sender cancellation cleanup",
+        "concurrent terminal requests share one in flight delivery",
+        "control queue is bounded and unsent snapshots are conflated",
+        "documented per-peer byte ceiling includes the retained heartbeat",
+        "stalled peer cannot delay honest peer or authoritative mutation",
+        "terminal delivery attempts peers in parallel and has a fixed deadline",
+        "terminal transport exception is returned as a sanitized failure"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinatorTest.kt",
+      "source_sha256": "3cb428fd8f82f82f85e8aab07e60504b1022010dfa04d23bd4331b8e911179bb",
+      "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+      "methods": [
+        "acknowledged unknown outcome releases command and reuses host sequence",
+        "applied result remains in flight until its authoritative snapshot is installed",
+        "authenticated host traffic restarts timed out outcome lookup without replay",
+        "caller cancellation during command write propagates and starts query-only recovery",
+        "caller cancellation removes a queued host mutation before it can execute",
+        "close rejects stale submissions and wipes retained command payload",
+        "closing host coordinator completes executing and queued mutation callers",
+        "failed publication does not kill mailbox or strand later host mutation",
+        "failed snapshot installation does not consume its revision",
+        "failed terminal transport is bounded and mailbox remains closable",
+        "fresh peer runtime resumes the host command sequence from its authoritative snapshot",
+        "heartbeat snapshots and terminal envelopes share one monotonic host sequence",
+        "host applies once then rejects duplicate gap and stale revision deterministically",
+        "host close waits for inbound collector cancellation cleanup",
+        "host end is delivered before end returns and remains delivered after close",
+        "host gameplay mutation is suspended while lifecycle mutation remains ordered",
+        "host mutation and peer command share one authoritative order",
+        "host outcome query returns recorded result without applying command again",
+        "host rejects commands while suspended without consuming id or sequence",
+        "host routes each private snapshot only to its recipient",
+        "in-memory peer room stamps command actor like production transport",
+        "malformed command id is dropped without killing host command processing",
+        "one peer cannot evict another peer command outcome",
+        "outcome lookup cannot overtake the original command write",
+        "outcome reconciliation has a deadline and reports recovery timeout",
+        "parent scope cancellation completes executing and queued mutation callers",
+        "peer accepts a command result that arrives after a newer-sequence snapshot",
+        "peer allows only one mutating command in flight",
+        "peer automatically reconciles a lost result without replaying the action",
+        "peer cannot enqueue a command while room is suspended",
+        "peer does not accept terminal end when durable transport commit fails",
+        "peer ignores validated terminal frame no longer owned by transport",
+        "peer installs only valid monotonic atomic snapshots",
+        "peer marks failed send ambiguous without replaying or releasing command",
+        "peer never replays sequence gap command and requests a fresh snapshot",
+        "peer queries ambiguous send outcome on restore without replaying command",
+        "peer retains every authoritative command outcome until UI acknowledgement",
+        "peer validates terminal envelope before asking transport to commit",
+        "retained peer acknowledges the stable start offer replay after reconnect",
+        "retained peer rejects a mutated start replay under the accepted start id",
+        "slow compatibility result observer cannot block authoritative inbound frames",
+        "unchanged host mutation does not advance revision or publish snapshot"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ForegroundConnectionProbeTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/ForegroundConnectionProbeTest.kt",
+      "source_sha256": "67796a9085298506ccb69784bfdb1dcdf596f78565884c92ee4368a08a4c8813",
+      "classname": "com.parlor.session.multidevice.ForegroundConnectionProbeTest",
+      "methods": [
+        "canceledProbeAndLateReplyCannotCompleteReplacement",
+        "closingOrFailedSendCannotLeaveAnUnboundedWaiter",
+        "onlyFreshChallengeFromEveryExpectedSeatCanComplete"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/MultiDeviceShapeTest.kt",
+      "source_sha256": "cd93b4463121c9e222b886c2c9e3883caa58ced639fba1c8569eff76f9029284",
+      "classname": "com.parlor.session.multidevice.MultiDeviceShapeTest",
+      "methods": [
+        "reducer_state_trajectory_matches_across_real_in_memory_topologies"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ForegroundSessionValidationTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/ForegroundSessionValidationTest.kt",
+      "source_sha256": "013e719e4873c00dd73eea98bd65f0af27c183486f9bd55a1d4608df7872ba16",
+      "classname": "com.parlor.session.multidevice.ForegroundSessionValidationTest",
+      "methods": [
+        "closingSessionDuringValidationCannotBecomeReadyFromALateReply",
+        "foregroundProbeCannotReuseAnAlreadyAcceptedHostMessageId",
+        "hostLocalMutationIsBlockedWhileHealthyRemoteCommandsCanContinue",
+        "hostUsesFreshAuthenticatedHeartbeatEchoWithoutReplayingGameActions",
+        "interruptedPendingActionIsReconciledByIdNeverReplayedDuringValidation",
+        "peerRejectsWrongSessionAndUncorrelatedReplyEvenOnConnectedRoom",
+        "peerRequiresFreshRoundTripAndMissingAuthoritativeRevisionBeforeReady"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/PeerConnectionTrackerTest.kt",
+      "source_sha256": "509f1e939fa86d5cd41f7b050f4649ddc1bce91de7ef1b832ce4fc971d1fead7",
+      "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+      "methods": [
+        "close after cancelled caller still waits for callback cleanup",
+        "close cancels an outstanding host loss deadline",
+        "close waits for an expiry callback that already started",
+        "connection state remains observable without an event collector",
+        "duplicate host loss does not extend the original deadline",
+        "durable room status closes a lost event subscription gap",
+        "every concurrent close waits for an already running expiry callback",
+        "host restoration cannot reverse a host-loss expiry that already committed",
+        "restore cancels expiry and marks the peer online",
+        "tracker owns and removes all timer jobs when closed"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwnerTest.kt",
+      "source_sha256": "ed0dc7e81d43ec00a4560bc1a5442c4a7d66351f87da517c7e16ce79a857b44d",
+      "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+      "methods": [
+        "aDifferentRouteCannotReplaceAnActiveSession",
+        "aNewOwnerModelsProcessDeathAsNoInMemoryHostSession",
+        "admissionFreezeIsExactlyOnceAcrossConcurrentUiRequests",
+        "cancelledAdmissionCloseDoesNotPoisonTheGate",
+        "cancelledCredentialDiscardRemainsRetryableAndPropagatesCancellation",
+        "cancelledOpenRestoresIdleAndDoesNotPoisonTheNextAcquire",
+        "cancelledPeerRetryCloseRestoresActiveStateAndPropagatesCancellation",
+        "cancellingOneUiWaiterDoesNotCancelProcessOwnedOpen",
+        "checkpointAndRuntimeSurviveUiReattachmentAndRejectWrongKinds",
+        "cold_selected_resume_leave_passes_its_ownership_and_never_uses_global_discard",
+        "different_resume_memberships_are_distinct_owner_routes_without_logging_their_handles",
+        "explicitLeaveDuringOpenWaitsForCancellationAndClosesAnOrphanRoom",
+        "explicitLeaveReportsOrphanCleanupFailureWithoutStrandingOwnership",
+        "failedColdResumeDiscardKeepsTheRouteForAnExplicitRetry",
+        "failedOpeningRestoresItsErrorUnlessRetryIsExplicit",
+        "failedPeerFinalLeaveKeepsSessionAndConcurrentRetryClosesExactlyOnce",
+        "failedPeerRetryKeepsTheLiveSessionAndCanBeRetried",
+        "finalLeaveWaitsForSessionChildrenToFinishCancellationCleanup",
+        "hostFinalLeaveRuntimeCloseFailureStillReleasesOwnership",
+        "hostRetryTerminatesRuntimeBeforeLeavingAndKeepsRouteRecoverable",
+        "leaveRacingPeerRetryWaitsThenDiscardsTheRetainedCredential",
+        "leavingAColdFailedResumeDiscardsThePersistedMembership",
+        "leavingAFailedOpenClearsTheRouteForANewSession",
+        "multiplayerRoutesRejectNonCanonicalUserInputAtTheOwnershipBoundary",
+        "peerLifecycleExpiryReleasesRuntimeAndLeavesAnExplicitTerminalOwnerState",
+        "peerRetryRetainsMembershipAndForcesResumeOnTheNextRoom",
+        "peerRetryRuntimeCloseFailureCannotStrandTheOwnerInClosing",
+        "restoreOnlyAcquireStillReattachesLiveRoomsAndRejectsDifferentFailedRoutes",
+        "retainedFactoryFailureIsExplicitAndDoesNotPoisonAReplacement",
+        "retainedValuesCannotBeCreatedAfterTheSessionIsReleased",
+        "runtimeFactoryKindMismatchClosesTheUninstalledCandidate",
+        "sameRouteReattachesWithoutOpeningAnotherRoom",
+        "staleExpiredLifecycleCannotReplaceANewerActiveSession",
+        "thrownAdmissionCloseBecomesRetryableWithoutPoisoningTheGate",
+        "unsupported_selected_discard_retains_route_without_unselected_fallback"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/RetainedSessionOperationTest.kt",
+      "source_sha256": "a24529e493acea7130b37a53a8eee3a76bbe8833f1a88f8e5f5dc52fab645bb5",
+      "classname": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+      "methods": [
+        "concurrentInstallersLaunchTheOperationExactlyOnce",
+        "losingTheUiCallerDoesNotCancelProcessOwnedWork",
+        "sessionCancellationIsNotMappedToAnOrdinaryFailure",
+        "unexpectedFailureBecomesTheExplicitSafeState"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "source_sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+      "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "methods": [
+        "absentCommitStillTimesOutWithoutAnAcknowledgement",
+        "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart",
+        "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart",
+        "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit",
+        "callerCancellationDuringAcknowledgementStillPropagates",
+        "commitForAnotherStartCannotEscapeTheReceiveDeadline",
+        "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit",
+        "lateAcceptedCommitSurvivesSlowAcknowledgement",
+        "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartHandshakeTest.kt",
+      "source_sha256": "c1f2a1f2906aa3e2ddb389a189772049ccd8e8dcec68b6f84bb047c37a46ec6e",
+      "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+      "methods": [
+        "caller cancellation racing irreversible commit cannot abort the session",
+        "cancelled resend cannot commit when its abort signal loses to a full mailbox",
+        "cancelling host start propagates cancellation and aborts transaction",
+        "concurrent resend transactions are isolated per player",
+        "cross game offer cannot prepare or acknowledge start even after admission",
+        "dropped eager snapshot and initial request recover from revision-zero heartbeat",
+        "duplicate ready flood during commit does not amplify responses",
+        "fatal preparation error is never converted into a start failure",
+        "game coordinator reacks delayed duplicate commit",
+        "hanging start send cannot block absolute host deadline",
+        "host commits after all ready and commit acknowledgement is delivery only",
+        "host coordinator requires the start barrier by default",
+        "host pre-commit deadline is terminal and bounded",
+        "host start gate retains typed failure and exit transition is idempotent",
+        "initial snapshot recovery retries are bounded and expose timeout",
+        "lost commit acknowledgement in a multi-peer room never rolls commit back",
+        "peer enters on irreversible commit even when acknowledgement send is lost",
+        "peer ignores transient host loss and reacks ready on restoration",
+        "peer lobby has no pre-offer timeout and late valid start succeeds",
+        "peer lobby reports terminal credential commit failure without accepting end",
+        "peer rejects non-canonical start seats before local preparation",
+        "peer start transaction ignores terminal frame no longer owned by transport",
+        "peer transaction deadline begins at offer and terminal lifecycle fails",
+        "peer validates wire version against local protocol major and minor",
+        "resend ready deadline is bounded and delayed frames cannot revive it",
+        "resend start retries each phase and only succeeds after commit acknowledgement",
+        "seat resend progresses while another initial commit acknowledgement is outstanding",
+        "slow preparation and first dropped commit use fresh delivery deadlines",
+        "throwing duplicate commit acknowledgement cannot kill peer inbox",
+        "throwing snapshot transport is retried and cannot strand loading forever",
+        "unexpected local preparation failure remains typed and cancellation propagates",
+        "wrong actor and stale ready cannot advance host transaction"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/ShadowSessionControllerTest.kt",
+      "source_sha256": "2e92dcddb3c0a0486834eca83e31648a89d4be99671153c53261319d10990b41",
+      "classname": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+      "methods": [
+        "installPlayerSnapshotUpdatesBothViewsFromOneValidatedCall",
+        "peerCannotAssumeHostViewerContext",
+        "wrongPlayerSnapshotIsRejectedBeforeEitherViewChanges"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SnapshotPayloadOwnershipTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SnapshotPayloadOwnershipTest.kt",
+      "source_sha256": "3de0ce005a67303c90ec92fefa434114a0476ab587ea618c67663d1d5eaaf030",
+      "classname": "com.parlor.session.multidevice.SnapshotPayloadOwnershipTest",
+      "methods": [
+        "exact_snapshot_byte_limit_and_empty_payloads_remain_accepted",
+        "oversized_snapshot_is_not_queued_and_does_not_poison_the_host_worker",
+        "producer_buffer_mutation_cannot_change_an_inflight_snapshot_revision",
+        "reused_private_serialization_buffer_cannot_cross_recipient_outboxes"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/party/PartyAwareCanonicalStateTest.kt",
+      "source_sha256": "914b40fc3d5a642750c26cc19d8642e1d2b2f7a3a33d6f0d7b6c27b6cef97e30",
+      "classname": "com.parlor.session.party.PartyAwareCanonicalStateTest",
+      "methods": [
+        "readiness_uses_directly_committed_state_when_public_projection_is_stale"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.passandplay.ControllerEventCancellationTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/passandplay/ControllerEventCancellationTest.kt",
+      "source_sha256": "9f585250d5d1bb1c9c107913eb2468913ecb3efa606f6ab764b84512b3481aae",
+      "classname": "com.parlor.session.passandplay.ControllerEventCancellationTest",
+      "methods": [
+        "cancelling_a_queued_submit_preserves_commit_order_under_real_flow_backpressure"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.passandplay.QueuedEventCancellationTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/passandplay/QueuedEventCancellationTest.kt",
+      "source_sha256": "625b3f7814d9b7eeb1360f815d6a2b0253cea4eebcccc4577471a07c7a1ae28f",
+      "classname": "com.parlor.session.passandplay.QueuedEventCancellationTest",
+      "methods": [
+        "a_deep_skipped_gate_chain_is_followed_without_recursive_completion_callbacks",
+        "a_failed_emitter_preserves_the_exception_and_releases_the_next_batch",
+        "cancellation_after_own_emission_starts_releases_the_successor_without_replaying",
+        "cancelling_a_queued_batch_cannot_release_events_past_its_active_predecessor",
+        "consecutive_cancelled_batches_preserve_the_original_ordering_gate"
+      ]
+    },
+    {
+      "path": "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "source": "shared/session/src/commonTest/kotlin/com/parlor/session/passandplay/RestoredStateTest.kt",
+      "source_sha256": "732c527d4c96d29ddc9ad2f39fadb5cb459458fad3df2d56aa444d7ac0bd9081",
+      "classname": "com.parlor.session.passandplay.RestoredStateTest",
+      "methods": [
+        "current_state_observes_the_committed_reduction_before_projection_flows_dispatch",
+        "null_restoredState_starts_at_initial_state",
+        "restoredState_boots_controller_at_provided_state",
+        "submit_receipt_distinguishes_committed_mutation_from_reducer_no_op",
+        "unknown_player_cannot_create_an_unbounded_private_projection"
+      ]
+    },
+    {
+      "path": "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "source": "shared/storage/src/commonTest/kotlin/com/parlor/storage/secure/PlatformKeyedSecureStorageTest.kt",
+      "source_sha256": "58d10d17f99f9667f6768aafcf8f4710115aa9cb7a235940f49270ecebc0913c",
+      "classname": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+      "methods": [
+        "adapter_maps_ordinary_backing_failures_without_exposing_details",
+        "adapter_never_converts_fatal_errors_into_recoverable_io_failures",
+        "adapter_preserves_lifecycle_cancellation",
+        "in_memory_test_backing_never_aliases_caller_arrays"
+      ]
+    },
+    {
+      "path": "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "source": "shared/storage/src/commonTest/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStoreTest.kt",
+      "source_sha256": "f9b6654f7f51827d48216e498b5285572c11e076c2b4eed952c0f65d21a7d43e",
+      "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+      "methods": [
+        "cancellation_during_codec_work_propagates_and_releases_store_mutex",
+        "cancellation_is_never_converted_into_a_data_error",
+        "deeply_nested_snapshot_is_corrupt_without_crashing_either_recovery_path",
+        "deleting_one_save_persists_after_store_recreation_and_preserves_other_saves",
+        "envelope_codec_runs_on_injected_context_and_filesystem_stays_outside_it",
+        "fatal_errors_are_never_converted_into_a_data_error",
+        "generic_io_failure_is_sanitized",
+        "malformed_utf8_snapshot_is_rejected_as_corrupted",
+        "metadata_read_uses_the_header_decoder_instead_of_full_snapshot_decoder",
+        "protection_failure_is_reported_as_corrupted_without_crypto_detail",
+        "traversal_and_temporary_names_are_rejected",
+        "unfinished_sessions_are_filtered_deduplicated_and_stable",
+        "valid_snapshot_round_trips_through_filesystem_boundary"
+      ]
+    },
+    {
+      "path": "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "source": "shared/storage/src/commonTest/kotlin/com/parlor/storage/snapshot/SerializedSnapshotWriterTest.kt",
+      "source_sha256": "29a85acbf75e49e2718ad827aa8b36eabbbb8128fadb542c82dc72cdde315aae",
+      "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+      "methods": [
+        "a_failed_state_is_retried_but_a_successful_duplicate_is_deduplicated",
+        "cancellation_propagates_and_does_not_leave_a_false_writing_status",
+        "completed_state_deletes_and_an_explicit_rematch_can_persist_again",
+        "concurrent_flushes_are_serialized_and_latest_state_wins",
+        "discard_cancellation_propagates_restores_status_and_can_retry",
+        "explicit_discard_waits_for_an_in_flight_save_and_prevents_resurrection",
+        "fatal_discard_error_propagates_restores_status_and_can_retry",
+        "fatal_snapshot_error_propagates_restores_status_and_releases_mutex",
+        "snapshot_construction_exception_is_corruption_and_same_state_can_retry",
+        "thrown_discard_store_exception_is_sanitized_as_io_and_can_retry",
+        "thrown_store_exception_is_sanitized_as_io_and_same_state_can_retry"
+      ]
+    },
+    {
+      "path": "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "source": "shared/storage/src/commonTest/kotlin/com/parlor/storage/settings/PersistentSettingsStoreTest.kt",
+      "source_sha256": "647d8a6ac5001fc5ccddc8ebbb830f8f422877e8f21e686c9fbae189a3a0862b",
+      "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+      "methods": [
+        "absent_preferences_use_safe_defaults",
+        "cancelled_or_failed_persistence_never_changes_the_published_flow",
+        "corrupt_persisted_tags_fall_back_without_blocking_startup",
+        "every_preference_survives_store_recreation",
+        "invalid_setter_values_are_rejected_without_overwriting_last_value"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleConnectionGraceTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleConnectionGraceTest.kt",
+      "source_sha256": "bc0fd9f260310477c1549d2ba5a10894594f3f6a22f3295a36a00ad744a3311e",
+      "classname": "com.parlor.transport.p2p.AppLifecycleConnectionGraceTest",
+      "methods": [
+        "aSlowRetentionCallCannotStartAFreshTimerAfterItsElapsedBudget",
+        "closingRoomCancelsRetentionAndNeverRevivesIt",
+        "delayedTimerStartsWithOnlyTheOriginalElapsedRemainder",
+        "elapsedDeadlineIsCheckedWhenTheSchedulerNeverRanWhileAsleep",
+        "elapsedDeadlineRejectsRetainedValidationBeforeThePendingTimerRuns",
+        "failedValidationUsesOriginalBackgroundTimeForHardRecovery",
+        "fifteenSecondDeadlineIsNotExtendedByDuplicateBackground",
+        "knownLossSuspendsImmediatelyNotAtTheGraceDeadline",
+        "replacementGetsNoFreshGraceAndOldTimerCannotSuspendIt",
+        "shortReturnValidatesWithoutSuspendingAndCancelsOldTimer"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleFaultInjectionTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleFaultInjectionTest.kt",
+      "source_sha256": "75b240bd74252b53b56ffecfcf6165c86a2f791f280a2a16d6734237a1138925",
+      "classname": "com.parlor.transport.p2p.AppLifecycleFaultInjectionTest",
+      "methods": [
+        "clockRollbackCannotValidateRetainedSocketOrCreateANewGraceWindow",
+        "repeatedShortInterruptionsDoNotLeakOldExpiryJobsIntoTheActiveRoom",
+        "retentionFailureSuspendsImmediatelyAndReportsOnlyOnce",
+        "validationFailureFallsBackWithoutExtendingOriginalRecoveryDeadline"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinatorTest.kt",
+      "source_sha256": "0240afa47574807f084c4bf649f963ee94885f2e3b4b05ac6842d9ed7d0561c8",
+      "classname": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+      "methods": [
+        "close_from_an_old_generation_cannot_detach_the_replacement_room",
+        "foreground_cannot_be_overtaken_by_background_captured_during_room_registration"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "source_sha256": "29e381e502598eba91358e7ae287abdc8a4c8762a4554aae937c3839ea8c94cb",
+      "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "methods": [
+        "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom",
+        "cancelledRegistrationDetachesBeforeQueuedForeground",
+        "failedRegistrationDetachesBeforeQueuedForeground"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ConnectionGraceBudgetTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/ConnectionGraceBudgetTest.kt",
+      "source_sha256": "fe5aa8ae8fc5955c9e8f86723f6d7026769cb1ed8233a3e0af7450160d268f0b",
+      "classname": "com.parlor.transport.p2p.ConnectionGraceBudgetTest",
+      "methods": [
+        "delayedIntakeAndWallForwardOnlyReduceTheBudget",
+        "invalidElapsedReadingsNeverGrantGraceOrRecoveryTime",
+        "oversizedOrInvalidEpochWindowsCannotGrantMoreThanFifteenSeconds",
+        "projectedEpochSaturatesRatherThanOverflowingIntoANewWindow",
+        "wallRollbackWithinWindowCannotExtendElapsedGrace"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/DiscoveryCandidateSchedulerTest.kt",
+      "source_sha256": "873015ea9a2222f65b4a0b1f0ff47abfbfc5e72d3fd1cdeb68a322075f2eb720",
+      "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+      "methods": [
+        "a_late_candidate_displaces_an_exhausted_candidate_at_capacity",
+        "candidates_with_unused_budget_are_not_starved_by_an_older_retry",
+        "changed_endpoint_version_is_a_new_incarnation_without_disappearance",
+        "disappearance_and_reappearance_reset_budget_even_when_metadata_is_unchanged",
+        "each_attempt_deadline_is_clipped_by_the_total_deadline",
+        "incompatible_version_has_deterministic_precedence_over_wrong_code_at_deadline",
+        "late_result_from_an_old_observation_cannot_back_off_the_new_incarnation",
+        "repeated_churn_never_exceeds_the_persistent_candidate_budget",
+        "retry_budget_is_hard_bounded_for_one_unchanged_candidate",
+        "sustained_candidate_flood_cannot_create_an_unbounded_retry_ledger",
+        "transient_failures_back_off_then_reprobe_an_unchanged_candidate",
+        "unchanged_wrong_room_is_periodically_reprobed_for_an_unobservable_room_restart",
+        "wrong_room_is_candidate_local_and_a_late_correct_room_is_selected_first"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ForegroundReconnectFallbackTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/ForegroundReconnectFallbackTest.kt",
+      "source_sha256": "bb4449a6e019d8d9d9389c2cd36700efefedfc8c8d758d5bfab901bef8f8e17a",
+      "classname": "com.parlor.transport.p2p.ForegroundReconnectFallbackTest",
+      "methods": [
+        "closingTheOwningSessionStillCancelsAnAlreadyClaimedFallback",
+        "lateConnectedCannotInterruptAClaimedRetirementTransaction",
+        "nativeRecoveryBeforeDeadlineCancelsTheFallback"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.NativeLanDiagnosticsTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/NativeLanDiagnosticsTest.kt",
+      "source_sha256": "f88a4d9f7df77850d203bcc87294bfb908b4db276ce803ce0c663c11f4ced245",
+      "classname": "com.parlor.transport.p2p.NativeLanDiagnosticsTest",
+      "methods": [
+        "native_failure_codes_become_closed_categories_not_raw_error_text",
+        "native_tcp_state_is_distinct_from_secure_session_establishment",
+        "peer_controlled_text_and_general_transport_traces_are_not_recorded"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/P2pDiagnosticsTest.kt",
+      "source_sha256": "99ea89d8de4579380250bd259656fa75d1b469b13172dde95e5f46d21f6cd221",
+      "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+      "methods": [
+        "count_buckets_disclose_only_coarse_cardinality",
+        "exported_lines_have_only_the_allowlisted_fixed_shape",
+        "invalid_memory_or_output_configuration_fails_closed",
+        "platform_output_has_a_one_record_backlog_and_is_rate_limited",
+        "sustained_flood_retains_only_the_fixed_ring_capacity"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/P2pTrafficPolicyTest.kt",
+      "source_sha256": "fc0c7c7c3db1c8749e4f140177086f73b3585cb8e4fd3a141a44a2380d97b228",
+      "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+      "methods": [
+        "admission_identity_bookkeeping_is_bounded_and_pruned",
+        "admission_limiter_allows_legitimate_room_burst_and_throttles_one_identity",
+        "long_idle_period_never_accumulates_more_than_one_burst",
+        "queue_memory_budgets_are_derived_from_capacity_and_directional_frame_limits",
+        "rate_limited_identity_does_not_consume_global_admission_credit",
+        "sustained_flood_is_dropped_then_disconnects_only_the_offending_session",
+        "traffic_budget_refills_and_violation_strikes_expire_after_cooldown"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.PlatformRecoveryClockTest.xml",
+      "source": "shared/transport-p2p/src/iosTest/kotlin/com/parlor/transport/p2p/PlatformRecoveryClockTest.kt",
+      "source_sha256": "b7ddbc954319114167c481e0f01bd55f26c886ffdc86a9908eee7a4d33218657",
+      "classname": "com.parlor.transport.p2p.PlatformRecoveryClockTest",
+      "methods": [
+        "platform_elapsed_clock_is_readable_and_nondecreasing"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.RecoveryWindowBudgetTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/RecoveryWindowBudgetTest.kt",
+      "source_sha256": "8b8923d776269562bf6a59ebbc4d27dd5d50aece4d8e26ca9a86731c1f724095",
+      "classname": "com.parlor.transport.p2p.RecoveryWindowBudgetTest",
+      "methods": [
+        "a_new_window_or_distinct_deadline_receives_its_own_budget",
+        "a_shorter_epoch_hint_can_shorten_but_never_extend_the_original_budget",
+        "impossible_elapsed_clock_readings_and_negative_requests_fail_closed",
+        "repeated_schedules_cannot_renew_spent_elapsed_time"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ResumableCredentialAvailabilityTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/ResumableCredentialAvailabilityTest.kt",
+      "source_sha256": "3f70b3cdd6710413cfaadc9139383f6b03e7e04e454251366fe9c71451cfb34b",
+      "classname": "com.parlor.transport.p2p.ResumableCredentialAvailabilityTest",
+      "methods": [
+        "failed_partial_deletion_write_preserves_the_selected_and_unrelated_memberships",
+        "failed_pending_only_commit_remains_resumable_after_store_recreation",
+        "failed_selected_removal_is_not_success_and_preserves_ownership_for_explicit_retry",
+        "failed_staging_and_commit_writes_preserve_the_last_durable_winner",
+        "unavailable_pending_only_record_is_not_reported_as_no_saved_session",
+        "unavailable_reads_preserve_both_generations_without_mutating_any_transaction"
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "source": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/ResumableCredentialStoreTest.kt",
+      "source_sha256": "d7208cd1d1742dfe7e6218ec2718e33ba1e67bba3d20aff657fe75c96212de02",
+      "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+      "methods": [
+        "canonical_international_display_name_remains_resumable",
+        "credential_read_propagates_cancellation_and_fatal_errors",
+        "credential_write_propagates_cancellation_and_fatal_errors",
+        "discarding_a_failed_rotation_restores_the_committed_generation",
+        "excessiveJsonNestingIsCorruptedInputAndDoesNotPoisonLaterStorageAccess",
+        "explicit_clear_permanently_removes_all_generations",
+        "final_membership_invalidation_preserves_a_newer_unrelated_membership",
+        "final_membership_invalidation_propagates_storage_cancellation",
+        "final_membership_invalidation_revokes_a_rotation_committed_before_room_handoff",
+        "home_selection_cannot_delete_replaced_or_rotated_membership",
+        "initial_offer_is_resumable_before_commit_and_becomes_active_on_commit",
+        "invalid_credential_is_reported_as_corrupted_before_storage_is_mutated",
+        "invalidating_active_generation_preserves_its_pending_rotation",
+        "invalidation_and_rotation_are_one_serialized_read_modify_write_transaction",
+        "malformed_or_unknown_schema_record_is_rejected",
+        "malformed_utf8_record_is_rejected_without_replacement_decoding",
+        "matching_generation_is_invalidated_transactionally_and_duplicate_is_idempotent",
+        "mismatched_commit_cannot_promote_an_unconfirmed_offer",
+        "old_room_cleanup_cannot_erase_a_different_logical_room_credential",
+        "pending_rotation_does_not_destroy_the_last_committed_generation",
+        "persisted_credentials_must_retain_canonical_room_and_display_name_boundaries",
+        "read_modify_write_transactions_are_serialized_without_losing_rotation_or_game_metadata",
+        "schema_one_record_without_membership_id_upgrades_to_offer_identity",
+        "selected_final_leave_preserves_unrelated_pending_membership_and_is_idempotent",
+        "selected_membership_deletion_preserves_unrelated_active_record_across_store_recreation",
+        "selected_pending_membership_leave_preserves_unrelated_active_and_never_resumes_it",
+        "selected_resume_keeps_the_same_logical_membership_across_pending_and_committed_rotations",
+        "selected_resume_rejects_same_presentation_replacement_without_falling_back_to_old_active",
+        "stale_generation_cannot_erase_a_committed_rotation_for_the_same_logical_room",
+        "unrelated_pending_admission_wins_crash_recovery_without_destroying_old_rollback"
+      ]
+    }
+  ]
+}
