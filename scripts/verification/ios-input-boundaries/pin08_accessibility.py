@@ -175,8 +175,18 @@ def retain_companion(sandbox, destination, token, simulator, bundle, legacy):
 
 
 def accept_native_export(out, state):
+    return accept_capability_export(out, state, profile=PROFILE,
+        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE))
+
+
+def accept_capability_export(out, state, *, profile, renderer):
+    """Shared strict custody checks; entry points bind exact profile/renderer.
+
+    No source, method, native ABI, failure-only export or cleanup check is
+    optional. The ordinary entry point still accepts only its frozen profile.
+    """
     require((state['source'], state['source_tree'], state['profile'], state['runtime'], state['device']) ==
-            (SOURCE, TREE, PROFILE, pair.RUNTIME, pair.DEVICE), 'Actual full current-source capability identity required')
+            (SOURCE, TREE, profile, pair.RUNTIME, pair.DEVICE), 'Actual full current-source capability identity required')
     require(state['xcode'] == 'Xcode 26.3\nBuild version 17C529\n' and state['sdk'] == '26.2' and
             state['debug_bundle'] == 'me.parlor.ios.debug', 'Exact current native compiler/Debug identity required')
     require(len(state['arms']) == 1 and state['arms'][0]['arm'] == 'native', 'Single observed capability arm required')
@@ -186,8 +196,7 @@ def accept_native_export(out, state):
     require(row['methods'] == verify_results(prior.load(dest / 'summary.json'), prior.load(dest / 'tests.json'),
             row['simulator'], row['test_exit']) and row['attachment_test_ids'] == [METHOD], 'Original exact failed method required')
     require(all(state['original_inputs'].get(p) == h for p, h in pair.INPUTS.items()), 'Original seven current source bytes required')
-    plan = renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE)(
-        {p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS, arm='native')
+    plan = renderer({p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS, arm='native')
     require(prior.load(dest / 'inputs.json') == state['original_inputs'] |
             {p: hashlib.sha256(v.encode()).hexdigest() for p, v in plan.items()}, 'Only reviewed native observer plan allowed')
     product = prior.load(dest / 'product.json')

@@ -1,0 +1,164 @@
+#if DEBUG && (targetEnvironment(simulator) || PIN10_CONTROL)
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+
+/// COPY ONLY. Observe original root reads/writes, never request an AX refresh.
+/// A nil/non-nil bit is sufficient: no array contents, labels or values are read.
+final class PIN10RootObserver {
+    private struct Row {
+        let startedMs: Double
+        let finishedMs: Double
+        let kind: Int
+        let present: Int
+    }
+    private let armed: () -> Bool
+    private var rows: [Row] = []
+    private var overflow = 0
+    private var installed = false
+    private var attempted = false
+    // Safe direct-Cocoa count, eligible root count, getter/setter encodings, stage.
+    private var installation = [0, 0, 0, 0, 0]
+    private static let capacity = 8_192
+    private static var processOwner: PIN10RootObserver?
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    func install() -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.processOwner == nil else { installation[4] = 1; return false }
+        // Reuse the independently executed ARC-safe inventory, not a global
+        // NSObject/UIKit interception or arbitrary runtime class materialization.
+        let inventory = PIN08ClassInventory.composeSubclasses()
+        installation[0] = inventory.classes.count
+        installation[4] = 2
+        guard !inventory.failed else { return false }
+        let getter = NSSelectorFromString("accessibilityElements")
+        let setter = NSSelectorFromString("setAccessibilityElements:")
+        let element = NSSelectorFromString("isAccessibilityElement")
+        let traits = NSSelectorFromString("accessibilityTraits")
+        let roots = inventory.classes.filter { candidate in
+            guard let parent = class_getSuperclass(candidate),
+                  let read = class_getInstanceMethod(candidate, getter),
+                  let parentRead = class_getInstanceMethod(parent, getter),
+                  let flag = class_getInstanceMethod(candidate, element),
+                  let parentFlag = class_getInstanceMethod(parent, element),
+                  let trait = class_getInstanceMethod(candidate, traits),
+                  let parentTrait = class_getInstanceMethod(parent, traits) else { return false }
+            // Published Compose root overrides elements/isElement, not traits.
+            return !Self.same(read, parentRead) && !Self.same(flag, parentFlag)
+                && Self.same(trait, parentTrait)
+        }
+        installation[1] = roots.count
+        installation[4] = 3
+        guard roots.count == 1, let root = roots.first,
+              let read = class_getInstanceMethod(root, getter),
+              let write = class_getInstanceMethod(root, setter),
+              let parent = class_getSuperclass(root),
+              let parentWrite = class_getInstanceMethod(parent, setter),
+              Self.same(write, parentWrite) else { return false }
+        installation[2] = Self.typeCode(method_copyReturnType(read))
+        installation[3] = Self.typeCode(method_copyReturnType(write))
+        installation[4] = 4
+        guard method_getNumberOfArguments(read) == 2,
+              method_getNumberOfArguments(write) == 3,
+              installation[2] == 64, installation[3] == 118,
+              Self.typeCode(method_copyArgumentType(read, 0)) == 64,
+              Self.typeCode(method_copyArgumentType(read, 1)) == 58,
+              Self.typeCode(method_copyArgumentType(write, 0)) == 64,
+              Self.typeCode(method_copyArgumentType(write, 1)) == 58,
+              Self.typeCode(method_copyArgumentType(write, 2)) == 64,
+              let encoding = method_getTypeEncoding(write) else { return false }
+        typealias Reader = @convention(c) (AnyObject, Selector) -> AnyObject?
+        typealias Writer = @convention(c) (AnyObject, Selector, AnyObject?) -> Void
+        let originalRead = unsafeBitCast(method_getImplementation(read), to: Reader.self)
+        let originalWrite = unsafeBitCast(method_getImplementation(write), to: Writer.self)
+        let readBlock: @convention(block) (AnyObject) -> AnyObject? = { [weak self] object in
+            let started = ProcessInfo.processInfo.systemUptime * 1000
+            let result = originalRead(object, getter)
+            self?.record(kind: 1, present: result == nil ? 0 : 1, started: started)
+            return result
+        }
+        let writeBlock: @convention(block) (AnyObject, AnyObject?) -> Void = { [weak self] object, value in
+            let started = ProcessInfo.processInfo.systemUptime * 1000
+            originalWrite(object, setter, value)
+            self?.record(kind: 2, present: value == nil ? 0 : 1, started: started)
+        }
+        let readReplacement = imp_implementationWithBlock(readBlock)
+        let writeReplacement = imp_implementationWithBlock(writeBlock)
+        // Add the inherited setter ONLY to this verified root subclass. Never
+        // replace the superclass implementation (which would affect all UIKit).
+        guard class_addMethod(root, setter, writeReplacement, encoding) else {
+            imp_removeBlock(readReplacement)
+            imp_removeBlock(writeReplacement)
+            return false
+        }
+        method_setImplementation(read, readReplacement)
+        Self.processOwner = self // Owned diagnostic process lifetime, no unhook race.
+        installed = true
+        installation[4] = 5
+        return true
+    }
+
+    private static func same(_ first: Method, _ second: Method) -> Bool {
+        unsafeBitCast(method_getImplementation(first), to: UInt.self)
+            == unsafeBitCast(method_getImplementation(second), to: UInt.self)
+    }
+
+    private static func typeCode(_ value: UnsafeMutablePointer<CChar>?) -> Int {
+        guard let value else { return 0 }
+        defer { free(value) }
+        let bytes = String(cString: value).utf8
+        return bytes.count == 1 ? Int(bytes.first!) : 0
+    }
+
+    private func record(kind: Int, present: Int, started: Double) {
+        guard Thread.isMainThread, armed() else { return }
+        guard rows.count < Self.capacity else { overflow = min(1_000_000, overflow + 1); return }
+        rows.append(Row(startedMs: started, finishedMs: ProcessInfo.processInfo.systemUptime * 1000,
+                        kind: kind, present: present))
+    }
+
+    /// Same once-only failure request as PIN02/PIN08; a separate exclusive file
+    /// keeps their exact schema, byte ceilings and completeness requirements.
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"],
+              UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator,
+            "bundle": bundle, "process": ProcessInfo.processInfo.processIdentifier,
+            "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "overflow": overflow, "installation": installation,
+            "rows": rows.map { [$0.startedMs, $0.finishedMs, Double($0.kind), Double($0.present)] }]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 1_048_576 else { return }
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("parlor-pin10-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("root.json").path,
+                      O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+}
+#endif

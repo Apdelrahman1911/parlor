@@ -312,10 +312,11 @@ def renderer_for_profile(profile, source, runtime, device):
     raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
 
 
-def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False):
+def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
+         root_capability=False, root_boundary=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -325,6 +326,10 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         import pin08_accessibility as control
     elif native_boundary:
         import pin09_native_boundary as control
+    elif root_capability:
+        import pin10_root_boundary as control
+    elif root_boundary:
+        import pin11_root_observations as control
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -503,8 +508,10 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     raise RuntimeError('Explicit owned Debug sandbox unavailable')
                 sandbox = Path(raw.decode().strip()).resolve(strict=True)
                 captures = []
-                if accessibility or native_boundary:
+                if accessibility or native_boundary or root_capability or root_boundary:
                     row['companion_captures'] = []
+                if root_capability or root_boundary:
+                    row['root_companion_captures'] = []
                 for token in sorted(tokens):
                     path = sandbox / 'tmp' / ('parlor-pin02-' + token) / 'capture.json'
                     if path.is_file():
@@ -515,8 +522,11 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         decoded = decode_capture(raw, tokens, simulator_id, bundle)
                         (dest / ('capture-' + token + '.json')).write_bytes(raw)
                         captures.append(decoded)
-                        if accessibility or native_boundary:
+                        if accessibility or native_boundary or root_capability or root_boundary:
                             row['companion_captures'].append(control.retain_companion(
+                                sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
+                        if root_capability or root_boundary:
+                            row['root_companion_captures'].append(control.retain_root_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                 row['captures'] = captures
         except BaseException as error:
@@ -557,7 +567,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     return 0 if state['result'] in ('SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY',
                                   'CURRENT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
                                   'SYNTHETIC_NATIVE_ACCESSIBILITY_CAPABILITY_ONLY',
-                                  'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION') else 1
+                                  'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+                                  'SYNTHETIC_NATIVE_ROOT_CAPABILITY_ONLY',
+                                  'ROOT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION') else 1
 
 
 if __name__ == '__main__':
