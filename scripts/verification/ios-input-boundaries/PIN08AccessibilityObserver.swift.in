@@ -1,0 +1,168 @@
+#if DEBUG && targetEnvironment(simulator)
+import UIKit
+import ObjectiveC.runtime
+import Darwin
+
+/// COPY ONLY. Records returns of two getters already invoked by UIKit/XCTest.
+/// No label/value/hierarchy read, synthetic input, timer or accessibility update.
+/// Method interception can change timing; this is NOT a neutrality certificate.
+final class PIN08AccessibilityObserver {
+    private struct Hook { let method: Method; let original: IMP; let replacement: IMP }
+    private struct Row {
+        let startedMs: Double
+        let finishedMs: Double
+        let element: Int
+        let getter: Int
+        let flags: Int
+    }
+    private let armed: () -> Bool
+    private var hooks: [Hook] = []
+    private var elements: [ObjectIdentifier: Int] = [:]
+    private var rows: [Row] = []
+    private var overflow = 0
+    private var installed = false
+    private var attempted = false
+    private static let capacity = 1024
+    // A process-owned bounded hook is never removed under an in-flight native
+    // AX getter. The owned diagnostic app/process is terminated by its runner.
+    // A second installation is rejected rather than chained or silently reused.
+    private static var processOwner: PIN08AccessibilityObserver?
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    /// Exact published 1.10.3 Objective-C superclass, never a UIKit-wide hook.
+    /// All signatures and implementations are checked BEFORE either replacement.
+    func install() -> Bool {
+        precondition(Thread.isMainThread && hooks.isEmpty())
+        guard Self.processOwner == nil else { return false }
+        var count: UInt32 = 0
+        guard let classes = objc_copyClassList(&count) else { return false }
+        defer { free(classes) }
+        guard count <= 100_000 else { return false }
+        let matches = (0..<Int(count)).map { classes[$0] }.filter { candidate in
+            guard let parent = class_getSuperclass(candidate) else { return false }
+            return String(cString: class_getName(parent)) == "CMPAccessibilityElement"
+        }
+        guard matches.count == 1, let target = matches.first,
+              let parent = class_getSuperclass(target) else { return false }
+        let traitsSelector = NSSelectorFromString("accessibilityTraits")
+        let elementSelector = NSSelectorFromString("isAccessibilityElement")
+        guard let traits = class_getInstanceMethod(target, traitsSelector),
+              let element = class_getInstanceMethod(target, elementSelector),
+              Self.signature(traits, returns: "Q"), Self.signature(element, returns: "B"),
+              let parentTraits = class_getInstanceMethod(parent, traitsSelector),
+              let parentElement = class_getInstanceMethod(parent, elementSelector),
+              !Self.same(method_getImplementation(traits), method_getImplementation(parentTraits)),
+              !Self.same(method_getImplementation(element), method_getImplementation(parentElement)) else { return false }
+        let originalTraits = method_getImplementation(traits)
+        let originalElement = method_getImplementation(element)
+        typealias TraitsGetter = @convention(c) (AnyObject, Selector) -> UInt64
+        typealias ElementGetter = @convention(c) (AnyObject, Selector) -> Bool
+        let readTraits = unsafeBitCast(originalTraits, to: TraitsGetter.self)
+        let readElement = unsafeBitCast(originalElement, to: ElementGetter.self)
+        let traitsBlock: @convention(block) (AnyObject) -> UInt64 = { [weak self] object in
+            let started = ProcessInfo.processInfo.systemUptime * 1000
+            let result = readTraits(object, traitsSelector)
+            // The original full result is returned unchanged. Only two PUBLIC
+            // bits enter evidence; roles, values, labels and identity never do.
+            let flags = (result & UIAccessibilityTraits.button.rawValue != 0 ? 1 : 0)
+                | (result & UIAccessibilityTraits.notEnabled.rawValue != 0 ? 2 : 0)
+            self?.record(object, getter: 1, flags: flags, started: started)
+            return result
+        }
+        let elementBlock: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            let started = ProcessInfo.processInfo.systemUptime * 1000
+            let result = readElement(object, elementSelector)
+            self?.record(object, getter: 2, flags: result ? 1 : 0, started: started)
+            return result
+        }
+        let replacementTraits = imp_implementationWithBlock(traitsBlock)
+        let replacementElement = imp_implementationWithBlock(elementBlock)
+        hooks = [Hook(method: traits, original: originalTraits, replacement: replacementTraits),
+                 Hook(method: element, original: originalElement, replacement: replacementElement)]
+        for hook in hooks { method_setImplementation(hook.method, hook.replacement) }
+        Self.processOwner = self
+        installed = true
+        return true
+    }
+
+    private static func same(_ first: IMP, _ second: IMP) -> Bool {
+        unsafeBitCast(first, to: UInt.self) == unsafeBitCast(second, to: UInt.self)
+    }
+
+    private static func copiedType(_ value: UnsafeMutablePointer<CChar>?) -> String? {
+        guard let value else { return nil }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    private static func signature(_ method: Method, returns expected: String) -> Bool {
+        method_getNumberOfArguments(method) == 2
+            && copiedType(method_copyReturnType(method)) == expected
+            && copiedType(method_copyArgumentType(method, 0)) == "@"
+            && copiedType(method_copyArgumentType(method, 1)) == ":"
+    }
+
+    private func record(_ object: AnyObject, getter: Int, flags: Int, started: Double) {
+        // Original getters are still called on any thread. Never cross into
+        // Kotlin or mutate this main-owned ledger from an AX background thread.
+        guard Thread.isMainThread, armed() else { return }
+        guard rows.count < Self.capacity else { overflow = min(Self.capacity, overflow + 1); return }
+        let identity = ObjectIdentifier(object)
+        if elements[identity] == nil {
+            guard elements.count < Self.capacity else { overflow = min(Self.capacity, overflow + 1); return }
+            elements[identity] = elements.count + 1
+        }
+        rows.append(Row(startedMs: started, finishedMs: ProcessInfo.processInfo.systemUptime * 1000,
+                        element: elements[identity]!, getter: getter, flags: flags))
+    }
+
+    /// Invoked only INSIDE PIN02's once-only post-failure snapshot closure.
+    /// A separate exclusive numeric file preserves PIN02's original schema and
+    /// byte limits. Its ACK is not proof this companion succeeded: host readback
+    /// must independently require the companion, token and original failed case.
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"],
+              UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator,
+            "bundle": bundle, "process": ProcessInfo.processInfo.processIdentifier,
+            "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "overflow": overflow,
+            // Local numeric ordinals do not retain an object or serialize its
+            // address. Address reuse is possible; these are NOT lifetime IDs.
+            "rows": rows.map { [$0.startedMs, $0.finishedMs, Double($0.element),
+                                  Double($0.getter), Double($0.flags)] }]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 131_072 else { return }
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("parlor-pin08-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let descriptor = open(directory.appendingPathComponent("accessibility.json").path,
+                              O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard descriptor >= 0 else { return }
+        defer { close(descriptor) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let written = write(descriptor, base.advanced(by: offset), bytes.count - offset)
+                guard written > 0 else { return }
+                offset += written
+            }
+            _ = fsync(descriptor)
+        }
+    }
+
+}
+#endif

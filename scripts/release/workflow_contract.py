@@ -64,7 +64,7 @@ PUBLIC_SETUP_BOUNDARIES_SHA256 = "c11f8f0f8041ebcf91ed8081d76c8665bff4a64f30eced
 PUBLIC_SETUP_BOUNDARIES_COMPANIONS = {
     'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a',
     'test_pin06_public_setup_pair.py': '2edb46c6ca6cc27276aca8a2f5a5cb1e195305ce001a980dd414574fa92159d7',
-    'run_pin03.py': 'a2b94cc84ad96a44244f7fbc3ab1eef536607c2a774ca8602d8a010548db9c90',
+    'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02',
     'pin01_copy.py': 'acf6e21c400287459740469c624ae589a791be39e3381898f150647caa07f385',
     'pin01_receipts.py': '2d778db5298bd2ac6e594bd5d4c389dc5f812c32e24ae77fb3467c36b7a98848',
     'pin02_capture.py': '4ed9b4257263e88abc640cf904243adfd6bce00787e93a9e468bc5648ba15f0f',
@@ -75,7 +75,7 @@ PUBLIC_SETUP_BOUNDARIES_COMPANIONS = {
 # Explicit synthetic failed-export control, separate from all application gates.
 SYNTHETIC_FAILURE_EXPORT = "ios-synthetic-failure-export.yml"
 SYNTHETIC_FAILURE_EXPORT_SHA256 = "454f33e2e4de97d67f6a08599beb0986bafcb949fd0ed8bf45436491d2906313"
-SYNTHETIC_FAILURE_EXPORT_COMPANIONS = {'run_pin07.py': '5ff286084167b000cbb7de9b1d92d2b838f6565210cb89af9da79913730d5eb3', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'test_pin07_native_adapter.py': '9330fcbbfc916c54d205c9e21a9b4402ff2ba4d30ee33d41bef77310430acfee', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'test_pin07_failure_control.py': '684f64cdaec02feee4bbd27be785844a209dd008a3410edd595af1209cd03094', 'run_pin03.py': 'a2b94cc84ad96a44244f7fbc3ab1eef536607c2a774ca8602d8a010548db9c90'}
+SYNTHETIC_FAILURE_EXPORT_COMPANIONS = {'run_pin07.py': '5ff286084167b000cbb7de9b1d92d2b838f6565210cb89af9da79913730d5eb3', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'test_pin07_native_adapter.py': '9330fcbbfc916c54d205c9e21a9b4402ff2ba4d30ee33d41bef77310430acfee', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'test_pin07_failure_control.py': '684f64cdaec02feee4bbd27be785844a209dd008a3410edd595af1209cd03094', 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02'}
 
 # Exact current failed-source observations, not an application gate or retry.
 CURRENT_INPUT_BOUNDARIES = "ios-current-input-boundaries.yml"
@@ -83,9 +83,15 @@ CURRENT_INPUT_BOUNDARIES_SHA256 = "90f9bf297eda4d7677ffd29d32efc841581cb9feb5067
 CURRENT_INPUT_BOUNDARIES_COMPANIONS = {'current_boundary_adapter.py': '02b11a91783f7da81161a7d0b9eedd0b913e63a3f3e3e3754d625f63be6d7ee8',
  'run_current_boundary.py': '7525f744980d79cad4636087682c5ff371e7942bb09d9364caaf47a2e9655d7e',
  'test_current_boundary_adapter.py': '8a3c7b3553b823bad02b63c7c069e23f4a3ec3668ae8075c3cef390e4a890f08',
- 'run_pin03.py': 'a2b94cc84ad96a44244f7fbc3ab1eef536607c2a774ca8602d8a010548db9c90',
+ 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02',
  'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a',
  'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43'}
+
+
+# Optional exact native getter capability control; never a shipping check.
+NATIVE_ACCESSIBILITY_CAPABILITY = 'ios-native-accessibility-capability.yml'
+NATIVE_ACCESSIBILITY_CAPABILITY_SHA256 = '621c5b641cbefa519af9a6e8c3df5f4f9c7c3717522b98a341b00eb0d797c92a'
+NATIVE_ACCESSIBILITY_CAPABILITY_COMPANIONS = {'run_pin08.py': '818e576147ec69419b80074b18ecff5330755402b1920b7b582374eb30a02611', 'pin08_accessibility.py': '6a239f9f13ab30356ef29afd707ba4b691748bcfadc19790bbc51f66c07a6bd5', 'test_pin08_accessibility.py': 'e4993f0ca95fd45a7fde5176d99cb1db79842a74a92ef8db886a10f013958f23', 'PIN08AccessibilityObserver.swift.in': 'c29e835a30bc415fedd7a2e07aa5bf11c194faa4e94314fe2629fe54c642b476', 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a'}
 
 ALLOWED_ACTIONS = {
     "actions/checkout",
@@ -141,7 +147,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES}
+                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -252,6 +258,16 @@ def verify_current_input_boundaries(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Current boundaries companion differs from reviewed failed-only controls: {name}")
+
+
+def verify_native_accessibility_capability(text: str) -> None:
+    verify_common(NATIVE_ACCESSIBILITY_CAPABILITY, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != NATIVE_ACCESSIBILITY_CAPABILITY_SHA256:
+        fail("Native accessibility capability must keep its exact copied control and free runner")
+    for name, digest in NATIVE_ACCESSIBILITY_CAPABILITY_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Native accessibility companion differs from reviewed source: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1888,6 +1904,8 @@ def main() -> int:
         verify_public_catalog_review(files[PUBLIC_CATALOG_REVIEW])
     if PUBLIC_SETUP_PAIR_REVIEW in files:
         verify_public_setup_pair_review(files[PUBLIC_SETUP_PAIR_REVIEW])
+    if NATIVE_ACCESSIBILITY_CAPABILITY in files:
+        verify_native_accessibility_capability(files[NATIVE_ACCESSIBILITY_CAPABILITY])
     if CURRENT_INPUT_BOUNDARIES in files:
         verify_current_input_boundaries(files[CURRENT_INPUT_BOUNDARIES])
     if SYNTHETIC_FAILURE_EXPORT in files:
