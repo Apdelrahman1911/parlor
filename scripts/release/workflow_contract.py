@@ -42,6 +42,10 @@ PUBLIC_BACK_REVIEW_COMPANIONS = {
 # Separate exact decoder for the PR300 catalog failure. Not a production gate.
 PUBLIC_CATALOG_REVIEW = "ios-public-catalog-review.yml"
 PUBLIC_CATALOG_REVIEW_SHA256 = "cd4642f114adc20cf5b9280b5ec085e774f65905b99fb8e039040249fcab6747"
+# Optional exact decoder of the retained PIN19 earlier failure. No app execution.
+SETTLED_FAILURE_REVIEW = 'ios-settled-failure-review.yml'
+SETTLED_FAILURE_REVIEW_SHA256 = '17556637c788e1938209573706776f73a7cfce0f82aff1897003e8c62e3c1d7e'
+SETTLED_FAILURE_REVIEW_COMPANIONS = {'review_pin19_failure.py': '72b2f65b6860ee0c473dd8e763a4090774c9452e83e407d943f3e6caf7b22254', 'test_pin19_failure_review.py': '0d46811654e5b50fbe7cb0d077aeb023fed9435d9be923e718bbd8233e8d9f4b', 'public_attachments.py': 'ad93b59659be452750d8b7cc5aa02c42547048c364557d0251f913a936729ec8'}
 PUBLIC_CATALOG_REVIEW_COMPANIONS = {
     "review_public_catalog_commit.py": "97c3d176a3adf366156c6aa5bb12f246e6956e4def075e94e0c2f45aa627fe0e",
     "test_public_catalog_commit_review.py": "912943d70f5c0ecd9adec8f2257754ef17ac12ffe1f389f5283223dbad984d4a",
@@ -151,7 +155,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL}
+                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -212,6 +216,16 @@ def verify_public_back_review(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Public Back review companion must retain its exact reviewed immutable intake/export controls: {name}")
+
+
+def verify_settled_failure_review(text: str) -> None:
+    verify_common(SETTLED_FAILURE_REVIEW, text)
+    if hashlib.sha256(text.encode()).hexdigest() != SETTLED_FAILURE_REVIEW_SHA256:
+        fail("PIN19 retained-failure workflow differs from exact free readonly review")
+    for name, digest in SETTLED_FAILURE_REVIEW_COMPANIONS.items():
+        path = ROOT / "scripts" / "verification" / "ios-input-boundaries" / name
+        if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail("PIN19 retained-failure reader differs from reviewed companion")
 
 
 def verify_public_catalog_review(text: str) -> None:
@@ -1946,6 +1960,8 @@ def main() -> int:
         verify_public_back_review(files[PUBLIC_BACK_REVIEW])
     if PUBLIC_CATALOG_REVIEW in files:
         verify_public_catalog_review(files[PUBLIC_CATALOG_REVIEW])
+    if SETTLED_FAILURE_REVIEW in files:
+        verify_settled_failure_review(files[SETTLED_FAILURE_REVIEW])
     if PUBLIC_SETUP_PAIR_REVIEW in files:
         verify_public_setup_pair_review(files[PUBLIC_SETUP_PAIR_REVIEW])
     if NATIVE_ACCESSIBILITY_CAPABILITY in files:
