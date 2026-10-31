@@ -330,15 +330,16 @@ def completed_exit_code(result):
         'ORIGINAL_RESOURCE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'COMBINED_XCODE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_AGGREGATE_CONTEXT_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'PAIRED_OBSERVER_CONTEXT_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -363,6 +364,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     elif aggregate_context:
         import pin16_aggregate_context as control
         combined_execution = True  # Reuse the unchanged single native action.
+    elif observer_comparison:
+        import pin17_observer_comparison as control
+        aggregate_context = combined_execution = True
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)

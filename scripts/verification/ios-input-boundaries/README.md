@@ -29,6 +29,27 @@ This is workload-context observation, not original failure-time evidence,
 instrumentation neutrality, memory-pressure causality, a shipping fix, required
 application qualification, a successful physical-device result or phase closure.
 
+## PIN17 — paired original/observer counterfactual
+
+PIN15 independently passed23 native cases, without a natural failure. The
+preceding context experiments all observed an instrumented application; a pass
+cannot establish that instrumentation preserves the failing behavior. PIN17
+therefore runs one explicit **uninstrumented → observed** pair on one free
+`macos-15` runner after the exact original774-method KMP prelude. Each arm has
+a fresh owned Simulator and all23 original cases/order in one combined Xcode
+action. The original source and entire original driver remain byte-identical;
+the observed plan remains byte-identical to PIN16. No successful-path capture,
+retry, slower gesture, selector substitution or assertion-budget change is added.
+
+Both passing and failing original outcomes must be retained, with no fabricated
+original observer ACK. The observed arm still requires every failure-only
+capture and companion. Each arm's source/product, numeric kernel snapshots,
+commands, native outcomes and cleanup are checked independently. Equal or
+different public outcomes are reported honestly, never promoted to causal or
+shipping acceptance. Sequential build/cache/resource differences limit timing
+comparisons. This is not the still-pending60-journey stress/neutrality matrix,
+physical testing, an unchanged production retry or a shipping qualification.
+
 ## PIN15 — original combined Xcode process boundary
 
 PIN14's original6GiB/parallel/booted-build experiment passed all23 native cases;
