@@ -70,7 +70,7 @@ def test_command(base, result):
             '-only-testing:iosAppUITests/' + METHOD.removesuffix('()')]
 
 
-def verify_results(summary, tests, simulator_id, code):
+def verify_results(summary, tests, simulator_id, code, *, method=METHOD):
     require(type(code) is int and code == 65, 'Original unexpected failed XCTest exit65 required')
     for key, value in [('totalTestCount', 1), ('failedTests', 1), ('passedTests', 0),
                        ('skippedTests', 0), ('expectedFailures', 0)]:
@@ -89,13 +89,13 @@ def verify_results(summary, tests, simulator_id, code):
                 cases.append(n)
             visit(n.get('children', []))
     visit(tests.get('testNodes', []))
-    require(len(cases) == 1 and cases[0].get('nodeIdentifier') == METHOD and cases[0].get('result') == 'Failed',
+    require(len(cases) == 1 and cases[0].get('nodeIdentifier') == method and cases[0].get('result') == 'Failed',
             'Only the distinct synthetic getter method may execute')
     failures = summary.get('testFailures', [])
-    require(len(failures) == 1 and failures[0].get('testIdentifierString') == METHOD and
+    require(len(failures) == 1 and failures[0].get('testIdentifierString') == method and
             failures[0].get('targetName') == 'iosAppUITests' and failures[0].get('failureText') == prior.FAILURE,
             'Only the original suppressed Host transition assertion may fail')
-    return {METHOD: 'Failed'}
+    return {method: 'Failed'}
 
 
 def failed_method_exports(result, destination, outcomes):
@@ -179,7 +179,7 @@ def accept_native_export(out, state):
         renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE))
 
 
-def accept_capability_export(out, state, *, profile, renderer):
+def accept_capability_export(out, state, *, profile, renderer, method=METHOD):
     """Shared strict custody checks; entry points bind exact profile/renderer.
 
     No source, method, native ABI, failure-only export or cleanup check is
@@ -194,7 +194,7 @@ def accept_capability_export(out, state, *, profile, renderer):
     require(row['build_exit'] == 0 and row['cleanup'] == 'PASS' and row['result'] == 'JOURNEYS_FAILED',
             'Real build/failure/owned cleanup required')
     require(row['methods'] == verify_results(prior.load(dest / 'summary.json'), prior.load(dest / 'tests.json'),
-            row['simulator'], row['test_exit']) and row['attachment_test_ids'] == [METHOD], 'Original exact failed method required')
+            row['simulator'], row['test_exit'], method=method) and row['attachment_test_ids'] == [method], 'Original exact failed method required')
     require(all(state['original_inputs'].get(p) == h for p, h in pair.INPUTS.items()), 'Original seven current source bytes required')
     plan = renderer({p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS, arm='native')
     require(prior.load(dest / 'inputs.json') == state['original_inputs'] |

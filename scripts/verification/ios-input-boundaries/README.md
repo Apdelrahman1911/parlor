@@ -5,6 +5,35 @@ Investigation tooling for [#267](https://github.com/Apdelrahman1911/parlor/issue
 The original lost Host event occurred on iOS26.2; later iOS18.5 passes do not
 establish its cause. Keep the original failed source/event/recording evidence.
 
+## PIN18 — explicit accessibility idle-gap stimulus
+
+The Maven-published Compose1.10.3 `Accessibility.uikit.kt` schedules root cleanup
+after2000ms without subsequent root reads. Original41180128325's failing second
+sample spent8.200s in sequential XCTest queries; no original native root trace
+exists. Neither source inspection nor passing PIN15/PIN16 establishes causality.
+
+This separately selected **synthetic control**, not a production replay, inserts
+one2500ms XCTest-AX-silent interval between two existence/frame/enabled samples of
+the public Ghamza Host choice. It keeps the previously verified copied Host
+callback suppression and the original single-tap/ten-second failed transition
+assertion. It changes no shipping file, original journey, assertion budget,
+ordinary gesture, dependency, permission or network operation. The deliberate
+pause stimulates a potential cleanup boundary; it cannot qualify an application
+or make an original failed test pass.
+
+The existing numeric root/native buffers remain unchanged. Only the known failed
+control exports its bounded timing/status/geometry attachment. Source/product,
+actual failure, method, ACK/token, original envelopes and owned cleanup all remain
+mandatory. The reader reports both nil/non-nil root outcomes, actual root and
+attribute reads during the gap, and complete before/after status honestly. An
+interval intended to be AX-silent may still contain UIKit accessibility reads;
+main-thread observer coverage does not establish background AX-server silence.
+Root cleanup by itself does not identify the cause of the original failure.
+
+One free `macos-15` runner executes the explicit profile after actual SDK
+typechecking. This is not full60-journey neutrality, natural reproduction, a
+shipping correction, PR296/300 qualification, or physical-device acceptance.
+
 ## PIN16 — original KMP aggregate workload boundary
 
 Original41180128325 executed `productionIosSimulatorRuntimeTests` before its

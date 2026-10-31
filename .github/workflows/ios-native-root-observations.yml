@@ -1,11 +1,11 @@
-name: Native iOS public failure observations (not qualification)
+name: Native iOS root idle stimulus (not qualification)
 
 on:
   push:
-    branches: [diagnostic/ios-observer-comparison-2026-10-31]
+    branches: [diagnostic/ios-root-idle-stimulus-2026-10-31]
 
 concurrency:
-  group: native-root-observations-${{ github.ref }}
+  group: native-root-idle-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:
@@ -14,15 +14,15 @@ permissions:
 jobs:
   ios:
     # One standard free public runner. No cache saves, signing or shipping edits.
-    name: Paired uninstrumented and observed original native context
+    name: Synthetic AX-silent interval and original root lifetime
     runs-on: macos-15
-    timeout-minutes: 190
+    timeout-minutes: 75
     permissions:
       contents: read
       actions: read
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
-      PARLOR_INPUT_OUTPUT: parlor-pin17-${{ github.run_id }}-${{ github.run_attempt }}
+      PARLOR_INPUT_OUTPUT: parlor-pin18-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Check out reviewed harness and exact original history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -48,31 +48,25 @@ jobs:
           /usr/bin/python3 -B scripts/release/workflow_contract.py
           /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
-      - name: Observe original public failures and root lifetime
+      - name: Execute explicit root idle stimulus without replaying production
         shell: bash
         run: |
-          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin17.py \
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin18.py \
             --source 5029b3f48c2d012b34dd2748f809dc775276a622 \
             --runtime com.apple.CoreSimulator.SimRuntime.iOS-18-5 \
             --device com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro \
-            --profile native-observer-comparison --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+            --profile synthetic-root-idle-stimulus --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Retain original failures source products and owned cleanup
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: native-observer-comparison-${{ github.run_id }}-${{ github.run_attempt }}
+          name: native-root-idle-stimulus-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
           retention-days: 14
           path: |
             ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/observer-comparison.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/aggregate/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/aggregate/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/aggregate/xml/**/*.xml
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/attachments
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/root-idle-stimulus.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/attachments
