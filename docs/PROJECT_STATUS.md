@@ -1,70 +1,63 @@
-# Project status — October 30, 2026
+# Project status — October 31, 2026
 
-## Latest merged checkpoint — main verification pending
+## Current independently qualified main
 
-[PR298](https://github.com/Apdelrahman1911/parlor/pull/298) normally merged as
-`71c3f7cc6b8c792b8d8c061d2e35fbe771f8dfe1`, tree
-`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`.
-[PR41090361352](https://github.com/Apdelrahman1911/parlor/actions/runs/41090361352)
-independently qualifies all eight producers/optimized Apple Release join, exact
-source/artifact/native/cleanup custody,23 Swift /716 KMP Simulator /450 readiness
-methods, and three API35 Release plus three API34 Debug navigator methods.
-Qualification SHA256
-`bed3bfe30226ea81f711ee3f924a6a04cfc30ef0eb11a7f8377a2201afbff919`.
-Its distinct automatic
-[actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
-remains pending at this integration's preparation; **do not substitute PR
-success for main acceptance**. #297 stays open until that separate readback.
+Accepted main is `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
+`00d87afce8588263a13733e9140340faac6d522a`. The distinct automatic
+[actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
+independently qualifies all eight producers, optimized Apple Release join,
+source/artifact/native/cleanup custody. Qualification SHA256:
+`57216eff6c013b37862e153645e91fdd5cf4f4f17edf927983f487b124cc1249`.
+PR294/PR298 normally merged; #297 is closed after its distinct main acceptance.
+This supersedes their earlier pending preparation notes, not the physical,
+Strict Complete Protection or Store gates below. PR256 was already merged;
+do not replay it or substitute a PR pass for newer main verification.
 
-## Prior independently qualified main (PR292)
+## Current unmerged work and failed runs
 
-[PR292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
-`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, tree
-`4d27c827b8189ffc49af8a07547c64e272af89c1`. Distinct automatic
-[actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
-independently qualifies all eight producers/original optimized Apple Release join:
-23 Swift /716 source-derived KMP Simulator /450 readiness methods, zero Apple
-skips, exact source/artifact/native/cleanup custody. Qualification SHA256
-`3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
-All nine name-setup pointer methods execute on all four Desktop hosts. This accepts
-regression tests, not a native keyboard repair or the original #267/#276 cause.
-The workflow's52.6 minutes including queues is one source-bound free-runner
-observation, not statistical/device benchmarking; hybrid draft291 remains unqualified.
+- [#302](https://github.com/Apdelrahman1911/parlor/issues/302): a newly reproduced
+  queued-event cancellation defect. A waiting cancelled batch can release later
+  events past its active predecessor. The scoped local correction forwards
+  skipped gates iteratively, preserving prompt cancellation and canonical
+  commits without a new worker, queue or replay. Corrected affected suites:
+  **169 Desktop /166 Android per Debug/Release**, zero skips; full final-source,
+  hosted/native, protected and actual-main checks remain required.
+  [Source-bound audit](audits/2026-10-31-CANCELLED-EVENT-ORDER.md).
+- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) remains failed
+  at `40ae511df882cb29070a94ef3c25f95c1b4ba93e`.
+  [41135053853](https://github.com/Apdelrahman1911/parlor/actions/runs/41135053853):
+  **21 Swift PASS /2 FAIL**,764 KMP Simulator methods passing, zero skips.
+  Arabic Ghamza Host's single settled tap does not transition; English Ghamza
+  Join permission Continue fails settlement **before any Continue tap**.
+  Seven passing producers and the passing optimized join cannot qualify the run.
+- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) stays failed
+  at published `22c67a6c`;41126885894 was not retried. The unpublished local
+  #299/#301 ownership union `52bc7a82` / tree `f4c22663` passes fresh strict
+  full local gates: **1,950 Desktop /733 Android per Debug/Release /120
+  GitHub-test /777 release /450 readiness methods**, established local skips
+  only. Exact local receipt SHA256:
+  `67d7459296f658b6f2eff3f1c8919d3423244029dd1e08c1f3f29012a1161810`.
+  This is not fresh hosted/native, a blind retry, publication or merge.
+- [Completed frozen PIN06 experiment41145628399](https://github.com/Apdelrahman1911/parlor/actions/runs/41145628399)
+  runs unchanged failed application40ae511d on one standard free `macos-15`
+  runner: original, Compose copy and native+Compose copy each **2 PASS**.
+  No journey failed, so no failed-only capture executed. Independent readback
+  matches1,211 original source hashes, all arm manifests/48 exited-reaped
+  commands,239 hosted preflight controls and owned cleanup receipts;63
+  in-memory actual-artifact mutations reject. Receipt SHA256:
+  `d8800fe4326e568e5aafe84f27dbbb2d9a92d3a78168f05ec38b98d462ebf34d`.
+  [Published report](https://github.com/Apdelrahman1911/parlor/blob/59e60c323e0bf9a46cdf97ff07a8f80ce5a6200c/docs/audits/2026-10-30-IOS-PUBLIC-SETUP-PAIR-READBACK.md).
+  This scoped pass is **not** original causality, full60-journey neutrality,
+  live process re-attestation, a mobile/CI benchmark or PR296/300 clearance.
+- #267/#276 and #293/#299/#301 remain open. Draft295's Ghamza evidence,
+  draft282's input observers and draft291's hybrid benchmark are unqualified;
+  no production dependency, verification threshold or Release optimization is
+  weakened. No new Store release or real-device qualification is claimed.
 
-## Current unmerged follow-ups
+## Earlier accepted checkpoints and investigation history
 
-- [Draft PR294](https://github.com/Apdelrahman1911/parlor/pull/294) now has a
-  **local, unpublished integration** of merged main `71c3f7cc`. Only status and
-  generated-inventory conflicts required resolution; the shared scalar-safe
-  admission/game-label code and all its regression methods are retained unchanged.
-  Current dual-image provisioning is inherited without weakening either runtime
-  lane. Fresh exact-source local and complete hosted/native checks remain required;
-  this preparation is not actual-main acceptance, a keyboard repair or a CI retry.
-  [Scalar-boundary evidence](audits/2026-10-30-GAME-DISPLAY-SCALARS.md) retains the
-  original policy/game failures, exhaustive common controls and qualified local
-  `4a9994f5` result (1,941 Desktop /726 Debug /726 Release /120 GitHub-test).
-- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) isolates the
-  Mafia/Whodunit initial roster from later caller mutations (#299). Its current
-  review base is the merged PR298 branch, **not a merge destination**. Full local
-  preparation passes; retargeting to main and fresh hosted/native qualification
-  remain required before protected integration and scoped closure.
-- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is a separate
-  authored-text follow-up stacked on draft294. Clean `65f4a8ee` passes strict full
-  local gates:1,950 Desktop /735 Android per Debug/Release /120 GitHub-test and768
-  release controls, with three established LAN skips and one exact local procfs
-  capability skip;450 software readiness methods/six Apple-only Linux skips.
-  This is not hosted/native/main or physical rendering qualification. #293 stays
-  open;295 is unchanged. [Source-bound report](https://github.com/Apdelrahman1911/parlor/blob/65f4a8eecc2fc8205b30d594e6d5712959c75e3a/docs/audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md).
-- PR294's fresh changed-source41079982618 Linux job fails during the late API34
-  image installation, after successful full root gates and the Release smoke
-  invocation. The whole run cannot qualify, regardless of other producer results.
-  [Issue297/report](audits/2026-10-30-ANDROID-NAVIGATION-IMAGE.md) identifies the
-  missing upfront API34 provisioning/revision pin; a separate main-based scoped
-  correction preserves both runtime lanes, Release optimizations and free runners.
-  PR298's protected merge and complete PR qualification are recorded above;
-  its distinct actual-main acceptance is still pending. The failed archive's
-  bytes are unavailable; a current valid official download does not establish its
-  cause. No blind retry, parent merge or Store release occurred.
+The dated observations below retain their original source/run identities;
+they do not certify the current unmerged corrections.
 
 ## Prior accepted checkpoint (PR290)
 
