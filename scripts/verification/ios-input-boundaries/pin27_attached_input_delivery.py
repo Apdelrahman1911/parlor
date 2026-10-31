@@ -21,7 +21,7 @@ SCOPE = ('Only original sentinel with source-provided Compose input container an
          'no startup registration assumption, polling, input repair, passing journey replay or shipping qualification')
 KOTLIN = 'composeApp/src/iosMain/kotlin/com/parlor/app/inputcopy/PIN27InputContainerBinding.kt'
 TEMPLATES = {
-    'PIN27InputContainer.kt.in': '9d4e2790adf89893820f11da221e26db3e9401509c5be92ecddb21c49fa6a39b',
+    'PIN27InputContainer.kt.in': '44d539d1aaf57615e97714c073063d4033fa4de52b11066a9fe9e415ea5390e2',
     'PIN27InputAttachment.swift.in': '4892fff80f78157fc4e75a79bbf00aa562a26d8da620afcf58aae05fb0a30a1c',
 }
 MAX_BYTES = 65_536

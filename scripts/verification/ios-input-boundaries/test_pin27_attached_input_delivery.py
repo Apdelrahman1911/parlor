@@ -79,6 +79,7 @@ class AttachedNativeInputControls(unittest.TestCase):
         self.assertIn('deliveryAttempted = true',swift)
         self.assertIn('O_EXCL | O_NOFOLLOW',swift)
         self.assertIn('val view = LocalUIView.current',kotlin)
+        self.assertIn('import androidx.compose.ui.uikit.LocalUIView',kotlin)
         self.assertNotIn('view.',kotlin)
         self.assertNotIn('delay(',kotlin)
 

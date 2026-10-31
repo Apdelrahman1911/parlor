@@ -104,7 +104,7 @@ NATIVE_ROOT_OBSERVATIONS_COMPANIONS |= {'PIN25NativeInputDelivery.swift.in': 'cd
 
 NATIVE_ROOT_OBSERVATIONS_COMPANIONS |= {'pin26_delivery_export_control.py': '882feeb79d376eeb2073635ad567b5962c3981945e745f344cd33cfb48e25366', 'run_pin26.py': 'bf4f6eb8c6db9183f18a133d0e0b1a2c0960d617ff6c38a9a69c3095652ec742', 'test_pin26_delivery_export_control.py': 'b60ae07223bf2ab64a7acda22daa76813d45b0fe8c39818c77ac62c0f135fa6b'}
 
-NATIVE_ROOT_OBSERVATIONS_COMPANIONS |= {'PIN27InputContainer.kt.in': '9d4e2790adf89893820f11da221e26db3e9401509c5be92ecddb21c49fa6a39b', 'PIN27InputAttachment.swift.in': '4892fff80f78157fc4e75a79bbf00aa562a26d8da620afcf58aae05fb0a30a1c', 'pin27_attached_input_delivery.py': '038b36f0a14d056b5e23c8e61e81ebfcdc3a1073e2a70dfd571cc4b8667cd332', 'run_pin27.py': '620b9ce3d7090d91b25546b5092bee75ff9b6950b446a64af8f9e00cba14a476', 'test_pin27_attached_input_delivery.py': '42860202b2d4271fcd941d250413a15f2dea23338f9129540d9b7360bc2747c8'}
+NATIVE_ROOT_OBSERVATIONS_COMPANIONS |= {'PIN27InputContainer.kt.in': '44d539d1aaf57615e97714c073063d4033fa4de52b11066a9fe9e415ea5390e2', 'PIN27InputAttachment.swift.in': '4892fff80f78157fc4e75a79bbf00aa562a26d8da620afcf58aae05fb0a30a1c', 'pin27_attached_input_delivery.py': '1283ec02138d0a95feabe616c43e8885a7aead774f268fcd4fa262392733e2da', 'run_pin27.py': '620b9ce3d7090d91b25546b5092bee75ff9b6950b446a64af8f9e00cba14a476', 'test_pin27_attached_input_delivery.py': 'd08e2f8252a68b5cebfb85fb510d928f1060409dbdb02ad0ceab4d75061086d9'}
 
 PUBLIC_FAILURE_COVERAGE_CONTROL = 'ios-public-failure-coverage-control.yml'
 PUBLIC_FAILURE_COVERAGE_CONTROL_SHA256 = 'b5a1e83f46e691d6967f45eb27ae13ac24cee19bd6184178db5974bb64251ab4'
