@@ -8,6 +8,7 @@ import tempfile
 import unittest
 
 import pin02_capture
+import run_pin03
 import pin06_public_setup_pair as pair
 import pin11_root_observations as observed
 import pin11_public_failure_coverage as coverage
@@ -27,6 +28,20 @@ def evidence(out, *, failed=False):
 
 
 class PublicBoundaryControls(unittest.TestCase):
+    def test_accepted_public_profile_exits_zero_without_qualifying_application_failures(self):
+        self.assertEqual(run_pin03.completed_exit_code(
+            'PUBLIC_FAILURE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION'), 0)
+        for result in ('INCOMPLETE', 'NOT_QUALIFIED', 'JOURNEYS_FAILED', 'JOURNEYS_PASSED',
+                       'PRODUCTION_QUALIFIED', 'unknown', None, True, {}):
+            self.assertEqual(run_pin03.completed_exit_code(result), 1)
+        for failed in (False, True):
+            with tempfile.TemporaryDirectory() as temporary:
+                out = Path(temporary).resolve()
+                state = evidence(out, failed=failed)
+                label = public.accept_native_export(out, state)
+                self.assertEqual(run_pin03.completed_exit_code(label), 0)
+                self.assertEqual(state['arms'][0]['test_exit'], 65 if failed else 0)
+
     def test_separate_profile_has_exact_inverse_and_unchanged_original_xctest_selection(self):
         args = ({p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS)
         plan = public.renderer_for_profile(public.PROFILE, public.SOURCE, pair.RUNTIME, pair.DEVICE)(*args, arm='compose')

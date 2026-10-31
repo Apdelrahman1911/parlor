@@ -312,6 +312,24 @@ def renderer_for_profile(profile, source, runtime, device):
     raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
 
 
+def completed_exit_code(result):
+    """Only completely accepted diagnostic profiles may exit zero.
+
+    This does not turn a retained failed application journey into qualification.
+    Unknown, incomplete and production-qualification labels always fail closed.
+    """
+    accepted = (
+        'SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY',
+        'CURRENT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'SYNTHETIC_NATIVE_ACCESSIBILITY_CAPABILITY_ONLY',
+        'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'SYNTHETIC_NATIVE_ROOT_CAPABILITY_ONLY',
+        'ROOT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'PUBLIC_FAILURE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+    )
+    return 0 if type(result) is str and result in accepted else 1
+
+
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
          root_capability=False, root_boundary=False, public_boundary=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
@@ -566,12 +584,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         state['result'] = 'SCOPED_INVESTIGATION_COMPLETE' if len(state['arms']) == 3 and \
             all(p['cleanup'] == 'PASS' and p['result'].startswith('JOURNEYS_') for p in state['arms']) else 'INCOMPLETE'
     checkpoint()
-    return 0 if state['result'] in ('SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY',
-                                  'CURRENT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
-                                  'SYNTHETIC_NATIVE_ACCESSIBILITY_CAPABILITY_ONLY',
-                                  'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
-                                  'SYNTHETIC_NATIVE_ROOT_CAPABILITY_ONLY',
-                                  'ROOT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION') else 1
+    return completed_exit_code(state['result'])
 
 
 if __name__ == '__main__':

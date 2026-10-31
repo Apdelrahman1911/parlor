@@ -125,3 +125,15 @@ This addresses confirmed diagnostic gaps, not a speculative application defect.
 Full source-specific copied-app compilation and execution remain necessary.
 Original41180128325/#267/#276 and Phase1 remain unresolved until causality,
 supported correction and fresh protected integration are actually verified.
+
+## Diagnostic process-status correction
+
+Read-only review of published PIN12 found a deterministic exit-classification
+bug: the native acceptance label was assigned to `state.result` but omitted from
+`run_pin03.py`'s zero-exit allowlist. Even complete observations would exit1.
+The corrected explicit classifier accepts that diagnostic label only after the
+unchanged acceptance checks. Regression controls cover passed and retained-failed
+journeys; incomplete, unknown and production-qualification labels reject. Original
+native test exits remain0/65. This is a harness correction, not an input fix;
+run41203554006 must keep its actual terminal result and original evidence.
+The separate original23-case cohort remains preserved preparation, not wired.
