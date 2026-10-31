@@ -58,7 +58,12 @@ failure/XCTest exit65 retained. Installation `[2,1,64,118,5]`. Artifact130422297
 is79118493bytes, SHA256 `46cba2a0b42e725325dc2b663e5338fd45b12ef5180547babd982716164efacd`.
 Actual Apple object/nil controls and236 input controls pass without skips.
 Original root observations [41201343854](https://github.com/Apdelrahman1911/parlor/actions/runs/41201343854),
-exact `fee08ff1`, are running; this is not application qualification.
+exact `fee08ff1`, finished SUCCESS. Independent original-artifact/source/product/
+owned-cleanup readback passes: both original EN/AR methods passed, zero skips,
+zero failure exports. Artifact13043139331 is2957221bytes, SHA256
+`9a394973d618a4e2bd05a7689805ff58da2361932584cd0e806e14d007b3d610`.
+Without a natural failure there is no root timeline to interpret; this is not
+application qualification or a repair, and that unchanged profile is not replayed.
 
 All diagnostics use standard free `macos-15`, read-only permissions, no diagnostic
 cache saves or shipping/release changes. Software fixtures do not certify UIKit.
@@ -75,7 +80,7 @@ gate shares Home/Setup pointer arming: Permission/Name native returns are exclud
 Host/Join pre-tap, name settlement and exact-value failures have no export owner.
 These are diagnostic coverage limitations, not established application causes.
 
-The separate **unwired** `pin11_public_failure_coverage.py` preparation separates
+The separate `pin11_public_failure_coverage.py` extension separates
 public AX arming (Home/Setup/Permission/Name only) from unchanged pointer arming.
 All explicit requests share a bounded once-only token guard; missing ACK never
 causes another request. Inverse/source controls preserve every action, assertion,
@@ -97,6 +102,26 @@ also prevents an explicit original capture followed by this hook from requesting
 again. Off-main recording fails closed without dispatching or blocking. The new
 actual XCTest control retains the abort/defer counterexample and requires exactly
 one pre-abort record hook, two native passes and one unchanged intentional failure.
-Actual Simulator SDK compatibility and this control must pass on Apple before
-wiring. The short control workflow does not build or launch Parlor and is not
-application input qualification. No original application cause or repair is claimed.
+Actual Simulator SDK compatibility and the record hook passed in
+[41203198618](https://github.com/Apdelrahman1911/parlor/actions/runs/41203198618),
+exact `6a67d585`:8 controls pass/zero skips; the native fixture retains its one
+intentional failure and has two passes, one hook and no failing defer. Independent
+API artifact/source/readback confirms the result. Artifact13043790566 SHA256
+`9a2cb60d8857660b1239d30ea2ced36b424e32438976eb678ac6cca9f46d87b3`.
+The short control workflow did not build or launch Parlor; it is not application
+input qualification. No original application cause or repair is claimed.
+
+## Separate public failure observation profile
+
+`pin12_public_boundaries.py` selects the exact original5029 EN/AR journeys with
+the validated coverage extension. PIN11's renderer and original successful
+actions/queries/assertions/deadlines remain exact and independently invertible.
+The shared owned-copy runner adds only this explicit profile and retains both
+existing complete native companions. Readiness includes its rejection controls.
+No added touch recognizer, keyboard pointer recording, private stage, issue
+content, synthetic permission, network action, timeout increase or tap retry.
+
+This addresses confirmed diagnostic gaps, not a speculative application defect.
+Full source-specific copied-app compilation and execution remain necessary.
+Original41180128325/#267/#276 and Phase1 remain unresolved until causality,
+supported correction and fresh protected integration are actually verified.

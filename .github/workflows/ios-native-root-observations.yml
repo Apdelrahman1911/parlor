@@ -1,4 +1,4 @@
-name: Native iOS root observations (not qualification)
+name: Native iOS public failure observations (not qualification)
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
 jobs:
   ios:
     # One standard free public runner. No cache saves, signing or shipping edits.
-    name: Original EN/AR journeys without added touch recognizer
+    name: Original EN/AR public failures with pre-abort capture
     runs-on: macos-15
     timeout-minutes: 75
     permissions:
@@ -22,7 +22,7 @@ jobs:
       actions: read
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
-      PARLOR_INPUT_OUTPUT: parlor-pin11-${{ github.run_id }}-${{ github.run_attempt }}
+      PARLOR_INPUT_OUTPUT: parlor-pin12-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Check out reviewed harness and exact original history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -48,19 +48,19 @@ jobs:
           /usr/bin/python3 -B scripts/release/workflow_contract.py
           /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
-      - name: Observe original root lifetime and public journeys
+      - name: Observe original public failures and root lifetime
         shell: bash
         run: |
-          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin11.py \
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin12.py \
             --source 5029b3f48c2d012b34dd2748f809dc775276a622 \
             --runtime com.apple.CoreSimulator.SimRuntime.iOS-18-5 \
             --device com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro \
-            --profile native-root-public-boundaries --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+            --profile native-public-failure-boundaries --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
       - name: Retain original failures source products and owned cleanup
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: native-root-observations-${{ github.run_id }}-${{ github.run_attempt }}
+          name: native-public-observations-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
           retention-days: 14
           path: |

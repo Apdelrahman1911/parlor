@@ -313,10 +313,10 @@ def renderer_for_profile(profile, source, runtime, device):
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False):
+         root_capability=False, root_boundary=False, public_boundary=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -330,6 +330,8 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         import pin10_root_boundary as control
     elif root_boundary:
         import pin11_root_observations as control
+    elif public_boundary:
+        import pin12_public_boundaries as control
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -508,9 +510,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     raise RuntimeError('Explicit owned Debug sandbox unavailable')
                 sandbox = Path(raw.decode().strip()).resolve(strict=True)
                 captures = []
-                if accessibility or native_boundary or root_capability or root_boundary:
+                if accessibility or native_boundary or root_capability or root_boundary or public_boundary:
                     row['companion_captures'] = []
-                if root_capability or root_boundary:
+                if root_capability or root_boundary or public_boundary:
                     row['root_companion_captures'] = []
                 for token in sorted(tokens):
                     path = sandbox / 'tmp' / ('parlor-pin02-' + token) / 'capture.json'
@@ -522,10 +524,10 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         decoded = decode_capture(raw, tokens, simulator_id, bundle)
                         (dest / ('capture-' + token + '.json')).write_bytes(raw)
                         captures.append(decoded)
-                        if accessibility or native_boundary or root_capability or root_boundary:
+                        if accessibility or native_boundary or root_capability or root_boundary or public_boundary:
                             row['companion_captures'].append(control.retain_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
-                        if root_capability or root_boundary:
+                        if root_capability or root_boundary or public_boundary:
                             row['root_companion_captures'].append(control.retain_root_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                 row['captures'] = captures
