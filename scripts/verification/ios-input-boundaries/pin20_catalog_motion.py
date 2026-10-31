@@ -185,7 +185,9 @@ def accept_motion_export(out, state, *, profile, renderer, result_verifier, case
     current.require((profile, cases, result) in (
         (PROFILE, CASES, RESULT),
         ('isolated-catalog-motion-export-control', (CONTROL,),
-         'ISOLATED_CATALOG_MOTION_EXPORT_COMPLETE_NOT_QUALIFICATION')),
+         'ISOLATED_CATALOG_MOTION_EXPORT_COMPLETE_NOT_QUALIFICATION'),
+        ('native-catalog-frame-return-boundaries', CASES,
+         'NATIVE_FRAME_RETURN_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION')),
         'Exact original or isolated-control acceptance contract required')
     boundary.accept_observation_export(out,state,profile=profile,renderer=renderer,result_verifier=result_verifier)
     root.accept_root_companions(out,state)

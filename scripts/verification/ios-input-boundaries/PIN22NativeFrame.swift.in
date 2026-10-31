@@ -1,0 +1,123 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN22_CONTROL
+import Foundation
+import CoreGraphics
+import ObjectiveC.runtime
+import Darwin
+
+/// COPY ONLY: the original native CGRect return, not another getter/query.
+/// Ordinals are process-local observation keys, never player/lifetime identities.
+final class PIN22NativeFrameObserver {
+    private let armed: () -> Bool
+    private let ordinal: (AnyObject) -> Int
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private var invalid = 0
+    private var installed = false
+    private var attempted = false
+    private static let capacity = 8192
+    private static var processOwner: PIN22NativeFrameObserver?
+
+    init(armed: @escaping () -> Bool, ordinal: @escaping (AnyObject) -> Int) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        self.ordinal = ordinal
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    func install(target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.processOwner == nil, let parent = class_getSuperclass(target) else { return false }
+        let selector = NSSelectorFromString("accessibilityFrame")
+        guard let read = class_getInstanceMethod(target, selector),
+              let inherited = class_getInstanceMethod(parent, selector),
+              unsafeBitCast(method_getImplementation(read), to: UInt.self) ==
+                unsafeBitCast(method_getImplementation(inherited), to: UInt.self),
+              method_getNumberOfArguments(read) == 2,
+              Self.type(method_copyReturnType(read)) == "{CGRect={CGPoint=dd}{CGSize=dd}}",
+              Self.type(method_copyArgumentType(read, 0)) == "@",
+              Self.type(method_copyArgumentType(read, 1)) == ":",
+              let encoding = method_getTypeEncoding(read) else { return false }
+        typealias Reader = @convention(c) (AnyObject, Selector) -> CGRect
+        let original = unsafeBitCast(method_getImplementation(read), to: Reader.self)
+        let block: @convention(block) (AnyObject) -> CGRect = { [weak self] object in
+            let started = ProcessInfo.processInfo.systemUptime * 1000
+            let result = original(object, selector)
+            self?.record(object, frame: result, started: started)
+            return result // Entire original CGRect unchanged, no added property read.
+        }
+        let replacement = imp_implementationWithBlock(block)
+        // Only the verified Compose leaf gets this inherited override. The
+        // parent/UIKit method is never replaced; installation cannot chain.
+        guard class_addMethod(target, selector, replacement, encoding) else {
+            imp_removeBlock(replacement)
+            return false
+        }
+        Self.processOwner = self // Owned diagnostic process lifetime; no unhook race.
+        installed = true
+        return true
+    }
+
+    private static func type(_ value: UnsafeMutablePointer<CChar>?) -> String {
+        guard let value else { return "" }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    private func record(_ object: AnyObject, frame: CGRect, started: Double) {
+        guard Thread.isMainThread, armed() else { return }
+        let id = ordinal(object)
+        let finished = ProcessInfo.processInfo.systemUptime * 1000
+        let row = [started, finished, Double(id), Double(frame.origin.x), Double(frame.origin.y),
+                   Double(frame.size.width), Double(frame.size.height)]
+        guard id > 0, id <= 16384, row.allSatisfy({ $0.isFinite }), started >= 0, finished >= started,
+              abs(row[3]) <= 100000, abs(row[4]) <= 100000,
+              row[5] >= 0, row[5] <= 100000, row[6] >= 0, row[6] <= 100000 else {
+            invalid = min(1000000, invalid + 1)
+            return
+        }
+        guard rows.count < Self.capacity else { overflow = min(1000000, overflow + 1); return }
+        rows.append(row)
+    }
+
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier,
+            "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "overflow": overflow, "invalid": invalid, "rows": rows]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 2097152 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin22-" + token,
+                                                                                      isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("frames.json").path,
+                      O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+
+    #if PIN22_CONTROL
+    func controlSnapshot() -> [String: Any] {
+        precondition(Thread.isMainThread)
+        return ["rows": rows, "installed": installed, "overflow": overflow, "invalid": invalid]
+    }
+    #endif
+}
+#endif
