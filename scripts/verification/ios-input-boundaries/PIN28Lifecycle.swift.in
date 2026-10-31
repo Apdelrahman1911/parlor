@@ -1,0 +1,89 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN28_CONTROL
+import Foundation
+import Darwin
+#if !PIN28_CONTROL
+import UIKit
+#endif
+
+/// COPY ONLY. Original public-scope lifecycle notifications; no polling/input.
+/// Owned container state is read only after the original XCTest failure.
+final class PIN28Lifecycle {
+    private let armed: () -> Bool
+    private let state: () -> [Int]
+    private var observers: [NSObjectProtocol] = []
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private var attempted = false
+
+    init(armed: @escaping () -> Bool, state: @escaping () -> [Int]) {
+        self.armed = armed
+        self.state = state
+        rows.reserveCapacity(128)
+    }
+
+    deinit { observers.forEach { NotificationCenter.default.removeObserver($0) } }
+
+    #if !PIN28_CONTROL
+    func install() -> Bool {
+        installVerifiedNames([
+            UIApplication.didBecomeActiveNotification, UIApplication.willResignActiveNotification,
+            UIApplication.didEnterBackgroundNotification, UIApplication.willEnterForegroundNotification,
+            UIScene.didActivateNotification, UIScene.willDeactivateNotification,
+            UIScene.didEnterBackgroundNotification, UIScene.willEnterForegroundNotification,
+        ])
+    }
+    #endif
+
+    fileprivate func installVerifiedNames(_ names: [Notification.Name]) -> Bool {
+        precondition(Thread.isMainThread)
+        guard observers.isEmpty, names.count == 8, Set(names).count == 8 else { return false }
+        for (index, name) in names.enumerated() {
+            observers.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { [weak self] _ in
+                guard let self else { return }
+                guard Thread.isMainThread else { return } // Never cross into Kotlin off-main.
+                guard self.armed() else { return }
+                guard self.rows.count < 128 else { self.overflow = min(1000000, self.overflow + 1); return }
+                self.rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(index + 1)])
+            })
+        }
+        return true // No active-path UIKit state/text/window query or forced event.
+    }
+
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let originalState = state() // Application/owned-window/scene status, not view content.
+        guard originalState.count == 3, (0...2).contains(originalState[0]),
+              (-2...2).contains(originalState[1]), (0...1).contains(originalState[2]) else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": observers.count == 8, "overflow": overflow, "rows": rows, "state": originalState]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]), raw.count <= 65536 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin28-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("lifecycle.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+
+    #if PIN28_CONTROL
+    func controlSnapshot() -> [String: Any] { ["installed": observers.count == 8, "overflow": overflow, "rows": rows] }
+    #endif
+}
+#endif

@@ -488,3 +488,28 @@ before/after and successful native installation; incomplete shape may be retaine
 but cannot pass. All earlier gates stay mandatory. The original sentinel alone
 executes; no successful journey or Kotlin control replay. This corrects an
 observed **diagnostic lifecycle defect**, not original application causality.
+
+PIN27 [run41252042512](https://github.com/Apdelrahman1911/parlor/actions/runs/41252042512)
+reached terminal **SUCCESS for the diagnostic control**, independently read once:
+all346 actual Apple controls passed without skips; compilation and owned cleanup
+passed. The first full-value assertion passed and the intentional sentinel failed
+at line53. Actual container installation `[1,1,1]`, one before/after attachment,
+native installation `[68357,1,3]`, original successful responder return and ten
+native text mutations verify capture capability. No shipping correction is implied.
+
+## Original input and lifecycle boundaries (PIN28)
+
+The working adapter can now observe the original journeys, not just a deliberate
+sentinel. PIN28 runs original English/Arabic methods **once**, without executing
+the successful synthetic controls. New evidence covers a previously absent
+boundary for pre-tap failures: original UIKit application/scene notifications,
+and owned application/scene/window status read only after failure. No notification
+contents, extra gestures, active-path state query, polling, thread or timer.
+
+The bounded exclusive 64KiB numeric companion requires exact process/product/
+token/device/clock binding and successful observer installation. Previous native,
+root, frame, motion, source, result and cleanup gates remain mandatory. Pre-Name
+failures retain actual zero input rows; no fabricated callback can stand in for
+an unentered scope. Once a public attachment occurs, complete original native
+installation is required. Neither zero rows nor lifecycle status establishes
+causality. Original assertions, deadlines, values and actions stay unchanged.
