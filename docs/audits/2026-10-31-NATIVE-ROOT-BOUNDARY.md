@@ -51,10 +51,36 @@ boundary timeline.
 
 ## Status and next decisions
 
-Prepared targeted capability/observation on standard free `macos-15`, read-only
-permissions, no diagnostic cache saves or shipping/release changes. Software
-fixtures do not certify UIKit. Natural root clearing must be correlated with
-original failures before attributing causality; a nil write alone is not a bug.
+Root capability [41200011344](https://github.com/Apdelrahman1911/parlor/actions/runs/41200011344)
+is terminal SUCCESS with independent source/artifact/product/owned-cleanup acceptance:
+226 root operations,3380 element returns,zero overflow; original synthetic
+failure/XCTest exit65 retained. Installation `[2,1,64,118,5]`. Artifact13042229727
+is79118493bytes, SHA256 `46cba2a0b42e725325dc2b663e5338fd45b12ef5180547babd982716164efacd`.
+Actual Apple object/nil controls and236 input controls pass without skips.
+Original root observations [41201343854](https://github.com/Apdelrahman1911/parlor/actions/runs/41201343854),
+exact `fee08ff1`, are running; this is not application qualification.
+
+All diagnostics use standard free `macos-15`, read-only permissions, no diagnostic
+cache saves or shipping/release changes. Software fixtures do not certify UIKit.
+Natural root clearing must be correlated with original failures before attributing
+causality; a nil write alone is not a bug.
 If no natural failure occurs, preserve that limitation without blindly repeating
 unchanged successful tests. Phase1 and #267/#276 remain open; Phases2/3 await
 actual qualified corrections. Phase4 stays reserved for the owner's device agent.
+
+## Confirmed coverage limit and prepared correction
+
+PIN11 targets the original catalog failure, not all typing boundaries. Its AX
+gate shares Home/Setup pointer arming: Permission/Name native returns are excluded.
+Host/Join pre-tap, name settlement and exact-value failures have no export owner.
+These are diagnostic coverage limitations, not established application causes.
+
+The separate **unwired** `pin11_public_failure_coverage.py` preparation separates
+public AX arming (Home/Setup/Permission/Name only) from unchanged pointer arming.
+It adds failure exit capture before existing public-method termination, using
+XCTest's in-process failure count. All explicit requests share a bounded once-only
+token guard; missing ACK never causes another request. Inverse/source controls
+preserve every action, assertion, query, waiter and clock read. Actual XCTest
+failure-count/defer behavior and Simulator SDK compatibility must pass on Apple
+before wiring this preparation. Its short native-control workflow does not build
+or launch Parlor and must not be described as gameplay/input qualification.

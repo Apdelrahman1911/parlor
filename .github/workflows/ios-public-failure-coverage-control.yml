@@ -1,0 +1,53 @@
+name: Native public failure coverage controls (not app qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-public-failure-coverage-2026-10-31]
+
+concurrency:
+  group: public-failure-coverage-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  native-control:
+    name: Actual XCTest failure count and public driver API controls
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      PARLOR_COVERAGE_OUTPUT: parlor-public-coverage-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Check out exact control source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Verify reviewed controls without building or launching Parlor
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/$PARLOR_COVERAGE_OUTPUT"
+          mkdir -m 700 "$output"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rev-parse HEAD > "$output/source.txt"
+          xcodebuild -version > "$output/toolchain.txt"
+          /usr/bin/python3 -B scripts/release/workflow_contract.py
+          PYTHONPATH=scripts/verification/ios-input-boundaries /usr/bin/python3 -B \
+            -m unittest test_pin11_public_failure_coverage -v 2>&1 | tee "$output/controls.log"
+      - name: Retain original native control failures and source
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: native-public-failure-coverage-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/${{ env.PARLOR_COVERAGE_OUTPUT }}/

@@ -93,6 +93,10 @@ NATIVE_ROOT_OBSERVATIONS_SHA256 = '1851d144648079277f224ff50ee3f122db6dc05bbf5f1
 NATIVE_ROOT_OBSERVATIONS_COMPANIONS = {'run_pin11.py': 'fd44d919abec2435d0af34e85cd2c8ce17c1c305efb1105bfd9927b2e2abfb61', 'pin11_root_observations.py': '90b7f3e68b0c466fb2d69165d730caa4f7d02ee367de61be57127f1e02d37529', 'test_pin11_root_observations.py': '26cbc62fff5a2afaa6ade8ea45d6075fb6bf93ea399e612d40574e0c1fb0e3e2', 'pin10_root_boundary.py': '49e0c3cc365ef299ee7435f291def95a9bb45a907880b60c2455cd2f6b382d2d', 'test_pin10_root_boundary.py': '72b0c8233826978ea899859bd7d587a2ee6f4afe1196ab65a82fa3204ed73101', 'PIN10RootObserver.swift.in': '1dc4ad1fb63788be0f7550ebb4c8dde82677ec74600343139d50729f8f682c32', 'run_pin03.py': '414c935d0594b34ab2d6e6b461bbdaf8d807914c47a8587296eb19d31a9f91c4', 'pin08_accessibility.py': '6803cc4a8a047f44419f0ed337b89e087445636ecc16c9ef225043517e9ce77b', 'PIN08AccessibilityObserver.swift.in': 'ecf2df64d3a7b6adc3ddf1e90adaa04c80c1c7b4cdecf428474df5a4123eb931', 'pin09_native_boundary.py': '1741bf169f090350e583b10d7b4c34e7f4ff425e69af7ed0822972c62e13b746', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a', 'current_boundary_adapter.py': '9bfedd6cedf08599761c482594140b642a0867737de39fd457103d367b9b27e2'}
 
 
+PUBLIC_FAILURE_COVERAGE_CONTROL = 'ios-public-failure-coverage-control.yml'
+PUBLIC_FAILURE_COVERAGE_CONTROL_SHA256 = 'b5a1e83f46e691d6967f45eb27ae13ac24cee19bd6184178db5974bb64251ab4'
+PUBLIC_FAILURE_COVERAGE_CONTROL_COMPANIONS = {'pin11_public_failure_coverage.py': '2bf8857f3a766c4ca3865bc7f1d5fd91b8c434331798135d753d25d89d823669', 'test_pin11_public_failure_coverage.py': '7b0593de5c023cd101e1ad252b3396cb144ee37dcf6363a8e0ae86f8c3d2abef'}
+
 ALLOWED_ACTIONS = {
     "actions/checkout",
     "actions/setup-java",
@@ -147,7 +151,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS}
+                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -298,6 +302,16 @@ def verify_native_root_observations(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Native root companion differs from reviewed source: {name}")
+
+
+def verify_public_failure_coverage_control(text: str) -> None:
+    verify_common(PUBLIC_FAILURE_COVERAGE_CONTROL, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_FAILURE_COVERAGE_CONTROL_SHA256:
+        fail("Public failure coverage must keep its exact free, read-only native control")
+    for name, digest in PUBLIC_FAILURE_COVERAGE_CONTROL_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Public failure coverage companion differs from reviewed source: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1942,6 +1956,8 @@ def main() -> int:
         verify_native_root_capability(files[NATIVE_ROOT_CAPABILITY])
     if NATIVE_ROOT_OBSERVATIONS in files:
         verify_native_root_observations(files[NATIVE_ROOT_OBSERVATIONS])
+    if PUBLIC_FAILURE_COVERAGE_CONTROL in files:
+        verify_public_failure_coverage_control(files[PUBLIC_FAILURE_COVERAGE_CONTROL])
     if CURRENT_INPUT_BOUNDARIES in files:
         verify_current_input_boundaries(files[CURRENT_INPUT_BOUNDARIES])
     if SYNTHETIC_FAILURE_EXPORT in files:
