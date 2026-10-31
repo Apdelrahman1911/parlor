@@ -12,10 +12,11 @@ def load_tests(loader, _tests, _pattern):
              'test_pin07_failure_control': '_parlor_synthetic_failed_export_controls',
              'test_pin07_native_adapter': '_parlor_native_failure_export_controls',
              'test_current_boundary_adapter': '_parlor_current_boundary_controls',
-             'test_pin08_accessibility': '_parlor_native_accessibility_controls'}
+             'test_pin08_accessibility': '_parlor_native_accessibility_controls',
+             'test_pin09_native_boundary': '_parlor_native_boundary_controls'}
     for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
                  'pin04_original_host', 'public_attachments', 'frozen_sources',
-                 'pin06_public_setup_pair', 'pin07_failure_control', 'pin07_native_adapter', 'run_pin03', 'current_boundary_adapter', 'pin08_accessibility', *tests):
+                 'pin06_public_setup_pair', 'pin07_failure_control', 'pin07_native_adapter', 'run_pin03', 'current_boundary_adapter', 'pin08_accessibility', 'pin09_native_boundary', *tests):
         path = folder / (name + '.py')
         key = tests.get(name, name)
         module = sys.modules.get(key)

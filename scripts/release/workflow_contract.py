@@ -61,37 +61,27 @@ PUBLIC_SETUP_PAIR_REVIEW_COMPANIONS = {
 # or changes the existing generic workflow; only this exact frozen profile runs.
 PUBLIC_SETUP_BOUNDARIES = "ios-public-setup-boundaries.yml"
 PUBLIC_SETUP_BOUNDARIES_SHA256 = "c11f8f0f8041ebcf91ed8081d76c8665bff4a64f30eced70c10bbc128dd4a163"
-PUBLIC_SETUP_BOUNDARIES_COMPANIONS = {
-    'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a',
-    'test_pin06_public_setup_pair.py': '2edb46c6ca6cc27276aca8a2f5a5cb1e195305ce001a980dd414574fa92159d7',
-    'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02',
-    'pin01_copy.py': 'acf6e21c400287459740469c624ae589a791be39e3381898f150647caa07f385',
-    'pin01_receipts.py': '2d778db5298bd2ac6e594bd5d4c389dc5f812c32e24ae77fb3467c36b7a98848',
-    'pin02_capture.py': '4ed9b4257263e88abc640cf904243adfd6bce00787e93a9e468bc5648ba15f0f',
-    'pin03_catalog_copy.py': '0092a943ca2103f4ecf829cb574b976d1d767f2fa340687335738b710cfce6c7',
-    'frozen_sources.py': '6402b9fc49298d143d1893dd6b609079b96fbeeb9672432816cd9357ff310962',
-}
+PUBLIC_SETUP_BOUNDARIES_COMPANIONS = {'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a', 'test_pin06_public_setup_pair.py': '2edb46c6ca6cc27276aca8a2f5a5cb1e195305ce001a980dd414574fa92159d7', 'run_pin03.py': '497529dee62cf662fffe62e55d0b6cd8a8be5bc74dc4505d309aca07c15b96d7', 'pin01_copy.py': 'acf6e21c400287459740469c624ae589a791be39e3381898f150647caa07f385', 'pin01_receipts.py': '2d778db5298bd2ac6e594bd5d4c389dc5f812c32e24ae77fb3467c36b7a98848', 'pin02_capture.py': '4ed9b4257263e88abc640cf904243adfd6bce00787e93a9e468bc5648ba15f0f', 'pin03_catalog_copy.py': '0092a943ca2103f4ecf829cb574b976d1d767f2fa340687335738b710cfce6c7', 'frozen_sources.py': '6402b9fc49298d143d1893dd6b609079b96fbeeb9672432816cd9357ff310962'}
 
 # Explicit synthetic failed-export control, separate from all application gates.
 SYNTHETIC_FAILURE_EXPORT = "ios-synthetic-failure-export.yml"
 SYNTHETIC_FAILURE_EXPORT_SHA256 = "454f33e2e4de97d67f6a08599beb0986bafcb949fd0ed8bf45436491d2906313"
-SYNTHETIC_FAILURE_EXPORT_COMPANIONS = {'run_pin07.py': '5ff286084167b000cbb7de9b1d92d2b838f6565210cb89af9da79913730d5eb3', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'test_pin07_native_adapter.py': '9330fcbbfc916c54d205c9e21a9b4402ff2ba4d30ee33d41bef77310430acfee', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'test_pin07_failure_control.py': '684f64cdaec02feee4bbd27be785844a209dd008a3410edd595af1209cd03094', 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02'}
+SYNTHETIC_FAILURE_EXPORT_COMPANIONS = {'run_pin07.py': '5ff286084167b000cbb7de9b1d92d2b838f6565210cb89af9da79913730d5eb3', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'test_pin07_native_adapter.py': '9330fcbbfc916c54d205c9e21a9b4402ff2ba4d30ee33d41bef77310430acfee', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'test_pin07_failure_control.py': '684f64cdaec02feee4bbd27be785844a209dd008a3410edd595af1209cd03094', 'run_pin03.py': '497529dee62cf662fffe62e55d0b6cd8a8be5bc74dc4505d309aca07c15b96d7'}
 
 # Exact current failed-source observations, not an application gate or retry.
 CURRENT_INPUT_BOUNDARIES = "ios-current-input-boundaries.yml"
 CURRENT_INPUT_BOUNDARIES_SHA256 = "90f9bf297eda4d7677ffd29d32efc841581cb9feb506719c9c661111fdf3a50b"
-CURRENT_INPUT_BOUNDARIES_COMPANIONS = {'current_boundary_adapter.py': '02b11a91783f7da81161a7d0b9eedd0b913e63a3f3e3e3754d625f63be6d7ee8',
- 'run_current_boundary.py': '7525f744980d79cad4636087682c5ff371e7942bb09d9364caaf47a2e9655d7e',
- 'test_current_boundary_adapter.py': '8a3c7b3553b823bad02b63c7c069e23f4a3ec3668ae8075c3cef390e4a890f08',
- 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02',
- 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a',
- 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43'}
+CURRENT_INPUT_BOUNDARIES_COMPANIONS = {'current_boundary_adapter.py': '9bfedd6cedf08599761c482594140b642a0867737de39fd457103d367b9b27e2', 'run_current_boundary.py': '7525f744980d79cad4636087682c5ff371e7942bb09d9364caaf47a2e9655d7e', 'test_current_boundary_adapter.py': '8a3c7b3553b823bad02b63c7c069e23f4a3ec3668ae8075c3cef390e4a890f08', 'run_pin03.py': '497529dee62cf662fffe62e55d0b6cd8a8be5bc74dc4505d309aca07c15b96d7', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43'}
 
 
 # Optional exact native getter capability control; never a shipping check.
 NATIVE_ACCESSIBILITY_CAPABILITY = 'ios-native-accessibility-capability.yml'
 NATIVE_ACCESSIBILITY_CAPABILITY_SHA256 = '621c5b641cbefa519af9a6e8c3df5f4f9c7c3717522b98a341b00eb0d797c92a'
-NATIVE_ACCESSIBILITY_CAPABILITY_COMPANIONS = {'run_pin08.py': '818e576147ec69419b80074b18ecff5330755402b1920b7b582374eb30a02611', 'pin08_accessibility.py': '181d9093a530b0128b3bf38857fb85a9e86435f8a0a7d6f2f12f9a8e05514731', 'test_pin08_accessibility.py': '1a5d317baf88fa92b57bd40136980534135b7b1b0245e8bad6f1a20431d8b9a2', 'PIN08AccessibilityObserver.swift.in': 'ec9e300cd79259a9c589962f2a35949c8b066baa7ebb5a998d5edec5a38afcce', 'run_pin03.py': '164eaf8fd066e79babb2bc4dac76ebc0196cb6f1619e5f4035d5d7816d73dc02', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a'}
+NATIVE_ACCESSIBILITY_CAPABILITY_COMPANIONS = {'run_pin08.py': '818e576147ec69419b80074b18ecff5330755402b1920b7b582374eb30a02611', 'pin08_accessibility.py': '181d9093a530b0128b3bf38857fb85a9e86435f8a0a7d6f2f12f9a8e05514731', 'test_pin08_accessibility.py': '1a5d317baf88fa92b57bd40136980534135b7b1b0245e8bad6f1a20431d8b9a2', 'PIN08AccessibilityObserver.swift.in': 'ec9e300cd79259a9c589962f2a35949c8b066baa7ebb5a998d5edec5a38afcce', 'run_pin03.py': '497529dee62cf662fffe62e55d0b6cd8a8be5bc74dc4505d309aca07c15b96d7', 'pin07_failure_control.py': '0a6b300c7aaa00571d876d4a91d5a16cb1921494a2142ecded0cec6a8e20c0f7', 'pin07_native_adapter.py': '5421a07246d5be5a40fad88c09879f431934f29299c9c06812ad69fc702a5e43', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a'}
+
+NATIVE_BOUNDARY_OBSERVATIONS = 'ios-native-boundary-observations.yml'
+NATIVE_BOUNDARY_OBSERVATIONS_SHA256 = '5de6bcfb9d09ceaa440c5b2d8f1536cd9d8b62364d467cd323838b329f83c366'
+NATIVE_BOUNDARY_OBSERVATIONS_COMPANIONS = {'run_pin09.py': 'a57ceecf789f23c419ac9d83fd7a3d2f4b450cb36a17a7f477b67db574dc937e', 'pin09_native_boundary.py': 'e73d62140fd2ffd9bb49a077090a14e556f5cfb1fb70aa09485a5bd912bef4f8', 'test_pin09_native_boundary.py': '4f30577c9a34aadc71b446c39f125628f55b1ff549c14b4ec5f5e9c994280fa1', 'run_pin03.py': '497529dee62cf662fffe62e55d0b6cd8a8be5bc74dc4505d309aca07c15b96d7', 'current_boundary_adapter.py': '9bfedd6cedf08599761c482594140b642a0867737de39fd457103d367b9b27e2', 'pin08_accessibility.py': '181d9093a530b0128b3bf38857fb85a9e86435f8a0a7d6f2f12f9a8e05514731', 'PIN08AccessibilityObserver.swift.in': 'ec9e300cd79259a9c589962f2a35949c8b066baa7ebb5a998d5edec5a38afcce', 'pin06_public_setup_pair.py': '6a3bc3c5e638262919269d0dd803bf977e0f2157e351e4fcfcc8c4be6d870a4a'}
 
 ALLOWED_ACTIONS = {
     "actions/checkout",
@@ -147,7 +137,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY}
+                                     PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -268,6 +258,16 @@ def verify_native_accessibility_capability(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Native accessibility companion differs from reviewed source: {name}")
+
+
+def verify_native_boundary_observations(text: str) -> None:
+    verify_common(NATIVE_BOUNDARY_OBSERVATIONS, text)
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != NATIVE_BOUNDARY_OBSERVATIONS_SHA256:
+        fail("Native boundary observation must keep its exact copied control and free runner")
+    for name, digest in NATIVE_BOUNDARY_OBSERVATIONS_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Native boundary companion differs from reviewed source: {name}")
 
 
 def verify_android_runtime_smoke(name: str, text: str) -> None:
@@ -1906,6 +1906,8 @@ def main() -> int:
         verify_public_setup_pair_review(files[PUBLIC_SETUP_PAIR_REVIEW])
     if NATIVE_ACCESSIBILITY_CAPABILITY in files:
         verify_native_accessibility_capability(files[NATIVE_ACCESSIBILITY_CAPABILITY])
+    if NATIVE_BOUNDARY_OBSERVATIONS in files:
+        verify_native_boundary_observations(files[NATIVE_BOUNDARY_OBSERVATIONS])
     if CURRENT_INPUT_BOUNDARIES in files:
         verify_current_input_boundaries(files[CURRENT_INPUT_BOUNDARIES])
     if SYNTHETIC_FAILURE_EXPORT in files:

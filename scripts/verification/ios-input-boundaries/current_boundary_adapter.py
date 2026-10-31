@@ -58,16 +58,20 @@ def verify_results(summary, tests, simulator_id, code):
     return methods
 
 
-def accept_native_export(out, state):
+def accept_observations(out, state, *, profile, arms, renderer):
+    """Shared source/product/result/custody validation, not a qualification gate.
+
+    Entry points still bind their own exact profile, arms and copied-source plan.
+    No command, native-mode, failed-only export or cleanup checks are optional.
+    """
     require((state['profile'], state['source'], state['source_tree'], state['runtime'], state['device']) ==
-            (PROFILE, SOURCE, TREE, pair.RUNTIME, pair.DEVICE), 'Current source/tree/device binding missing')
-    require([row['arm'] for row in state['arms']] == list(ARMS), 'Both distinct observed copies required')
+            (profile, SOURCE, TREE, pair.RUNTIME, pair.DEVICE), 'Current source/tree/device binding missing')
+    require([row['arm'] for row in state['arms']] == list(arms), 'Exact ordered observed copies required')
     require(state['debug_bundle'] == 'me.parlor.ios.debug' and
             state['xcode'] == 'Xcode 26.3\nBuild version 17C529\n' and state['sdk'] == '26.2',
             'Actual compiler/SDK/Debug identity required')
     for path, digest in pair.INPUTS.items():
         require(state['original_inputs'].get(path) == digest, 'Current observed source changed')
-    renderer = renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE)
     for row in state['arms']:
         arm = row['arm']; dest = out / arm
         require(row['build_exit'] == 0 and row['cleanup'] == 'PASS' and
@@ -119,4 +123,10 @@ def accept_native_export(out, state):
             require(len(selected) == 1 and selected[0].get('exit_code') == code, 'Single original command required')
     require(state['commands'] and all(p.get('status') == 'EXITED' and p.get('direct_child_reaped') and
             not p.get('signals') for p in state['commands']), 'Every current child must exit and be reaped')
+    return True
+
+
+def accept_native_export(out, state):
+    accept_observations(out, state, profile=PROFILE, arms=ARMS,
+                        renderer=renderer_for_profile(PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE))
     return 'CURRENT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION'

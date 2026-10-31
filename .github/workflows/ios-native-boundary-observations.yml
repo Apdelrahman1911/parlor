@@ -1,0 +1,71 @@
+name: Native iOS boundary observations (not qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-native-boundaries-2026-10-31]
+
+concurrency:
+  group: native-boundary-observations-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    # One standard free public runner. No cache saves, signing or shipping edits.
+    name: Original EN/AR journeys without added touch recognizer
+    runs-on: macos-15
+    timeout-minutes: 75
+    permissions:
+      contents: read
+      actions: read
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      PARLOR_INPUT_OUTPUT: parlor-pin09-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Check out reviewed harness and exact original history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Restore reviewed dependencies without saving diagnostic state
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Verify frozen copies privacy ownership and actual Swift typechecks
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/release/workflow_contract.py
+          /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
+      - name: Observe original public journeys with native getters
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin09.py \
+            --source 5029b3f48c2d012b34dd2748f809dc775276a622 \
+            --runtime com.apple.CoreSimulator.SimRuntime.iOS-18-5 \
+            --device com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro \
+            --profile native-getter-public-boundaries --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
+      - name: Retain original failures source products and owned cleanup
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: native-boundary-observations-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.json
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.log
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/tests.xcresult
+            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/attachments
