@@ -147,7 +147,10 @@ def verify_results(summary, tests):
     require(len(cases) == 1 and cases[0]['nodeIdentifier'] == METHOD and cases[0]['result'] == 'Failed')
 
 
-def public_observations(activities):
+def public_observations(activities, summary, tests):
+    # Failure is attested by the mandatory exact native summary/test tree.
+    # Activity views need not repeat its failure association flag.
+    verify_results(summary, tests)
     require(activities.get('testIdentifier') == METHOD)
     counts = dict(nodes=0, failures=0, taps=0, typing=0, swipes=0, queries=0)
     errors = {k: 0 for k in ('no_matches', 'multiple_matches', 'snapshot_failure', 'query_timeout')}
@@ -181,9 +184,28 @@ def public_observations(activities):
             for value in node:
                 visit(value, depth + 1)
     visit(activities)
-    require(counts['failures'] == 1 and counts['taps'] == counts['typing'] == 0)
+    require(counts['failures'] <= 1 and counts['taps'] == counts['typing'] == 0)
     return dict(counts=counts, error_markers=errors, xctest_error_codes=sorted(codes),
+                failure_provenance='Exact original summary and test tree; activity failure flags reported without substitution',
                 scope='Fixed public failure categories only; no labels, values, activity graph or causal proof')
+
+
+def original_object_digest(path, expected):
+    # Empty xcresult bookkeeping objects are legitimate only when the original
+    # immutable archive already attests their exact empty content. Images keep
+    # the existing nonempty read_regular policy unchanged.
+    if expected != sha(b''):
+        return sha(attachments.read_regular(path, 64 * 1024 * 1024))
+    identity = lambda st: (st.st_dev, st.st_ino, st.st_mode, st.st_nlink, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+    before = path.lstat()
+    require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and before.st_size == 0)
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as stream:
+        require(identity(os.fstat(stream.fileno())) == identity(before))
+        require(stream.read(1) == b'')
+        require(identity(os.fstat(stream.fileno())) == identity(before))
+    require(identity(path.lstat()) == identity(before))
+    return sha(b'')
 
 
 def main():
@@ -235,7 +257,7 @@ def main():
             decoded[kind] = load(read(argv, kind))
         require(decoded['summary'] == original_summary and decoded['tests'] == original_tests)
         verify_results(decoded['summary'], decoded['tests'])
-        receipt['public_observations'] = public_observations(decoded['activities'])
+        receipt['public_observations'] = public_observations(decoded['activities'], decoded['summary'], decoded['tests'])
         for kind in ('summary', 'tests'):
             (out / (kind + '.json')).write_text(json.dumps(decoded[kind], indent=2))
         attachments.verify_export_help(read(['help', 'export', 'attachments'], 'attachments-help'))
@@ -252,7 +274,7 @@ def main():
         receipt.update(result='REJECTED', error_type=type(error).__name__)
         raise
     finally:
-        require(all(sha(attachments.read_regular(inputs / name, 64 * 1024 * 1024)) == digest
+        require(all(original_object_digest(inputs / name, digest) == digest
                     for name, digest in manifest.items()))
         receipt['result_inputs_unchanged'] = True
         checkpoint()

@@ -105,9 +105,27 @@ class PIN19FailureReviewControls(unittest.TestCase):
             with self.subTest(change=change),self.assertRaises(ValueError):review.verify_results(s,t)
 
     def test_exact_public_pre_stimulus_failure_has_no_input(self):
-        r=review.public_observations(activities())
+        r=review.public_observations(activities(),*results())
         self.assertEqual(r['counts']['taps'],0);self.assertEqual(r['counts']['typing'],0)
         self.assertEqual(r['counts']['failures'],1);self.assertEqual(r['counts']['swipes'],1)
+
+    def test_missing_activity_failure_flag_uses_mandatory_original_failure_not_invented_flag(self):
+        a=activities();a['activities'][-1].pop('isAssociatedWithFailure')
+        report=review.public_observations(a,*results())
+        self.assertEqual(report['counts']['failures'],0)
+        self.assertIn('Exact original summary',report['failure_provenance'])
+        s,t=results();s['testFailures'][0]['failureText']='foreign failure'
+        with self.assertRaises(ValueError):review.public_observations(a,s,t)
+
+    def test_only_archive_attested_empty_original_objects_can_be_read(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            p=Path(temporary)/'object';p.write_bytes(b'')
+            self.assertEqual(review.original_object_digest(p,review.sha(b'')),review.sha(b''))
+            with self.assertRaises(ValueError):review.original_object_digest(p,review.sha(b'not empty'))
+            p.write_bytes(b'changed')
+            with self.assertRaises(ValueError):review.original_object_digest(p,review.sha(b''))
+            p.unlink();p.symlink_to(Path(temporary)/'target')
+            with self.assertRaises((ValueError,OSError)):review.original_object_digest(p,review.sha(b''))
 
     def test_typing_tap_foreign_failure_and_duplicate_assertion_forbid_export(self):
         for change in (lambda a:a.update(testIdentifier='foreign'),
@@ -116,20 +134,20 @@ class PIN19FailureReviewControls(unittest.TestCase):
             lambda a:a['activities'].append(a['activities'][-1]),
             lambda a:a['activities'][-1].update(title='different failed assertion')):
             a=activities();change(a)
-            with self.subTest(change=change),self.assertRaises(ValueError):review.public_observations(a)
+            with self.subTest(change=change),self.assertRaises(ValueError):review.public_observations(a,*results())
 
     def test_activity_traversal_depth_title_length_and_node_count_are_bounded(self):
         for a in (dict(testIdentifier=review.METHOD,activities=[dict(title='x'*4097)]),
                   dict(testIdentifier=review.METHOD,activities=[None]*16385)):
-            with self.assertRaises(ValueError):review.public_observations(a)
+            with self.assertRaises(ValueError):review.public_observations(a,*results())
         a=activities()
         for _ in range(25):a=dict(child=a)
         a['testIdentifier']=review.METHOD
-        with self.assertRaises(ValueError):review.public_observations(a)
+        with self.assertRaises(ValueError):review.public_observations(a,*results())
 
     def test_error_metadata_is_fixed_numeric_not_raw_titles(self):
         a=activities();a['activities'].append(dict(title='No matches found: XCTestErrorDomain Code=4 private-marker'))
-        r=review.public_observations(a)
+        r=review.public_observations(a,*results())
         self.assertEqual(r['error_markers']['no_matches'],1);self.assertEqual(r['xctest_error_codes'],[4])
         self.assertNotIn('private-marker',json.dumps(r))
 

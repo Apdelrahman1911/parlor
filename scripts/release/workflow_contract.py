@@ -45,7 +45,7 @@ PUBLIC_CATALOG_REVIEW_SHA256 = "cd4642f114adc20cf5b9280b5ec085e774f65905b99fb8e0
 # Optional exact decoder of the retained PIN19 earlier failure. No app execution.
 SETTLED_FAILURE_REVIEW = 'ios-settled-failure-review.yml'
 SETTLED_FAILURE_REVIEW_SHA256 = '17556637c788e1938209573706776f73a7cfce0f82aff1897003e8c62e3c1d7e'
-SETTLED_FAILURE_REVIEW_COMPANIONS = {'review_pin19_failure.py': '72b2f65b6860ee0c473dd8e763a4090774c9452e83e407d943f3e6caf7b22254', 'test_pin19_failure_review.py': '0d46811654e5b50fbe7cb0d077aeb023fed9435d9be923e718bbd8233e8d9f4b', 'public_attachments.py': 'ad93b59659be452750d8b7cc5aa02c42547048c364557d0251f913a936729ec8'}
+SETTLED_FAILURE_REVIEW_COMPANIONS = {'review_pin19_failure.py': 'a5622ab4057629762ee45e29a54c8e2d3035305a25f195333c9d4450df3858b5', 'test_pin19_failure_review.py': '01d1b5ac148b34cc6c9ff3a973df96e94e5337026a659d8f6ad78790db2d5146', 'public_attachments.py': 'ad93b59659be452750d8b7cc5aa02c42547048c364557d0251f913a936729ec8'}
 PUBLIC_CATALOG_REVIEW_COMPANIONS = {
     "review_public_catalog_commit.py": "97c3d176a3adf366156c6aa5bb12f246e6956e4def075e94e0c2f45aa627fe0e",
     "test_public_catalog_commit_review.py": "912943d70f5c0ecd9adec8f2257754ef17ac12ffe1f389f5283223dbad984d4a",
