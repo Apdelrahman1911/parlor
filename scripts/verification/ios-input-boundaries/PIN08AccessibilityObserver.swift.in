@@ -80,7 +80,11 @@ final class PIN08AccessibilityObserver {
     // original getter return-type ASCII (0 if not one byte), failure stage.
     // No runtime names, addresses, selector values or private state exported.
     private var installation = [0, 0, 0, 0, 0, 0, 0]
-    private static let capacity = 1024
+    // Hosted public AX traversals exhausted1024 rows in4.3s. Budget the
+    // complete observed scope, not just its prefix: ~640KiB row storage and
+    // a separate2MiB numeric file ceiling. Overflow still rejects capability.
+    private static let capacity = 16_384
+    private static let overflowLimit = 1_000_000
     // A process-owned bounded hook is never removed under an in-flight native
     // AX getter. The owned diagnostic app/process is terminated by its runner.
     // A second installation is rejected rather than chained or silently reused.
@@ -190,10 +194,10 @@ final class PIN08AccessibilityObserver {
         // Original getters are still called on any thread. Never cross into
         // Kotlin or mutate this main-owned ledger from an AX background thread.
         guard Thread.isMainThread, armed() else { return }
-        guard rows.count < Self.capacity else { overflow = min(Self.capacity, overflow + 1); return }
+        guard rows.count < Self.capacity else { overflow = min(Self.overflowLimit, overflow + 1); return }
         let identity = ObjectIdentifier(object)
         if elements[identity] == nil {
-            guard elements.count < Self.capacity else { overflow = min(Self.capacity, overflow + 1); return }
+            guard elements.count < Self.capacity else { overflow = min(Self.overflowLimit, overflow + 1); return }
             elements[identity] = elements.count + 1
         }
         rows.append(Row(startedMs: started, finishedMs: ProcessInfo.processInfo.systemUptime * 1000,
@@ -223,7 +227,7 @@ final class PIN08AccessibilityObserver {
             "rows": rows.map { [$0.startedMs, $0.finishedMs, Double($0.element),
                                   Double($0.getter), Double($0.flags)] }]
         guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
-              raw.count <= 131_072 else { return }
+              raw.count <= 2_097_152 else { return }
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("parlor-pin08-" + token, isDirectory: true)
         guard mkdir(directory.path, 0o700) == 0 else { return }

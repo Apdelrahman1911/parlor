@@ -25,8 +25,11 @@ METHOD = 'IOSAppLaunchUITests/testPIN08SyntheticAccessibilityCapture()'
 SCOPE = ('One distinct intentionally failed current-source copied Host transition with native getter '
          'observation; capability only, not original cause, neutrality, shipping or physical qualification')
 TEMPLATE = 'PIN08AccessibilityObserver.swift.in'
+MAX_ROWS = 16_384
+MAX_BYTES = 2_097_152
+MAX_OVERFLOW = 1_000_000
 # Reviewed separately from PIN01/PIN02; their templates/schema/limits stay exact.
-TEMPLATE_SHA256 = '66f8d20e6f45aa92fbf1765ed7eb1edb0216cab9932be0f03e2d4992e2083350'
+TEMPLATE_SHA256 = 'ecf2df64d3a7b6adc3ddf1e90adaa04c80c1c7b4cdecf428474df5a4123eb931'
 INSTALL = '''        let observation = PIN08AccessibilityObserver(armed: { MainViewControllerKt.PIN01InputArmed() })
         _ = observation.install()
         pin08Accessibility = observation
@@ -108,7 +111,7 @@ def validate_native_envelope(raw, *, token, simulator, bundle, legacy):
     A safely retained incomplete report never qualifies native capability.
     Unknown/private, malformed, foreign or oversized bytes still cannot export.
     """
-    require(type(raw) is bytes and 0 < len(raw) <= 131_072, 'Bounded original native companion required')
+    require(type(raw) is bytes and 0 < len(raw) <= MAX_BYTES, 'Bounded original native companion required')
     value = json.loads(raw, object_pairs_hook=pin01_receipts.reject_duplicates,
                        parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite native value')))
     require(type(value) is dict and set(value) == {'schema', 'token', 'simulator', 'bundle', 'process',
@@ -119,7 +122,7 @@ def validate_native_envelope(raw, *, token, simulator, bundle, legacy):
     require(type(value['process']) is int and value['process'] > 0 and
             type(value['capturedMs']) in (int, float) and math.isfinite(value['capturedMs']) and
             0 <= value['capturedMs'] <= legacy['capturedMs'], 'Valid original native process/clock required')
-    require(type(value['installed']) is bool and type(value['overflow']) is int and 0 <= value['overflow'] <= 1024,
+    require(type(value['installed']) is bool and type(value['overflow']) is int and 0 <= value['overflow'] <= MAX_OVERFLOW,
             'Bounded numeric native status required')
     installation = value['installation']
     require(type(installation) is list and len(installation) == 7 and
@@ -128,7 +131,7 @@ def validate_native_envelope(raw, *, token, simulator, bundle, legacy):
             all(0 <= v <= 127 for v in installation[4:6]) and 0 <= installation[6] <= 6 and
             installation[3] <= installation[2] <= installation[1] <= installation[0],
             'Only bounded numeric installation counts/type codes/stage allowed')
-    require(type(value['rows']) is list and len(value['rows']) <= 1024, 'Bounded native getter rows required')
+    require(type(value['rows']) is list and len(value['rows']) <= MAX_ROWS, 'Bounded native getter rows required')
     finished = 0
     for row in value['rows']:
         require(type(row) is list and len(row) == 5 and
@@ -136,7 +139,7 @@ def validate_native_envelope(raw, *, token, simulator, bundle, legacy):
         require(0 <= row[0] <= row[1] <= value['capturedMs'] and row[1] >= finished,
                 'Original native getter clock/order required')
         finished = row[1]
-        require(row[2] == int(row[2]) and 1 <= row[2] <= 1024 and row[3] in (1, 2) and
+        require(row[2] == int(row[2]) and 1 <= row[2] <= MAX_ROWS and row[3] in (1, 2) and
                 row[4] == int(row[4]) and 0 <= row[4] <= (3 if row[3] == 1 else 1),
                 'Only local ordinals/getter/public-bit enums allowed')
     return value
@@ -164,7 +167,7 @@ def retain_companion(sandbox, destination, token, simulator, bundle, legacy):
     source = sandbox / 'tmp' / ('parlor-pin08-' + token) / 'accessibility.json'
     require(not source.is_symlink() and source.resolve(strict=True) == source.absolute(),
             'Exact nonredirected owned native companion required')
-    raw = run_pin03.read_capture(source)
+    raw = run_pin03.read_capture(source, maximum=MAX_BYTES)
     validate_native_envelope(raw, token=token, simulator=simulator, bundle=bundle, legacy=legacy)
     with (destination / ('native-accessibility-' + token + '.json')).open('xb') as f:
         f.write(raw)
@@ -213,7 +216,7 @@ def accept_native_export(out, state):
     decoded = run_pin03.decode_capture(raw, {token}, row['simulator'], state['debug_bundle'])
     fault.inspect_numeric_fixture(json.dumps(decoded['snapshot'], allow_nan=False).encode())
     require(row['captures'] == [decoded], 'Original Kotlin capture matches collection')
-    native = decode_native(frozen_sources._read(dest / ('native-accessibility-' + token + '.json'), 131_072),
+    native = decode_native(frozen_sources._read(dest / ('native-accessibility-' + token + '.json'), MAX_BYTES),
         token=token, simulator=row['simulator'], bundle=state['debug_bundle'], legacy=json.loads(raw))
     require(row['companion_captures'] == [native], 'Actual native companion matches original file')
     cleanup = prior.load(dest / 'cleanup.json')

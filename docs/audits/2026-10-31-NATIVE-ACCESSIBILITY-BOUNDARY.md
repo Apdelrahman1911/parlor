@@ -134,3 +134,35 @@ or false installation-success rejection. The next source-specific capability
 execution diagnoses the actual rejected native status; it is not an unchanged
 retry and cannot qualify from an incomplete report. No application root cause,
 shipping correction, PR merge, issue closure or physical result is claimed.
+
+## Retained original report isolates overflow; measurement-led capacity correction
+
+[41194368265](https://github.com/Apdelrahman1911/parlor/actions/runs/41194368265)
+completes **FAILURE**, but the corrected reader now preserves the rejected original
+native report. Exact published-harness decoder readback accepts its safe envelope
+and still rejects capability. Actual installation `[66254,2,2,1,81,66,6]` proves two
+Cocoa subclasses, one eligible target, original Q/B return encodings and successful
+installation. No ABI or uniqueness change is justified. The1024-row buffer exhausts
+within about4.3seconds; its capped overflow counter is1024 (at least
+1024 additional calls lost). Owned build/assertion/cleanup and children pass.
+
+The retained rows cover **4276 milliseconds (about4.3seconds)**, whereas capture
+is about24.8seconds after the first row. No prefix is counted as complete evidence
+or used to infer the original application's behavior. Artifact13040695720:
+79,986,085 bytes, SHA256 `1d576b350fa8dd02e708d028194c39e9a9d2a2d9c1e3b45e9da1b3c77af88f6c`;
+API identity/size/digest and actual numeric envelope independently match custody.
+
+The corrected bound budgets16384 original rows (about640KiB raw Swift row storage,
+not measured whole-process RAM) with a separate2MiB numeric file ceiling, giving
+headroom over the observed prefix-to-capture interval. Actual overflow is now
+counted up to1000000 rather than hidden after1024; **any nonzero overflow still
+rejects qualification**. No rows are filtered, merged, sampled, rounded, dropped
+silently or synthesized, and no AX query, input, timer, deadline or assertion changes.
+
+Only the explicitly selected native companion opts into the new file ceiling.
+Legacy PIN02 keeps its exact previous bound by default, and arbitrary/invalid read
+ceilings reject. Safe incomplete retention, private/foreign-before-retention,
+exclusive writes, full original returns and source/product/cleanup requirements
+remain. Regression controls exercise the native row limit and larger report while
+proving the legacy reader still rejects that same file. This fixes an observed
+diagnostic capacity defect, not an application input failure or security waiver.

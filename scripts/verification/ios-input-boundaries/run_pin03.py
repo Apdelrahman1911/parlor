@@ -177,20 +177,24 @@ def apply_arm(copy, original, manifest, arm, *, previous, renderer=catalog.rende
     return manifest | {p: sha(content.encode()) for p, content in plan.items()}
 
 
-def read_capture(path):
+def read_capture(path, *, maximum=pin02_capture.MAX_BYTES):
+    # Legacy PIN02 remains unchanged. Only the separately reviewed public-only
+    # native companion can opt into its2MiB ceiling; arbitrary bounds reject.
+    if type(maximum) is not int or maximum not in (pin02_capture.MAX_BYTES, 2_097_152):
+        raise ValueError('Exact legacy or native companion read ceiling required')
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     try:
         before = os.fstat(fd)
         if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1 or before.st_uid != os.getuid() or \
-                not 0 < before.st_size <= pin02_capture.MAX_BYTES:
+                not 0 < before.st_size <= maximum:
             raise ValueError('Unsafe or oversized owned capture')
         chunks, size = [], 0
         while True:
-            part = os.read(fd, min(8192, pin02_capture.MAX_BYTES + 1 - size))
+            part = os.read(fd, min(8192, maximum + 1 - size))
             if not part:
                 break
             chunks.append(part); size += len(part)
-            if size > pin02_capture.MAX_BYTES:
+            if size > maximum:
                 raise ValueError('Capture exceeded bound during retention')
         after = os.fstat(fd)
         if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != \

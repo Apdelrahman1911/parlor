@@ -108,7 +108,7 @@ class NativeAccessibilityControls(unittest.TestCase):
                          'let result = readTraits(object, traitsSelector)',
                          'let result = readElement(object, elementSelector)',
                          'Thread.isMainThread, armed()', 'O_EXCL | O_NOFOLLOW',
-                         'private static let capacity = 1024', 'return result'):
+                         'private static let capacity = 16_384', 'return result'):
             self.assertIn(expected, text)
         self.assertEqual(text.count('return result'), 2)
         self.assertIn('not lifetime IDs or root cause', decode(fixture())['scope'])
@@ -164,7 +164,7 @@ class NativeAccessibilityControls(unittest.TestCase):
     def test_duplicate_json_and_oversized_companions_cannot_be_accepted(self):
         value = fixture()
         for raw in (json.dumps(value).replace('"schema": 2', '"schema": 2, "schema": 2').encode(),
-                    b'x' * 131073):
+                    b'x' * (native.MAX_BYTES + 1)):
             with self.assertRaises(ValueError):
                 native.decode_native(raw, token=value['token'], simulator=value['simulator'], bundle=value['bundle'],
                                      legacy=dict(process=100,capturedMs=21))
@@ -200,7 +200,7 @@ class NativeAccessibilityControls(unittest.TestCase):
 
     def test_incomplete_but_safe_native_status_is_retained_then_rejected_not_qualified(self):
         for update in (dict(installed=False, rows=[], installation=[5000,2,2,0,0,0,3]),
-                       dict(overflow=1)):
+                       dict(overflow=1), dict(overflow=native.MAX_OVERFLOW)):
             with tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp).resolve(); sandbox = root / 'sandbox'; dest = root / 'retained'; dest.mkdir()
                 value = fixture(); value.update(update)
@@ -236,6 +236,33 @@ class NativeAccessibilityControls(unittest.TestCase):
             value = fixture(); value.update(update)
             with self.assertRaises(ValueError):
                 decode(value)
+
+    def test_native_capacity_is_bounded_and_legacy_file_ceiling_is_not_expanded(self):
+        value = fixture()
+        value['rows'] = [[10+i/100000, 10+i/100000+0.000001, 1, 1+i%2, 1]
+                         for i in range(native.MAX_ROWS)]
+        raw = json.dumps(value).encode()
+        self.assertGreater(len(raw), pin02_capture.MAX_BYTES)
+        self.assertLess(len(raw), native.MAX_BYTES)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve(); sandbox = root / 'sandbox'; dest = root / 'retained'; dest.mkdir()
+            source = sandbox / 'tmp' / ('parlor-pin08-' + value['token']) / 'accessibility.json'
+            source.parent.mkdir(parents=True); source.write_bytes(raw)
+            with self.assertRaises(ValueError):
+                run_pin03.read_capture(source)
+            for maximum in (0, True, native.MAX_BYTES+1, 64*1024*1024):
+                with self.subTest(maximum=maximum), self.assertRaises(ValueError):
+                    run_pin03.read_capture(source, maximum=maximum)
+            result = native.retain_companion(sandbox, dest, value['token'], value['simulator'], value['bundle'],
+                                             dict(process=100, capturedMs=21))
+            self.assertEqual(result['rows'], native.MAX_ROWS)
+            self.assertEqual((dest / ('native-accessibility-' + value['token'] + '.json')).read_bytes(), raw)
+        value['rows'].append(value['rows'][-1])
+        with self.assertRaises(ValueError):
+            decode(value)
+        value = fixture(); value['overflow'] = native.MAX_OVERFLOW+1
+        with self.assertRaises(ValueError):
+            decode(value)
 
     @unittest.skipUnless(platform.system() == 'Darwin', 'Actual Apple runtime unavailable on Linux')
     def test_actual_objc_inventory_handles_unretainable_root_and_two_compose_subclasses(self):

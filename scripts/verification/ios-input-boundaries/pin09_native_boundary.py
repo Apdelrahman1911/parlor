@@ -66,7 +66,7 @@ def accept_native_export(out, state):
         token = legacy['token']
         companion = dest / ('native-accessibility-' + token + '.json')
         current.require(companion in companions, 'Exact original failed token companion required')
-        decoded.append(native.decode_native(frozen_sources._read(companion, 131_072), token=token,
+        decoded.append(native.decode_native(frozen_sources._read(companion, native.MAX_BYTES), token=token,
             simulator=row['simulator'], bundle=state['debug_bundle'], legacy=legacy))
     current.require(row.get('companion_captures', []) == decoded,
                     'Native companion collection must match the original bytes in token order')
