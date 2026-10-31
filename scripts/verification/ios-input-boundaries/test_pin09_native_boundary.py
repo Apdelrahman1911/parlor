@@ -116,13 +116,13 @@ class NativeBoundaryControls(unittest.TestCase):
 
     def test_successful_software_fixture_has_zero_exports_and_is_not_qualification(self):
         with tempfile.TemporaryDirectory() as tmp:
-            out = Path(tmp)
+            out = Path(tmp).resolve()
             self.assertEqual(boundary.accept_native_export(out, evidence(out)),
                              'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION')
 
     def test_failed_software_fixture_requires_both_original_and_native_companions(self):
         with tempfile.TemporaryDirectory() as tmp:
-            out = Path(tmp)
+            out = Path(tmp).resolve()
             self.assertEqual(boundary.accept_native_export(out, evidence(out, failed=True)),
                              'NATIVE_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION')
 
@@ -133,7 +133,7 @@ class NativeBoundaryControls(unittest.TestCase):
             lambda o,s: earlier.write(o / 'compose/capture-foreign.json', {}),
         ):
             with tempfile.TemporaryDirectory() as tmp:
-                out = Path(tmp); state = evidence(out); mutate(out, state)
+                out = Path(tmp).resolve(); state = evidence(out); mutate(out, state)
                 with self.assertRaises((ValueError, KeyError)):
                     boundary.accept_native_export(out, state)
 
@@ -147,7 +147,7 @@ class NativeBoundaryControls(unittest.TestCase):
             lambda o,s: earlier.write(o / 'compose/product.json', {'foreign': 'a' * 64}),
         ):
             with tempfile.TemporaryDirectory() as tmp:
-                out = Path(tmp); state = evidence(out); mutate(out, state)
+                out = Path(tmp).resolve(); state = evidence(out); mutate(out, state)
                 with self.assertRaises((ValueError, KeyError)):
                     boundary.accept_native_export(out, state)
 
@@ -159,7 +159,7 @@ class NativeBoundaryControls(unittest.TestCase):
             lambda o,s: earlier.write(next((o / 'compose').glob('native-accessibility-*.json')), {}),
         ):
             with tempfile.TemporaryDirectory() as tmp:
-                out = Path(tmp); state = evidence(out, failed=True); mutate(out, state)
+                out = Path(tmp).resolve(); state = evidence(out, failed=True); mutate(out, state)
                 with self.assertRaises((ValueError, KeyError, FileNotFoundError)):
                     boundary.accept_native_export(out, state)
 

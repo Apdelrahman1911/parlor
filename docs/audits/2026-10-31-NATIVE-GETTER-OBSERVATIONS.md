@@ -47,3 +47,21 @@ corrected by removing impossible native-touch rows from Compose-only fixtures an
 requiring rejection of successful-case attachment export; production decoders
 were not weakened. #267/#276 and Phase1 remain OPEN. No shipping root cause,
 correction, protected merge, physical acceptance or Phase2/3 completion is claimed.
+
+
+## Hosted preflight failure and fixture correction
+
+41191796826 failed before application execution: its two positive software
+collector fixtures passed macOS `/var` temporary aliases into the frozen reader,
+which correctly rejected redirected paths. All ten new fixture workspaces now
+resolve their owned temporary directory before constructing inputs, matching the
+existing fixture convention. The reader's no-follow/nonredirected/regular-file,
+bounds and custody requirements are unchanged. This is a fixture correction,
+not an application input fix. Corrected-source macOS execution remains required.
+
+The concurrent PIN08 capability41190953763 builds successfully but fails its
+initial Home assertion at line17, before its deliberate Host counterexample;
+its strict category validator correctly rejects that result. Original 66,712,055-byte
+artifact13038769586 SHA256 `c8067e728fd2891fe60ed39207ce2ff10fde5664ea993600fb4db9995adbebce`
+and owned cleanup are retained. Native cause and getter capture remain unverified;
+no assertion is waived and this is not synthetic capability success.
