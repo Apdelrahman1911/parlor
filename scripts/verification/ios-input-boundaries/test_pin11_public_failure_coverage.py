@@ -18,7 +18,30 @@ def original_plan():
         {p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS, arm='compose')
 
 
+def failure_count_build_command(sdk_platform, root, file, executable):
+    frameworks = sdk_platform + '/Developer/Library/Frameworks'
+    libraries = sdk_platform + '/Developer/usr/lib'
+    # XCTest's overlay needs both Swift import (-I) AND linker (-L) search.
+    # It is outside MacOSX.sdk; a framework path alone does not resolve it.
+    return ['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-Onone',
+        '-F', frameworks, '-I', libraries, '-L', libraries,
+        '-Xlinker', '-rpath', '-Xlinker', frameworks,
+        '-Xlinker', '-rpath', '-Xlinker', libraries,
+        '-module-cache-path', str(root / 'cache'), str(file), '-o', str(executable)]
+
+
 class PublicFailureCoverageControls(unittest.TestCase):
+    def test_actual_xctest_overlay_has_import_link_and_runtime_search_paths(self):
+        command = failure_count_build_command('/Xcode/MacOSX.platform', Path('/owned'),
+                                             Path('/owned/Count.swift'), Path('/owned/count'))
+        libraries = '/Xcode/MacOSX.platform/Developer/usr/lib'
+        self.assertEqual(command[command.index('-I') + 1], libraries)
+        self.assertEqual(command[command.index('-L') + 1], libraries)
+        self.assertIn(['-Xlinker', '-rpath', '-Xlinker', libraries],
+                      [command[i:i+4] for i in range(len(command) - 3)])
+        self.assertEqual(command[:5], ['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-Onone'])
+        self.assertIn('/owned/cache', command)
+
     def test_exact_inverse_retains_all_original_actions_assertions_waiters_and_templates(self):
         original = original_plan()
         expanded = coverage.extend(original)
@@ -136,11 +159,7 @@ print("PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS")
             file.write_text(source)
             sdk_platform = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'macosx', '--show-sdk-platform-path'],
                 text=True, timeout=45, env=environment).strip()
-            frameworks = sdk_platform + '/Developer/Library/Frameworks'
-            build = subprocess.run(['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-Onone',
-                '-F', frameworks, '-I', sdk_platform + '/Developer/usr/lib',
-                '-Xlinker', '-rpath', '-Xlinker', frameworks,
-                '-module-cache-path', str(root / 'cache'), str(file), '-o', str(executable)],
+            build = subprocess.run(failure_count_build_command(sdk_platform, root, file, executable),
                 capture_output=True, text=True, timeout=180, env=environment)
             self.assertEqual(build.returncode, 0, build.stdout + build.stderr)
             actual = subprocess.run([str(executable)], capture_output=True, text=True, timeout=30, env=environment)
