@@ -14,6 +14,11 @@ import pin07_failure_control as control
 
 PROFILE = control.PROFILE
 METHOD = control.METHOD
+SOURCE = pair.SOURCE
+TREE = pair.TREE
+ARMS = ('native',)
+SCOPE = ('One intentionally failed synthetic public Host transition; capture custody only, '
+         'not original cause, input neutrality, production qualification or physical acceptance')
 FAILURE = ('XCTAssertEqual failed: ("XCTWaiterResult(rawValue: 2)") is not equal to '
            '("XCTWaiterResult(rawValue: 1)") - '
            'One public setup tap must remove the source and expose its destination')

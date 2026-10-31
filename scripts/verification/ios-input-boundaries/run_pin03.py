@@ -308,11 +308,15 @@ def renderer_for_profile(profile, source, runtime, device):
     raise ValueError('Original Host investigation requires its exact frozen source/runtime/device; no fallback')
 
 
-def main(*, synthetic=False):
+def main(*, synthetic=False, current=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
+    if synthetic and current:
+        raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
+    elif current:
+        import current_boundary_adapter as control
     else:
         control = None
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
@@ -348,7 +352,8 @@ def main(*, synthetic=False):
         raise RuntimeError('Actual Simulator SDK differs from qualified compiler profile')
     config = apple.configuration(ROOT)
     source_tree = subprocess.check_output(['git', 'rev-parse', args.source + '^{tree}'], cwd=ROOT).decode().strip()
-    if (control or args.profile == 'public-setup-pair') and source_tree != setup_pair.TREE:
+    if (control and source_tree != control.TREE) or \
+            (not control and args.profile == 'public-setup-pair' and source_tree != setup_pair.TREE):
         raise ValueError('Original failed public setup tree differs; no fallback')
     out.mkdir(mode=0o700)
     copy = out / 'source'; copy.mkdir(mode=0o700)
@@ -366,7 +371,7 @@ def main(*, synthetic=False):
                  original_inputs=manifest, arms=[], result='NOT_QUALIFIED',
                  scope='Existing EN/AR additional-game journeys only, not 60-journey neutrality, original iOS26.2 cause, production CI or physical acceptance')
     if control:
-        state['scope'] = 'One intentionally failed synthetic public Host transition; capture custody only, not original cause, input neutrality, production qualification or physical acceptance'
+        state['scope'] = control.SCOPE
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
     environment = diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
@@ -396,7 +401,7 @@ def main(*, synthetic=False):
             raise RuntimeError('Investigation command did not finish')
         return row['exit_code'], stdout
     previous = manifest
-    for arm in ('native',) if control else catalog.ARMS:
+    for arm in control.ARMS if control else catalog.ARMS:
         dest = out / arm; dest.mkdir()
         inputs = apply_arm(copy, original, manifest, arm, previous=previous, renderer=renderer)
         previous = inputs
@@ -536,7 +541,8 @@ def main(*, synthetic=False):
         state['result'] = 'SCOPED_INVESTIGATION_COMPLETE' if len(state['arms']) == 3 and \
             all(p['cleanup'] == 'PASS' and p['result'].startswith('JOURNEYS_') for p in state['arms']) else 'INCOMPLETE'
     checkpoint()
-    return 0 if state['result'] in ('SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY') else 1
+    return 0 if state['result'] in ('SCOPED_INVESTIGATION_COMPLETE', 'SYNTHETIC_FAILED_EXPORT_CAPTURE_ONLY',
+                                  'CURRENT_BOUNDARY_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION') else 1
 
 
 if __name__ == '__main__':
