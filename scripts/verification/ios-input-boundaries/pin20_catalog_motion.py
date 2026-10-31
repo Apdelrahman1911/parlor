@@ -88,18 +88,23 @@ def test_command(base, result):
 
 
 def verify_results(summary, tests, simulator_id, code):
+    return verify_motion_results(summary, tests, simulator_id, code, cases=CASES)
+
+
+def verify_motion_results(summary, tests, simulator_id, code, *, cases):
+    current.require(cases in (CASES, (CONTROL,)), 'Only original cohort or isolated export control allowed')
     current.require(type(code) is int and code == 65, 'Genuine isolated unexpected control failure must remain failed')
-    cases=[]
+    observed_cases=[]
     def visit(nodes):
         for n in nodes:
-            if n.get('nodeType')=='Test Case': cases.append(n)
+            if n.get('nodeType')=='Test Case': observed_cases.append(n)
             visit(n.get('children',[]))
     visit(tests.get('testNodes',[]))
-    current.require(len(cases)==len(CASES)==3 and {n.get('nodeIdentifier') for n in cases}==set(CASES)
-        and all(n.get('result') in ('Passed','Failed') for n in cases), 'Three complete actual outcomes, no skips required')
-    methods={n['nodeIdentifier']:n['result'] for n in cases}
+    current.require(len(observed_cases)==len(cases) and {n.get('nodeIdentifier') for n in observed_cases}==set(cases)
+        and all(n.get('result') in ('Passed','Failed') for n in observed_cases), 'Exact complete actual outcomes, no skips required')
+    methods={n['nodeIdentifier']:n['result'] for n in observed_cases}
     current.require(methods[CONTROL]=='Failed' and summary.get('result')=='Failed', 'Forced control never becomes a passing test')
-    for k,v in dict(totalTestCount=3,failedTests=sum(v=='Failed' for v in methods.values()),
+    for k,v in dict(totalTestCount=len(cases),failedTests=sum(v=='Failed' for v in methods.values()),
                     passedTests=sum(v=='Passed' for v in methods.values()),skippedTests=0,expectedFailures=0).items():
         current.require(type(summary.get(k)) is int and summary[k]==v, 'Exact native counts required')
     config=summary.get('devicesAndConfigurations',[]);devices=tests.get('devices',[])
@@ -118,7 +123,11 @@ def verify_results(summary, tests, simulator_id, code):
 
 
 def failed_method_exports(result, destination, outcomes):
-    current.require(set(outcomes)==set(CASES), 'Exact motion case set required')
+    return motion_method_exports(result, destination, outcomes, cases=CASES)
+
+
+def motion_method_exports(result, destination, outcomes, *, cases):
+    current.require(cases in (CASES, (CONTROL,)) and set(outcomes)==set(cases), 'Exact motion case set required')
     return [(destination/('failed-%02d'%i),['export','attachments','--path',str(result),'--output-path',
             str(destination/('failed-%02d'%i)),'--test-id',t])
             for i,t in enumerate(sorted(t for t,v in outcomes.items() if v=='Failed'),1)]
@@ -168,13 +177,23 @@ def retain_motion_companion(sandbox, destination, token, simulator, bundle, lega
 
 def accept_native_export(out, state):
     renderer=renderer_for_profile(PROFILE,SOURCE,pair.RUNTIME,pair.DEVICE)
-    boundary.accept_observation_export(out,state,profile=PROFILE,renderer=renderer,result_verifier=verify_results)
+    return accept_motion_export(out, state, profile=PROFILE, renderer=renderer,
+                               result_verifier=verify_results, cases=CASES, result=RESULT)
+
+
+def accept_motion_export(out, state, *, profile, renderer, result_verifier, cases, result):
+    current.require((profile, cases, result) in (
+        (PROFILE, CASES, RESULT),
+        ('isolated-catalog-motion-export-control', (CONTROL,),
+         'ISOLATED_CATALOG_MOTION_EXPORT_COMPLETE_NOT_QUALIFICATION')),
+        'Exact original or isolated-control acceptance contract required')
+    boundary.accept_observation_export(out,state,profile=profile,renderer=renderer,result_verifier=result_verifier)
     root.accept_root_companions(out,state)
     row=state['arms'][0];dest=out/'compose';decoded=[]
     commands=[c for c in state['commands'] if c.get('label')=='compose-tests']
     current.require(len(commands)==1 and commands[0].get('timeout_seconds')==900 and
         [a for a in commands[0].get('command',[]) if a.startswith('-only-testing:')]==
-        ['-only-testing:iosAppUITests/'+t.removesuffix('()') for t in CASES],
+        ['-only-testing:iosAppUITests/'+t.removesuffix('()') for t in cases],
         'One exact native command and original 900-second budget required')
     failed=sorted(t for t,v in row['methods'].items() if v=='Failed')
     token_methods={}
@@ -202,4 +221,4 @@ def accept_native_export(out, state):
         decoded.append(report)
     current.require(len(list(dest.glob('catalog-motion-*.json')))==len(decoded) and
         row.get('motion_companion_captures')==decoded,'One complete motion companion per real failure, none on success')
-    return RESULT
+    return result

@@ -3,6 +3,7 @@ import copy
 import hashlib
 import importlib
 import json
+import os
 from pathlib import Path
 import platform
 import subprocess
@@ -71,6 +72,41 @@ def evidence(out):
 
 
 class CatalogMotionControls(unittest.TestCase):
+    def test_real_retention_path_accepts_reviewed_motion_ceiling_and_preserves_original_bytes(self):
+        value = fixture()
+        # Exercise the actual reader, not just the JSON decoder: PIN20's
+        # hosted failure occurred before its small numeric file could be read.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve(); sandbox = root / 'sandbox'
+            dest = root / 'retained'; dest.mkdir()
+            path = sandbox / 'tmp' / ('parlor-pin20-' + value['token']) / 'motion.json'
+            path.parent.mkdir(parents=True)
+            raw = json.dumps(value).encode(); path.write_bytes(raw)
+            result = motion.retain_motion_companion(sandbox, dest, value['token'], value['simulator'],
+                value['bundle'], dict(process=100, capturedMs=20))
+            self.assertTrue(result['complete'])
+            self.assertEqual((dest / ('catalog-motion-' + value['token'] + '.json')).read_bytes(), raw)
+
+    def test_motion_reader_preserves_file_safety_and_does_not_expand_default_legacy_limit(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve(); path = root / 'motion.json'
+            path.write_bytes(b'x' * (pin02_capture.MAX_BYTES + 1))
+            with self.assertRaises(ValueError): run_pin03.read_capture(path)
+            self.assertEqual(run_pin03.read_capture(path, maximum=motion.MAX_BYTES), path.read_bytes())
+            for maximum in (True, 0, motion.MAX_BYTES - 1, motion.MAX_BYTES + 1):
+                with self.subTest(maximum=maximum), self.assertRaises(ValueError):
+                    run_pin03.read_capture(path, maximum=maximum)
+            link = root / 'link'; link.symlink_to(path)
+            with self.assertRaises(OSError): run_pin03.read_capture(link, maximum=motion.MAX_BYTES)
+            hard = root / 'hard'; os.link(path, hard)
+            with self.assertRaises(ValueError): run_pin03.read_capture(path, maximum=motion.MAX_BYTES)
+            hard.unlink()
+            fifo = root / 'fifo'; os.mkfifo(fifo)
+            with self.assertRaises(ValueError): run_pin03.read_capture(fifo, maximum=motion.MAX_BYTES)
+            for raw in (b'', b'x' * (motion.MAX_BYTES + 1)):
+                path.write_bytes(raw)
+                with self.assertRaises(ValueError): run_pin03.read_capture(path, maximum=motion.MAX_BYTES)
+
     def test_original_journeys_only_gain_declared_control_and_passive_catalog_observation(self):
         baseline=public.renderer_for_profile(public.PROFILE,public.SOURCE,pair.RUNTIME,pair.DEVICE)(
             {p:pair.fixture(p) for p in pair.MODIFIED},pair.INPUTS,arm='compose')

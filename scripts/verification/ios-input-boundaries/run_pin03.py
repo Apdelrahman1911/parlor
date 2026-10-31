@@ -178,10 +178,10 @@ def apply_arm(copy, original, manifest, arm, *, previous, renderer=catalog.rende
 
 
 def read_capture(path, *, maximum=pin02_capture.MAX_BYTES):
-    # Legacy PIN02 remains unchanged. Only the separately reviewed public-only
-    # native companion can opt into its2MiB ceiling; arbitrary bounds reject.
-    if type(maximum) is not int or maximum not in (pin02_capture.MAX_BYTES, 2_097_152):
-        raise ValueError('Exact legacy or native companion read ceiling required')
+    # Legacy PIN02 remains unchanged. Explicit public-only companions use the
+    # reviewed 1MiB motion or 2MiB native ceilings; arbitrary bounds reject.
+    if type(maximum) is not int or maximum not in (pin02_capture.MAX_BYTES, 1_048_576, 2_097_152):
+        raise ValueError('Exact legacy, motion or native companion read ceiling required')
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     try:
         before = os.fstat(fd)
@@ -334,15 +334,16 @@ def completed_exit_code(result):
         'SYNTHETIC_ROOT_IDLE_STIMULUS_COMPLETE_NOT_QUALIFICATION',
         'SETTLED_CATALOG_IDLE_STIMULUS_COMPLETE_NOT_QUALIFICATION',
         'PUBLIC_CATALOG_MOTION_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'ISOLATED_CATALOG_MOTION_EXPORT_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -367,6 +368,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     elif aggregate_context:
         import pin16_aggregate_context as control
         combined_execution = True  # Reuse the unchanged single native action.
+    elif motion_control:
+        import pin21_motion_export_control as control
+        public_motion = root_capability = True
     elif public_motion:
         import pin20_catalog_motion as control
         root_capability = True
