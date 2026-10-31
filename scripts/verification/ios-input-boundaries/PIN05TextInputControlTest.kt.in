@@ -1,0 +1,179 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.platform.PlatformTextInputMethodRequest
+import androidx.compose.ui.platform.PlatformTextInputSession
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.input.CommitTextCommand
+import androidx.compose.ui.text.input.EditCommand
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.ImeOptions
+import androidx.compose.ui.text.input.TextEditingScope
+import androidx.compose.ui.text.input.TextEditorState
+import androidx.compose.ui.text.input.TextFieldValue
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.Json
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
+import kotlin.test.fail
+
+/** Actual copied Kotlin/Skiko implementation controls, not native keyboard delivery. */
+@OptIn(ExperimentalComposeUiApi::class)
+class PIN05TextInputControlTest {
+    @Test
+    fun same_command_list_is_forwarded_once_and_cancellation_is_preserved() = runTest {
+        val recorder = recorder()
+        val owner = Any()
+        recorder.mount(owner, false)
+        val commands = listOf<EditCommand>(CommitTextCommand("Synthetic Fixture", 1))
+        var calls = 0
+        val request = Request { received -> assertSame(commands, received); calls++ }
+        val cancelled = CancellationException("synthetic stop")
+        val next = object : PlatformTextInputSession {
+            override suspend fun startInputMethod(request: PlatformTextInputMethodRequest): Nothing {
+                request.onEditCommand(commands)
+                throw cancelled
+            }
+        }
+        try {
+            PIN05Interceptor(recorder).interceptStartInputMethod(request, next)
+        } catch (caught: CancellationException) {
+            assertSame(cancelled, caught)
+        }
+        assertEquals(1, calls)
+        assertEquals(listOf(1, 2, 3, 3, 2), kinds(recorder))
+        assertFalse(recorder.snapshot().contains("Synthetic Fixture"))
+        assertFalse(recorder.snapshot().contains("synthetic stop"))
+    }
+
+    @Test
+    fun unarmed_private_requests_forward_identically_without_observation() = runTest {
+        val recorder = recorder()
+        val original = Request { fail("No editor invocation intended") }
+        val cancelled = CancellationException("test session")
+        val next = object : PlatformTextInputSession {
+            override suspend fun startInputMethod(request: PlatformTextInputMethodRequest): Nothing {
+                assertSame(original, request)
+                throw cancelled
+            }
+        }
+        try {
+            PIN05Interceptor(recorder).interceptStartInputMethod(original, next)
+        } catch (caught: CancellationException) {
+            assertSame(cancelled, caught)
+        }
+        assertTrue(rows(recorder).isEmpty())
+    }
+
+    @Test
+    fun delegate_failure_is_not_swallowed_logged_or_replayed() = runTest {
+        val recorder = recorder()
+        recorder.mount(Any(), false)
+        val failure = IllegalStateException("NONPUBLIC-EXCEPTION-FIXTURE")
+        var calls = 0
+        val original = Request { calls++; throw failure }
+        val next = object : PlatformTextInputSession {
+            override suspend fun startInputMethod(request: PlatformTextInputMethodRequest): Nothing {
+                request.onEditCommand(emptyList())
+                fail("The original exception must propagate")
+            }
+        }
+        try {
+            PIN05Interceptor(recorder).interceptStartInputMethod(original, next)
+        } catch (caught: IllegalStateException) {
+            assertSame(failure, caught)
+        }
+        assertEquals(1, calls)
+        assertEquals(listOf(1, 2, 3, 3, 2), kinds(recorder))
+        assertFalse(recorder.snapshot().contains("NONPUBLIC-EXCEPTION-FIXTURE"))
+    }
+
+    @Test
+    fun late_old_session_callbacks_cannot_record_against_the_successor() = runTest {
+        val recorder = recorder()
+        val old = Any()
+        val current = Any()
+        recorder.mount(old, true)
+        var delivered = 0
+        val original = Request { delivered++; recorder.callback(old, 0, false) }
+        val cancelled = CancellationException("test session")
+        val next = object : PlatformTextInputSession {
+            override suspend fun startInputMethod(request: PlatformTextInputMethodRequest): Nothing {
+                recorder.unmount(old)
+                recorder.mount(current, false)
+                recorder.composed(current, true)
+                request.onEditCommand(emptyList())
+                throw cancelled
+            }
+        }
+        try {
+            PIN05Interceptor(recorder).interceptStartInputMethod(original, next)
+        } catch (caught: CancellationException) {
+            assertSame(cancelled, caught)
+        }
+        assertEquals(1, delivered)
+        assertEquals(listOf(1, 2, 1, 1, 1), kinds(recorder))
+        assertSame(current, recorder.owner())
+    }
+
+    @Test
+    fun outgoing_scope_disposal_does_not_disarm_the_incoming_name() {
+        val recorder = recorder()
+        val old = Any()
+        val current = Any()
+        recorder.mount(old, true)
+        recorder.mount(current, false)
+        recorder.unmount(old)
+        recorder.callback(current, 0, false)
+        recorder.callback(current, 1, false)
+        assertSame(current, recorder.owner())
+        assertEquals(listOf(1, 1, 4, 4), kinds(recorder))
+        recorder.unmount(current)
+        assertEquals(null, recorder.owner())
+    }
+
+    @Test
+    fun overflowing_or_invalid_clock_observation_is_retained_not_normalized() {
+        val recorder = recorder()
+        val owner = Any()
+        recorder.mount(owner, false)
+        repeat(200) { recorder.callback(owner, 0, true) }
+        val value = json(recorder)
+        assertEquals(128, rows(recorder).size)
+        assertTrue((value.getValue("overflow") as JsonPrimitive).int > 0)
+        val invalid = this.recorder()
+        invalid.mount(owner, false)
+        invalid.clock = { -1.0 }
+        invalid.callback(owner, 0, true)
+        assertEquals(1, (json(invalid).getValue("invalid") as JsonPrimitive).int)
+        assertEquals(1, rows(invalid).size)
+    }
+
+    private fun recorder() = PIN05Recorder().apply { clock = { 10.0 } }
+    private fun json(recorder: PIN05Recorder) = Json.parseToJsonElement(recorder.snapshot()) as JsonObject
+    private fun rows(recorder: PIN05Recorder) = json(recorder).getValue("rows") as JsonArray
+    private fun kinds(recorder: PIN05Recorder) = rows(recorder).map { ((it as JsonArray)[1] as JsonPrimitive).double.toInt() }
+
+    /** Other properties deliberately fault if this delegation control touches them. */
+    private class Request(override val onEditCommand: (List<EditCommand>) -> Unit) : PlatformTextInputMethodRequest {
+        override val value: () -> TextFieldValue = { error("Unused value getter") }
+        override val state: TextEditorState get() = error("Unused editor state")
+        override val imeOptions: ImeOptions get() = error("Unused IME options")
+        override val onImeAction: ((ImeAction) -> Unit)? = null
+        override val textLayoutResult: () -> TextLayoutResult? = { error("Unused layout getter") }
+        override val focusedRectInRoot: () -> Rect? = { error("Unused focused rect") }
+        override val textFieldRectInRoot: () -> Rect? = { error("Unused field rect") }
+        override val textClippingRectInRoot: () -> Rect? = { error("Unused clipping rect") }
+        override val editText: (TextEditingScope.() -> Unit) -> Unit = { error("Unused editText") }
+    }
+}

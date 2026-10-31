@@ -336,15 +336,16 @@ def completed_exit_code(result):
         'PUBLIC_CATALOG_MOTION_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
         'ISOLATED_CATALOG_MOTION_EXPORT_COMPLETE_NOT_QUALIFICATION',
         'NATIVE_FRAME_RETURN_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'PUBLIC_NAME_TEXT_SESSION_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control, frame_boundary)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control, frame_boundary, text_boundary)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -369,6 +370,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     elif aggregate_context:
         import pin16_aggregate_context as control
         combined_execution = True  # Reuse the unchanged single native action.
+    elif text_boundary:
+        import pin23_text_session_boundary as control
+        public_motion = root_capability = True
     elif frame_boundary:
         import pin22_native_frame_boundary as control
         public_motion = root_capability = True

@@ -385,3 +385,22 @@ All three methods must execute without skips, and each actual failure requires
 its complete original numeric, native, root and new motion companions plus exact
 source/product/device/cleanup custody. Successful journeys export no ledger.
 This investigates a missing observation, not observer neutrality or a shipping fix.
+
+## Reused public-name text-session boundary (PIN23)
+
+PIN22 retained a real Arabic first-Dominoes-Join typing failure: the original
+recording and screenshot show an empty focused field after one injection, while
+its captured root ledger has no nil reads/writes. This does not identify the
+input-delivery cause. PIN23 reuses the byte-exact prepared PIN05 recorder,
+`PlatformTextInputInterceptor`, ownership rules and cancellation/forwarding
+controls, bound to original5029 rather than its older renderer.
+
+Only the unresolved Arabic journey and one separate public-name export control
+execute. The control types once, verifies the actual value, then deliberately
+fails an exact-value sentinel predicate. Original journey assertions, taps,
+queries, deadlines and input values remain unchanged. English and completed
+motion controls are not replayed. A bounded exclusive companion contains only
+session/command/callback emptiness bits and post-failure first-responder booleans;
+no characters, lengths, player data, UIKit classes or extra active input queries.
+Existing numeric/native/root/frame/motion evidence and owned cleanup remain
+mandatory. Diagnostic success never qualifies shipping code or closes #267/#276.

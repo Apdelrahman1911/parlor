@@ -1,0 +1,99 @@
+package com.parlor.app.inputcopy
+
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlin.time.TimeSource
+
+/** COPY ONLY. No characters, lengths, names, command objects, identifiers or error text. */
+open class PIN05Recorder {
+    private val origin = TimeSource.Monotonic.markNow()
+    var clock: () -> Double = { origin.elapsedNow().inWholeMicroseconds / 1000.0 }
+    private class Scope(val owner: Any, var lastEmpty: Boolean? = null)
+    private val scopes = ArrayList<Scope>()
+    private val rows = DoubleArray(128 * 10)
+    private var size = 0
+    private var invalid = 0
+    private var overflow = 0
+    private var lastTime = 0.0
+    var nativeMode = 0
+
+    fun mount(owner: Any, isHost: Boolean) {
+        if (scopes.any { it.owner === owner }) return
+        if (scopes.size == 8) {
+            invalid = (invalid + 1).coerceAtMost(128)
+            return
+        }
+        scopes.add(Scope(owner))
+        emit(1, 0, isHost)
+    }
+
+    fun unmount(owner: Any) {
+        val index = scopes.indexOfFirst { it.owner === owner }
+        if (index < 0) return
+        if (index == scopes.lastIndex) emit(1, 1, false)
+        scopes.removeAt(index)
+    }
+
+    fun owner(): Any? = scopes.lastOrNull()?.owner
+
+    fun composed(owner: Any, empty: Boolean) {
+        val scope = scopes.lastOrNull() ?: return
+        if (scope.owner !== owner || scope.lastEmpty == empty) return
+        scope.lastEmpty = empty
+        emit(1, 2, empty)
+    }
+
+    fun session(owner: Any?, phase: Int) = record(owner, 2, phase)
+    fun commands(owner: Any?, phase: Int) = record(owner, 3, phase)
+    fun callback(owner: Any, phase: Int, empty: Boolean) = record(owner, 4, phase, empty)
+
+    fun native(firstResponder: Boolean, textResponder: Boolean) {
+        if (owner() != null && nativeMode == 1) emit(5, 0, firstResponder, textResponder)
+    }
+
+    fun rejectNativeObservation() {
+        invalid = (invalid + 1).coerceAtMost(128)
+    }
+
+    private fun record(owner: Any?, kind: Int, phase: Int, empty: Boolean = false) {
+        if (owner == null || this.owner() !== owner) return
+        emit(kind, phase, empty)
+    }
+
+    private fun emit(kind: Int, phase: Int, flag: Boolean, secondFlag: Boolean = false) {
+        val now = clock()
+        if (!now.isFinite() || now < lastTime || now !in 0.0..1e12 ||
+            kind !in 1..5 || phase !in 0..2 || (kind != 1 && phase == 2)) {
+            invalid = (invalid + 1).coerceAtMost(128)
+            return
+        }
+        lastTime = now
+        if (size == 128) {
+            overflow = (overflow + 1).coerceAtMost(128)
+            return
+        }
+        val offset = size++ * 10
+        rows[offset] = now
+        rows[offset + 1] = kind.toDouble()
+        rows[offset + 2] = phase.toDouble()
+        rows[offset + 3] = if (flag) 1.0 else 0.0
+        rows[offset + 4] = if (secondFlag) 1.0 else 0.0
+    }
+
+    /** Called only by an explicitly bound post-failure app-host capture. */
+    fun snapshot(): String = buildJsonObject {
+        put("schema", 5)
+        put("nativeMode", nativeMode)
+        put("overflow", overflow)
+        put("invalid", invalid)
+        put("rows", buildJsonArray {
+            for (index in 0 until size) add(buildJsonArray {
+                for (field in 0 until 10) add(JsonPrimitive(rows[index * 10 + field]))
+            })
+        })
+    }.toString()
+}
+
+object PIN05Observation : PIN05Recorder()

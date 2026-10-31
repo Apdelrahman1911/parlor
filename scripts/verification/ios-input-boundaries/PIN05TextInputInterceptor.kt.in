@@ -1,0 +1,40 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.InterceptPlatformTextInput
+import androidx.compose.ui.platform.PlatformTextInputInterceptor
+import androidx.compose.ui.platform.PlatformTextInputMethodRequest
+import androidx.compose.ui.text.input.EditCommand
+
+/** COPY ONLY, UIKit/Skiko API. Not a LocalTextInputService override or input retry. */
+@OptIn(ExperimentalComposeUiApi::class)
+fun PIN05Interceptor(recorder: PIN05Recorder): PlatformTextInputInterceptor =
+    PlatformTextInputInterceptor { request, next ->
+        val owner = recorder.owner()
+        // Private/other screens get the original request without wrapping or observation.
+        if (owner == null) next.startInputMethod(request)
+        recorder.session(owner, 0)
+        try {
+            next.startInputMethod(object : PlatformTextInputMethodRequest by request {
+                override val onEditCommand: (List<EditCommand>) -> Unit = { commands ->
+                    recorder.commands(owner, 0)
+                    try {
+                        request.onEditCommand(commands) // Same list, once, synchronously; no storage.
+                    } finally {
+                        recorder.commands(owner, 1)
+                    }
+                }
+            })
+        } finally {
+            recorder.session(owner, 1) // Preserve cancellation and original exceptions.
+        }
+    }
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun PIN05ObserveInput(content: @Composable () -> Unit) {
+    val interceptor = remember { PIN05Interceptor(PIN05Observation) }
+    InterceptPlatformTextInput(interceptor, content)
+}
