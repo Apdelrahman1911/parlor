@@ -2,27 +2,41 @@
 
 ## Current independently qualified main
 
-Accepted main is `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
-`00d87afce8588263a13733e9140340faac6d522a`. The distinct automatic
-[actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
-independently qualifies all eight producers, optimized Apple Release join,
-source/artifact/native/cleanup custody. Qualification SHA256:
-`57216eff6c013b37862e153645e91fdd5cf4f4f17edf927983f487b124cc1249`.
-PR294/PR298 normally merged; #297 is closed after its distinct main acceptance.
-This supersedes their earlier pending preparation notes, not the physical,
-Strict Complete Protection or Store gates below. PR256 was already merged;
-do not replay it or substitute a PR pass for newer main verification.
+Latest independently accepted application checkpoint is main
+`16d4ecabc74d29690edd22ba278d6bb86d8c70dd`, tree
+`079b8cd36021df541b340ff405ed204bf2f3f02f`. Normally protected
+[PR303](https://github.com/Apdelrahman1911/parlor/pull/303) fixes queued-event
+cancellation ordering. Its separate automatic
+[actual-main41158996451](https://github.com/Apdelrahman1911/parlor/actions/runs/41158996451)
+qualifies all eight producers and the optimized Apple Release join with exact
+checkout/tree/artifact/native/cleanup custody, **23 Swift /759 KMP Simulator
+/450 macOS readiness methods**, zero native/readiness skips. Qualification SHA256:
+`5a21fa0ffc207e84527b6ec5c0fc94864f8eaf83922e1326100e14df47dd6a32`.
+Scoped #302 is closed; the wider overhaul is not complete. This receipt does not
+certify changes after that checkpoint, physical devices or Store readiness.
+
+The hosted main run completed in **43m43s** on standard free public runners.
+That is this run's observed elapsed time, not a matched-source speedup or proof
+of the fastest possible configuration. Checks, architectures and Release
+optimizations were preserved. Prior accepted main35288/41118248151 and normally
+merged PR294/PR298 retain their source-bound evidence; #297 is already closed.
+PR256 was already merged. Do not replay completed integrations or substitute a
+PR pass for newer main verification.
 
 ## Current unmerged work and failed runs
 
-- [#302](https://github.com/Apdelrahman1911/parlor/issues/302): a newly reproduced
-  queued-event cancellation defect. A waiting cancelled batch can release later
-  events past its active predecessor. The scoped local correction forwards
-  skipped gates iteratively, preserving prompt cancellation and canonical
-  commits without a new worker, queue or replay. Corrected affected suites:
-  **169 Desktop /166 Android per Debug/Release**, zero skips; full final-source,
-  hosted/native, protected and actual-main checks remain required.
-  [Source-bound audit](audits/2026-10-31-CANCELLED-EVENT-ORDER.md).
+- [#304](https://github.com/Apdelrahman1911/parlor/issues/304): actual current-main
+  coordinator regressions reproduce caller-owned snapshot-buffer corruption:
+  **four Desktop methods /two assertion failures /two passing size controls**.
+  Reusing a private encoding buffer can overwrite a different recipient's queued
+  bytes; later producer mutation can change an in-flight revision's body.
+  The isolated correction copies validated public/private bytes before asynchronous
+  outbox handoff. This is not an observed shipping-device disclosure: current game
+  encoders allocate fresh buffers. Corrected affected suites pass **173 Desktop
+  /170 Android per Debug/Release**, zero failures/errors/skips, all earlier
+  methods plus four common regressions; plain/type-aware Detekt pass. Final-source
+  and fresh hosted/native, protected and actual-main qualification remain required.
+  [Source-bound audit](audits/2026-10-31-SNAPSHOT-PAYLOAD-OWNERSHIP.md).
 - [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) remains failed
   at `40ae511df882cb29070a94ef3c25f95c1b4ba93e`.
   [41135053853](https://github.com/Apdelrahman1911/parlor/actions/runs/41135053853):

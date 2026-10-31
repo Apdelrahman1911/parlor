@@ -63,9 +63,25 @@ methods run on those targets; Desktop also retains both earlier methods.
 Plain and explicit type-aware Detekt pass. Affected cached execution is43s,
 not a cold/free-hosted-runner or battery benchmark.
 
-Final committed-source `productionCheck allTests`, complete hosted/native
-checks, protected integration and distinct post-merge readback remain required
-before scoped closure. This report does not qualify newer commits, repair any
-original iOS failure, certify physical devices, change CI/Release/dependencies,
-or authorize Store distribution. Reviewed open/closed equivalent searches and
-#28/#91/#92/#95/#260; input-ownership #299/#301 remains separate.
+## Completed protected integration
+
+Final source `0e3e843d` /tree `079b8cd3` independently passes strict
+`productionCheck allTests`: **1,947 Desktop /732 Android per Debug/Release
+/120 GitHub-test /777 release controls /450 readiness methods**, established
+Linux-only skips. Local exact-method receipt SHA256:
+`5341902ae2928a5b9a12051f2e841624ec2e2f2e7776b87d63e58759c0a94e74`.
+
+[PR303](https://github.com/Apdelrahman1911/parlor/pull/303) normally merged after
+fresh [41154958886](https://github.com/Apdelrahman1911/parlor/actions/runs/41154958886)
+qualified all eight producers and the Apple Release join. The separate automatic
+[actual-main41158996451](https://github.com/Apdelrahman1911/parlor/actions/runs/41158996451)
+then independently qualifies actual merge `16d4ecab`, the same tree, **23 Swift
+/759 KMP Simulator /450 macOS readiness methods**, zero native/readiness skips
+and exact source/artifact/native/cleanup custody. Main qualification SHA256:
+`5a21fa0ffc207e84527b6ec5c0fc94864f8eaf83922e1326100e14df47dd6a32`.
+Scoped #302 closed only after that distinct main acceptance.
+
+This does not qualify newer commits, repair original iOS failures, certify physical
+devices, change CI/Release/dependencies or authorize Store distribution. Reviewed
+open/closed equivalents and #28/#91/#92/#95/#260; input-ownership #299/#301 and
+the wider overhaul remain separate.
