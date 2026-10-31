@@ -27,7 +27,10 @@ def readiness_helpers(driver):
     first = driver.index('    @MainActor\n    private func tapSetupButton(')
     last = driver.index('    @MainActor\n    private func tapPublicSetupTransition(', first)
     reach = driver[first:last].replace('tapSetupButton(', 'pin19ObserveSettledSetupButton(')
-    reach = reach.replace('tapSettledControl(button)', 'pin19ObserveSettledControl(button)')
+    # Match the callee, not its argument spelling. PIN06 adds a failure-owner
+    # argument, so matching `tapSettledControl(button)` left the original tapping
+    # callee alive in ee7773d1. This must be the sole call in the cloned reach path.
+    reach = pin01_copy.once(reach, 'tapSettledControl(', 'pin19ObserveSettledControl(')
     first = driver.index('    @MainActor\n    private func tapSettledControl(')
     last = driver.index('    @MainActor\n    private func verifyKeyboardCycle(', first)
     settle = driver[first:last].replace('tapSettledControl(', 'pin19ObserveSettledControl(')

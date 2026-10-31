@@ -52,6 +52,26 @@ class SettledCatalogIdleControls(unittest.TestCase):
         self.assertEqual(original.count('        control.tap()\n'), 1)
         self.assertEqual(restored, original.replace('        control.tap()\n', ''))
 
+    def test_observer_reachability_calls_only_the_no_tap_clone_with_instrumented_arguments(self):
+        driver=prior.plan()[pin02_capture.DRIVER]
+        helpers=settled.readiness_helpers(driver)
+        self.assertNotIn('tapSettledControl(',helpers)
+        self.assertEqual(helpers.count('pin19ObserveSettledControl('),2)  # call and definition
+        self.assertIn('try pin19ObserveSettledControl(button, pin06FailureOwner:',helpers)
+        self.assertNotIn('control.tap()',helpers)
+        rendered=plan()[pin02_capture.DRIVER]
+        start=rendered.index('private func pin19ObserveSettledSetupButton(')
+        end=rendered.index('private func pin19ObserveSettledControl(',start)
+        self.assertNotIn('tapSettledControl(',rendered[start:end])
+        self.assertIn('try pin19ObserveSettledControl(',rendered[start:end])
+
+    def test_duplicate_callee_in_clone_is_rejected_not_silently_left_as_a_tap_path(self):
+        driver=prior.plan()[pin02_capture.DRIVER]
+        needle='                try tapSettledControl(button, pin06FailureOwner:'
+        self.assertIn(needle,driver)
+        drift=driver.replace(needle,'                try tapSettledControl(button)\n'+needle,1)
+        with self.assertRaises(RuntimeError):settled.readiness_helpers(drift)
+
     def test_only_declared_driver_control_changes_original_plan(self):
         baseline = prior.plan()
         output = plan()

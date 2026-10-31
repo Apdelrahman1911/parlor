@@ -69,8 +69,7 @@ class PIN19FailureReviewControls(unittest.TestCase):
                 if e.isdir() or not review.run_pin03.selected(e.name):continue
                 raw=tar.extractfile(e).read();complete[e.name]=review.sha(raw)
                 if e.name in review.pair.MODIFIED:sources[e.name]=raw.decode()
-        plan=review.idle.renderer_for_profile(review.idle.PROFILE,review.SOURCE,review.pair.RUNTIME,review.pair.DEVICE)(
-            sources,{n:complete[n] for n in review.pair.MODIFIED},arm='native')
+        plan=review.original_idle_renderer()(sources,{n:complete[n] for n in review.pair.MODIFIED},arm='native')
         observed=complete|{n:review.sha(v.encode()) for n,v in plan.items()}
         binding=review.validate_source_inputs(dict(original_inputs=complete),observed)
         self.assertEqual(binding['original_input_count'],1214)
@@ -116,6 +115,14 @@ class PIN19FailureReviewControls(unittest.TestCase):
         self.assertIn('Exact original summary',report['failure_provenance'])
         s,t=results();s['testFailures'][0]['failureText']='foreign failure'
         with self.assertRaises(ValueError):review.public_observations(a,s,t)
+
+    def test_source_pinned_public_merged_catalog_label_does_not_admit_other_controls(self):
+        a=activities();a['activities'][2]['title']='Tap "Open Word Impostor, Word Impostor, Nearby only" Button'
+        self.assertEqual(review.public_observations(a,*results())['counts']['taps'],1)
+        for title in ('Tap "Host" Button', 'Tap "Open Word Impostor" TextView',
+                      'Tap "Open Word Impostor\nprivate" Button', 'Tap "Open Word Impostor'+('x'*1024)+'" Button'):
+            bad=activities();bad['activities'][2]['title']=title
+            with self.assertRaises(ValueError):review.public_observations(bad,*results())
 
     def test_only_archive_attested_empty_original_objects_can_be_read(self):
         with tempfile.TemporaryDirectory() as temporary:

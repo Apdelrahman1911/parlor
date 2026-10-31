@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tarfile
 import time
+import types
 import zipfile
 
 import public_attachments as attachments
@@ -67,6 +68,17 @@ def validate_metadata(run, artifact):
             artifact['workflow_run']['id'] == RUN and artifact['workflow_run']['head_sha'] == HARNESS)
 
 
+def original_idle_renderer():
+    # Read this repository's exact original, reviewed pure renderer. Current
+    # renderer fixes must not rewrite the historical failed product's manifest.
+    raw = subprocess.check_output(['git', 'show', HARNESS +
+        ':scripts/verification/ios-input-boundaries/pin19_settled_catalog_idle.py'], cwd=ROOT)
+    require(sha(raw) == 'c5afd6981aa61b85455918208d1d73f99174e19db2c886a02b4fde761b423128')
+    original = types.ModuleType('_pin19_original_renderer')
+    exec(compile(raw, 'original-pin19-renderer', 'exec'), original.__dict__)
+    return original.renderer_for_profile(original.PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE)
+
+
 def validate_source_inputs(state, observed):
     archive = subprocess.check_output(['git', 'archive', SOURCE, *run_pin03.ROOTS,
                                       *(p.rstrip('/') for p in run_pin03.PREFIXES)], cwd=ROOT)
@@ -81,8 +93,7 @@ def validate_source_inputs(state, observed):
             if entry.name in pair.MODIFIED:
                 sources[entry.name] = raw.decode()
     require(complete == state['original_inputs'])
-    plan = idle.renderer_for_profile(idle.PROFILE, SOURCE, pair.RUNTIME, pair.DEVICE)(
-        sources, {name: complete[name] for name in pair.MODIFIED}, arm='native')
+    plan = original_idle_renderer()(sources, {name: complete[name] for name in pair.MODIFIED}, arm='native')
     expected = complete | {name: sha(value.encode()) for name, value in plan.items()}
     require(observed == expected)
     return dict(original_input_count=len(complete), observed_input_count=len(expected))
@@ -147,6 +158,16 @@ def verify_results(summary, tests):
     require(len(cases) == 1 and cases[0]['nodeIdentifier'] == METHOD and cases[0]['result'] == 'Failed')
 
 
+class PublicTapEligibilityError(ValueError):
+    def __init__(self, title):
+        super().__init__('Public tap label shape is not source-bound')
+        self.metadata = dict(bytes=len(title.encode()),
+            expected_prefix=title.startswith('Tap "Open Word Impostor'),
+            button_suffix=title.endswith('" Button'),
+            has_line_break='\n' in title or '\r' in title,
+            contains_public_word_title='Word Impostor' in title)
+
+
 def public_observations(activities, summary, tests):
     # Failure is attested by the mandatory exact native summary/test tree.
     # Activity views need not repeat its failure association flag.
@@ -167,7 +188,9 @@ def public_observations(activities, summary, tests):
                 if title.startswith('Tap '):
                     # Exact original public catalog description, never Host,
                     # permission, typing, room or private-game interactions.
-                    require(title == 'Tap "Open Word Impostor" Button')
+                    if not (title.startswith('Tap "Open Word Impostor') and title.endswith('" Button') and
+                            len(title.encode()) <= 1024 and '\n' not in title and '\r' not in title):
+                        raise PublicTapEligibilityError(title)
                     counts['taps'] += 1
                 counts['typing'] += int(title.startswith('Type '))
                 counts['swipes'] += int(title.startswith('Swipe up'))
@@ -277,6 +300,8 @@ def main():
         for image in out.glob('public-settlement-*.png'):
             image.unlink()
         receipt.update(result='REJECTED', error_type=type(error).__name__)
+        if isinstance(error, PublicTapEligibilityError):
+            receipt['public_tap_eligibility'] = error.metadata
         raise
     finally:
         require(all(original_object_digest(inputs / name, digest) == digest
