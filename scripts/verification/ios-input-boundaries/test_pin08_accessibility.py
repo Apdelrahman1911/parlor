@@ -113,15 +113,25 @@ class NativeAccessibilityControls(unittest.TestCase):
         self.assertEqual(text.count('return result'), 2)
         self.assertIn('not lifetime IDs or root cause', decode(fixture())['scope'])
 
-    def test_swift_installation_property_and_copy_class_allocation_release(self):
+    def test_swift_inventory_never_materializes_unverified_runtime_classes(self):
         text = (pair.HERE / native.TEMPLATE).read_text()
         self.assertIn('Thread.isMainThread && hooks.isEmpty)', text)
         self.assertNotIn('hooks.isEmpty()', text)
         self.assertEqual(text.count('objc_copyClassList(&count)'), 1)
-        self.assertEqual(text.count('defer { free(UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes))) }'), 1)
-        self.assertIn('guard count <= 100_000 else { return false }', text)
-        # The actual Apple SDK control below, not this source control, verifies
-        # the imported autoreleasing pointer conversion and both getter ABIs.
+        self.assertEqual(text.count('defer { free(storage) }'), 1)
+        self.assertNotIn('classes[$0]', text)
+        self.assertNotIn('classes[index]', text)
+        self.assertIn('guard count <= 100_000 else { return [] }', text)
+        self.assertIn('storage.load(fromByteOffset:', text)
+        self.assertIn('guard isNSObject else { continue }', text)
+        self.assertEqual(text.count('unsafeBitCast(candidate, to: AnyClass.self)'), 1)
+        self.assertIn('for _ in 0..<32', text)
+        for symbol in ('class_getSuperclass', 'class_getName'):
+            self.assertIn('dlsym(runtime, "' + symbol + '")', text)
+        self.assertIn('typealias Superclass = @convention(c) (UnsafeRawPointer) -> UnsafeRawPointer?', text)
+        self.assertIn('typealias ClassName = @convention(c) (UnsafeRawPointer) -> UnsafePointer<CChar>', text)
+        self.assertIn('the unique subclass overriding BOTH', text)
+        # Native compilation and executable controls below verify the actual ABI.
 
     def test_valid_software_rows_only_attest_shape_never_native_or_root_cause(self):
         result = decode(fixture())
@@ -187,6 +197,40 @@ class NativeAccessibilityControls(unittest.TestCase):
                 out = Path(tmp).resolve(); state = evidence(out); change(out, state)
                 with self.assertRaises((ValueError, FileNotFoundError)):
                     native.accept_native_export(out, state)
+
+    @unittest.skipUnless(platform.system() == 'Darwin', 'Actual Apple runtime unavailable on Linux')
+    def test_actual_objc_inventory_handles_unretainable_root_and_two_compose_subclasses(self):
+        text = (pair.HERE / native.TEMPLATE).read_text()
+        inventory = text[text.index('enum PIN08ClassInventory {'):text.index('/// COPY ONLY.')]
+        # Separate macOS executable, never the application/Simulator or evidence.
+        # A registered non-NSObject root cannot receive +retain: old map crashes.
+        driver = r'''import Foundation
+import ObjectiveC.runtime
+import Darwin
+@objc(CMPAccessibilityElement) class Base: NSObject {}
+@objc(PIN08ControlRoot) class Root: Base {}
+@objc(PIN08ControlElement) class Element: Base {}
+let handle = dlopen(nil, RTLD_LAZY)!
+typealias Allocate = @convention(c) (UnsafeRawPointer?, UnsafePointer<CChar>, Int) -> UnsafeRawPointer?
+typealias Register = @convention(c) (UnsafeRawPointer) -> Void
+let allocate = unsafeBitCast(dlsym(handle, "objc_allocateClassPair")!, to: Allocate.self)
+let register = unsafeBitCast(dlsym(handle, "objc_registerClassPair")!, to: Register.self)
+let unrelated = "PIN08UnretainableRoot".withCString { allocate(nil, $0, 0) }!
+register(unrelated)
+_ = Root(); _ = Element()
+let result = PIN08ClassInventory.composeSubclasses()
+precondition(Set(result.map { String(cString: class_getName($0)) }) ==
+             Set(["PIN08ControlRoot", "PIN08ControlElement"]))
+dlclose(handle)
+'''
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / 'Inventory.swift'; executable = Path(tmp) / 'inventory'
+            file.write_text(inventory + driver)
+            build = subprocess.run(['/usr/bin/xcrun', 'swiftc', '-Onone', str(file), '-o', str(executable)],
+                                   capture_output=True, text=True, timeout=120)
+            self.assertEqual(build.returncode, 0, build.stdout + build.stderr)
+            run = subprocess.run([str(executable)], capture_output=True, text=True, timeout=30)
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
 
     @unittest.skipUnless(platform.system() == 'Darwin', 'Actual Apple SDK unavailable on Linux')
     def test_actual_simulator_sdk_typechecks_native_getter_abi_and_export_template(self):

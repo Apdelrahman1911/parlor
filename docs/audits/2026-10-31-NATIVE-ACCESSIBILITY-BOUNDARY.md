@@ -64,3 +64,40 @@ class-count bound and exact hook/getter ABI checks are unchanged. The actual
 Apple SDK control remains mandatory; local source controls are not a typecheck.
 A new source-specific execution is justified by these diagnosed compilation
 errors. Native capability and natural application causality remain pending.
+
+## Actual startup crash and ARC-safe inventory correction
+
+[41190953763](https://github.com/Apdelrahman1911/parlor/actions/runs/41190953763)
+passes actual Simulator SDK preflight and builds the actual copied application
+(exit0), but fails the initial Home assertion (line17) before the intended Host
+transition. The strict collector correctly rejects this different failure.
+Owned children and Simulator cleanup pass; no capability or getter export qualifies.
+
+An original decoded crash attachment (`pin08-original-marker.bin`, retained in
+agent custody with the original xcresult/artifact) reports EXC_BREAKPOINT/SIGTRAP,
+`___forwarding___.cold.2`, then the observer's `Collection.map` closure at copied
+container line251. Registers identify selector `retain` and Objective-C class
+`SCROBrailleTranslationUtility`. The original `.map { classes[$0] }` materializes
+and retains arbitrary runtime classes before filtering them; some registered
+Objective-C root classes do not implement retain. This is a **diagnostic startup
+defect**, not the original Word Impostor/Host/typing cause.
+
+The corrected copy-only inventory reads raw Class-pointer storage. Two public
+runtime C functions use explicit `@convention(c)` opaque-pointer bindings via
+`dlsym`; their pointer/name ABIs are separately checked on Apple. Only a direct
+`CMPAccessibilityElement` child with bounded verified NSObject ancestry becomes
+an AnyClass. The same allocation is freed exactly once and the100000-class bound
+remains. Published Compose1.10.3 has two direct children, AccessibilityRoot and
+AccessibilityElement; only the latter overrides both intercepted getters. The
+unique-candidate check now filters on **both original implementations**, avoiding
+an additional installation rejection without broadening the hook to UIKit.
+
+New mandatory Apple runtime control creates a non-NSObject root and two synthetic
+Compose-shaped subclasses in a separate macOS executable. It exercises raw class
+inspection without retaining the unrelated root, alongside the existing actual
+Simulator SDK getter-ABI typecheck and failure-only native application control.
+Linux skips only these unavailable Apple executions; software checks are not
+native evidence. Original calls/returns, UI actions, selectors, ten-second budgets,
+failure classification, privacy ledger and cleanup requirements remain unchanged.
+The corrected-source capability must pass before natural getter observations
+can support application investigation. Issues267/276 and Phase1 remain open.

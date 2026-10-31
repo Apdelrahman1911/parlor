@@ -3,6 +3,52 @@ import UIKit
 import ObjectiveC.runtime
 import Darwin
 
+/// Only verified NSObject-derived Compose classes become Swift AnyClass values.
+/// objc_copyClassList may include non-NSObject roots that cannot receive retain.
+/// The public runtime C ABI uses opaque Class pointers and const char* names;
+/// @convention(c) dlsym bindings avoid ARC when inspecting unrelated metadata.
+/// No Objective-C messages, object initialization or getter reads occur here.
+enum PIN08ClassInventory {
+    static func composeSubclasses() -> [AnyClass] {
+        typealias Superclass = @convention(c) (UnsafeRawPointer) -> UnsafeRawPointer?
+        typealias ClassName = @convention(c) (UnsafeRawPointer) -> UnsafePointer<CChar>
+        guard let runtime = dlopen(nil, RTLD_LAZY) else { return [] }
+        defer { dlclose(runtime) }
+        guard let superclassSymbol = dlsym(runtime, "class_getSuperclass"),
+              let nameSymbol = dlsym(runtime, "class_getName") else { return [] }
+        let superclass = unsafeBitCast(superclassSymbol, to: Superclass.self)
+        let className = unsafeBitCast(nameSymbol, to: ClassName.self)
+        var count: UInt32 = 0
+        guard let classes = objc_copyClassList(&count) else { return [] }
+        // Never subscript the imported AnyClass buffer: doing so retains every
+        // class. Read only pointer storage and free the exact malloc allocation.
+        guard let storage = UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes)) else { return [] }
+        defer { free(storage) }
+        guard count <= 100_000 else { return [] }
+        var matches: [AnyClass] = []
+        for index in 0..<Int(count) {
+            let candidate = storage.load(fromByteOffset: index * MemoryLayout<UnsafeRawPointer>.stride,
+                                         as: UnsafeRawPointer.self)
+            guard let parent = superclass(candidate),
+                  String(cString: className(parent)) == "CMPAccessibilityElement" else { continue }
+            var ancestor: UnsafeRawPointer? = parent
+            var isNSObject = false
+            for _ in 0..<32 {
+                guard let value = ancestor else { break }
+                if String(cString: className(value)) == "NSObject" {
+                    isNSObject = true
+                    break
+                }
+                ancestor = superclass(value)
+            }
+            guard isNSObject else { continue }
+            // Only this validated Cocoa lineage supports Swift's class retain.
+            matches.append(unsafeBitCast(candidate, to: AnyClass.self))
+        }
+        return matches
+    }
+}
+
 /// COPY ONLY. Records returns of two getters already invoked by UIKit/XCTest.
 /// No label/value/hierarchy read, synthetic input, timer or accessibility update.
 /// Method interception can change timing; this is NOT a neutrality certificate.
@@ -39,16 +85,18 @@ final class PIN08AccessibilityObserver {
     func install() -> Bool {
         precondition(Thread.isMainThread && hooks.isEmpty)
         guard Self.processOwner == nil else { return false }
-        var count: UInt32 = 0
-        guard let classes = objc_copyClassList(&count) else { return false }
-        // objc_copyClassList owns a malloc allocation. Its autoreleasing Swift
-        // pointer does not implicitly bridge to free; release the same address,
-        // not its class references or a Swift-owned/rebound buffer.
-        defer { free(UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes))) }
-        guard count <= 100_000 else { return false }
-        let matches = (0..<Int(count)).map { classes[$0] }.filter { candidate in
-            guard let parent = class_getSuperclass(candidate) else { return false }
-            return String(cString: class_getName(parent)) == "CMPAccessibilityElement"
+        let classes = PIN08ClassInventory.composeSubclasses()
+        let matches = classes.filter { candidate in
+            guard let parent = class_getSuperclass(candidate),
+                  let traits = class_getInstanceMethod(candidate, NSSelectorFromString("accessibilityTraits")),
+                  let element = class_getInstanceMethod(candidate, NSSelectorFromString("isAccessibilityElement")),
+                  let parentTraits = class_getInstanceMethod(parent, NSSelectorFromString("accessibilityTraits")),
+                  let parentElement = class_getInstanceMethod(parent, NSSelectorFromString("isAccessibilityElement"))
+            else { return false }
+            // Published 1.10.3 also has AccessibilityRoot, which overrides only
+            // the element getter. Require the unique subclass overriding BOTH.
+            return !Self.same(method_getImplementation(traits), method_getImplementation(parentTraits))
+                && !Self.same(method_getImplementation(element), method_getImplementation(parentElement))
         }
         guard matches.count == 1, let target = matches.first,
               let parent = class_getSuperclass(target) else { return false }
