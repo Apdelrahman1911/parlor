@@ -52,8 +52,9 @@ plus all four common additions are preserved; plain and type-aware Detekt pass.
 Affected exact-method receipt SHA256:
 `840f64c13ab73362429714c1ca11e7dee50119102d07325e38fe61951edabfd1`.
 
-Final committed-source strict checks and fresh complete hosted/native, protected
-integration and distinct actual-main acceptance remain required before closure.
+Final committed-source strict checks and the fresh complete hosted/native,
+protected integration and distinct actual-main acceptance below are completed
+for this scoped correction only.
 Original PR296/300 failures and held #299/#301 fixes are not cleared by this work.
 No failed workflow retry, copied observer shipping, added agent, paid runner,
 physical qualification or Store release is claimed.
@@ -61,3 +62,27 @@ physical qualification or Store release is claimed.
 All open/closed issue titles and snapshot/buffer/caller-owned searches were reviewed,
 including #11/#260/#301/#299. The closed recipient-test gap, game-state/concealment
 acceptance and membership/start-roster aliasing are different boundaries.
+
+## Completed protected integration — exact source, not newer documentation
+
+Final correction `301ff8f5` /tree `67cacfa6` independently passes strict local
+`productionCheck allTests`: 1,951 Desktop /736 Android per Debug/Release /120
+GitHub-test methods, 777 release controls and 450 readiness methods, established
+local platform skips only. Full local receipt SHA256:
+`e58e19222ed57b3f10e65f04bfd1cdedaf67c3c61676aa08e5b60dbb41a5fa78`.
+
+[PR305](https://github.com/Apdelrahman1911/parlor/pull/305) normally merged after
+[41169961315](https://github.com/Apdelrahman1911/parlor/actions/runs/41169961315)
+independently qualifies every producer and the optimized Apple Release join.
+The **distinct automatic actual-main
+[41173438833](https://github.com/Apdelrahman1911/parlor/actions/runs/41173438833)**
+then independently accepts merge `706e0ecb8766bb8de1671f64e2250c7a53b0bf9c`,
+the same tree, 23 Swift /763 KMP Simulator /450 macOS readiness methods, zero
+native/readiness skips and exact source/artifact/native/cleanup custody. Main
+qualification SHA256:
+`01f642bfac254e408043319c0bf629695bbc3711a85d0649eac4539449134190`.
+
+#304 closed only after that acceptance. Observed PR 49m14s /main 41m36s are not
+matched-source benchmark or phone-energy measurements. This verifies the scoped
+correction, not later documentation, original iOS causes, #293/#299/#301,
+physical gameplay/lifecycle/storage/accessibility/energy or Store release.
