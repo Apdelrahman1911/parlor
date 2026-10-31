@@ -1,96 +1,77 @@
-# Project status — October 30, 2026
+# Project status — October 31, 2026
 
-## Latest independently qualified protected main (PR294)
+## Current independently qualified main
 
-[PR294](https://github.com/Apdelrahman1911/parlor/pull/294) normally merged at
-19:48 UTC as `35288a72a6ec0edf7c71123b6d9a6467755556ac`, tree
-`00d87afce8588263a13733e9140340faac6d522a`.
-[Fresh PR41110715660](https://github.com/Apdelrahman1911/parlor/actions/runs/41110715660)
-independently qualifies all eight producers/original optimized Apple Release join,
-23 Swift /753 source-derived KMP Simulator /450 readiness methods, zero Apple
-skips, exact source/artifact/native/cleanup custody,1,941 Desktop /726 Android
-per Debug/Release /120 GitHub-test and777 release controls. Both navigation lanes
-execute: three API35 Release and three API34 Debug methods. Qualification SHA256
-`8abf82e001842b5a0bfc0075a752318b5dda61d164907585e85c19ba470c1538`.
-The51.4-minute wall time including queues is one source-bound free-runner
-observation, **not** a matched-source hybrid/mobile benchmark.
-Distinct automatic
-[actual-main41118248151](https://github.com/Apdelrahman1911/parlor/actions/runs/41118248151)
-independently qualifies the exact merged source with the same complete methods,
-all eight producers, optimized Apple Release join and source/artifact/native/cleanup
-custody. Qualification SHA256
-`57216eff6c013b37862e153645e91fdd5cf4f4f17edf927983f487b124cc1249`.
-This is distinct main acceptance, not PR-pass substitution, physical-device evidence
-or a native keyboard/root-cause repair.
+Latest independently accepted application checkpoint is main
+`16d4ecabc74d29690edd22ba278d6bb86d8c70dd`, tree
+`079b8cd36021df541b340ff405ed204bf2f3f02f`. Normally protected
+[PR303](https://github.com/Apdelrahman1911/parlor/pull/303) fixes queued-event
+cancellation ordering. Its separate automatic
+[actual-main41158996451](https://github.com/Apdelrahman1911/parlor/actions/runs/41158996451)
+qualifies all eight producers and the optimized Apple Release join with exact
+checkout/tree/artifact/native/cleanup custody, **23 Swift /759 KMP Simulator
+/450 macOS readiness methods**, zero native/readiness skips. Qualification SHA256:
+`5a21fa0ffc207e84527b6ec5c0fc94864f8eaf83922e1326100e14df47dd6a32`.
+Scoped #302 is closed; the wider overhaul is not complete. This receipt does not
+certify changes after that checkpoint, physical devices or Store readiness.
 
-## Prior independently qualified main (PR298)
+The hosted main run completed in **43m43s** on standard free public runners.
+That is this run's observed elapsed time, not a matched-source speedup or proof
+of the fastest possible configuration. Checks, architectures and Release
+optimizations were preserved. Prior accepted main35288/41118248151 and normally
+merged PR294/PR298 retain their source-bound evidence; #297 is already closed.
+PR256 was already merged. Do not replay completed integrations or substitute a
+PR pass for newer main verification.
 
-[PR298](https://github.com/Apdelrahman1911/parlor/pull/298) normally merged as
-`71c3f7cc6b8c792b8d8c061d2e35fbe771f8dfe1`, tree
-`a36e15b551fb2b8fa503e8e21c20ac6d75d73087`. Distinct automatic
-[actual-main41099887333](https://github.com/Apdelrahman1911/parlor/actions/runs/41099887333)
-independently qualifies all eight producers/original optimized Apple Release join,
-23 Swift /716 KMP Simulator /450 readiness methods, zero Apple skips,
-777 release controls and both actual Android navigator lanes with successful
-supervision/cleanup. Qualification SHA256
-`83469030473de7ef4b3b028669bc735a78e4d659251f01dc8eeb286592758bc7`.
-Scoped #297 is closed after this distinct main acceptance; do not replay closure.
-Its75.1 minutes including queues is a source-bound observation, not a comparison.
+## Current unmerged work and failed runs
 
-## Prior independently qualified main (PR292)
+- [#304](https://github.com/Apdelrahman1911/parlor/issues/304): actual current-main
+  coordinator regressions reproduce caller-owned snapshot-buffer corruption:
+  **four Desktop methods /two assertion failures /two passing size controls**.
+  Reusing a private encoding buffer can overwrite a different recipient's queued
+  bytes; later producer mutation can change an in-flight revision's body.
+  The isolated correction copies validated public/private bytes before asynchronous
+  outbox handoff. This is not an observed shipping-device disclosure: current game
+  encoders allocate fresh buffers. Corrected affected suites pass **173 Desktop
+  /170 Android per Debug/Release**, zero failures/errors/skips, all earlier
+  methods plus four common regressions; plain/type-aware Detekt pass. Final-source
+  and fresh hosted/native, protected and actual-main qualification remain required.
+  [Source-bound audit](audits/2026-10-31-SNAPSHOT-PAYLOAD-OWNERSHIP.md).
+- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) remains failed
+  at `40ae511df882cb29070a94ef3c25f95c1b4ba93e`.
+  [41135053853](https://github.com/Apdelrahman1911/parlor/actions/runs/41135053853):
+  **21 Swift PASS /2 FAIL**,764 KMP Simulator methods passing, zero skips.
+  Arabic Ghamza Host's single settled tap does not transition; English Ghamza
+  Join permission Continue fails settlement **before any Continue tap**.
+  Seven passing producers and the passing optimized join cannot qualify the run.
+- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) stays failed
+  at published `22c67a6c`;41126885894 was not retried. The unpublished local
+  #299/#301 ownership union `52bc7a82` / tree `f4c22663` passes fresh strict
+  full local gates: **1,950 Desktop /733 Android per Debug/Release /120
+  GitHub-test /777 release /450 readiness methods**, established local skips
+  only. Exact local receipt SHA256:
+  `67d7459296f658b6f2eff3f1c8919d3423244029dd1e08c1f3f29012a1161810`.
+  This is not fresh hosted/native, a blind retry, publication or merge.
+- [Completed frozen PIN06 experiment41145628399](https://github.com/Apdelrahman1911/parlor/actions/runs/41145628399)
+  runs unchanged failed application40ae511d on one standard free `macos-15`
+  runner: original, Compose copy and native+Compose copy each **2 PASS**.
+  No journey failed, so no failed-only capture executed. Independent readback
+  matches1,211 original source hashes, all arm manifests/48 exited-reaped
+  commands,239 hosted preflight controls and owned cleanup receipts;63
+  in-memory actual-artifact mutations reject. Receipt SHA256:
+  `d8800fe4326e568e5aafe84f27dbbb2d9a92d3a78168f05ec38b98d462ebf34d`.
+  [Published report](https://github.com/Apdelrahman1911/parlor/blob/59e60c323e0bf9a46cdf97ff07a8f80ce5a6200c/docs/audits/2026-10-30-IOS-PUBLIC-SETUP-PAIR-READBACK.md).
+  This scoped pass is **not** original causality, full60-journey neutrality,
+  live process re-attestation, a mobile/CI benchmark or PR296/300 clearance.
+- #267/#276 and #293/#299/#301 remain open. Draft295's Ghamza evidence,
+  draft282's input observers and draft291's hybrid benchmark are unqualified;
+  no production dependency, verification threshold or Release optimization is
+  weakened. No new Store release or real-device qualification is claimed.
 
-[PR292](https://github.com/Apdelrahman1911/parlor/pull/292) normally merged as
-`d566a576abad59c8c67ddba1798aa6dd30b6ce44`, tree
-`4d27c827b8189ffc49af8a07547c64e272af89c1`. Distinct automatic
-[actual-main41005347088](https://github.com/Apdelrahman1911/parlor/actions/runs/41005347088)
-independently qualifies all eight producers/original optimized Apple Release join:
-23 Swift /716 source-derived KMP Simulator /450 readiness methods, zero Apple
-skips, exact source/artifact/native/cleanup custody. Qualification SHA256
-`3381a9db53912fe81005bf1612a345b453575cd9f558fd382c9ee16817a4a84f`.
-All nine name-setup pointer methods execute on all four Desktop hosts. This accepts
-regression tests, not a native keyboard repair or the original #267/#276 cause.
-The workflow's52.6 minutes including queues is one source-bound free-runner
-observation, not statistical/device benchmarking; hybrid draft291 remains unqualified.
+## Earlier accepted checkpoints and investigation history
 
-## Current unmerged follow-ups
-
-- [Draft PR300](https://github.com/Apdelrahman1911/parlor/pull/300) groups #299/#301
-  initializer/coordinator ownership. Its normally published current-main head
-  `22c67a6c` has a genuine [full41126885894](https://github.com/Apdelrahman1911/parlor/actions/runs/41126885894)
-  iOS runtime failure: **22 Swift PASS /1FAIL**, Arabic Egyptian Dominoes catalog
-  control settlement before the first game-opening tap, before name input/networking.
-  First complete existence/frame/enabled sample takes8.631 seconds; the next reports
-  absence after the unchanged10-second budget. This establishes a failed observer,
-  **not** native cause, a game-code regression or a caller-ownership repair failure.
-  Original job log SHA256 `bb20b419a1aa15f5972e78bae0919148de7408322e28bb82f4fc2875e0808563`;
-  immutable runtime ZIP SHA256 `512d7ca4b2bafcb4ead03fa99bc7fc8cd38d881e3c6cabdf15c198283e60abdd`.
-  Other completed producers cannot qualify the run. No blind retry, deadline/check
-  relaxation, partial-pass stitching or merge; #299/#301 and native #267/#276 stay
-  open. Dependent main300 preparations are retired without deleting source/evidence.
-  Fresh local1,948/733 results remain local, not full hosted/main acceptance.
-- [Draft PR296](https://github.com/Apdelrahman1911/parlor/pull/296) is locally
-  prepared to group the [authored-text scalar correction](audits/2026-10-30-AUTHORED-DISPLAY-SCALARS.md)
-  with the [Ghamza public-information regression](audits/2026-10-30-GHAMZA-PUBLIC-INFORMATION.md)
-  originally published in [draft295](https://github.com/Apdelrahman1911/parlor/pull/295).
-  **One shipping policy change, three test files**, eleven common additions;
-  the four reviewed implementation/test files remain byte-identical. No game-rule
-  change, extra connection or imported iOS diagnostic implementation. Exact prior
-  local union `beaac746` passes1,952 Desktop /737 Android per variant /120 GitHub-test,
-  all777 release and450 readiness methods with established local skips; receipt
-  SHA256 `eee1391a5f11a8b4e75aab61cfebfdb42f9dbb566215b3f957a297c7c6c98f2e`.
-  That receipt does **not** qualify the subsequent documentation union or a newer
-  main. Independent accepted-main294 integration, fresh exact-source local and all-eight hosted/
-  native/runtime/custody checks remain mandatory. Neither unprotected review branch
-  is a merge destination. Keep295 draft until its exact work is accepted through
-  protected main; #293 and physical/social-play #260 retain their applicable gates.
-- Independent small [RPC publication/status documentation](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md)
-  is being grouped locally with296 to avoid an extra full hosted matrix without
-  removing tests, architectures or Release optimizations. Dated network/source
-  readbacks remain intact; retain shipping P2pKit0.7.0-rc3. Published rc8 availability
-  is confirmed, but no qualified replacement graph or measured mobile benefit exists.
-- Failed original41079982618 remains failed and unqualified. #297 closes only
-  accepted upfront dual-image provisioning, not the unavailable archive's cause.
-  No blind retry, additional agent, paid runner, protection bypass or Store release.
+The dated observations below retain their original source/run identities;
+they do not certify the current unmerged corrections.
 
 ## Prior accepted checkpoint (PR290)
 
@@ -206,14 +187,13 @@ failures remain failed; #267/#276 stay open; PR #282 stays draft/unmerged.
 - **Native/tooling:** #267/#276 input causality/failed-only pipeline/full 60-journey
   neutrality; #284 copied-input integration is closed after actual-main acceptance, as are
   scoped #283/#285. Closed #6 covers separate-process automation, not physical phones.
-- **RPC:** production P2pKit0.7.0-rc3 messaging stays pinned. A separate October30
-  reassessment now confirms Central's post-#524 `0.8.0-rc8` publication and
-  publisher/target-byte parity; absence of publication is no longer the deferral
-  reason. No comparative mobile benefit or replacement shipping graph is qualified;
-  additional connection/trust ownership remains unjustified. The
-  [publication report](audits/2026-10-30-PUBLISHED-RPC-REASSESSMENT.md) retains
-  dated byte/source checks; the [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md)
-  retains historical rc7 observations, not a denial of rc8 availability.
+- **RPC:** reviewed P2pKit 0.7.0-rc3 Maven Central single-connection messaging remains.
+  October30 publication/source readback confirms upstream
+  [0.8.0-rc8](https://github.com/p2pKit/P2pKit/tree/6c85fdc2977386e572830c243f9aa8bb17d84ec3)
+  includes #524; publication is no longer the reason to defer. No comparative
+  mobile benefit or qualified replacement graph is established. A separate
+  detailed documentation reassessment is locally prepared; the
+  [older decision](audits/RPC_AND_LIFECYCLE_2026-10-25.md) retains dated rc7 evidence.
 
 Only standard free public runners (documented 20 total / five macOS ceilings, no allocation
 guarantee), no paid infrastructure/additional agents, weakened verification or

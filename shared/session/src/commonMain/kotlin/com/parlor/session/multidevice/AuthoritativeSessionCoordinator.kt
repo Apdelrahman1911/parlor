@@ -46,7 +46,12 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 
-/** Wire-ready public and player-private state captured from one domain revision. */
+/**
+ * Wire-ready public and player-private state captured from one domain revision.
+ * The producer must finish writing both buffers before returning them. The host
+ * copies their validated bytes before handing them to asynchronous peer outboxes;
+ * later serialization may reuse the producer's buffers, but must not race that copy.
+ */
 data class PlayerSnapshotPayload(
     val publicPayload: ByteArray,
     val privatePayload: ByteArray,
@@ -1208,7 +1213,16 @@ class HostAuthoritativeSessionCoordinator(
         check(message.validateFor(protocol) == ProtocolValidation.Valid) {
             "Snapshot exceeds the protocol limit or has invalid metadata"
         }
-        outboundByPlayer[playerId]?.enqueue(message)
+        // Outboxes may serialize after the next recipient's snapshot callback
+        // runs. Own these bytes before that handoff: a reused producer buffer
+        // must never change a queued recipient's secret or revision contents.
+        // Validate first so an oversized callback cannot force an oversized copy.
+        outboundByPlayer[playerId]?.enqueue(
+            message.copy(
+                publicPayload = message.publicPayload.copyOf(),
+                privatePayload = message.privatePayload.copyOf(),
+            ),
+        )
     }
 
     private suspend fun sendResult(
