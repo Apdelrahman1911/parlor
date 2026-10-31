@@ -101,3 +101,36 @@ native evidence. Original calls/returns, UI actions, selectors, ten-second budge
 failure classification, privacy ledger and cleanup requirements remain unchanged.
 The corrected-source capability must pass before natural getter observations
 can support application investigation. Issues267/276 and Phase1 remain open.
+
+## Post-ARC runtime result and rejected-evidence retention correction
+
+[41192595302](https://github.com/Apdelrahman1911/parlor/actions/runs/41192595302)
+completes **FAILURE**, not qualification. Actual SDK and new independent macOS
+unretainable-root controls pass; copied application builds (663.055s), and the
+native method reaches exactly the intended suppressed Host assertion (exit65).
+Original Kotlin export5272 bytes is retained; owned cleanup and children pass.
+The collector rejects the native companion at its mandatory installed/overflow
+check. Original artifact13039529175 (83,902,827 bytes), SHA256
+`796611321c19693b398883ba4ad6ef28a24068bcc3f5a68b1ca7f43529efbd6f`,
+independently matches API size/digest/identity. It contains **no native companion**:
+`retain_companion` decoded completeness before writing, losing the safely bounded
+rejected numeric report when owned Simulator cleanup correctly deleted the sandbox.
+Installation rejection and overflow cannot be distinguished from retained data.
+
+The evidence-based collector correction separates strict privacy/ownership/shape
+validation from qualification. Foreign/private/malformed/oversized reports still
+reject **before retention**. A safe incomplete numeric report is exclusively
+retained unchanged, then completeness still raises and the workflow still fails.
+New source-bound diagnostic schema2 adds only seven bounded startup integers:
+runtime/direct/Cocoa/eligible class counts, two one-byte getter return-type ASCII
+codes (zero for other encodings), and installation stage. No class names, pointers,
+labels, values, object queries, new inputs or deadlines enter this report. Original
+hook uniqueness, Q/B signatures, full returns, capacity1024/overflow completeness,
+failure classifier, source/product custody and cleanup remain required.
+
+Regression controls prove safe incomplete retention then rejection, exclusive
+no-clobber writes, private/foreign rejection before any retention, and old schema
+or false installation-success rejection. The next source-specific capability
+execution diagnoses the actual rejected native status; it is not an unchanged
+retry and cannot qualify from an incomplete report. No application root cause,
+shipping correction, PR merge, issue closure or physical result is claimed.

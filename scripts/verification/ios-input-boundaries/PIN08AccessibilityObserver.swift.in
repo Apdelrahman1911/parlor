@@ -9,28 +9,36 @@ import Darwin
 /// @convention(c) dlsym bindings avoid ARC when inspecting unrelated metadata.
 /// No Objective-C messages, object initialization or getter reads occur here.
 enum PIN08ClassInventory {
-    static func composeSubclasses() -> [AnyClass] {
+    struct Inventory {
+        let classes: [AnyClass]
+        let total: Int
+        let direct: Int
+        let failed: Bool
+    }
+    static func composeSubclasses() -> Inventory {
         typealias Superclass = @convention(c) (UnsafeRawPointer) -> UnsafeRawPointer?
         typealias ClassName = @convention(c) (UnsafeRawPointer) -> UnsafePointer<CChar>
-        guard let runtime = dlopen(nil, RTLD_LAZY) else { return [] }
+        guard let runtime = dlopen(nil, RTLD_LAZY) else { return Inventory(classes: [], total: 0, direct: 0, failed: true) }
         defer { dlclose(runtime) }
         guard let superclassSymbol = dlsym(runtime, "class_getSuperclass"),
-              let nameSymbol = dlsym(runtime, "class_getName") else { return [] }
+              let nameSymbol = dlsym(runtime, "class_getName") else { return Inventory(classes: [], total: 0, direct: 0, failed: true) }
         let superclass = unsafeBitCast(superclassSymbol, to: Superclass.self)
         let className = unsafeBitCast(nameSymbol, to: ClassName.self)
         var count: UInt32 = 0
-        guard let classes = objc_copyClassList(&count) else { return [] }
+        guard let classes = objc_copyClassList(&count) else { return Inventory(classes: [], total: 0, direct: 0, failed: true) }
         // Never subscript the imported AnyClass buffer: doing so retains every
         // class. Read only pointer storage and free the exact malloc allocation.
-        guard let storage = UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes)) else { return [] }
+        guard let storage = UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes)) else { return Inventory(classes: [], total: 0, direct: 0, failed: true) }
         defer { free(storage) }
-        guard count <= 100_000 else { return [] }
+        guard count <= 100_000 else { return Inventory(classes: [], total: 0, direct: 0, failed: true) }
         var matches: [AnyClass] = []
+        var direct = 0
         for index in 0..<Int(count) {
             let candidate = storage.load(fromByteOffset: index * MemoryLayout<UnsafeRawPointer>.stride,
                                          as: UnsafeRawPointer.self)
             guard let parent = superclass(candidate),
                   String(cString: className(parent)) == "CMPAccessibilityElement" else { continue }
+            direct += 1
             var ancestor: UnsafeRawPointer? = parent
             var isNSObject = false
             for _ in 0..<32 {
@@ -45,7 +53,7 @@ enum PIN08ClassInventory {
             // Only this validated Cocoa lineage supports Swift's class retain.
             matches.append(unsafeBitCast(candidate, to: AnyClass.self))
         }
-        return matches
+        return Inventory(classes: matches, total: Int(count), direct: direct, failed: false)
     }
 }
 
@@ -68,6 +76,10 @@ final class PIN08AccessibilityObserver {
     private var overflow = 0
     private var installed = false
     private var attempted = false
+    // Numeric startup stages only: total/direct/Cocoa/eligible counts,
+    // original getter return-type ASCII (0 if not one byte), failure stage.
+    // No runtime names, addresses, selector values or private state exported.
+    private var installation = [0, 0, 0, 0, 0, 0, 0]
     private static let capacity = 1024
     // A process-owned bounded hook is never removed under an in-flight native
     // AX getter. The owned diagnostic app/process is terminated by its runner.
@@ -84,8 +96,11 @@ final class PIN08AccessibilityObserver {
     /// All signatures and implementations are checked BEFORE either replacement.
     func install() -> Bool {
         precondition(Thread.isMainThread && hooks.isEmpty)
-        guard Self.processOwner == nil else { return false }
-        let classes = PIN08ClassInventory.composeSubclasses()
+        guard Self.processOwner == nil else { installation[6] = 1; return false }
+        let inventory = PIN08ClassInventory.composeSubclasses()
+        installation = [inventory.total, inventory.direct, inventory.classes.count, 0, 0, 0, 2]
+        guard !inventory.failed else { return false }
+        let classes = inventory.classes
         let matches = classes.filter { candidate in
             guard let parent = class_getSuperclass(candidate),
                   let traits = class_getInstanceMethod(candidate, NSSelectorFromString("accessibilityTraits")),
@@ -98,13 +113,19 @@ final class PIN08AccessibilityObserver {
             return !Self.same(method_getImplementation(traits), method_getImplementation(parentTraits))
                 && !Self.same(method_getImplementation(element), method_getImplementation(parentElement))
         }
+        installation[3] = matches.count
+        installation[6] = 3
         guard matches.count == 1, let target = matches.first,
               let parent = class_getSuperclass(target) else { return false }
         let traitsSelector = NSSelectorFromString("accessibilityTraits")
         let elementSelector = NSSelectorFromString("isAccessibilityElement")
+        installation[6] = 4
         guard let traits = class_getInstanceMethod(target, traitsSelector),
-              let element = class_getInstanceMethod(target, elementSelector),
-              Self.signature(traits, returns: "Q"), Self.signature(element, returns: "B"),
+              let element = class_getInstanceMethod(target, elementSelector) else { return false }
+        installation[4] = Self.returnTypeCode(traits)
+        installation[5] = Self.returnTypeCode(element)
+        installation[6] = 5
+        guard Self.signature(traits, returns: "Q"), Self.signature(element, returns: "B"),
               let parentTraits = class_getInstanceMethod(parent, traitsSelector),
               let parentElement = class_getInstanceMethod(parent, elementSelector),
               !Self.same(method_getImplementation(traits), method_getImplementation(parentTraits)),
@@ -138,6 +159,7 @@ final class PIN08AccessibilityObserver {
         for hook in hooks { method_setImplementation(hook.method, hook.replacement) }
         Self.processOwner = self
         installed = true
+        installation[6] = 6
         return true
     }
 
@@ -149,6 +171,12 @@ final class PIN08AccessibilityObserver {
         guard let value else { return nil }
         defer { free(value) }
         return String(cString: value)
+    }
+
+    private static func returnTypeCode(_ method: Method) -> Int {
+        let bytes = copiedType(method_copyReturnType(method))?.utf8
+        guard let bytes, bytes.count == 1, let code = bytes.first else { return 0 }
+        return Int(code)
     }
 
     private static func signature(_ method: Method, returns expected: String) -> Bool {
@@ -186,10 +214,10 @@ final class PIN08AccessibilityObserver {
               environment["SIMULATOR_UDID"] == simulator,
               let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
               environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
-        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator,
+        let report: [String: Any] = ["schema": 2, "token": token, "simulator": simulator,
             "bundle": bundle, "process": ProcessInfo.processInfo.processIdentifier,
             "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
-            "installed": installed, "overflow": overflow,
+            "installed": installed, "overflow": overflow, "installation": installation,
             // Local numeric ordinals do not retain an object or serialize its
             // address. Address reuse is possible; these are NOT lifetime IDs.
             "rows": rows.map { [$0.startedMs, $0.finishedMs, Double($0.element),

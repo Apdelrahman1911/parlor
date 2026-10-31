@@ -26,9 +26,9 @@ def sources():
 
 
 def fixture():
-    return dict(schema=1, token='00000000-0000-4000-8000-000000000001',
+    return dict(schema=2, token='00000000-0000-4000-8000-000000000001',
         simulator='00000000-0000-4000-8000-000000000002', bundle='me.parlor.ios.debug', process=100,
-        capturedMs=20, installed=True, overflow=0, rows=[[10,11,1,1,1],[12,13,1,2,1]])
+        capturedMs=20, installed=True, overflow=0, installation=[5000,2,2,1,81,66,6], rows=[[10,11,1,1,1],[12,13,1,2,1]])
 
 
 def decode(value):
@@ -121,7 +121,7 @@ class NativeAccessibilityControls(unittest.TestCase):
         self.assertEqual(text.count('defer { free(storage) }'), 1)
         self.assertNotIn('classes[$0]', text)
         self.assertNotIn('classes[index]', text)
-        self.assertIn('guard count <= 100_000 else { return [] }', text)
+        self.assertIn('guard count <= 100_000 else { return Inventory', text)
         self.assertIn('storage.load(fromByteOffset:', text)
         self.assertIn('guard isNSObject else { continue }', text)
         self.assertEqual(text.count('unsafeBitCast(candidate, to: AnyClass.self)'), 1)
@@ -163,7 +163,7 @@ class NativeAccessibilityControls(unittest.TestCase):
 
     def test_duplicate_json_and_oversized_companions_cannot_be_accepted(self):
         value = fixture()
-        for raw in (json.dumps(value).replace('"schema": 1', '"schema": 1, "schema": 1').encode(),
+        for raw in (json.dumps(value).replace('"schema": 2', '"schema": 2, "schema": 2').encode(),
                     b'x' * 131073):
             with self.assertRaises(ValueError):
                 native.decode_native(raw, token=value['token'], simulator=value['simulator'], bundle=value['bundle'],
@@ -198,6 +198,45 @@ class NativeAccessibilityControls(unittest.TestCase):
                 with self.assertRaises((ValueError, FileNotFoundError)):
                     native.accept_native_export(out, state)
 
+    def test_incomplete_but_safe_native_status_is_retained_then_rejected_not_qualified(self):
+        for update in (dict(installed=False, rows=[], installation=[5000,2,2,0,0,0,3]),
+                       dict(overflow=1)):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve(); sandbox = root / 'sandbox'; dest = root / 'retained'; dest.mkdir()
+                value = fixture(); value.update(update)
+                source = sandbox / 'tmp' / ('parlor-pin08-' + value['token']) / 'accessibility.json'
+                source.parent.mkdir(parents=True); raw = json.dumps(value).encode(); source.write_bytes(raw)
+                with self.assertRaises(ValueError):
+                    native.retain_companion(sandbox, dest, value['token'], value['simulator'], value['bundle'],
+                                            dict(process=100, capturedMs=21))
+                retained = dest / ('native-accessibility-' + value['token'] + '.json')
+                self.assertEqual(retained.read_bytes(), raw)
+                with self.assertRaises(FileExistsError):
+                    native.retain_companion(sandbox, dest, value['token'], value['simulator'], value['bundle'],
+                                            dict(process=100, capturedMs=21))
+                self.assertEqual(retained.read_bytes(), raw)
+
+    def test_private_or_foreign_native_report_is_rejected_before_any_retention(self):
+        for update in (dict(private='forbidden'), dict(token='foreign'), dict(installation=[0]*8),
+                       dict(installation=[5000,2,2,1,81,66,7]), dict(installation=[1,2,2,1,81,66,6])):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve(); sandbox = root / 'sandbox'; dest = root / 'retained'; dest.mkdir()
+                value = fixture(); token = value['token']; value.update(update)
+                source = sandbox / 'tmp' / ('parlor-pin08-' + token) / 'accessibility.json'
+                source.parent.mkdir(parents=True); source.write_text(json.dumps(value))
+                with self.assertRaises(ValueError):
+                    native.retain_companion(sandbox, dest, token, value['simulator'], value['bundle'],
+                                            dict(process=100, capturedMs=21))
+                self.assertEqual(list(dest.iterdir()), [])
+
+    def test_old_schema_or_false_installation_success_never_qualifies(self):
+        for update in (dict(schema=1), dict(installation=[5000,2,2,1,81,66,5]),
+                       dict(installation=[5000,2,2,0,81,66,6]), dict(installation=[5000,2,2,1,81,99,6]),
+                       dict(installation=[5000,2,2,1,True,66,6])):
+            value = fixture(); value.update(update)
+            with self.assertRaises(ValueError):
+                decode(value)
+
     @unittest.skipUnless(platform.system() == 'Darwin', 'Actual Apple runtime unavailable on Linux')
     def test_actual_objc_inventory_handles_unretainable_root_and_two_compose_subclasses(self):
         text = (pair.HERE / native.TEMPLATE).read_text()
@@ -218,7 +257,7 @@ let register = unsafeBitCast(dlsym(handle, "objc_registerClassPair")!, to: Regis
 let unrelated = "PIN08UnretainableRoot".withCString { allocate(nil, $0, 0) }!
 register(unrelated)
 _ = Root(); _ = Element()
-let result = PIN08ClassInventory.composeSubclasses()
+let result = PIN08ClassInventory.composeSubclasses().classes
 precondition(Set(result.map { String(cString: class_getName($0)) }) ==
              Set(["PIN08ControlRoot", "PIN08ControlElement"]))
 dlclose(handle)

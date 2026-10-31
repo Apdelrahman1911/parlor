@@ -26,7 +26,7 @@ SCOPE = ('One distinct intentionally failed current-source copied Host transitio
          'observation; capability only, not original cause, neutrality, shipping or physical qualification')
 TEMPLATE = 'PIN08AccessibilityObserver.swift.in'
 # Reviewed separately from PIN01/PIN02; their templates/schema/limits stay exact.
-TEMPLATE_SHA256 = 'c87fc378e927fdca729c59625b5bd49bae765d6ca940549a67b34668bb509382'
+TEMPLATE_SHA256 = '66f8d20e6f45aa92fbf1765ed7eb1edb0216cab9932be0f03e2d4992e2083350'
 INSTALL = '''        let observation = PIN08AccessibilityObserver(armed: { MainViewControllerKt.PIN01InputArmed() })
         _ = observation.install()
         pin08Accessibility = observation
@@ -102,21 +102,33 @@ def failed_method_exports(result, destination, outcomes):
                          str(directory), '--test-id', METHOD])]
 
 
-def decode_native(raw, *, token, simulator, bundle, legacy):
+def validate_native_envelope(raw, *, token, simulator, bundle, legacy):
+    """Safe retention requires privacy/ownership/shape, NOT hook completeness.
+
+    A safely retained incomplete report never qualifies native capability.
+    Unknown/private, malformed, foreign or oversized bytes still cannot export.
+    """
     require(type(raw) is bytes and 0 < len(raw) <= 131_072, 'Bounded original native companion required')
     value = json.loads(raw, object_pairs_hook=pin01_receipts.reject_duplicates,
                        parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite native value')))
     require(type(value) is dict and set(value) == {'schema', 'token', 'simulator', 'bundle', 'process',
-            'capturedMs', 'installed', 'overflow', 'rows'}, 'Unknown/private native companion field')
-    require(type(value['schema']) is int and value['schema'] == 1 and value['token'] == token and
+            'capturedMs', 'installed', 'overflow', 'installation', 'rows'}, 'Unknown/private native companion field')
+    require(type(value['schema']) is int and value['schema'] == 2 and value['token'] == token and
             value['simulator'] == simulator and value['bundle'] == bundle and value['process'] == legacy['process'],
             'Exact original native token/device/product/process required')
     require(type(value['process']) is int and value['process'] > 0 and
             type(value['capturedMs']) in (int, float) and math.isfinite(value['capturedMs']) and
             0 <= value['capturedMs'] <= legacy['capturedMs'], 'Valid original native process/clock required')
-    require(value['installed'] is True and type(value['overflow']) is int and value['overflow'] == 0,
-            'Exact ABI hooks must install and bounded buffer must be complete')
-    require(type(value['rows']) is list and 0 < len(value['rows']) <= 1024, 'Complete bounded native getter rows required')
+    require(type(value['installed']) is bool and type(value['overflow']) is int and 0 <= value['overflow'] <= 1024,
+            'Bounded numeric native status required')
+    installation = value['installation']
+    require(type(installation) is list and len(installation) == 7 and
+            all(type(v) is int for v in installation) and
+            all(0 <= v <= 100_000 for v in installation[:4]) and
+            all(0 <= v <= 127 for v in installation[4:6]) and 0 <= installation[6] <= 6 and
+            installation[3] <= installation[2] <= installation[1] <= installation[0],
+            'Only bounded numeric installation counts/type codes/stage allowed')
+    require(type(value['rows']) is list and len(value['rows']) <= 1024, 'Bounded native getter rows required')
     finished = 0
     for row in value['rows']:
         require(type(row) is list and len(row) == 5 and
@@ -127,6 +139,14 @@ def decode_native(raw, *, token, simulator, bundle, legacy):
         require(row[2] == int(row[2]) and 1 <= row[2] <= 1024 and row[3] in (1, 2) and
                 row[4] == int(row[4]) and 0 <= row[4] <= (3 if row[3] == 1 else 1),
                 'Only local ordinals/getter/public-bit enums allowed')
+    return value
+
+
+def decode_native(raw, *, token, simulator, bundle, legacy):
+    value = validate_native_envelope(raw, token=token, simulator=simulator, bundle=bundle, legacy=legacy)
+    require(value['installed'] is True and value['overflow'] == 0 and value['installation'][6] == 6 and
+            value['installation'][3] == 1 and value['installation'][4:6] == [81, 66] and value['rows'],
+            'Exact ABI hooks must install and bounded buffer must be complete')
     require(any(r[3] == 1 and int(r[4]) & 1 for r in value['rows']) and
             any(r[3] == 2 and r[4] == 1 for r in value['rows']), 'Actual button-traits and element getters required')
     return dict(sha256=hashlib.sha256(raw).hexdigest(), token=token, rows=len(value['rows']),
@@ -145,10 +165,10 @@ def retain_companion(sandbox, destination, token, simulator, bundle, legacy):
     require(not source.is_symlink() and source.resolve(strict=True) == source.absolute(),
             'Exact nonredirected owned native companion required')
     raw = run_pin03.read_capture(source)
-    decoded = decode_native(raw, token=token, simulator=simulator, bundle=bundle, legacy=legacy)
+    validate_native_envelope(raw, token=token, simulator=simulator, bundle=bundle, legacy=legacy)
     with (destination / ('native-accessibility-' + token + '.json')).open('xb') as f:
         f.write(raw)
-    return decoded
+    return decode_native(raw, token=token, simulator=simulator, bundle=bundle, legacy=legacy)
 
 
 def accept_native_export(out, state):
