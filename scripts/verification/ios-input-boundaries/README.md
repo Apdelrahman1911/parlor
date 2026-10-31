@@ -369,3 +369,19 @@ deadlines and dependencies stay unchanged. A positive enabled/nonzero baseline
 is mandatory; either later status is retained without declaring a shipping fix.
 The separate diagnostic branch runs on standard free `macos-15`, preserving
 failure-only exports, actual SDK typechecks and all source/product/cleanup checks.
+
+## Actual catalog motion boundary (PIN20)
+
+Sequential XCTest frame/enabled samples do not observe actual Compose scrolling.
+PIN20 adds a bounded five-number ledger of public Home mount/unmount, scrolling,
+first visible index and pixel offset via `snapshotFlow` invalidations (no polling,
+keys, labels, player state, touch interception or scroll mutation). The original
+EN/AR methods are preserved byte-for-byte relative to PIN12. A third isolated
+control sets a copied-app-only launch flag to suppress its own Host transition;
+ordinary journeys never set it. The captured flag is bound to its failed method,
+and the control must observe actual scrolling/Home disposal. Its forced assertion
+must genuinely fail.
+All three methods must execute without skips, and each actual failure requires
+its complete original numeric, native, root and new motion companions plus exact
+source/product/device/cleanup custody. Successful journeys export no ledger.
+This investigates a missing observation, not observer neutrality or a shipping fix.

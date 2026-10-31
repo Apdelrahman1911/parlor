@@ -1,0 +1,66 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
+/** COPY ONLY: actual catalog scroll state; no labels, keys, identities or input. */
+object PIN20CatalogMotion {
+    private const val CAPACITY = 4096
+    private const val WIDTH = 5
+    private val rows = DoubleArray(CAPACITY * WIDTH)
+    private var size = 0
+    private var overflow = 0
+    private var invalid = 0
+    var syntheticHostSuppression = false
+
+    // Actual main-thread composition/scroll observations, not a polling timer.
+    // Row: system uptime ms, mounted, scrolling, first visible index, pixel offset.
+    fun record(mounted: Boolean, scrolling: Boolean, index: Int, offset: Int) {
+        val now = PIN01Observation.clock()
+        if (!now.isFinite() || now < 0 || now > 1e12 || index !in 0..128 || offset !in 0..100_000) {
+            invalid = (invalid + 1).coerceAtMost(1_000_000)
+            return
+        }
+        if (size == CAPACITY) {
+            overflow = (overflow + 1).coerceAtMost(1_000_000)
+            return
+        }
+        val at = size++ * WIDTH
+        rows[at] = now
+        rows[at + 1] = if (mounted) 1.0 else 0.0
+        rows[at + 2] = if (scrolling) 1.0 else 0.0
+        rows[at + 3] = index.toDouble()
+        rows[at + 4] = offset.toDouble()
+    }
+
+    fun snapshot(): String = buildJsonObject {
+        put("overflow", overflow)
+        put("invalid", invalid)
+        put("syntheticControl", syntheticHostSuppression)
+        put("rows", buildJsonArray {
+            for (row in 0 until size) add(buildJsonArray {
+                for (field in 0 until WIDTH) add(JsonPrimitive(rows[row * WIDTH + field]))
+            })
+        })
+    }.toString()
+}
+
+@Composable
+fun PIN20ObserveCatalogMotion(state: LazyListState) {
+    DisposableEffect(state) {
+        onDispose { PIN20CatalogMotion.record(false, false, 0, 0) }
+    }
+    LaunchedEffect(state) {
+        // snapshotFlow observes state invalidations, never polls or mutates scrolling.
+        snapshotFlow { Triple(state.isScrollInProgress, state.firstVisibleItemIndex, state.firstVisibleItemScrollOffset) }
+            .collect { (scrolling, index, offset) -> PIN20CatalogMotion.record(true, scrolling, index, offset) }
+    }
+}

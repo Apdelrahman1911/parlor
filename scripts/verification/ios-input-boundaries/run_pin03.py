@@ -333,15 +333,16 @@ def completed_exit_code(result):
         'PAIRED_OBSERVER_CONTEXT_COMPLETE_NOT_QUALIFICATION',
         'SYNTHETIC_ROOT_IDLE_STIMULUS_COMPLETE_NOT_QUALIFICATION',
         'SETTLED_CATALOG_IDLE_STIMULUS_COMPLETE_NOT_QUALIFICATION',
+        'PUBLIC_CATALOG_MOTION_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -366,6 +367,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     elif aggregate_context:
         import pin16_aggregate_context as control
         combined_execution = True  # Reuse the unchanged single native action.
+    elif public_motion:
+        import pin20_catalog_motion as control
+        root_capability = True
     elif settled_idle:
         import pin19_settled_catalog_idle as control
         root_capability = True
@@ -604,6 +608,8 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     row['companion_captures'] = []
                 if root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                     row['root_companion_captures'] = []
+                if public_motion:
+                    row['motion_companion_captures'] = []
                 for token in sorted(tokens):
                     path = sandbox / 'tmp' / ('parlor-pin02-' + token) / 'capture.json'
                     if path.is_file():
@@ -619,6 +625,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                         if root_capability or root_boundary or public_boundary or original_cohort or original_resources or combined_execution:
                             row['root_companion_captures'].append(control.retain_root_companion(
+                                sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
+                        if public_motion:
+                            row['motion_companion_captures'].append(control.retain_motion_companion(
                                 sandbox, dest, token, simulator_id, bundle, json.loads(raw)))
                 row['captures'] = captures
         except BaseException as error:
