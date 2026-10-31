@@ -17,11 +17,12 @@ def load_tests(loader, _tests, _pattern):
              'test_pin10_root_boundary': '_parlor_root_boundary_controls',
              'test_pin11_root_observations': '_parlor_root_observation_controls',
              'test_pin11_public_failure_coverage': '_parlor_public_failure_coverage_controls',
-             'test_pin12_public_boundaries': '_parlor_public_failure_boundary_controls'}
+             'test_pin12_public_boundaries': '_parlor_public_failure_boundary_controls',
+             'test_pin13_original_cohort': '_parlor_original_cohort_controls'}
     for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
                  'pin04_original_host', 'public_attachments', 'frozen_sources',
                  'pin06_public_setup_pair', 'pin07_failure_control', 'pin07_native_adapter', 'run_pin03', 'current_boundary_adapter', 'pin08_accessibility', 'pin09_native_boundary',
-                 'pin10_root_boundary', 'pin11_root_observations', 'pin11_public_failure_coverage', 'pin12_public_boundaries', *tests):
+                 'pin10_root_boundary', 'pin11_root_observations', 'pin11_public_failure_coverage', 'pin12_public_boundaries', 'pin13_original_cohort', *tests):
         path = folder / (name + '.py')
         key = tests.get(name, name)
         module = sys.modules.get(key)

@@ -137,3 +137,26 @@ journeys; incomplete, unknown and production-qualification labels reject. Origin
 native test exits remain0/65. This is a harness correction, not an input fix;
 run41203554006 must keep its actual terminal result and original evidence.
 The separate original23-case cohort remains preserved preparation, not wired.
+
+## PIN12 terminal result and next source-bound experiment
+
+[41203554006](https://github.com/Apdelrahman1911/parlor/actions/runs/41203554006)
+finished **FAILURE**, exact`528f5568`; that result is not waived or relabeled.
+Independent original-artifact/source/product/owned-cleanup acceptance confirms
+both original EN/AR journeys passed with zero skips and zero exports. Its
+accepted state reaches the previously identified omitted-label classifier and
+exits1. Original artifact13044567064 is3023175bytes, SHA256
+`b41254e530351930221250c06315266d6de173057680653782dacea28d67c2ed`.
+The original API job log and complete copied build/test logs are preserved;
+`gh run view --log` returned an empty file, so the separate original job-log API
+was used without overwriting that receipt. No app root cause is established.
+
+The next distinct PIN13 experiment reuses prepared code to restore **all23
+original cases**, including the four-container-test prelude absent from the
+successful targeted profiles. Copied application and entire driver are identical
+to PIN12. Actions, assertions, selectors and deadlines remain unchanged. Only
+case selection and ordinary non-quiet test output differ; original log order
+must match every case. All other21 cases must pass; target failures require the
+unchanged complete failure-only companions. No retry/tap replay or production
+qualification is introduced. The explicit process classifier includes this new
+diagnostic label. Native execution and original input causality remain pending.

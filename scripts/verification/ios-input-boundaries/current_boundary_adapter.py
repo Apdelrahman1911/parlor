@@ -58,7 +58,7 @@ def verify_results(summary, tests, simulator_id, code):
     return methods
 
 
-def accept_observations(out, state, *, profile, arms, renderer):
+def accept_observations(out, state, *, profile, arms, renderer, result_verifier=None):
     """Shared source/product/result/custody validation, not a qualification gate.
 
     Entry points still bind their own exact profile, arms and copied-source plan.
@@ -76,7 +76,10 @@ def accept_observations(out, state, *, profile, arms, renderer):
         arm = row['arm']; dest = out / arm
         require(row['build_exit'] == 0 and row['cleanup'] == 'PASS' and
                 row['result'] in ('JOURNEYS_PASSED', 'JOURNEYS_FAILED'), 'Real build/results/cleanup required')
-        methods = verify_results(synthetic.load(dest / 'summary.json'), synthetic.load(dest / 'tests.json'),
+        # A separately source-bound cohort may require MORE original tests.
+        # The default two-journey verifier and every custody check stay intact.
+        selected_verifier = verify_results if result_verifier is None else result_verifier
+        methods = selected_verifier(synthetic.load(dest / 'summary.json'), synthetic.load(dest / 'tests.json'),
                                  row['simulator'], row['test_exit'])
         require(row['methods'] == methods, 'Original methods differ from collection')
         plan = renderer({p: pair.fixture(p) for p in pair.MODIFIED}, pair.INPUTS, arm=arm)

@@ -56,9 +56,10 @@ def accept_native_export(out, state):
     return accept_observation_export(out, state, profile=PROFILE, renderer=renderer)
 
 
-def accept_observation_export(out, state, *, profile, renderer):
+def accept_observation_export(out, state, *, profile, renderer, result_verifier=None):
     """Exact entry-point renderer binding; all original checks remain required."""
-    current.accept_observations(out, state, profile=profile, arms=ARMS, renderer=renderer)
+    current.accept_observations(out, state, profile=profile, arms=ARMS, renderer=renderer,
+                               result_verifier=result_verifier)
     row = state['arms'][0]; dest = out / 'compose'
     failures = [method for method, outcome in row['methods'].items() if outcome == 'Failed']
     captures = sorted(dest.glob('capture-*.json'))
