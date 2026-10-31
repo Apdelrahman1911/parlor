@@ -1,7 +1,9 @@
 """Prepared coverage controls; source checks are not native failure evidence."""
 import os
 from pathlib import Path
+import plistlib
 import platform
+import re
 import subprocess
 import tempfile
 import unittest
@@ -24,6 +26,7 @@ def failure_count_build_command(sdk_platform, root, file, executable):
     # XCTest's overlay needs both Swift import (-I) AND linker (-L) search.
     # It is outside MacOSX.sdk; a framework path alone does not resolve it.
     return ['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-Onone',
+        '-emit-library', '-module-name', 'PIN11PublicCoverage',
         '-F', frameworks, '-I', libraries, '-L', libraries,
         '-Xlinker', '-rpath', '-Xlinker', frameworks,
         '-Xlinker', '-rpath', '-Xlinker', libraries,
@@ -40,6 +43,8 @@ class PublicFailureCoverageControls(unittest.TestCase):
         self.assertIn(['-Xlinker', '-rpath', '-Xlinker', libraries],
                       [command[i:i+4] for i in range(len(command) - 3)])
         self.assertEqual(command[:5], ['/usr/bin/xcrun', '--sdk', 'macosx', 'swiftc', '-Onone'])
+        self.assertIn('-emit-library', command)
+        self.assertIn('PIN11PublicCoverage', command)
         self.assertIn('/owned/cache', command)
 
     def test_exact_inverse_retains_all_original_actions_assertions_waiters_and_templates(self):
@@ -144,27 +149,45 @@ final class PIN11ExitCountCase: XCTestCase {
         defer { Self.exits["fail"] = testRun?.failureCount }
         XCTFail("Intentional native failure-count capability only")
     }
+    @objc func testZVerifyExitCounts() {
+        XCTAssertEqual(Self.exits, ["pass": 0, "fail": 1])
+        if Self.exits == ["pass": 0, "fail": 1] {
+            print("PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS")
+        }
+    }
 }
-let suite = PIN11ExitCountCase.defaultTestSuite
-suite.run()
-precondition(suite.testRun?.executionCount == 2)
-precondition(suite.testRun?.failureCount == 1)
-precondition(PIN11ExitCountCase.exits == ["pass": 0, "fail": 1])
-print("PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS")
 '''
         with tempfile.TemporaryDirectory(prefix='parlor-public-failure-count-') as temporary:
             root = Path(temporary).resolve()
             environment = os.environ | {'TMPDIR': str(root)}
-            file, executable = root / 'Count.swift', root / 'count'
+            file = root / 'Count.swift'
+            bundle = root / 'Coverage.xctest'
+            executable = bundle / 'Contents/MacOS/Coverage'
+            executable.parent.mkdir(parents=True)
+            (bundle / 'Contents/Info.plist').write_bytes(plistlib.dumps({
+                'CFBundleExecutable': 'Coverage', 'CFBundlePackageType': 'BNDL',
+                'CFBundleIdentifier': 'com.parlor.diagnostics.public-failure-coverage',
+            }))
             file.write_text(source)
             sdk_platform = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'macosx', '--show-sdk-platform-path'],
                 text=True, timeout=45, env=environment).strip()
             build = subprocess.run(failure_count_build_command(sdk_platform, root, file, executable),
                 capture_output=True, text=True, timeout=180, env=environment)
             self.assertEqual(build.returncode, 0, build.stdout + build.stderr)
-            actual = subprocess.run([str(executable)], capture_output=True, text=True, timeout=30, env=environment)
-            self.assertEqual(actual.returncode, 0, actual.stdout + actual.stderr)
-            self.assertIn('PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS', actual.stdout)
+            # Use Xcode's actual test host, which resolves XCTestCore/private
+            # dependencies. A standalone executable is not the XCTest runtime.
+            actual = subprocess.run(['/usr/bin/xcrun', '--sdk', 'macosx', 'xctest', str(bundle)],
+                capture_output=True, text=True, timeout=30, env=environment)
+            output = actual.stdout + actual.stderr
+            print(output) # Public synthetic fixture only; retain original outcomes.
+            self.assertEqual(actual.returncode, 1, output) # One intentional XCTest failure, never waived.
+            self.assertRegex(output, r'Executed 3 tests, with 1 failure', output)
+            for name, result in (('testFailedExit', 'failed'), ('testPassingExit', 'passed'),
+                                 ('testZVerifyExitCounts', 'passed')):
+                self.assertEqual(len(re.findall(r"Test Case [^\n]*" + name + r"[^\n]* " + result + r"\b", output)),
+                                 1, output)
+            self.assertIn('Intentional native failure-count capability only', output)
+            self.assertIn('PIN11_ACTUAL_XCTEST_FAILURE_EXIT_COUNT_PASS', output)
 
 
 if __name__ == '__main__':
