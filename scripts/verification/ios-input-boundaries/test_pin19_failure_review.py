@@ -39,7 +39,7 @@ def metadata():
 
 def activities():
     return dict(testIdentifier=review.METHOD,activities=[dict(title='Swipe up Application'),
-        dict(title='Find the "Open Word Impostor" Button'),
+        dict(title='Find the "Open Word Impostor" Button'),dict(title='Tap "Open Word Impostor" Button'),
         dict(title='failed - '+review.FAILURE,isAssociatedWithFailure=True)])
 
 
@@ -104,9 +104,9 @@ class PIN19FailureReviewControls(unittest.TestCase):
             s,t=copy.deepcopy(results());change(s,t)
             with self.subTest(change=change),self.assertRaises(ValueError):review.verify_results(s,t)
 
-    def test_exact_public_pre_stimulus_failure_has_no_input(self):
+    def test_exact_source_proven_unwanted_public_catalog_tap_has_no_typing(self):
         r=review.public_observations(activities(),*results())
-        self.assertEqual(r['counts']['taps'],0);self.assertEqual(r['counts']['typing'],0)
+        self.assertEqual(r['counts']['taps'],1);self.assertEqual(r['counts']['typing'],0)
         self.assertEqual(r['counts']['failures'],1);self.assertEqual(r['counts']['swipes'],1)
 
     def test_missing_activity_failure_flag_uses_mandatory_original_failure_not_invented_flag(self):
@@ -127,10 +127,11 @@ class PIN19FailureReviewControls(unittest.TestCase):
             p.unlink();p.symlink_to(Path(temporary)/'target')
             with self.assertRaises((ValueError,OSError)):review.original_object_digest(p,review.sha(b''))
 
-    def test_typing_tap_foreign_failure_and_duplicate_assertion_forbid_export(self):
+    def test_typing_second_or_foreign_tap_and_duplicate_assertion_forbid_export(self):
         for change in (lambda a:a.update(testIdentifier='foreign'),
             lambda a:a['activities'].append(dict(title="Type 'private' into field")),
             lambda a:a['activities'].append(dict(title='Tap "Open Word Impostor" Button')),
+            lambda a:a['activities'].append(dict(title='Tap "Host" Button')),
             lambda a:a['activities'].append(a['activities'][-1]),
             lambda a:a['activities'][-1].update(title='different failed assertion')):
             a=activities();change(a)

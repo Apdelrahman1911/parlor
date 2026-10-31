@@ -1,7 +1,7 @@
-"""Read the retained PIN19 pre-stimulus failure; never launch/build a Simulator.
+"""Read the retained PIN19 diagnostic call-graph failure; never launch/build a Simulator.
 
 Only exact public catalog method attachments and numeric query counters may be
-published. The failed experiment remains failed; its idle stimulus never ran.
+published. The failed experiment remains failed: its observe-only helper admitted a tap.
 """
 import argparse
 import hashlib
@@ -164,7 +164,11 @@ def public_observations(activities, summary, tests):
             if 'title' in node:
                 title = node['title']
                 require(type(title) is str and len(title.encode()) <= 4096)
-                counts['taps'] += int(title.startswith('Tap '))
+                if title.startswith('Tap '):
+                    # Exact original public catalog description, never Host,
+                    # permission, typing, room or private-game interactions.
+                    require(title == 'Tap "Open Word Impostor" Button')
+                    counts['taps'] += 1
                 counts['typing'] += int(title.startswith('Type '))
                 counts['swipes'] += int(title.startswith('Swipe up'))
                 counts['queries'] += int('Open Word Impostor' in title and
@@ -184,7 +188,7 @@ def public_observations(activities, summary, tests):
             for value in node:
                 visit(value, depth + 1)
     visit(activities)
-    require(counts['failures'] <= 1 and counts['taps'] == counts['typing'] == 0)
+    require(counts['failures'] <= 1 and counts['taps'] == 1 and counts['typing'] == 0)
     return dict(counts=counts, error_markers=errors, xctest_error_codes=sorted(codes),
                 failure_provenance='Exact original summary and test tree; activity failure flags reported without substitution',
                 scope='Fixed public failure categories only; no labels, values, activity graph or causal proof')
@@ -224,7 +228,8 @@ def main():
     out.mkdir(mode=0o700)
     receipt = dict(run=RUN, artifact=ARTIFACT, digest=DIGEST, harness=HARNESS, source=SOURCE, tree=TREE,
                    reviewer=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip(),
-                   result='NOT_REVIEWED', idle_stimulus_executed=False, shipping_qualified=False, physical_verified=False)
+                   result='NOT_REVIEWED', idle_stimulus_source_reached=True, unexpected_observer_tap=True,
+                   positive_baseline_verified=False, shipping_qualified=False, physical_verified=False)
     def api(path):
         r = subprocess.run(['gh', 'api', 'repos/' + REPOSITORY + '/' + path], capture_output=True, timeout=90)
         require(r.returncode == 0 and len(r.stdout) <= 128 * 1024)
@@ -267,7 +272,7 @@ def main():
         rows = attachments.curate_public_screenshots(exported, out)
         require(all(row['sha256'] in manifest.values() for row in rows))
         receipt['public_screenshots'] = rows
-        receipt['result'] = 'FROZEN_PRE_STIMULUS_FAILURE_DECODED_NOT_QUALIFICATION'
+        receipt['result'] = 'FROZEN_DIAGNOSTIC_HELPER_FAILURE_DECODED_NOT_QUALIFICATION'
     except BaseException as error:
         for image in out.glob('public-settlement-*.png'):
             image.unlink()
