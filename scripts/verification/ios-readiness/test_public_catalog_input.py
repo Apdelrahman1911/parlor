@@ -8,10 +8,11 @@ def load_tests(loader, _tests, _pattern):
     folder = Path(__file__).resolve().parents[3] / 'scripts/verification/ios-input-boundaries'
     tests = {'test_pin03_catalog': '_parlor_catalog_input_controls',
              'test_pin04_original_host': '_parlor_original_host_controls',
-             'test_pin06_public_setup_pair': '_parlor_public_setup_pair_controls'}
+             'test_pin06_public_setup_pair': '_parlor_public_setup_pair_controls',
+             'test_pin07_failure_control': '_parlor_synthetic_failed_export_controls'}
     for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
                  'pin04_original_host', 'public_attachments', 'frozen_sources',
-                 'pin06_public_setup_pair', 'run_pin03', *tests):
+                 'pin06_public_setup_pair', 'pin07_failure_control', 'run_pin03', *tests):
         path = folder / (name + '.py')
         key = tests.get(name, name)
         module = sys.modules.get(key)

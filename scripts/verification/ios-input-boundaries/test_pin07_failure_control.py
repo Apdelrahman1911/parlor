@@ -130,6 +130,31 @@ class FailedExportControlTests(unittest.TestCase):
             self.assertNotIn(forbidden, module)
         self.assertEqual(pair.render(sources(), pair.INPUTS, arm='original'), sources())
 
+    def test_ordinary_readiness_reuses_every_synthetic_control_exactly_once(self):
+        # Enumerate source-bound test metadata in an isolated import namespace;
+        # do not execute another suite recursively or infer native execution.
+        root = Path(control.__file__).resolve().parents[3]
+        query = '''import json, unittest
+suite = unittest.defaultTestLoader.discover('scripts/verification/ios-readiness')
+def names(suite):
+    for entry in suite:
+        if isinstance(entry, unittest.TestSuite):
+            yield from names(entry)
+        else:
+            yield entry.id()
+print(json.dumps(list(names(suite))))
+'''
+        result = subprocess.run([sys.executable, '-B', '-c', query], cwd=root,
+                                capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        names = json.loads(result.stdout)
+        observed = [name.rsplit('.', 1)[1] for name in names
+                    if name.startswith('_parlor_synthetic_failed_export_controls.FailedExportControlTests.')]
+        expected = unittest.defaultTestLoader.getTestCaseNames(FailedExportControlTests)
+        self.assertEqual(sorted(observed), expected)
+        self.assertEqual(len(observed), len(set(observed)))
+        self.assertFalse(any('_FailedTest' in name for name in names))
+
     @unittest.skipUnless(sys.platform == 'darwin', 'Synthetic Swift driver requires actual Apple SDK')
     def test_actual_generated_failure_control_driver_typechecks_with_simulator_sdk(self):
         with tempfile.TemporaryDirectory(prefix='parlor-pin07-swift-') as temporary:

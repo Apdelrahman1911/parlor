@@ -56,9 +56,10 @@ No private input, permission action, transport, retry or successful-path wait is
 added. The original PIN06 driver/methods and every other generated file are
 byte-exact after removing these two declared synthetic deltas.
 
-Eight portable controls verify source/profile bindings, inverse restoration,
-privacy, predicates, callback/delivery/stage evidence and rejection paths. A
-ninth actual-SDK Swift typecheck skips on Linux. The strict numeric reader
+Nine portable controls verify source/profile bindings, inverse restoration,
+privacy, predicates, callback/delivery/stage evidence, rejection paths and exact
+once-only inclusion in ordinary readiness. A tenth actual-SDK Swift typecheck
+skips on Linux. The strict numeric reader
 reports **no source/product/device/export custody or causal qualification**;
 fabricated software rows are never called native observations.
 
