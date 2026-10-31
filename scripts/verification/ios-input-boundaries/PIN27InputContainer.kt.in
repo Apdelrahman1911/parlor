@@ -1,0 +1,29 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalUIView
+import com.parlor.app.PIN27InputContainerObserver
+import platform.Foundation.NSThread
+
+/** COPY ONLY. Bind the already provided input container; never scan view content. */
+object PIN27InputContainerBinding {
+    private var observer: PIN27InputContainerObserver? = null
+
+    fun register(value: PIN27InputContainerObserver): Boolean {
+        check(NSThread.isMainThread)
+        if (observer != null) return false
+        observer = value
+        return true
+    }
+
+    @Composable
+    fun Observe(content: @Composable () -> Unit) {
+        val view = LocalUIView.current
+        DisposableEffect(view) {
+            observer?.observeInputContainer(view)
+            onDispose { } // Do not alter original focus, input or container lifecycle.
+        }
+        content()
+    }
+}

@@ -464,3 +464,27 @@ controls are not replayed. Native installation remains unverified until actual
 readback; startup registration timing is a candidate, not a demonstrated cause.
 Neither this diagnostic correction nor an isolated sentinel qualifies the
 application or resolves the original input Issues.
+
+## Attachment-time installation (PIN27)
+
+PIN26 [run41249656768](https://github.com/Apdelrahman1911/parlor/actions/runs/41249656768)
+reached terminal **failure**, correctly retaining the incomplete native companion:
+startup inventory `[66495,0,1]`, `installed=false`, zero observed calls. All
+340 Apple controls, compilation, the first complete-value predicate, original
+text/native/root/frame/motion gates and owned cleanup passed. The sentinel failed
+as intended; strict native installation acceptance still rejected the run.
+
+The startup discovery assumption is therefore invalid. Pinned source constructs
+the internal input view on attachment; `LocalUIView` supplies exactly the same
+`OverlayInputView : CMPScrollView` used by `UIKitTextInputService`. PIN27 binds
+that provided container, validates its Cocoa/published lineage and the inherited
+`didAddSubview:` ABI, and adds an observer **only to its leaf**. The first actual
+public input attachment installs the unchanged eight-method native observer
+before the original attachment call. No global UIView/initializer hook, guessed
+Kotlin class name, force-created input, polling or installation retries.
+
+An additional exclusive 64KiB failure-only companion proves original attachment
+before/after and successful native installation; incomplete shape may be retained
+but cannot pass. All earlier gates stay mandatory. The original sentinel alone
+executes; no successful journey or Kotlin control replay. This corrects an
+observed **diagnostic lifecycle defect**, not original application causality.

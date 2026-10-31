@@ -1,0 +1,153 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN27_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+#if !PIN27_CONTROL
+import UIKit
+#endif
+
+/// COPY ONLY. Hook the actual supplied Compose input-container leaf, never UIView.
+/// Install original-call observers at the first public input view's attachment.
+final class PIN27InputAttachment {
+    private let armed: () -> Bool
+    private let installDelivery: () -> Bool
+    private var installed = false
+    private var attempted = false
+    private var deliveryAttempted = false
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private var installation = [0, 0, 0]
+    private static var owner: PIN27InputAttachment?
+
+    init(armed: @escaping () -> Bool, installDelivery: @escaping () -> Bool) {
+        self.armed = armed
+        self.installDelivery = installDelivery
+        rows.reserveCapacity(128)
+    }
+
+    #if !PIN27_CONTROL
+    func bindInputContainer(_ view: UIView) -> Bool {
+        precondition(Thread.isMainThread)
+        guard let target = object_getClass(view), let parent = class_getSuperclass(target),
+              String(cString: class_getName(parent)) == "CMPScrollView" else { return false }
+        // LocalUIView in the pinned mediator is OverlayInputView : CMPScrollView.
+        // The supplied UIView is Cocoa; still require its exact published lineage.
+        var ancestor: AnyClass? = parent
+        var scroll = false
+        var cocoa = false
+        for _ in 0..<32 {
+            guard let current = ancestor else { break }
+            let name = String(cString: class_getName(current))
+            if name == "UIScrollView" { scroll = true }
+            if name == "NSObject" { cocoa = true; break }
+            ancestor = class_getSuperclass(current)
+        }
+        guard scroll && cocoa else { return false }
+        return installVerifiedContainer(target)
+    }
+    #endif
+
+    private static func type(_ value: UnsafeMutablePointer<CChar>?) -> String {
+        guard let value else { return "" }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    /// Exact ABI control entry; shipping-copy callers first validate LocalUIView.
+    fileprivate func installVerifiedContainer(_ target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.owner == nil, let parent = class_getSuperclass(target) else { return false }
+        installation[0] = 1
+        let selector = NSSelectorFromString("didAddSubview:")
+        guard let method = class_getInstanceMethod(target, selector),
+              let inherited = class_getInstanceMethod(parent, selector),
+              unsafeBitCast(method_getImplementation(method), to: UInt.self) ==
+                unsafeBitCast(method_getImplementation(inherited), to: UInt.self),
+              method_getNumberOfArguments(method) == 3,
+              Self.type(method_copyReturnType(method)) == "v",
+              ["@", ":", "@"].enumerated().allSatisfy({ index, expected in
+                  Self.type(method_copyArgumentType(method, UInt32(index))) == expected
+              }), let encoding = method_getTypeEncoding(method) else { return false }
+        installation[1] = 1
+        typealias Original = @convention(c) (AnyObject, Selector, AnyObject) -> Void
+        let original = unsafeBitCast(method_getImplementation(method), to: Original.self)
+        let replacement: @convention(block) (AnyObject, AnyObject) -> Void = { [weak self] object, child in
+            // Discovery is at actual attachment, before any original focus call.
+            // Other/private children receive only the original call unchanged.
+            let selected = self?.selectPublicInput(child) == true
+            if selected { self?.observeDeliveryBeforeAttachment() }
+            original(object, selector, child) // Same child, once, synchronously.
+            if selected { self?.record(phase: 1, succeeded: false) }
+        }
+        let implementation = imp_implementationWithBlock(replacement)
+        guard class_addMethod(target, selector, implementation, encoding) else {
+            imp_removeBlock(implementation)
+            return false
+        }
+        // Only the inherited method on this leaf is added. Parent/UIKit stay exact.
+        Self.owner = self
+        installed = true
+        installation[2] = 1
+        return true
+    }
+
+    private func selectPublicInput(_ child: AnyObject) -> Bool {
+        guard Thread.isMainThread, armed(), !deliveryAttempted else { return false }
+        #if PIN27_CONTROL
+        return controlEligible?(child) == true
+        #else
+        guard let target = object_getClass(child), let parent = class_getSuperclass(target),
+              String(cString: class_getName(parent)) == "CMPEditMenuView",
+              let input = NSProtocolFromString("UITextInput"),
+              class_conformsToProtocol(target, input) else { return false }
+        return true // Never ask for the child's input, text, range, frame or label.
+        #endif
+    }
+
+    private func observeDeliveryBeforeAttachment() {
+        deliveryAttempted = true // One actual eligible attachment, no polling/retry.
+        let succeeded = installDelivery() // Original eight-method observer still checks every ABI.
+        record(phase: 0, succeeded: succeeded)
+    }
+
+    private func record(phase: Int, succeeded: Bool) {
+        guard Thread.isMainThread, rows.count < 128 else { overflow = min(1000000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(phase), succeeded ? 1 : 0])
+    }
+
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "installation": installation, "overflow": overflow, "rows": rows]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]), raw.count <= 65536 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin27-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("attachment.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+
+    #if PIN27_CONTROL
+    var controlEligible: ((AnyObject) -> Bool)?
+    func controlSnapshot() -> [String: Any] { ["installed": installed, "overflow": overflow, "rows": rows] }
+    #endif
+}
+#endif
