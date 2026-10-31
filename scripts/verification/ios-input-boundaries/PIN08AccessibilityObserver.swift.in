@@ -37,11 +37,14 @@ final class PIN08AccessibilityObserver {
     /// Exact published 1.10.3 Objective-C superclass, never a UIKit-wide hook.
     /// All signatures and implementations are checked BEFORE either replacement.
     func install() -> Bool {
-        precondition(Thread.isMainThread && hooks.isEmpty())
+        precondition(Thread.isMainThread && hooks.isEmpty)
         guard Self.processOwner == nil else { return false }
         var count: UInt32 = 0
         guard let classes = objc_copyClassList(&count) else { return false }
-        defer { free(classes) }
+        // objc_copyClassList owns a malloc allocation. Its autoreleasing Swift
+        // pointer does not implicitly bridge to free; release the same address,
+        // not its class references or a Swift-owned/rebound buffer.
+        defer { free(UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes))) }
         guard count <= 100_000 else { return false }
         let matches = (0..<Int(count)).map { classes[$0] }.filter { candidate in
             guard let parent = class_getSuperclass(candidate) else { return false }

@@ -46,3 +46,21 @@ Xcode26.3/17C529 and owned ARM64 iOS18.5/iPhone16Pro. It does not replay the ori
 suite. **Native execution pending.** Interception may change timing; capability
 is not neutrality, natural reproduction, a shipping fix or physical acceptance.
 Issues267/276 and Phase1 remain open. No dependency/security/release gate is waived.
+
+
+## First hosted preflight and correction
+
+[41190620693](https://github.com/Apdelrahman1911/parlor/actions/runs/41190620693)
+failed the actual Simulator SDK control before any application execution:
+`Array.isEmpty` was called as a function and the imported
+`AutoreleasingUnsafeMutablePointer<AnyClass>` could not implicitly convert to
+`free`'s raw-pointer argument. Original logs and terminal receipt are retained.
+The missing runtime artifact is consequent to this preflight failure; it does
+not indicate an application or XCTest failure.
+
+The correction uses the Boolean property and explicitly reconstructs the same
+malloc address for `free` via Swift's pointer-bit-pattern conversion. Ownership,
+class-count bound and exact hook/getter ABI checks are unchanged. The actual
+Apple SDK control remains mandatory; local source controls are not a typecheck.
+A new source-specific execution is justified by these diagnosed compilation
+errors. Native capability and natural application causality remain pending.

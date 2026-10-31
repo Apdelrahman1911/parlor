@@ -113,6 +113,16 @@ class NativeAccessibilityControls(unittest.TestCase):
         self.assertEqual(text.count('return result'), 2)
         self.assertIn('not lifetime IDs or root cause', decode(fixture())['scope'])
 
+    def test_swift_installation_property_and_copy_class_allocation_release(self):
+        text = (pair.HERE / native.TEMPLATE).read_text()
+        self.assertIn('Thread.isMainThread && hooks.isEmpty)', text)
+        self.assertNotIn('hooks.isEmpty()', text)
+        self.assertEqual(text.count('objc_copyClassList(&count)'), 1)
+        self.assertEqual(text.count('defer { free(UnsafeMutableRawPointer(bitPattern: UInt(bitPattern: classes))) }'), 1)
+        self.assertIn('guard count <= 100_000 else { return false }', text)
+        # The actual Apple SDK control below, not this source control, verifies
+        # the imported autoreleasing pointer conversion and both getter ABIs.
+
     def test_valid_software_rows_only_attest_shape_never_native_or_root_cause(self):
         result = decode(fixture())
         self.assertEqual(result['rows'], 2)

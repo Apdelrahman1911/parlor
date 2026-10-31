@@ -26,7 +26,7 @@ SCOPE = ('One distinct intentionally failed current-source copied Host transitio
          'observation; capability only, not original cause, neutrality, shipping or physical qualification')
 TEMPLATE = 'PIN08AccessibilityObserver.swift.in'
 # Reviewed separately from PIN01/PIN02; their templates/schema/limits stay exact.
-TEMPLATE_SHA256 = 'c29e835a30bc415fedd7a2e07aa5bf11c194faa4e94314fe2629fe54c642b476'
+TEMPLATE_SHA256 = 'ec9e300cd79259a9c589962f2a35949c8b066baa7ebb5a998d5edec5a38afcce'
 INSTALL = '''        let observation = PIN08AccessibilityObserver(armed: { MainViewControllerKt.PIN01InputArmed() })
         _ = observation.install()
         pin08Accessibility = observation
