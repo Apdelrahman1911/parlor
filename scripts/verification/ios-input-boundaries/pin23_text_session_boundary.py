@@ -78,8 +78,12 @@ CONTROL_METHOD = '''    // COPY ONLY: distinct public-name export control, not a
         PIN02FailureRequest.configure(app)
         app.launchArguments += ["-AppleLanguages", "(ar)", "-AppleLocale", "ar_EG"]
         app.launchEnvironment["PARLOR_PIN23_CONTROL"] = "1"
+        pin11PublicApp = app // Same once-only failure owner as the original public journey.
         app.launch()
-        defer { app.terminate() }
+        defer {
+            pin11PublicApp = nil
+            app.terminate()
+        }
         XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
         try tapSetupButton(app, prefix: "افتح الدومنة المصرية")
         try tapPublicSetupTransition(app, from: "أدخل رمز المضيف للدخول إلى طاولته.",
@@ -148,6 +152,11 @@ def test_command(base,result):
 
 
 def verify_results(summary,tests,simulator_id,code):
+    return verify_text_results(summary,tests,simulator_id,code,cases=CASES)
+
+
+def verify_text_results(summary,tests,simulator_id,code,*,cases):
+    require(cases in (CASES,(CONTROL,)), 'Only unresolved original cohort or isolated text export control')
     require(type(code) is int and code==65,'Original sentinel control must remain a genuine XCTest failure')
     nodes=[]
     def visit(items):
@@ -155,11 +164,11 @@ def verify_results(summary,tests,simulator_id,code):
             if n.get('nodeType')=='Test Case':nodes.append(n)
             visit(n.get('children',[]))
     visit(tests.get('testNodes',[]))
-    require(len(nodes)==2 and {n.get('nodeIdentifier') for n in nodes}==set(CASES) and
+    require(len(nodes)==len(cases) and {n.get('nodeIdentifier') for n in nodes}==set(cases) and
         all(n.get('result') in ('Passed','Failed') for n in nodes),'Exact Arabic and text-control outcomes; zero skips')
     methods={n['nodeIdentifier']:n['result'] for n in nodes}
     require(methods[CONTROL]=='Failed' and summary.get('result')=='Failed','Sentinel is never a passing application test')
-    for k,v in dict(totalTestCount=2,passedTests=sum(v=='Passed' for v in methods.values()),
+    for k,v in dict(totalTestCount=len(cases),passedTests=sum(v=='Passed' for v in methods.values()),
         failedTests=sum(v=='Failed' for v in methods.values()),skippedTests=0,expectedFailures=0).items():
         require(type(summary.get(k)) is int and summary[k]==v,'Exact unskipped native counts required')
     config=summary.get('devicesAndConfigurations',[]);devices=tests.get('devices',[])
@@ -178,7 +187,11 @@ def verify_results(summary,tests,simulator_id,code):
 
 
 def failed_method_exports(result,destination,outcomes):
-    require(set(outcomes)==set(CASES),'Only exact Arabic and isolated text-control failures eligible')
+    return text_method_exports(result,destination,outcomes,cases=CASES)
+
+
+def text_method_exports(result,destination,outcomes,*,cases):
+    require(cases in (CASES,(CONTROL,)) and set(outcomes)==set(cases),'Only exact Arabic and isolated text-control failures eligible')
     return [(destination/('failed-%02d'%i),['export','attachments','--path',str(result),'--output-path',
         str(destination/('failed-%02d'%i)),'--test-id',t])
         for i,t in enumerate(sorted(t for t,v in outcomes.items() if v=='Failed'),1)]
@@ -216,16 +229,36 @@ def retain_companion(sandbox,destination,token,simulator,bundle,legacy):
 
 
 def accept_native_export(out,state):
-    require(state['original_inputs'].get(NAME)==NAME_SHA256,'Actual original public-name source binding required')
     renderer=renderer_for_profile(PROFILE,SOURCE,motion.pair.RUNTIME,motion.pair.DEVICE)
-    frame.motion.boundary.accept_observation_export(out,state,profile=PROFILE,renderer=renderer,result_verifier=verify_results)
+    return accept_text_export(out,state,profile=PROFILE,renderer=renderer,cases=CASES,result=RESULT)
+
+
+def accept_text_export(out,state,*,profile,renderer,cases,result):
+    require((profile,cases,result) in (
+        (PROFILE,CASES,RESULT),
+        ('isolated-public-text-session-export-control',(CONTROL,),
+         'ISOLATED_PUBLIC_TEXT_SESSION_EXPORT_COMPLETE_NOT_QUALIFICATION')),
+        'Exact original or isolated-control acceptance contract required')
+    require(state['original_inputs'].get(NAME)==NAME_SHA256,'Actual original public-name source binding required')
+    def selected_verifier(summary,tests,simulator,code):
+        return verify_text_results(summary,tests,simulator,code,cases=cases)
+    frame.motion.boundary.accept_observation_export(out,state,profile=profile,renderer=renderer,result_verifier=selected_verifier)
     frame.motion.root.accept_root_companions(out,state)
     row=state['arms'][0];dest=out/'compose';captures=sorted(dest.glob('capture-*.json'))
     commands=[c for c in state['commands'] if c.get('label')=='compose-tests']
     require(len(commands)==1 and commands[0].get('timeout_seconds')==900 and
         [a for a in commands[0].get('command',[]) if a.startswith('-only-testing:')]==
-        ['-only-testing:iosAppUITests/'+t.removesuffix('()') for t in CASES],
+        ['-only-testing:iosAppUITests/'+t.removesuffix('()') for t in cases],
         'One original-budget command; no English replay or old export-control replay')
+    # The unchanged Swift helper uses caller #line. This proves the first exact
+    # value check completed and the failing assertion is the sentinel, not a
+    # partial/nonempty natural injection failure masquerading as the control.
+    driver=renderer({p:motion.pair.fixture(p) for p in motion.pair.MODIFIED},motion.pair.INPUTS,arm='compose')[pin02_capture.DRIVER]
+    sentinel_lines=[i for i,line in enumerate(driver.splitlines(),1) if 'equals: "PIN23 isolated export sentinel"' in line]
+    require(len(sentinel_lines)==1,'One exact original sentinel callsite required')
+    log=frozen_sources._read(dest/'test.log',4*1024*1024).decode()
+    assertion=f'IOSAppLaunchUITests.swift:{sentinel_lines[0]}: error: -[iosAppUITests.IOSAppLaunchUITests testPIN23IsolatedPublicTextExportControl] : XCTAssertEqual failed:'
+    require(log.count(assertion)==1,'Control must actually fail at sentinel callsite after its exact original value check')
     tokens={}
     for i,method in enumerate(sorted(t for t,v in row['methods'].items() if v=='Failed'),1):
         requests=[]
@@ -257,7 +290,7 @@ def accept_native_export(out,state):
     require(row.get('motion_companion_captures')==decoded_motion,'Actual motion receipt unchanged')
     for prefix in ('public-text-','native-frame-','catalog-motion-'):
         require(len(list(dest.glob(prefix+'*.json')))==len(captures),'One exact companion per real failed method; none on success')
-    return RESULT
+    return result
 
 
 # Byte-exact prepared PIN05 public responder snapshot and decoder.
@@ -320,5 +353,3 @@ def decode_snapshot(raw):
         last = now
     return dict(schema=5, rows=len(rows), category_counts=counts,
                 scope='Numeric shared input-session/callback boundaries only; missing rows and native booleans are not causal or neutrality proof')
-
-

@@ -52,6 +52,8 @@ def evidence(out):
     row['motion_companion_captures']=[text.motion.decode_motion(p.read_bytes(),token=legacy['token'],simulator=row['simulator'],bundle=s['debug_bundle'],legacy=legacy)]
     value=fixture();value.update(token=legacy['token'],simulator=row['simulator'],process=legacy['process'],capturedMs=legacy['capturedMs'])
     (dest/('public-text-'+legacy['token']+'.json')).write_text(json.dumps(value))
+    line=next(i for i,s in enumerate(plan()[pin02_capture.DRIVER].splitlines(),1) if 'equals: "PIN23 isolated export sentinel"' in s)
+    (dest/'test.log').write_text(f'IOSAppLaunchUITests.swift:{line}: error: -[iosAppUITests.IOSAppLaunchUITests testPIN23IsolatedPublicTextExportControl] : XCTAssertEqual failed: synthetic portable fixture\n')
     return s
 
 
@@ -69,6 +71,8 @@ class PublicTextSessionControls(unittest.TestCase):
         self.assertEqual(name,text.name_fixture())
         for n,digest in text.TEMPLATES.items():self.assertEqual(hashlib.sha256(text.template(n).encode()).hexdigest(),digest)
         self.assertEqual(text.CASES,(text.NATURAL,text.CONTROL))
+        self.assertLess(text.CONTROL_METHOD.index('pin11PublicApp = app'),text.CONTROL_METHOD.index('app.launch()'))
+        self.assertIn('pin11PublicApp = nil\n            app.terminate()',text.CONTROL_METHOD)
         self.assertNotIn('testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish',str(text.test_command(['xcodebuild'],Path('/owned/result'))))
         self.assertEqual(text.CONTROL_METHOD.count('name.typeText('),1)
         self.assertEqual(text.CONTROL_METHOD.count('equals: "Table Test"'),1)

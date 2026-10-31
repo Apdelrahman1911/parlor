@@ -404,3 +404,15 @@ session/command/callback emptiness bits and post-failure first-responder boolean
 no characters, lengths, player data, UIKit classes or extra active input queries.
 Existing numeric/native/root/frame/motion evidence and owned cleanup remain
 mandatory. Diagnostic success never qualifies shipping code or closes #267/#276.
+
+### Corrected isolated failure owner (PIN24)
+
+PIN23's original Arabic journey passed, but its new control failed at the
+intended sentinel without numeric capture: it had not registered
+`pin11PublicApp`, so the existing failure hook had no owner. PIN24 fixes that
+specific control ownership and runs only this control, not the successful
+journey. Original caller `#line` in the test log must identify the sentinel
+assertion (not the first complete-value assertion). A partial value or missing
+request cannot substitute for complete failure-only exports. All original
+native/root/frame/motion/text companions and custody checks remain mandatory;
+this proves adapter capability, not the earlier natural failure's cause.
