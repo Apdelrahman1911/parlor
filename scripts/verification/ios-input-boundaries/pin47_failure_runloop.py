@@ -1,5 +1,6 @@
 """Passive copied iOS run-loop boundary, original AR/EN methods and new export control."""
 import hashlib,json,math,re
+from functools import partial
 from pathlib import Path
 import frozen_sources,pin01_copy,pin02_capture,pin01_receipts
 import pin44_original_runtime as runtime
@@ -10,6 +11,9 @@ PROFILE='failure-owned-main-runloop'
 ARMS=('compose',)
 SENTINEL_CASE='IOSAppLaunchUITests/testZPIN47FailureRunLoopExport()'
 CASES=runtime.CASES+(SENTINEL_CASE,)
+EXPORT_PROFILE='failure-owned-main-runloop-export-control'
+PROFILES=(PROFILE,EXPORT_PROFILE)
+EXPORT_CASES=(SENTINEL_CASE,)
 TESTS=tuple('iosAppUITests/'+c.removesuffix('()') for c in CASES)
 TEST_TIMEOUT_SECONDS=900
 RESULT='FAILURE_OWNED_MAIN_RUNLOOP_COMPLETE_NOT_QUALIFICATION'
@@ -37,7 +41,7 @@ def owner_source():
     return raw.decode()
 
 def renderer_for_profile(profile,source,os,device):
-    require((profile,source,os,device)==(PROFILE,SOURCE,RUNTIME,DEVICE),'Exact original failed source/runtime')
+    require(profile in PROFILES and (source,os,device)==(SOURCE,RUNTIME,DEVICE),'Exact original failed source/runtime')
     baseline=runtime.renderer_for_profile(runtime.PROFILE,source,os,device)
     def render(sources,digests,*,arm):
         original=baseline(sources,digests,arm=arm) # Existing exact source binding and failure interceptor.
@@ -63,26 +67,31 @@ def renderer_for_profile(profile,source,os,device):
         return sources|{pin02_capture.CONTAINER:container,pin02_capture.DRIVER:driver}
     return render
 
-def test_command(base,result):
+def selected_cases(cases):
+    require(cases in (CASES,EXPORT_CASES),'Only original cohort or isolated failed-export correction')
+    return cases
+
+def test_command(base,result,*,cases=CASES):
     return [*(a for a in base if a!='-quiet'),'test-without-building','-resultBundlePath',str(result),
-        *('-only-testing:'+t for t in TESTS)]
+        *('-only-testing:iosAppUITests/'+c.removesuffix('()') for c in selected_cases(cases))]
 
 def visit(nodes):
     return [c for n in nodes for c in ([n] if n.get('nodeType')=='Test Case' else visit(n.get('children',[])))]
 
-def verify_results(summary,tests,simulator,code):
+def verify_results(summary,tests,simulator,code,*,cases=CASES):
+    count=len(selected_cases(cases))
     require(type(code) is int and code==65,'Original unexpected sentinel failure retains actual XCTest exit65')
     for k in ('totalTestCount','passedTests','failedTests','skippedTests','expectedFailures'):
-        require(type(summary.get(k)) is int and 0<=summary[k]<=3,'Exact finite actual three-method counts')
-    require(summary['totalTestCount']==3 and summary['skippedTests']==summary['expectedFailures']==0
-        and summary['passedTests']+summary['failedTests']==3 and summary['result']=='Failed','All original methods/control execute without skips')
+        require(type(summary.get(k)) is int and 0<=summary[k]<=count,'Exact finite actual selected-method counts')
+    require(summary['totalTestCount']==count and summary['skippedTests']==summary['expectedFailures']==0
+        and summary['passedTests']+summary['failedTests']==count and summary['result']=='Failed','All selected methods execute without skips')
     config=summary.get('devicesAndConfigurations',[]);devices=tests.get('devices',[])
     require(len(config)==len(devices)==len(tests.get('testPlanConfigurations',[]))==1,'One actual owned configuration')
     for d in (config[0].get('device',{}),devices[0]):
         require((d.get('deviceId'),d.get('architecture'),d.get('platform'),d.get('modelName'),d.get('osVersion'))==
             (simulator,'arm64','iOS Simulator','iPhone 17 Pro','26.2'),'Actual original failed runtime/model')
     nodes=visit(tests.get('testNodes',[]))
-    require(len(nodes)==3 and {n.get('nodeIdentifier') for n in nodes}==set(CASES)
+    require(len(nodes)==count and {n.get('nodeIdentifier') for n in nodes}==set(cases)
         and all(n.get('result') in ('Passed','Failed') and type(n.get('durationInSeconds')) in (int,float)
             and math.isfinite(n['durationInSeconds']) and 0<n['durationInSeconds']<900 for n in nodes),'Exact original identifiers/control outcomes/durations')
     methods={n['nodeIdentifier']:n['result'] for n in nodes}
@@ -95,8 +104,8 @@ def verify_results(summary,tests,simulator,code):
         and {f['testIdentifierString'] for f in failures}=={k for k,v in methods.items() if v=='Failed'},'No hidden extra or lost original failures')
     return methods
 
-def failed_method_exports(result,destination,outcomes):
-    require(set(outcomes)==set(CASES) and outcomes[SENTINEL_CASE]=='Failed','All declared actual outcomes before failed-only export')
+def failed_method_exports(result,destination,outcomes,*,cases=CASES):
+    require(set(outcomes)==set(selected_cases(cases)) and outcomes[SENTINEL_CASE]=='Failed','All declared actual outcomes before failed-only export')
     return [(destination/('failed-%02d'%i),['export','attachments','--path',str(result),'--output-path',str(destination/('failed-%02d'%i)),'--test-id',c])
         for i,c in enumerate(sorted(k for k,v in outcomes.items() if v=='Failed'),1)]
 
@@ -115,10 +124,16 @@ def decode_companions(destination,token,simulator,bundle,legacy):
 def retain_companion(sandbox,destination,token,simulator,bundle,legacy):
     p=sandbox/'tmp'/('parlor-pin47-runloop-'+token)/'runloop.json'
     require(not p.is_symlink() and p.resolve(strict=True)==p.absolute(),'Owned unredirected failure-only runloop file')
-    with (destination/('native-runloop-'+token+'.json')).open('xb') as f:f.write(runtime.pair_control.leaf.run_pin03.read_capture(p,maximum=MAX_BYTES))
+    # Reuse the established secure 64KiB reader, then enforce this companion's
+    # stricter 16KiB ceiling BEFORE creating a destination. Do not broaden the
+    # reader's allowlist or leave an empty file that resembles retained evidence.
+    raw=runtime.pair_control.leaf.run_pin03.read_capture(p,maximum=65536)
+    require(len(raw)<=MAX_BYTES,'Exact lower run-loop companion ceiling')
+    with (destination/('native-runloop-'+token+'.json')).open('xb') as f:f.write(raw)
     return decode_companions(destination,token,simulator,bundle,legacy)
 
-def verify_commands(state,row):
+def verify_commands(state,row,*,cases=CASES):
+    selected_cases(cases)
     require(state['commands'] and all(c['status']=='EXITED' and c['direct_child_reaped'] and not c.get('signals') for c in state['commands']),
         'Every child exited/reaped with no retries/signals')
     for stage,code,budget in (('build',0,2700),('tests',65,900),('gradle-stop',0,120)):
@@ -126,7 +141,7 @@ def verify_commands(state,row):
         require(len(selected)==1 and selected[0]['exit_code']==code and selected[0]['timeout_seconds']==budget,'One bounded actual build/test/cleanup command')
         if stage!='tests':continue
         argv=selected[0]['command']
-        require([a for a in argv if a.startswith('-only-testing:')]==['-only-testing:'+t for t in TESTS]
+        require([a for a in argv if a.startswith('-only-testing:')]==['-only-testing:iosAppUITests/'+c.removesuffix('()') for c in cases]
             and argv.count('/usr/bin/xcodebuild')==argv.count('test-without-building')==1 and '-quiet' not in argv
             and not any(a.startswith(('-skip-testing','-test-iterations','-retry-tests','-run-tests-until-failure')) for a in argv),'Original two methods then control once, no retries or skips')
         for flag,value in (('-project','iosApp/iosApp.xcodeproj'),('-scheme','iosApp'),('-configuration','Debug'),
@@ -137,16 +152,17 @@ def verify_commands(state,row):
     require(labels.index('compose-build')<labels.index('compose-tests')<labels.index('compose-gradle-stop'),'Build/test/cleanup ordering')
     require(state['build_profile']['test_timeout_seconds']==900,'Original process budget; no assertion extension')
 
-def accept_native_export(out,state):
+def accept_native_export(out,state,*,cases=CASES,profile=PROFILE):
+    require((profile,cases) in ((PROFILE,CASES),(EXPORT_PROFILE,EXPORT_CASES)),'Exact declared cohort/profile pair')
     require_capability_binding()
     require((state['profile'],state['source'],state['source_tree'],state['runtime'],state['device'],state['debug_bundle'],state['xcode'],state['sdk'])==
-        (PROFILE,SOURCE,TREE,RUNTIME,DEVICE,'me.parlor.ios.debug','Xcode 26.3\nBuild version 17C529\n','26.2') and len(state['arms'])==1,'Exact source/compiler/platform/single arm')
+        (profile,SOURCE,TREE,RUNTIME,DEVICE,'me.parlor.ios.debug','Xcode 26.3\nBuild version 17C529\n','26.2') and len(state['arms'])==1,'Exact source/compiler/platform/single arm')
     row=state['arms'][0];d=out/'compose'
     require(row['arm']=='compose' and row['build_exit']==0 and row['test_exit']==65 and row['cleanup']=='PASS' and row['result']=='JOURNEYS_FAILED','Actual unexpected control failure, real build and cleanup')
-    methods=verify_results(load(d/'summary.json'),load(d/'tests.json'),row['simulator'],row['test_exit'])
+    methods=verify_results(load(d/'summary.json'),load(d/'tests.json'),row['simulator'],row['test_exit'],cases=cases)
     require(methods==row['methods'] and row['attachment_test_ids']==sorted(k for k,v in methods.items() if v=='Failed'),'All actual natural/control failures retained')
     leaf=runtime.pair_control.leaf
-    plan=renderer_for_profile(PROFILE,SOURCE,RUNTIME,DEVICE)({p:leaf.pair.fixture(p) for p in leaf.pair.MODIFIED},leaf.pair.INPUTS,arm='compose')
+    plan=renderer_for_profile(profile,SOURCE,RUNTIME,DEVICE)({p:leaf.pair.fixture(p) for p in leaf.pair.MODIFIED},leaf.pair.INPUTS,arm='compose')
     require(load(d/'inputs.json')==state['original_inputs']|{p:hashlib.sha256(v.encode()).hexdigest() for p,v in plan.items()},'Exact original inputs plus only reviewed copied Swift owner/driver')
     product=frozen_sources._read(d/'product.json',2097152)
     require(load(d/'product.json') and hashlib.sha256(product).hexdigest()==row['product_manifest_sha256'],'Built product byte custody')
@@ -163,9 +179,9 @@ def accept_native_export(out,state):
         require(not any(d.glob(prefix+'*.json')),'No fabricated absent native/input hooks')
     cleanup=load(d/'cleanup.json')
     require(cleanup['gradle_exit']==0 and cleanup['workers_before']['result']==cleanup['workers_after']['result']==cleanup['simulator']['result']=='PASS' and cleanup['simulator']['udid']==row['simulator'],'Owned workers/device retired')
-    verify_commands(state,row)
+    verify_commands(state,row,cases=cases)
     starts=re.findall(rb"Test Case '-\[iosAppUITests\.([A-Za-z0-9_]+) ([A-Za-z0-9_]+)\]' started\.",frozen_sources._read(d/'test.log',4194304))
-    require(tuple(c.decode()+'/'+m.decode()+'()' for c,m in starts)==CASES,'Exact original two methods then isolated control in actual order')
+    require(tuple(c.decode()+'/'+m.decode()+'()' for c,m in starts)==cases,'Exact selected methods execute once in actual order')
     receipt=dict(methods=methods,failed_sample_tokens=owners,native=reports,capability_run=CAPABILITY_RUN,capability_harness=CAPABILITY_HARNESS,
         capability_state_sha256=CAPABILITY_STATE_SHA256,all_failed_samples_retained=True,application_root_cause=False,shipping_qualified=False,native_timing_neutrality=False,physical_verified=False)
     target=out/'failure-runloop.json'
@@ -173,3 +189,25 @@ def accept_native_export(out,state):
     else:
         with target.open('x') as f:json.dump(receipt,f,indent=2)
     return RESULT
+
+
+class ExportControlProfile:
+    """Only the failed exporter is repeated; accepted natural journeys are not."""
+    PROFILE=EXPORT_PROFILE
+    ARMS=ARMS
+    TREE=TREE
+    TEST_TIMEOUT_SECONDS=TEST_TIMEOUT_SECONDS
+    SCOPE='Correct failed PIN47 retention once; only its isolated absent-destination control, no successful natural/KMP/cohort replay or qualification'
+    renderer_for_profile=staticmethod(renderer_for_profile)
+    retain_companion=staticmethod(retain_companion)
+    test_command=staticmethod(partial(test_command,cases=EXPORT_CASES))
+    verify_results=staticmethod(partial(verify_results,cases=EXPORT_CASES))
+    failed_method_exports=staticmethod(partial(failed_method_exports,cases=EXPORT_CASES))
+    accept_native_export=staticmethod(partial(accept_native_export,cases=EXPORT_CASES,profile=EXPORT_PROFILE))
+
+
+def select_profile(profile):
+    require(profile in PROFILES,'One explicit failure-runloop profile')
+    if profile==EXPORT_PROFILE:return ExportControlProfile()
+    import sys
+    return sys.modules[__name__]

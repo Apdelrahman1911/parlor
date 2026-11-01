@@ -47,3 +47,32 @@ Freeze final source/reader before publication. #267/#276 and Phase1 remain open;
 no shipping correction or protected merge is justified yet. Phases2/3 follow
 Phase1's genuine resolution; physical Phase4 remains owner-reserved. AGENTS,
 shipping sources, strict verification, privacy and release safeguards unchanged.
+
+
+## Retained terminal failure and targeted correction
+
+[41340181840](https://github.com/Apdelrahman1911/parlor/actions/runs/41340181840)
+(`f3158a7a`) failed **during host retention**, after all9 actual Apple controls,
+the original Arabic/English journeys (2 PASS/0 SKIP) and the new control's
+original unexpected assertion/exit65 executed. Owned worker/device cleanup PASS.
+Original artifact13098046378 SHA256
+`5e144f0be815bf3e0b1aeed8c130f5b59861d5da4dff91a9f1b2e00f46be3043`.
+The frozen reader correctly rejects the unsuccessful collection. No natural
+failure was reproduced; no application fix or phase completion is established.
+
+Confirmed collector defect: `retain_companion` supplied16384 to `read_capture`,
+which intentionally accepts only reviewed ceilings, including65536. It created
+an empty destination before that rejection. The native companion was therefore
+**not retained**; its original sandbox was retired, so an ACK must not be treated
+as the missing data. Preserve the empty artifact as failed evidence.
+
+Correction reuses the existing secure65536-byte reader and enforces the stricter
+16384-byte companion limit **before** exclusive destination creation. No reader
+allowlist, no-follow/ownership/link/type/stability checks or decoder is weakened.
+New regression actually invokes that reader (not a mocked decoder), validates
+byte-exact retention and rejects empty/oversized/hardlinked files without leaving
+a destination. An explicit correction profile runs **only the failed export
+control once**; already-passed Arabic/English/KMP/cohort runs are not repeated.
+The original assertion, XCTest exit65 and900s process budget remain unchanged.
+Fresh actual-Apple execution and independent retained-companion acceptance are
+required. Application input causality and #267/#276 remain unresolved.

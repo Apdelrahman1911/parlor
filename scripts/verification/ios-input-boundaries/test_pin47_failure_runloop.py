@@ -128,6 +128,49 @@ class FailureRunLoopControls(unittest.TestCase):
             p=sandbox/'tmp'/('parlor-pin47-runloop-'+token);p.parent.mkdir(parents=True);p.symlink_to(target,target_is_directory=True)
             with self.assertRaises(ValueError):c.retain_companion(sandbox,out,token,'unused','unused',{})
 
+    def test_real_secure_reader_retains_valid_bytes_and_rejects_empty_oversized_or_linked_before_destination(self):
+        for mutation in ('valid','empty','oversized','hardlink'):
+            with self.subTest(mutation=mutation),tempfile.TemporaryDirectory() as tmp:
+                out=Path(tmp).resolve();state=evidence(out);row=state['arms'][0];d=out/'compose'
+                destination=next(d.glob('native-runloop-*.json'));raw=destination.read_bytes();destination.unlink()
+                token=destination.name.removeprefix('native-runloop-').removesuffix('.json')
+                legacy=c.load(d/('capture-'+token+'.json'))
+                sandbox=out/'sandbox';p=sandbox/'tmp'/('parlor-pin47-runloop-'+token)/'runloop.json'
+                p.parent.mkdir(parents=True)
+                p.write_bytes(b'' if mutation=='empty' else b' '*(c.MAX_BYTES+1) if mutation=='oversized' else raw)
+                if mutation=='hardlink':os.link(p,p.parent/'alias.json')
+                if mutation=='valid':
+                    actual=c.retain_companion(sandbox,d,token,row['simulator'],state['debug_bundle'],legacy)
+                    self.assertEqual(actual,c.decode_companions(d,token,row['simulator'],state['debug_bundle'],legacy))
+                    self.assertEqual(destination.read_bytes(),raw)
+                else:
+                    with self.assertRaises(ValueError):c.retain_companion(sandbox,d,token,row['simulator'],state['debug_bundle'],legacy)
+                    self.assertFalse(destination.exists(),'Rejected retention must not create an empty evidence file')
+
+    def test_correction_profile_executes_only_failed_exporter_and_rejects_replayed_natural_cases(self):
+        control=c.select_profile(c.EXPORT_PROFILE)
+        self.assertIs(c.select_profile(c.PROFILE),c)
+        with self.assertRaises(ValueError):c.select_profile('arbitrary')
+        argv=control.test_command(['/usr/bin/xcodebuild'],Path('/result'))
+        self.assertEqual([a for a in argv if a.startswith('-only-testing:')],['-only-testing:iosAppUITests/'+c.SENTINEL_CASE.removesuffix('()')])
+        self.assertEqual(control.TEST_TIMEOUT_SECONDS,900)
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp).resolve();state=evidence(out);d=out/'compose';row=state['arms'][0]
+            summary=c.load(d/'summary.json');tests=c.load(d/'tests.json')
+            with self.assertRaises(ValueError):control.verify_results(summary,tests,row['simulator'],65)
+            summary.update(totalTestCount=1,passedTests=0)
+            tests['testNodes']=[n for n in tests['testNodes'] if n['nodeIdentifier']==c.SENTINEL_CASE]
+            methods=control.verify_results(summary,tests,row['simulator'],65)
+            self.assertEqual(methods,{c.SENTINEL_CASE:'Failed'})
+            state['profile']=control.PROFILE;row['methods']=methods
+            for name,value in (('summary',summary),('tests',tests)):(d/(name+'.json')).write_text(json.dumps(value))
+            original=next(s for s in state['commands'] if s['label']=='compose-tests')
+            original['command']=[a for a in original['command'] if not a.startswith('-only-testing:')]+[a for a in argv if a.startswith('-only-testing:')]
+            (d/'test.log').write_text("Test Case '-[iosAppUITests.IOSAppLaunchUITests testZPIN47FailureRunLoopExport]' started.\n")
+            self.assertEqual(control.accept_native_export(out,state),c.RESULT)
+            original['command'].append('-only-testing:iosAppUITests/'+c.runtime.CASES[0].removesuffix('()'))
+            with self.assertRaises(ValueError):control.accept_native_export(out,state)
+
     @unittest.skipUnless(platform.system()=='Darwin','Actual Apple runloop wrapper SDK required')
     def test_actual_apple_passive_wrapper_typecheck(self):
         with tempfile.TemporaryDirectory() as tmp:

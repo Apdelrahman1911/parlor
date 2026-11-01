@@ -493,13 +493,15 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     parser.add_argument('--source', required=True)
     parser.add_argument('--runtime', required=True)
     parser.add_argument('--device', required=True)
-    parser.add_argument('--profile', choices=(control.PROFILE,) if control else
+    parser.add_argument('--profile', choices=control.PROFILES if failure_runloop else (control.PROFILE,) if control else
                         ('catalog', 'original-host', 'public-setup-pair'),
                         required=bool(control), default=None if control else 'catalog')
     parser.add_argument('--output', type=Path, required=True)
     if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples:
         parser.add_argument('--arm', choices=control.ARMS, required=True)
     args = parser.parse_args()
+    if failure_runloop:
+        control = control.select_profile(args.profile)
     renderer = control.renderer_for_profile(args.profile, args.source, args.runtime, args.device) if control else \
         renderer_for_profile(args.profile, args.source, args.runtime, args.device)
     selected_test_command = control.test_command if control else test_command
