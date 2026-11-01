@@ -845,3 +845,28 @@ occurred. Raw escape allowance is now limited to that exact retained-log endpoin
 bytes are captured and written, never displayed. A new regression rejects allowance
 on every general API/artifact endpoint. The failed run/artifact and rejected frozen
 reader remain preserved; fresh corrected artifact-only execution is required.
+
+
+## Missing boundary in the previously failing sample context (PIN38)
+
+PIN37's corrected retained evidence now passes on [run41292150310](https://github.com/Apdelrahman1911/parlor/actions/runs/41292150310),
+with independent one-time acceptance and no native replay. Its two passing
+original methods did not reproduce a failure. Original application causality
+remains unresolved; neither diagnostic admission correction is a shipping fix.
+
+PIN38 observes the **exact existing five EN/AR pairs from failing PIN31**, which
+had actual Permission and Word Impostor failures but lacked the original native
+touch/overscroll/public-scroll boundary. This is the new reason for sampling,
+not an unchanged retry or use of a green sample as qualification. It preserves
+PIN33's entire original sample driver and restores that complete14-file plan
+byte-for-byte from the new16-file plan. Only the already capability-verified
+PIN36 public-scroll adapter is added; no new native ABI, sample count, gestures,
+queries, timers, assertions or deadlines. No full23 cohort or sentinel executes.
+
+All ten cases must execute once in their original strict lexical order. Failed
+cases retain every prior and public-scroll companion. Actual incomplete state,
+missing/unentered scopes and all failed outcomes remain evidence, not passes.
+A green collection with no natural failures is diagnostic completion only and
+cannot resolve #267/#276 or establish instrumentation neutrality. One standard
+free macOS runner performs the finite experiment; physical acceptance stays
+pending. Existing successful sentinel/Desktop capability evidence is reused.

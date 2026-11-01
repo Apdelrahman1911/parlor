@@ -352,15 +352,16 @@ def completed_exit_code(result):
         'ORIGINAL_TOUCH_FULL_COHORT_CONTEXT_COMPLETE_NOT_QUALIFICATION',
         'ISOLATED_PUBLIC_SCROLL_EXPORT_COMPLETE_NOT_QUALIFICATION',
         'ORIGINAL_PUBLIC_SCROLL_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION',
+        'FIXED_PUBLIC_SCROLL_SAMPLES_COMPLETE_NOT_QUALIFICATION',
     )
     return 0 if type(result) is str and result in accepted else 1
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False, public_scroll_samples=False):
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
-    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control, frame_boundary, text_boundary, text_export_control, native_input_delivery, native_input_export_control, attached_input_delivery, original_input_lifecycle, equivalent_query, public_session_stress, catalog_input_boundary, overscroll_getter, original_touch_delivery, original_touch_export_control, original_touch_cohort, public_scroll_export, public_scroll_natural)) > 1:
+    if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control, frame_boundary, text_boundary, text_export_control, native_input_delivery, native_input_export_control, attached_input_delivery, original_input_lifecycle, equivalent_query, public_session_stress, catalog_input_boundary, overscroll_getter, original_touch_delivery, original_touch_export_control, original_touch_cohort, public_scroll_export, public_scroll_natural, public_scroll_samples)) > 1:
         raise ValueError('Exactly one explicit copy-only entry point required')
     if synthetic:
         import pin07_native_adapter as control
@@ -385,6 +386,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     elif aggregate_context:
         import pin16_aggregate_context as control
         combined_execution = True  # Reuse the unchanged single native action.
+    elif public_scroll_samples:
+        import pin38_public_scroll_samples as control
+        public_motion = root_capability = True
     elif public_scroll_natural:
         import pin37_public_scroll_natural as control
         public_motion = root_capability = True
@@ -458,7 +462,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         ('catalog', 'original-host', 'public-setup-pair'),
                         required=bool(control), default=None if control else 'catalog')
     parser.add_argument('--output', type=Path, required=True)
-    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control:
+    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples:
         parser.add_argument('--arm', choices=control.ARMS, required=True)
     args = parser.parse_args()
     renderer = control.renderer_for_profile(args.profile, args.source, args.runtime, args.device) if control else \
@@ -524,7 +528,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         partial = out / 'state.writing'
         partial.write_text(json.dumps(state | {'commands': commands.rows}, indent=2))
         partial.replace(out / 'state.json')
-    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control:
+    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples:
         state['build_profile']['test_timeout_seconds'] = control.TEST_TIMEOUT_SECONDS
         state['build_profile']['scope'] = control.SCOPE
     commands = Commands(environment, time.monotonic() + 3 * 3600, checkpoint)
@@ -551,7 +555,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         verify_inputs(copy, manifest)
         control.execute_prelude(copy, out, state, command, checkpoint, ROOT, task, config, environment, commands)
         verify_inputs(copy, manifest)
-    arms = (args.arm,) if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control else control.ARMS if control else catalog.ARMS
+    arms = (args.arm,) if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples else control.ARMS if control else catalog.ARMS
     for arm in arms:
         dest = out / arm; dest.mkdir()
         inputs = apply_arm(copy, original, manifest, arm, previous=previous, renderer=renderer)
@@ -624,7 +628,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         raise RuntimeError('Owned Simulator boot failed')
             if not combined_execution:
                 code, _ = command(selected_test_command(base, result),
-                                  arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control else 900, dest / 'test.log',
+                                  arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples else 900, dest / 'test.log',
                                   environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
                 row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
             if original_resources:

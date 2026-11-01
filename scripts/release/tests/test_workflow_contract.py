@@ -19,6 +19,27 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_fixed_public_scroll_preserves_exact_context_free_runner_and_failure_custody(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_SAMPLES).read_text()
+        workflow_contract.verify_public_scroll_samples(text)
+        for before, after in (
+            ('runs-on: macos-15', 'runs-on: macos-15-large'),
+            ('contents: read', 'contents: write'),
+            ('cancel-in-progress: false', 'cancel-in-progress: true'),
+            ('--arm compose', '--arm original'),
+            ('--profile fixed-public-scroll-failure-boundaries', '--profile original-public-scroll-boundaries'),
+            ('if: always()', 'if: success()'),
+            ('if-no-files-found: error', 'if-no-files-found: warn'),
+            ('run_pin38.py', 'run_pin38.py || true #'),
+        ):
+            changed = text.replace(before, after, 1)
+            self.assertNotEqual(text, changed)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_samples(changed)
+        self.assertNotIn('secrets.', text)
+        self.assertNotIn('workflow_dispatch:', text)
+
+
     def test_retained_order_correction_requires_exact_free_readonly_artifact_only_scope(self) -> None:
         text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_ORDER_CORRECTION).read_text()
         workflow_contract.verify_public_scroll_order_correction(text)
