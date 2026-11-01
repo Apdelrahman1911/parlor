@@ -147,6 +147,14 @@ PASSIVE_FAILURE_SAMPLES = 'ios-passive-failure-samples.yml'
 PASSIVE_FAILURE_SAMPLES_SHA256 = 'c8f7d7a6cc7c8226cc14815f33b0c48bb3860a3f23bf10f5ac0ebe0670457fd0'
 PASSIVE_FAILURE_SAMPLES_COMPANIONS = {'test_pin47_passive_samples.py': 'ab4de72803beda6429d37ef99d2617074562462257ceec6a45d87f40ab57d2c9'}
 
+NATIVE_STACK_BOUNDARY = 'ios-native-stack-boundary.yml'
+NATIVE_STACK_BOUNDARY_SHA256 = 'ac94f9151ea84471d8f989b73f58117e75256f9d7915b7effe5b62b9251b92ed'
+NATIVE_STACK_BOUNDARY_COMPANIONS = {
+    'pin49_native_stacks.py': '72ffc6384f56d87a37c0304769dbab083e6b7083a5c562aa41c2ccdfcb344570',
+    'run_pin49.py': 'c187edc2f4549410da58322949db11d547335105ccc22f6acb216e6561988ad3',
+    'test_pin49_native_stacks.py': '8abb7e9fc1fa1975f99e68e573ac9f53d5dc72c0393f515e40f27b731fe81cde',
+}
+
 QUERY_PROPERTY_BOUNDARY = 'ios-query-property-boundary.yml'
 QUERY_PROPERTY_BOUNDARY_SHA256 = 'e843e33864d2734c0abe768afdc3d7e5683e97ce5f8c88f74e01ed7e93c0bd94'
 QUERY_PROPERTY_BOUNDARY_COMPANIONS = {
@@ -264,7 +272,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY}
+                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -492,6 +500,17 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_native_stack_boundary(text: str) -> None:
+    verify_common(NATIVE_STACK_BOUNDARY, text)
+    verify_query_property_boundary((WORKFLOWS / QUERY_PROPERTY_BOUNDARY).read_text())
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != NATIVE_STACK_BOUNDARY_SHA256:
+        fail("Native stack boundary requires one free Mac, same original pair and bounded owned OS samples")
+    for name, digest in NATIVE_STACK_BOUNDARY_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Native stack companion differs from reviewed source: {name}")
 
 
 def verify_query_property_boundary(text: str) -> None:
@@ -2341,6 +2360,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if NATIVE_STACK_BOUNDARY in files:
+        verify_native_stack_boundary(files[NATIVE_STACK_BOUNDARY])
     if QUERY_PROPERTY_BOUNDARY in files:
         verify_query_property_boundary(files[QUERY_PROPERTY_BOUNDARY])
     if PASSIVE_RETAINED_CORRECTION in files:
