@@ -1,5 +1,24 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN35 — original full XCTest context with existing touch adapter (prepared)
+
+The ten PIN33 wrappers omit the original four-case native prelude and separate
+serial linkage from XCTest. A finite pass cannot establish timing neutrality or
+explain the original English Word Impostor failure. PIN35 keeps the **entire
+PIN33 application, driver and adapter plan byte-identical**, selecting only the
+original23 test identifiers/order in the original combined Xcode action and
+6GiB/default-worker build context. No successful isolated sentinel, sampled
+wrapper, original KMP prelude, new gesture or adaptive count is replayed.
+
+The original single-tap actions, exact-value/frame predicates and ten-second
+assertion deadlines stay unchanged. Every original outcome, failure-only native
+touch/overscroll/input/text/root/frame/lifecycle/query companion, all source and
+product bytes, finite case durations, original summed command budget and owned
+cleanup remain required. Unrelated failures cannot be waived. One standard free
+macos-15 runner; no shipping, dependency or release change. Publication requires
+the corrected PIN34 real-app isolated export to be independently accepted first.
+This is prepared investigation, not causality, neutrality or qualification.
+
 ## PIN34 — isolated original-touch failure export
 
 PIN33 run41276101184 passed399actual Apple controls and its ten fixed original
