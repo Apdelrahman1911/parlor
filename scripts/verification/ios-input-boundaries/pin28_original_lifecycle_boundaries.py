@@ -131,6 +131,12 @@ def accept_native_export(out,state):
     renderer=renderer_for_profile(PROFILE,SOURCE,motion.pair.RUNTIME,motion.pair.DEVICE)
     text.require(state['original_inputs'].get(text.NAME)==text.NAME_SHA256,'Exact original public Name source required')
     motion.boundary.accept_observation_export(out,state,profile=PROFILE,renderer=renderer)
+    return verify_original_companions(out,state)
+
+
+def verify_original_companions(out,state):
+    # Shared exact companion gates; each profile must separately validate its
+    # complete original/rendered source manifest and command/result identity.
     motion.root.accept_root_companions(out,state)
     row=state['arms'][0];dest=out/'compose';captures=sorted(dest.glob('capture-*.json'));decoded_motion=[]
     commands=[c for c in state['commands'] if c.get('label')=='compose-tests']

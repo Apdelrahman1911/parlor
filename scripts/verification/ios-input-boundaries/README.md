@@ -1,5 +1,32 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN29 — failure-only equivalent XCTest query
+
+PIN28 [41254126043](https://github.com/Apdelrahman1911/parlor/actions/runs/41254126043)
+passed 354 actual Apple controls and both original EN/AR methods, with zero skips
+and owned cleanup. Independent source/product/artifact readback passed. No natural
+failure occurred, so no failure-only lifecycle/input evidence exists for that run;
+it is not an application repair or qualification. The original quiet log does not
+contain case-start lines; unique executed xcresult nodes and the original single
+command bind execution, not fabricated log lines or inferred chronological order.
+
+PIN29 adds the missing retained-reference/equivalent-query boundary. Only after an
+original failed waiter, screenshot and original native capture, it reads one
+snapshot from each reference using the **same original public query**. Geometry,
+enabled status, snapshot/error status and synthetic Name exact/empty bits only
+enter a bounded 16KiB attachment. No labels, values, identifiers or hierarchies
+are retained. Successful-path actions/queries, assertions, gestures and deadlines
+remain unchanged; the transformation is exactly invertible.
+
+Read order is explicit: retained, then equivalent. Either query can refresh AX;
+differences narrow the observation boundary but do not prove original causality.
+There are no extra taps, typing, waiters, retries, input repairs or shipping edits.
+Both original methods execute once on one standard free macOS runner, with all
+prior source/product/native/root/frame/motion/text/attachment/lifecycle/cleanup
+gates preserved. Early failures without the targeted probe remain incomplete.
+Actual new XCTest SDK typechecking and original execution are required; portable
+controls alone do not verify UIKit or complete #267/#276/Phase 1.
+
 Investigation tooling for [#267](https://github.com/Apdelrahman1911/parlor/issues/267).
 **Not a shipping fix, native neutrality certification, or standalone device runner.**
 The original lost Host event occurred on iOS26.2; later iOS18.5 passes do not
