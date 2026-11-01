@@ -127,9 +127,15 @@ def requests_by_method(destination, methods):
 
 
 def accept_native_export(out, state):
+    return _accept_sampled_export(out, state, profile=PROFILE, renderer=renderer_for_profile,
+        decoder=decode_companions, prefixes=('capture-','native-accessibility-','native-frame-','native-root-','native-touch-','native-only-'),
+        result=RESULT, filename='native-only-samples.json')
+
+
+def _accept_sampled_export(out, state, *, profile, renderer, decoder, prefixes, result, filename):
     require((state['profile'],state['source'],state['source_tree'],state['runtime'],state['device'],
         state['debug_bundle'],state['xcode'],state['sdk']) ==
-        (PROFILE,SOURCE,TREE,native.pair.RUNTIME,native.pair.DEVICE,'me.parlor.ios.debug',
+        (profile,SOURCE,TREE,native.pair.RUNTIME,native.pair.DEVICE,'me.parlor.ios.debug',
          'Xcode 26.3\nBuild version 17C529\n','26.2') and len(state['arms']) == 1, 'Exact original native-only identity')
     row = state['arms'][0]; d = out/'compose'
     require(row['arm'] == 'compose' and row['build_exit'] == 0 and row['cleanup'] == 'PASS' and row['result'] in
@@ -138,7 +144,7 @@ def accept_native_export(out, state):
     require(methods == row['methods'] and row.get('attachment_test_ids',[]) == sorted(k for k,v in methods.items() if v == 'Failed'),
             'All ten exact original outcomes and actual failed-method attachment ownership')
     require(all(state['original_inputs'].get(p) == h for p,h in native.pair.INPUTS.items()), 'All exact original binding bytes')
-    plan = renderer_for_profile(PROFILE,SOURCE,native.pair.RUNTIME,native.pair.DEVICE)(
+    plan = renderer(profile,SOURCE,native.pair.RUNTIME,native.pair.DEVICE)(
         {p:native.pair.fixture(p) for p in native.pair.MODIFIED},native.pair.INPUTS,arm='compose')
     require(load(d/'inputs.json') == state['original_inputs'] | {p:hashlib.sha256(v.encode()).hexdigest() for p,v in plan.items()},
             'All original inputs plus only reviewed copied Swift wrapper/driver')
@@ -152,10 +158,10 @@ def accept_native_export(out, state):
         require(decoded['snapshot'] == dict(schema=1,nativeMode=0,overflow=0,invalid=0,rows=[]) and
                 decoded['numeric_buffer_complete'] is False, 'ACK-only envelope, never invented Kotlin observations')
         captures.append(decoded)
-        reports.append(decode_companions(d,token,row['simulator'],state['debug_bundle'],json.loads(raw)))
+        reports.append(decoder(d,token,row['simulator'],state['debug_bundle'],json.loads(raw)))
     require(row.get('captures',[]) == captures and row.get('companion_captures',[]) == reports and
         not row.get('root_companion_captures') and not row.get('motion_companion_captures'), 'All exact native-only captures')
-    for prefix in ('capture-','native-accessibility-','native-frame-','native-root-','native-touch-','native-only-'):
+    for prefix in prefixes:
         require({p.name for p in d.glob(prefix+'*.json')} == {prefix+t+'.json' for t in owners},
                 'One exact companion per actual failure, zero exports on all-pass execution')
     cleanup = load(d/'cleanup.json')
@@ -172,8 +178,8 @@ def accept_native_export(out, state):
         actual_completed_flows=60 if row['test_exit'] == 0 else None,all_failed_samples_retained=True,
         primary_envelope_purpose='durable-failure-ack-only',application_root_cause=False,shipping_qualified=False,
         native_timing_neutrality=False,physical_verified=False)
-    target = out/'native-only-samples.json'
+    target = out/filename
     if target.exists(): require(load(target) == receipt, 'Exact saved sampled observations')
     else:
         with target.open('x') as f: json.dump(receipt,f,indent=2)
-    return RESULT
+    return result
