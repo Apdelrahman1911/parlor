@@ -1,0 +1,97 @@
+#if DEBUG && targetEnvironment(simulator)
+import UIKit
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+
+/// COPY ONLY. Original finite public journeys never enter networking or
+/// gameplay. All Kotlin/Compose inputs remain original. No AX getters/value/label reads,
+/// added recognizer, pointer modifier, state mutation or successful-path export.
+final class PIN42OwnedLeafObservation {
+    private var active = true
+    private var capture: PIN02Capture?
+    private var touches: PIN42OwnedLeafTouch?
+    private var touchInstalled = false
+    private var inputBindingAttempted = false
+    private var visited = 0
+    private var candidates = 0
+    private var treeComplete = true
+
+    init?() {
+        let environment = ProcessInfo.processInfo.environment
+        guard Thread.isMainThread,
+              environment["PARLOR_PIN42_SCOPE"] == "isolated-owned-leaf-export",
+              environment["PARLOR_PIN42_SOURCE"] == "5029b3f48c2d012b34dd2748f809dc775276a622",
+              let token = environment["PARLOR_PIN02_TOKEN"], PIN02Capture.canonicalUUID(token),
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], PIN02Capture.canonicalUUID(simulator),
+              environment["SIMULATOR_UDID"] == simulator,
+              Bundle.main.bundleIdentifier == environment["PARLOR_PIN02_BUNDLE"],
+              Bundle.main.bundleIdentifier?.hasSuffix(".debug") == true else { return nil }
+        let armed: () -> Bool = { [weak self] in self?.active == true }
+        let touches = PIN42OwnedLeafTouch(armed: armed)
+        self.touches = touches
+        capture = PIN02Capture.install(snapshot: { [weak self] in
+            guard let self else { return "" }
+            self.touches?.exportAfterFailureOnce()
+            let complete = self.exportStatus()
+            self.active = false // Freeze native buffers before any post-failure new query.
+            // Durable request/ACK envelope ONLY, not invented Kotlin observations.
+            return complete ? "{\"schema\":1,\"nativeMode\":0,\"overflow\":0,\"invalid\":0,\"rows\":[]}" : ""
+        })
+    }
+
+    func bindOriginalInputOnce(view: UIView) {
+        // The original content view is empty during outer viewDidLoad. Compose
+        // creates its mediator/overlay only after entering the window hierarchy.
+        // Observe from the original appearance boundary, once, without AX hooks, polling,
+        // forced layout, Kotlin callbacks, extra recognizers or input retries.
+        guard Thread.isMainThread, active, !inputBindingAttempted else { return }
+        inputBindingAttempted = true
+        let inputs = inputViews(view, depth: 0)
+        candidates = inputs.count
+        if treeComplete && inputs.count == 1 { touchInstalled = touches?.bindInputContainer(inputs[0]) == true }
+    }
+
+    private func inputViews(_ view: UIView, depth: Int) -> [UIView] {
+        guard visited < 256, depth <= 32 else { treeComplete = false; return [] }
+        visited += 1
+        var result: [UIView] = []
+        if let leaf = object_getClass(view), let parent = class_getSuperclass(leaf),
+           String(cString: class_getName(parent)) == "CMPScrollView" { result.append(view) }
+        for child in view.subviews { result += inputViews(child, depth: depth + 1) }
+        return result
+    }
+
+    private func exportStatus() -> Bool {
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], let simulator = environment["PARLOR_PIN02_SIMULATOR"],
+              let bundle = Bundle.main.bundleIdentifier else { return false }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier,
+            "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "viewCount": visited, "eligibleInputViews": candidates, "treeComplete": treeComplete,
+            "accessibilityGetterHooks": false, "frameGetterHooks": false, "rootGetterHooks": false,
+            "classListEnumeration": false, "touchInstalled": touchInstalled,
+            "inputBindingAttempted": inputBindingAttempted,
+            "kotlinInstrumentation": false, "composePointerObservers": false, "addedRecognizer": false,
+            "primaryEnvelopePurpose": "durable-failure-ack-only"]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 4096 else { return false }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin42-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return false }
+        let fd = open(directory.appendingPathComponent("status.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return false }
+        defer { close(fd) }
+        return raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return false }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return false }
+                offset += count
+            }
+            return fsync(fd) == 0
+        }
+    }
+}
+#endif

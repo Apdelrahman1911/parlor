@@ -1,0 +1,202 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN42_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+#if !PIN42_CONTROL
+import UIKit
+#endif
+
+/// COPY ONLY. Observe the existing Compose recognizer's original calls.
+/// Only seven existing owned overrides; inherited setter/parent method table untouched.
+/// No new recognizer, pointer modifier, event/value inspection or state change.
+final class PIN42OwnedLeafTouch {
+    private let armed: () -> Bool
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private weak var primaryRecognizer: AnyObject?
+    private var inheritedSetterUntouched = false
+    private var installed = false
+    private var attempted = false
+    private var installation = [0, 0, 0]
+    private static var owner: PIN42OwnedLeafTouch?
+    private static let capacity = 8192
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    #if !PIN42_CONTROL
+    func bindInputContainer(_ view: UIView) -> Bool {
+        precondition(Thread.isMainThread)
+        guard let container = object_getClass(view), let parent = class_getSuperclass(container),
+              String(cString: class_getName(parent)) == "CMPScrollView",
+              let recognizers = view.gestureRecognizers, recognizers.count <= 32 else { return false }
+        // The supplied LocalUIView is the published OverlayInputView. Its existing
+        // touch recognizer is a direct CMPGestureRecognizer leaf, not a pan observer.
+        let selected = recognizers.filter { recognizer in
+            guard let leaf = object_getClass(recognizer), let base = class_getSuperclass(leaf),
+                  String(cString: class_getName(base)) == "CMPGestureRecognizer" else { return false }
+            var current: AnyClass? = base
+            var gesture = false
+            for _ in 0..<32 {
+                guard let ancestor = current else { break }
+                let name = String(cString: class_getName(ancestor))
+                if name == "UIGestureRecognizer" { gesture = true }
+                if name == "NSObject" { return gesture }
+                current = class_getSuperclass(ancestor)
+            }
+            return false
+        }
+        installation[0] = recognizers.count
+        installation[1] = selected.count
+        guard selected.count == 1, let recognizer = selected.first,
+              let target = object_getClass(recognizer) else { return false }
+        primaryRecognizer = recognizer
+        return installVerifiedTarget(target)
+    }
+    #endif
+
+    private static func type(_ value: UnsafeMutablePointer<CChar>?) -> String {
+        guard let value else { return "" }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    private static func same(_ first: Method, _ second: Method) -> Bool {
+        unsafeBitCast(method_getImplementation(first), to: UInt.self) ==
+            unsafeBitCast(method_getImplementation(second), to: UInt.self)
+    }
+
+    private static func signature(_ method: Method, returns: String, arguments: [String]) -> Bool {
+        method_getNumberOfArguments(method) == arguments.count &&
+            type(method_copyReturnType(method)) == returns &&
+            arguments.enumerated().allSatisfy { index, argument in
+                type(method_copyArgumentType(method, UInt32(index))) == argument
+            }
+    }
+
+    fileprivate func installVerifiedTarget(_ target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.owner == nil, let parent = class_getSuperclass(target) else { return false }
+        // Verify the setter remains inherited, but NEVER intercept it or add a leaf method.
+        let stateSelector = NSSelectorFromString("setState:")
+        guard let stateBefore = class_getInstanceMethod(target, stateSelector),
+              let parentState = class_getInstanceMethod(parent, stateSelector),
+              Self.same(stateBefore, parentState),
+              Self.signature(stateBefore, returns: "v", arguments: ["@", ":", "q"]) else { return false }
+        let stateIMP = method_getImplementation(stateBefore)
+        var count: UInt32 = 0
+        guard let owned = class_copyMethodList(target, &count) else { return false }
+        defer { free(owned) }
+        guard !(0..<Int(count)).contains(where: { method_getName(owned[$0]) == stateSelector }) else { return false }
+        let selectors = ["touchesBegan:withEvent:", "touchesMoved:withEvent:",
+            "touchesEnded:withEvent:", "touchesCancelled:withEvent:",
+            "canBePreventedByGestureRecognizer:", "canPreventGestureRecognizer:",
+            "shouldRequireFailureOfGestureRecognizer:"].map(NSSelectorFromString)
+        let methods = selectors.compactMap { class_getInstanceMethod(target, $0) }
+        guard methods.count == selectors.count else { return false }
+        for index in methods.indices {
+            let arguments = index < 4 ? ["@", ":", "@", "@"] : ["@", ":", "@"]
+            guard Self.signature(methods[index], returns: index < 4 ? "v" : "B", arguments: arguments),
+                  method_getTypeEncoding(methods[index]) != nil,
+                  let inherited = class_getInstanceMethod(parent, selectors[index]),
+                  !Self.same(methods[index], inherited),
+                  (0..<Int(count)).contains(where: { method_getName(owned[$0]) == selectors[index] }) else { return false }
+        }
+        typealias Touch = @convention(c) (AnyObject, Selector, AnyObject, AnyObject?) -> Void
+        typealias Arbitration = @convention(c) (AnyObject, Selector, AnyObject) -> Bool
+        let touches = (0..<4).map { unsafeBitCast(method_getImplementation(methods[$0]), to: Touch.self) }
+        let arbitration = (4..<7).map { unsafeBitCast(method_getImplementation(methods[$0]), to: Arbitration.self) }
+        var replacements: [IMP] = []
+        for index in 0..<4 {
+            let original = touches[index]
+            let selector = selectors[index]
+            let block: @convention(block) (AnyObject, AnyObject, AnyObject?) -> Void = { [weak self] object, input, event in
+                let primary = self?.begin(object, kind: index + 1)
+                original(object, selector, input, event) // Same arguments, once, synchronously.
+                if let primary { self?.record(kind: index + 1, phase: 1, primary: primary) }
+            }
+            replacements.append(imp_implementationWithBlock(block))
+        }
+        for index in 4..<7 {
+            let original = arbitration[index - 4]
+            let selector = selectors[index]
+            let kind = index + 2 // Preserve old kind IDs; kind5/setState is explicitly absent.
+            let block: @convention(block) (AnyObject, AnyObject) -> Bool = { [weak self] object, other in
+                let primary = self?.begin(object, kind: kind)
+                let result = original(object, selector, other)
+                if let primary { self?.record(kind: kind, phase: 1, flag: result ? 1 : 0, primary: primary) }
+                return result
+            }
+            replacements.append(imp_implementationWithBlock(block))
+        }
+        Self.owner = self // Owned process lifetime; no unhook during an original call.
+        for index in methods.indices { method_setImplementation(methods[index], replacements[index]) }
+        var afterCount: UInt32 = 0
+        let after = class_copyMethodList(target, &afterCount)
+        defer { if let after { free(after) } }
+        inheritedSetterUntouched = after != nil && afterCount == count &&
+            !(0..<Int(afterCount)).contains(where: { method_getName(after![$0]) == stateSelector }) &&
+            unsafeBitCast(method_getImplementation(class_getInstanceMethod(target, stateSelector)!), to: UInt.self) ==
+                unsafeBitCast(stateIMP, to: UInt.self) &&
+            Self.same(class_getInstanceMethod(target, stateSelector)!, parentState)
+        guard inheritedSetterUntouched else { return false }
+        installation[2] = 1
+        installed = true
+        return true
+    }
+
+    private func begin(_ object: AnyObject, kind: Int, flag: Int = 0) -> Int? {
+        guard Thread.isMainThread, armed() else { return nil }
+        // Class interception also sees its source-identical background instance.
+        // A single same-primary bit distinguishes it without exporting identity.
+        let primary = primaryRecognizer === object ? 1 : 0
+        record(kind: kind, phase: 0, flag: flag, primary: primary)
+        return primary
+    }
+
+    private func record(kind: Int, phase: Int, flag: Int = 0, primary: Int) {
+        guard Thread.isMainThread else { return }
+        guard rows.count < Self.capacity else { overflow = min(1000000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(kind), Double(phase), Double(flag), Double(primary)])
+    }
+
+    func exportAfterFailureOnce() {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle else { return }
+        let report: [String: Any] = ["schema": 2, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+            "installed": installed, "installation": installation, "overflow": overflow, "rows": rows,
+            "observedMethodKinds": [1, 2, 3, 4, 6, 7, 8], "inheritedStateSetterUntouched": inheritedSetterUntouched]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]), raw.count <= 1048576 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin42-touch-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("touches.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+
+    #if PIN42_CONTROL
+    func controlBindPrimary(_ object: AnyObject) { primaryRecognizer = object }
+    func controlSnapshot() -> [String: Any] { ["installed": installed, "overflow": overflow, "rows": rows, "inheritedStateSetterUntouched": inheritedSetterUntouched] }
+    #endif
+}
+#endif
