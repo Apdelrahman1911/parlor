@@ -12,8 +12,11 @@ ARMS=('compose',)
 SENTINEL_CASE='IOSAppLaunchUITests/testZPIN47FailureRunLoopExport()'
 CASES=runtime.CASES+(SENTINEL_CASE,)
 EXPORT_PROFILE='failure-owned-main-runloop-export-control'
-PROFILES=(PROFILE,EXPORT_PROFILE)
+SAMPLE_PROFILE='failure-owned-main-runloop-fixed-samples'
+PROFILES=(PROFILE,EXPORT_PROFILE,SAMPLE_PROFILE)
 EXPORT_CASES=(SENTINEL_CASE,)
+SAMPLE_CASES=tuple('IOSAppLaunchUITests/testPIN47'+language+'Sample%02d()'%i
+    for language in ('Arabic','English') for i in range(1,6))
 TESTS=tuple('iosAppUITests/'+c.removesuffix('()') for c in CASES)
 TEST_TIMEOUT_SECONDS=900
 RESULT='FAILURE_OWNED_MAIN_RUNLOOP_COMPLETE_NOT_QUALIFICATION'
@@ -64,11 +67,26 @@ def renderer_for_profile(profile,source,os,device):
         sentinel=runtime.pair_control.leaf.native.SENTINEL.replace('testPIN39NativeOnlyExportCapability',
             SENTINEL_CASE.split('/')[1].removesuffix('()')).replace('PIN39Configure','PIN47Configure')
         driver=pin01_copy.once(driver,'    private struct KeyboardCopy {',sentinel+'\n    private struct KeyboardCopy {')
+        if profile==SAMPLE_PROFILE:
+            driver=pin01_copy.once(driver,'    private struct KeyboardCopy {',sample_wrappers()+'    private struct KeyboardCopy {')
+            # Clock metadata only AFTER XCTest has decided a failure, with no
+            # additional app/AX query or successful-path measurement.
+            driver=pin01_copy.once(driver,'        // record is called only after XCTest decides to report a failure.',
+                '        print("PIN47 failed-record clock ms: \\(ProcessInfo.processInfo.systemUptime * 1000)")\n'
+                '        // record is called only after XCTest decides to report a failure.')
+            driver=pin01_copy.once(driver,'            print("Public text commit: " + samples.joined(separator: "; "))',
+                '            print("PIN47 failed-text-query clock origin ms: \\(started * 1000)")\n'
+                '            print("Public text commit: " + samples.joined(separator: "; "))')
         return sources|{pin02_capture.CONTAINER:container,pin02_capture.DRIVER:driver}
     return render
 
+def sample_wrappers():
+    return ''.join('    @MainActor\n    func '+c.split('/')[1].removesuffix('()')+'() throws {\n'
+        '        try testAdditionalGamesExposeOnlyMultiplayerSetupIn'+language+'()\n    }\n\n'
+        for language in ('Arabic','English') for c in SAMPLE_CASES if language in c)
+
 def selected_cases(cases):
-    require(cases in (CASES,EXPORT_CASES),'Only original cohort or isolated failed-export correction')
+    require(cases in (CASES,EXPORT_CASES,SAMPLE_CASES),'Only original cohort, isolated correction or predeclared passive samples')
     return cases
 
 def test_command(base,result,*,cases=CASES):
@@ -80,11 +98,13 @@ def visit(nodes):
 
 def verify_results(summary,tests,simulator,code,*,cases=CASES):
     count=len(selected_cases(cases))
-    require(type(code) is int and code==65,'Original unexpected sentinel failure retains actual XCTest exit65')
+    control=SENTINEL_CASE in cases
+    require(type(code) is int and code in ((65,) if control else (0,65)),'Actual XCTest exit; control must retain exit65')
     for k in ('totalTestCount','passedTests','failedTests','skippedTests','expectedFailures'):
         require(type(summary.get(k)) is int and 0<=summary[k]<=count,'Exact finite actual selected-method counts')
     require(summary['totalTestCount']==count and summary['skippedTests']==summary['expectedFailures']==0
-        and summary['passedTests']+summary['failedTests']==count and summary['result']=='Failed','All selected methods execute without skips')
+        and summary['passedTests']+summary['failedTests']==count
+        and summary['result']==('Passed' if code==0 else 'Failed'),'All selected methods execute without skips')
     config=summary.get('devicesAndConfigurations',[]);devices=tests.get('devices',[])
     require(len(config)==len(devices)==len(tests.get('testPlanConfigurations',[]))==1,'One actual owned configuration')
     for d in (config[0].get('device',{}),devices[0]):
@@ -95,17 +115,21 @@ def verify_results(summary,tests,simulator,code,*,cases=CASES):
         and all(n.get('result') in ('Passed','Failed') and type(n.get('durationInSeconds')) in (int,float)
             and math.isfinite(n['durationInSeconds']) and 0<n['durationInSeconds']<900 for n in nodes),'Exact original identifiers/control outcomes/durations')
     methods={n['nodeIdentifier']:n['result'] for n in nodes}
-    require(methods[SENTINEL_CASE]=='Failed' and sum(v=='Passed' for v in methods.values())==summary['passedTests'],'Control remains failed; natural outcomes preserved')
+    passed=sum(v=='Passed' for v in methods.values())
+    require(passed==summary['passedTests'] and (code==0)==(passed==count),'Original natural outcomes/exit preserved')
+    if control:require(methods[SENTINEL_CASE]=='Failed','Control remains failed')
     failures=summary.get('testFailures',[])
-    control=[f for f in failures if f.get('testIdentifierString')==SENTINEL_CASE]
-    require(len(control)==1 and 'One public setup tap must remove the source and expose its destination' in control[0].get('failureText',''),
-        'New control fails at unchanged absent-destination assertion, not startup/input')
+    if control:
+        control_failures=[f for f in failures if f.get('testIdentifierString')==SENTINEL_CASE]
+        require(len(control_failures)==1 and 'One public setup tap must remove the source and expose its destination' in control_failures[0].get('failureText',''),
+            'New control fails at unchanged absent-destination assertion, not startup/input')
     require(all(f.get('testIdentifierString') in methods and methods[f['testIdentifierString']]=='Failed' for f in failures)
         and {f['testIdentifierString'] for f in failures}=={k for k,v in methods.items() if v=='Failed'},'No hidden extra or lost original failures')
     return methods
 
 def failed_method_exports(result,destination,outcomes,*,cases=CASES):
-    require(set(outcomes)==set(selected_cases(cases)) and outcomes[SENTINEL_CASE]=='Failed','All declared actual outcomes before failed-only export')
+    require(set(outcomes)==set(selected_cases(cases)) and all(v in ('Passed','Failed') for v in outcomes.values()),'All declared actual outcomes before failed-only export')
+    if SENTINEL_CASE in cases:require(outcomes[SENTINEL_CASE]=='Failed','Control remains failed')
     return [(destination/('failed-%02d'%i),['export','attachments','--path',str(result),'--output-path',str(destination/('failed-%02d'%i)),'--test-id',c])
         for i,c in enumerate(sorted(k for k,v in outcomes.items() if v=='Failed'),1)]
 
@@ -134,9 +158,10 @@ def retain_companion(sandbox,destination,token,simulator,bundle,legacy):
 
 def verify_commands(state,row,*,cases=CASES):
     selected_cases(cases)
+    test_budget=2700 if cases==SAMPLE_CASES else 900
     require(state['commands'] and all(c['status']=='EXITED' and c['direct_child_reaped'] and not c.get('signals') for c in state['commands']),
         'Every child exited/reaped with no retries/signals')
-    for stage,code,budget in (('build',0,2700),('tests',65,900),('gradle-stop',0,120)):
+    for stage,code,budget in (('build',0,2700),('tests',row['test_exit'],test_budget),('gradle-stop',0,120)):
         selected=[c for c in state['commands'] if c['label']=='compose-'+stage]
         require(len(selected)==1 and selected[0]['exit_code']==code and selected[0]['timeout_seconds']==budget,'One bounded actual build/test/cleanup command')
         if stage!='tests':continue
@@ -150,15 +175,16 @@ def verify_commands(state,row,*,cases=CASES):
             require(argv.count(flag)==1 and argv[argv.index(flag)+1]==value,'Exact declared original command/device flags')
     labels=[c['label'] for c in state['commands']]
     require(labels.index('compose-build')<labels.index('compose-tests')<labels.index('compose-gradle-stop'),'Build/test/cleanup ordering')
-    require(state['build_profile']['test_timeout_seconds']==900,'Original process budget; no assertion extension')
+    require(state['build_profile']['test_timeout_seconds']==test_budget,'Exact declared cohort process budget; no assertion extension')
 
 def accept_native_export(out,state,*,cases=CASES,profile=PROFILE):
-    require((profile,cases) in ((PROFILE,CASES),(EXPORT_PROFILE,EXPORT_CASES)),'Exact declared cohort/profile pair')
+    require((profile,cases) in ((PROFILE,CASES),(EXPORT_PROFILE,EXPORT_CASES),(SAMPLE_PROFILE,SAMPLE_CASES)),'Exact declared cohort/profile pair')
     require_capability_binding()
     require((state['profile'],state['source'],state['source_tree'],state['runtime'],state['device'],state['debug_bundle'],state['xcode'],state['sdk'])==
         (profile,SOURCE,TREE,RUNTIME,DEVICE,'me.parlor.ios.debug','Xcode 26.3\nBuild version 17C529\n','26.2') and len(state['arms'])==1,'Exact source/compiler/platform/single arm')
     row=state['arms'][0];d=out/'compose'
-    require(row['arm']=='compose' and row['build_exit']==0 and row['test_exit']==65 and row['cleanup']=='PASS' and row['result']=='JOURNEYS_FAILED','Actual unexpected control failure, real build and cleanup')
+    require(row['arm']=='compose' and row['build_exit']==0 and row['test_exit'] in (0,65) and row['cleanup']=='PASS'
+        and row['result']==('JOURNEYS_PASSED' if row['test_exit']==0 else 'JOURNEYS_FAILED'),'Actual outcome, real build and cleanup')
     methods=verify_results(load(d/'summary.json'),load(d/'tests.json'),row['simulator'],row['test_exit'],cases=cases)
     require(methods==row['methods'] and row['attachment_test_ids']==sorted(k for k,v in methods.items() if v=='Failed'),'All actual natural/control failures retained')
     leaf=runtime.pair_control.leaf
@@ -206,8 +232,19 @@ class ExportControlProfile:
     accept_native_export=staticmethod(partial(accept_native_export,cases=EXPORT_CASES,profile=EXPORT_PROFILE))
 
 
+class FixedSampleProfile(ExportControlProfile):
+    PROFILE=SAMPLE_PROFILE
+    TEST_TIMEOUT_SECONDS=2700
+    SCOPE='Ten predeclared passive samples on original26.2/17Pro; five AR then five EN, each original journey once, failure-only phases, no artificial exporter/KMP/full-cohort replay, action retry or qualification'
+    test_command=staticmethod(partial(test_command,cases=SAMPLE_CASES))
+    verify_results=staticmethod(partial(verify_results,cases=SAMPLE_CASES))
+    failed_method_exports=staticmethod(partial(failed_method_exports,cases=SAMPLE_CASES))
+    accept_native_export=staticmethod(partial(accept_native_export,cases=SAMPLE_CASES,profile=SAMPLE_PROFILE))
+
+
 def select_profile(profile):
     require(profile in PROFILES,'One explicit failure-runloop profile')
     if profile==EXPORT_PROFILE:return ExportControlProfile()
+    if profile==SAMPLE_PROFILE:return FixedSampleProfile()
     import sys
     return sys.modules[__name__]

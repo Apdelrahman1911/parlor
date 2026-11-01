@@ -565,7 +565,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         partial = out / 'state.writing'
         partial.write_text(json.dumps(state | {'commands': commands.rows}, indent=2))
         partial.replace(out / 'state.json')
-    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf:
+    if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf or failure_runloop:
         state['build_profile']['test_timeout_seconds'] = control.TEST_TIMEOUT_SECONDS
         state['build_profile']['scope'] = control.SCOPE
     commands = Commands(environment, time.monotonic() + 3 * 3600, checkpoint)
@@ -665,7 +665,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                         raise RuntimeError('Owned Simulator boot failed')
             if not combined_execution:
                 code, _ = command(selected_test_command(base, result),
-                                  arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf else 900, dest / 'test.log',
+                                  arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf or failure_runloop else 900, dest / 'test.log',
                                   environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
                 row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
             if original_resources:

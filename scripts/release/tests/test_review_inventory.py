@@ -14,6 +14,10 @@ import generate_review_inventory as review_inventory  # noqa: E402
 
 
 class ReviewInventoryTest(unittest.TestCase):
+    def test_passive_native_workflows_never_claim_application_qualification(self) -> None:
+        for name in ('ios-failure-runloop.yml', 'ios-main-runloop-capability.yml', 'ios-passive-failure-samples.yml'):
+            self.assertEqual(review_inventory.classification_for('.github/workflows/' + name, 'ci'), 'ci-diagnostic-workflow')
+
     def test_help_never_resolves_the_repository_or_writes_an_inventory(self) -> None:
         for flag in ("-h", "--help"):
             with self.subTest(flag=flag), patch.object(sys, "argv", ["inventory", flag]), \
