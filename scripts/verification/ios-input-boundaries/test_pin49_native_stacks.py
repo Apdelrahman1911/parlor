@@ -1,5 +1,6 @@
 import hashlib
 import ctypes
+import io
 import json
 import os
 from pathlib import Path
@@ -11,6 +12,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 import pin49_native_stacks as c
+import pin49_kernel_channel as channel
 
 SIM = '12345678-1234-1234-1234-123456789ABC'
 INSTALL = 'ABCDE123-1234-1234-1234-123456789ABC'
@@ -124,6 +126,12 @@ class NativeStacksControls(unittest.TestCase):
                     'ended_ms': sampler.started_ms+5001, 'started_unix': 1, 'ended_unix': 6,
                     'command': c.sample_command(23, path), 'sampler_child_reaped': True,
                     'exit': 0, 'status': 'SAMPLED', **c.read_sample(path, 23)}]
+                sampler.kernel = Mock()
+                sampler.kernel.receipt.return_value = dict(schema=1, pid=42,
+                    ready=dict(kind='ready', schema=1, selector='PROC_UID_ONLY', simulator=SIM,
+                               own_process_seen=True, helper_pid=42), requests=1,
+                    startup_seconds=0.1, response_seconds=[0.1], exit=0, child_reaped=True,
+                    started_before_original_command=True, reply_timeout_seconds=3)
                 sampler._checkpoint()
                 self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64)['sampled_reports'], 1)
                 with self.assertRaises(ValueError):
@@ -159,7 +167,7 @@ class NativeStacksControls(unittest.TestCase):
                 sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
                 sampler.error = 'TimeoutExpired'
                 with patch.object(sampler, '_discover', side_effect=subprocess.TimeoutExpired('native-child', 3)):
-                    sampler.__enter__()
+                    sampler.thread.start()  # Portable observer error, no fake Apple child startup.
                     sampler.thread.join(timeout=1)
                 sampler.__exit__(None, None, None)
                 with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
@@ -179,3 +187,112 @@ class NativeStacksControls(unittest.TestCase):
             self.assertEqual(metadata['selector'], 'PROC_UID_ONLY')
             with (directory/'kernel-path-control.json').open('x') as out:
                 json.dump(metadata, out, indent=2)
+            child = channel.KernelChannel(SIM, c.environment())
+            try:
+                child.start()
+                first, second = child.discover(), child.discover()
+                self.assertEqual(first['helper_pid'], second['helper_pid'])
+            finally:
+                child.close()
+            receipt = child.receipt()
+            channel.verify(receipt, SIM, 2)
+            with (directory/'kernel-child-control.json').open('x') as out:
+                json.dump(receipt, out, indent=2)
+
+
+FAKE_CHILD = '''import json,os,sys,time
+sim,mode=sys.argv[1:]
+base=dict(schema=1,selector='PROC_UID_ONLY',simulator=sim,own_process_seen=True,
+          helper_pid=os.getpid(),enumerated=1,disappeared=0,paths=[])
+print(json.dumps(dict(kind='ready',**base)),flush=True)
+for index,line in enumerate(sys.stdin,1):
+ if mode=='timeout':time.sleep(10)
+ if mode=='oversize':print('x'*65537,flush=True);continue
+ if mode=='exit':sys.exit(7)
+ print(json.dumps(dict(kind='paths',index=index+1 if mode=='stale' else index,**base)),flush=True)
+'''
+
+
+class KernelChannelControls(unittest.TestCase):
+    def owned(self, mode='normal'):
+        child = channel.KernelChannel(SIM, c.environment())
+        # Hermetic protocol child is explicitly NOT libproc/native evidence.
+        with patch.object(channel, 'command', return_value=[sys.executable, '-u', '-c', FAKE_CHILD, SIM, mode]):
+            child.start()
+        return child
+
+    def test_one_prestarted_process_handles_serial_requests_and_exits_on_eof(self):
+        child = self.owned()
+        try:
+            first, second = child.discover(), child.discover()
+            self.assertEqual(first['helper_pid'], second['helper_pid'])
+            self.assertEqual([first['index'], second['index']], [1, 2])
+            with self.assertRaises(ValueError): child.start()
+        finally: child.close()
+        channel.verify(child.receipt(), SIM, 2)
+        self.assertEqual(child.exit, 0)
+        self.assertTrue(child.reaped)
+
+    def test_stale_oversized_and_ended_replies_fail_closed_and_reap_owned_child(self):
+        for mode in ('stale', 'oversize', 'exit'):
+            child = self.owned(mode)
+            with self.assertRaises(ValueError): child.discover()
+            self.assertTrue(child.reaped)
+            with self.assertRaises(ValueError): child.discover()
+            with self.assertRaises((ValueError, KeyError)): channel.verify(child.receipt(), SIM, 1)
+
+    def test_reply_timeout_remains_bounded_and_aborts_reaps_without_retry(self):
+        child = self.owned('timeout')
+        with patch.object(channel, 'TIMEOUT', 0.05), self.assertRaises(subprocess.TimeoutExpired):
+            child.discover()
+        self.assertEqual(child.requests, 1)
+        self.assertTrue(child.reaped)
+        self.assertNotEqual(child.exit, 0)
+
+    def test_production_command_has_exact_owned_simulator_no_loader_or_longer_timeout(self):
+        self.assertEqual(channel.TIMEOUT, 3)
+        self.assertEqual(channel.command(SIM)[-2:], [SIM, '--serve'])
+        self.assertEqual(channel.command(SIM)[:2], [sys.executable, '-B'])
+
+    def test_duplicate_protocol_keys_and_changed_custody_are_rejected(self):
+        with self.assertRaises(ValueError): channel.duplicate([('schema', 1), ('schema', 1)])
+        child = self.owned()
+        try: child.discover()
+        finally: child.close()
+        for field,value in [('exit', 1), ('child_reaped', False), ('reply_timeout_seconds', 4),
+                            ('started_before_original_command', False), ('response_seconds', [3.1])]:
+            receipt = child.receipt();receipt[field] = value
+            with self.assertRaises(ValueError): channel.verify(receipt, SIM, 1)
+
+    def test_native_server_rejects_unrecognized_request_before_any_discovery(self):
+        import pin49_process_paths as paths
+        result = dict(schema=1,selector='PROC_UID_ONLY',simulator=SIM,own_process_seen=True,
+                      enumerated=1,disappeared=0,paths=[])
+        for raw in (b'LONGREQUEST\n', b'DISCOVER!\n'):
+            with patch.object(paths, 'collect', return_value=result) as collect, self.assertRaises(ValueError):
+                paths.serve(Mock(), SIM, io.BytesIO(raw), Mock())
+            self.assertEqual(collect.call_count, 1)  # Readiness only; no unauthorized request.
+
+    def test_native_readiness_precedes_original_command_and_helper_reaping_precedes_cleanup(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler = c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            events = [];sampler.thread = Mock();sampler.thread.is_alive.return_value = False
+            sampler.thread.start.side_effect = lambda: events.append('observe')
+            helper = Mock();helper.receipt.return_value = {'portable_fixture_only': True}
+            helper.start.side_effect = lambda: events.append('ready')
+            helper.close.side_effect = lambda **_: events.append('reaped')
+            with patch.object(c.kernel, 'KernelChannel', return_value=helper):
+                with sampler: events.append('unchanged-original-command')
+            events.append('owned-simulator-cleanup')
+            self.assertEqual(events, ['ready','observe','unchanged-original-command','reaped','owned-simulator-cleanup'])
+
+    def test_failed_native_readiness_cannot_launch_original_command_or_observer(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler = c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            sampler.thread = Mock()
+            helper = Mock();helper.receipt.return_value = {'portable_fixture_only': True}
+            helper.start.side_effect = subprocess.TimeoutExpired('owned-ready', 3)
+            with patch.object(c.kernel, 'KernelChannel', return_value=helper), self.assertRaises(subprocess.TimeoutExpired):
+                with sampler: self.fail('Original command must not start without native readiness')
+            sampler.thread.start.assert_not_called()
+            helper.close.assert_called_once_with(abort=True)

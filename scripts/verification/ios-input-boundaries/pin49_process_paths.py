@@ -58,10 +58,26 @@ def load_proc():
     return proc
 
 
+def serve(proc, simulator, stream, emit):
+    # One owned host child starts BEFORE XCTest, then accepts only finite serial
+    # discovery requests. No interpreter/process startup in the observed window.
+    emit(dict(kind='ready', helper_pid=os.getpid(), **collect(proc, simulator)))
+    for index in range(1, 3601):
+        request = stream.readline(10)
+        if request == b'': return
+        if request != b'DISCOVER\n': raise ValueError('One exact bounded discovery request')
+        emit(dict(kind='paths', index=index, helper_pid=os.getpid(), **collect(proc, simulator)))
+    if stream.readline(10) != b'': raise ValueError('Finite serial discovery budget')
+
+
 if __name__ == '__main__':
     try:
-        if len(sys.argv) != 2: raise ValueError('One exact owned Simulator required')
-        print(json.dumps(collect(load_proc(), sys.argv[1]), sort_keys=True))
+        if len(sys.argv) == 3 and sys.argv[2] == '--serve':
+            serve(load_proc(), sys.argv[1], sys.stdin.buffer,
+                  lambda value: print(json.dumps(value, sort_keys=True), flush=True))
+        elif len(sys.argv) == 2:
+            print(json.dumps(collect(load_proc(), sys.argv[1]), sort_keys=True))
+        else: raise ValueError('One exact owned Simulator and explicit server mode only')
     except BaseException as error:
         print(json.dumps({'schema': 1, 'error_type': type(error).__name__}))
         sys.exit(1)

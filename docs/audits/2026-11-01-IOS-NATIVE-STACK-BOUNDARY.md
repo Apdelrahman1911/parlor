@@ -86,3 +86,34 @@ a failed observer must not prevent preserving actual XCTest outcomes. Native
 journals stay truthful; no missing stack is waived. The unchanged completed native
 pair is retained, not claimed as a shipping correction. A corrected observation
 is needed because no stack boundary was obtained, not because the app passed.
+
+## Prestarted owned kernel channel
+
+[41360974443](https://github.com/Apdelrahman1911/parlor/actions/runs/41360974443)
+passed all18 actual Apple controls and both original native methods (exit0), but
+its **first** Python discovery child exceeded3s; zero stack reports. Final stack
+validation correctly failed, while the preceding original result admission and
+cleanup were preserved. Independent original-only readback accepts all472
+supporting/all1,214 original inputs and actual outcomes; it explicitly rejects
+stack-investigation/shipping acceptance. Evidence cannot distinguish interpreter
+startup, scheduling delay, or libproc work inside that failed child.
+
+Remove repeated child/interpreter startup from the observed window: one owned
+host Python/libproc child completes native self/path readiness **before** the
+unchanged XCTest command, then accepts only finite serial `DISCOVER` requests.
+Startup and each complete response retain the original3s bound; no larger timeout,
+retry, alternate selector, additional AX query or shipping thread. Native paths
+still pass the same installed-device/Debug-bundle/executable byte validator.
+Bounded duplicate/stale/oversized/ended replies fail closed, and owned timeout
+children are terminated/reaped. EOF retires the healthy child before Simulator
+cleanup; source-bound receipts retain actual PID/readiness/request count, startup
+and response timings, exit and reaping. One host observer thread remains.
+
+Actual Apple preflight now exercises two serial replies from one real libproc
+child, retaining startup/warm reply timing and cleanup; portable protocol fixtures
+are explicitly not native evidence. Final stack admission requires the complete
+owned-child receipt, every report, and original outcomes. This is a supported
+collector design correction after an observed child deadline failure, **not proof
+of its internal cause or an application input correction**. Fresh native collection
+is needed because previous attempts obtained no stacks; accepted original evidence
+and exporter controls are retained rather than claimed as a qualified fix.

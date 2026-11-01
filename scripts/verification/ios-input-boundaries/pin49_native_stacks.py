@@ -16,6 +16,7 @@ import threading
 import time
 
 import frozen_sources
+import pin49_kernel_channel as kernel
 
 MAX_REPORT = 4 * 1024 * 1024
 MAX_SAMPLES = 180
@@ -108,6 +109,7 @@ class NativeSampler:
         self.directory, self.simulator, self.executable_sha = directory, simulator, executable_sha
         self.stop = threading.Event()
         self.rows, self.error, self.discoveries = [], None, 0
+        self.kernel = None
         self.thread = threading.Thread(target=self._observe, name='parlor-owned-os-sampler')
         self.started_ms = time.monotonic() * 1000
         self.home = Path(os.environ['HOME']).resolve(strict=True)
@@ -115,11 +117,7 @@ class NativeSampler:
     def _discover(self):
         self.discoveries += 1
         require(self.discoveries <= MAX_DISCOVERIES, 'Finite OS process-discovery budget')
-        helper = Path(__file__).with_name('pin49_process_paths.py')
-        result = subprocess.run([sys.executable, '-B', str(helper), self.simulator], env=environment(),
-                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3)
-        require(result.returncode == 0 and len(result.stdout) <= 65536, 'Bounded current-UID native image child')
-        receipt = json.loads(result.stdout)
+        receipt = self.kernel.discover()
         require(receipt['schema'] == 1 and receipt['selector'] == 'PROC_UID_ONLY'
                 and receipt['simulator'] == self.simulator and receipt['own_process_seen'] is True,
                 'Actual current-UID kernel path capability')
@@ -177,6 +175,7 @@ class NativeSampler:
                    'producer_directory': str(self.directory),
                    'executable_sha256': self.executable_sha, 'started_ms': self.started_ms,
                    'discoveries': self.discoveries, 'samples': self.rows, 'error': self.error,
+                   'kernel_child': self.kernel.receipt() if self.kernel else None,
                    'sample_seconds': SAMPLE_SECONDS, 'interval_ms': INTERVAL_MS,
                    'original_sources_changed': False, 'additional_ax_queries': False,
                    'native_timing_neutrality': False, 'shipping_qualified': False, 'physical_verified': False}
@@ -187,14 +186,24 @@ class NativeSampler:
         temporary.replace(target)
 
     def __enter__(self):
-        self.thread.start()
+        self.kernel = kernel.KernelChannel(self.simulator, environment())
+        try:
+            self.kernel.start()  # Actual native readiness BEFORE the unchanged XCTest command.
+            self.thread.start()
+        except BaseException:
+            self.kernel.close(abort=True)
+            self._checkpoint()
+            raise
         return self
 
     def __exit__(self, kind, value, traceback):
         self.stop.set()
         self.thread.join(timeout=12)
-        require(not self.thread.is_alive(), 'Owned native sampler must finish and reap before Simulator cleanup')
-        self._checkpoint()
+        try:
+            require(not self.thread.is_alive(), 'Owned native sampler must finish and reap before Simulator cleanup')
+        finally:
+            if self.kernel: self.kernel.close(abort=self.error is not None)
+            self._checkpoint()
         # Validate in final verify_receipt, AFTER original XCTest result decoding
         # and cleanup, so an observer error cannot erase actual native outcomes.
         # Final receipt still fails closed on any error or absent stack report.
@@ -230,6 +239,7 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
             and 0 < receipt['discoveries'] <= MAX_DISCOVERIES
             and 0 < len(receipt['samples']) <= MAX_SAMPLES, 'Exact bounded real sampling parameters')
     actual = []
+    kernel.verify(receipt['kernel_child'], simulator, receipt['discoveries'])
     previous = receipt['started_ms']
     for index, row in enumerate(receipt['samples'], 1):
         path = directory/('sample-%03d.txt' % index)
