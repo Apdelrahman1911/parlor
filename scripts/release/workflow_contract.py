@@ -145,7 +145,7 @@ NATIVE_ONLY_SAMPLES_COMPANIONS = {'pin40_native_only_samples.py': '5e69b7a12d645
 
 MAIN_RUNLOOP_CAPABILITY = 'ios-main-runloop-capability.yml'
 MAIN_RUNLOOP_CAPABILITY_SHA256 = '9e134e5c5e802e4897deedab3b75570aa316c06d1956fbc5825da7f1eceba34f'
-MAIN_RUNLOOP_CAPABILITY_COMPANIONS = {'PIN46MainRunLoop.swift.in': '579b56e44d46cf507dc2e2cdc8dfeeef474bc3e6ae283b148c826faec4816c4b', 'PIN46MainRunLoopControl.swift.in': 'bc41471caf2d33d8bf72549f935afdecdb9da6615e51a47e8d2bda599b12e619', 'pin46_main_runloop.py': '6d09e34cf9fec7f11feffd37142feab6403887538da0be5cdfc15dafb98e9616', 'test_pin46_main_runloop.py': '9caf0cda7556278310a4ac7d15526ed0c6919f9557c0f40b5a4eb2701ff37eb9'}
+MAIN_RUNLOOP_CAPABILITY_COMPANIONS = {'PIN46MainRunLoop.swift.in': '6dec78a0716ad3c8841f884f7e076294e95b00c567124d9f0ab0bdc3a1e82aad', 'PIN46MainRunLoopControl.swift.in': 'bc41471caf2d33d8bf72549f935afdecdb9da6615e51a47e8d2bda599b12e619', 'pin46_main_runloop.py': 'cb21d1b290ac4d439fd981c79d46896cf931a68c48c545a4391c0396a5198131', 'test_pin46_main_runloop.py': '5089ef1c2eb8a76ffa35105c905f9ec795b5ddfc2eb2ea36ee7a9ab494656e2a'}
 
 ORIGINAL_RUNTIME_CONTEXT = 'ios-original-runtime-context.yml'
 ORIGINAL_RUNTIME_CONTEXT_SHA256 = '2e1b1042923b3292907b4e9c66b58758f8430dd62ddb91e46adefb5a27a2577b'

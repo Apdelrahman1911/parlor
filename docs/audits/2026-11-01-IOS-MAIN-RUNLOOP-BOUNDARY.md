@@ -48,3 +48,13 @@ failure-owned diagnostic adapter and execute a justified natural boundary study.
 Original failures and ten-second assertions remain unchanged. Phase1/#267/#276
 stay open; Phases2/3 follow genuine Phase1 resolution. Physical Phase4 remains
 owner-reserved. No security waiver, AGENTS change, dependency override or release.
+
+## Actual compiler failure and correction
+
+[41339329869](https://github.com/Apdelrahman1911/parlor/actions/runs/41339329869),
+exact `43e92f65`, failed before native execution: Xcode26.3 rejects obsolete
+`kCFRunLoopCommonModes` in Swift. Use `CFRunLoopMode.commonModes` consistently
+for installation, membership/removal and deinitialization; retain the original
+compiler log, state and source. The source control rejects the obsolete name.
+The frozen reader rejected this failed capability correctly. Fresh execution of
+the corrected source is required; no iOS/app cause or qualification follows.

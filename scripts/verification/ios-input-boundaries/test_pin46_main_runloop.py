@@ -47,7 +47,8 @@ class MainRunLoopControls(unittest.TestCase):
                           'accessibilityValue','method_setImplementation','addGestureRecognizer'):
             self.assertNotIn(forbidden,source)
         self.assertIn('CFRunLoopObserverCreateWithHandler',source)
-        self.assertIn('kCFRunLoopCommonModes',source)
+        self.assertIn('CFRunLoopMode.commonModes',source)
+        self.assertNotIn('kCFRunLoopCommonModes',source)
         self.assertLess(source.index('        frozen = value'),source.index('        CFRunLoopRemoveObserver'))
         self.assertIn('.prefix(8)',source)
         self.assertIn('duration > longestActive.last![2]',source)

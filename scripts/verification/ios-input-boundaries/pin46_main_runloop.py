@@ -10,7 +10,7 @@ import pin45_original_runtime_context as context
 HERE=Path(__file__).resolve().parent
 TEMPLATE='PIN46MainRunLoop.swift.in'
 CONTROL='PIN46MainRunLoopControl.swift.in'
-TEMPLATE_SHA256='579b56e44d46cf507dc2e2cdc8dfeeef474bc3e6ae283b148c826faec4816c4b'
+TEMPLATE_SHA256='6dec78a0716ad3c8841f884f7e076294e95b00c567124d9f0ab0bdc3a1e82aad'
 CONTROL_SHA256='bc41471caf2d33d8bf72549f935afdecdb9da6615e51a47e8d2bda599b12e619'
 SCOPE='main-run-loop-phase-intervals-not-dispatch-or-AX-roundtrip'
 MAX_BYTES=8192

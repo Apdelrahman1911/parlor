@@ -29,7 +29,7 @@ final class PIN46MainRunLoopObservation {
         guard let value = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault, activities, true, 0,
             { [weak self] _, activity in self?.observe(activity) }) else { return false }
         observer = value
-        CFRunLoopAddObserver(CFRunLoopGetMain(), value, kCFRunLoopCommonModes)
+        CFRunLoopAddObserver(CFRunLoopGetMain(), value, CFRunLoopMode.commonModes)
         return CFRunLoopObserverIsValid(value)
     }
 
@@ -108,10 +108,10 @@ final class PIN46MainRunLoopObservation {
             "boundary": "main-run-loop-phase-intervals-not-dispatch-or-AX-roundtrip",
             "timerOrPolling": false, "additionalThread": false, "allIntervalsRetained": false, "observerRemoved": false]
         frozen = value
-        CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes)
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, CFRunLoopMode.commonModes)
         CFRunLoopObserverInvalidate(observer)
         guard !CFRunLoopObserverIsValid(observer),
-              !CFRunLoopContainsObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes) else { return nil }
+              !CFRunLoopContainsObserver(CFRunLoopGetMain(), observer, CFRunLoopMode.commonModes) else { return nil }
         value["observerRemoved"] = true
         frozen = value
         self.observer = nil
@@ -120,7 +120,7 @@ final class PIN46MainRunLoopObservation {
 
     deinit {
         if let observer {
-            CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes)
+            CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, CFRunLoopMode.commonModes)
             CFRunLoopObserverInvalidate(observer)
         }
     }
