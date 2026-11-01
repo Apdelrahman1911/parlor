@@ -63,3 +63,26 @@ parser and positive fixture to the actual field protocol, retaining a negative
 control rejecting fabricated descriptor-path admission. The reviewed collector
 correction changes no copied app/query/action/assertion and is not a shipping fix.
 Fresh Apple execution remains required, including capability on the new host.
+
+## Kernel discovery correction
+
+[41358405633](https://github.com/Apdelrahman1911/parlor/actions/runs/41358405633)
+passed all16 Apple controls and both original native methods (exit0), but the
+observer failed: its15th global `ps pid/ucomm` child timed out at3s near Simulator
+startup; **zero native stacks were collected**. Workflow remains failed, source
+state INCOMPLETE, original XCResult/log/zero-sample receipt retained. Owned cleanup
+PASS. This is not app causality or a valid stack investigation.
+
+Replace global ps/lsof discovery with a3s owned child using public **libproc
+current-UID PID selection and executable paths**, the repository's already
+reviewed64-bit Darwin ABI. No argument/environment, root-user enumeration, AX
+or app-source change. The exact owned-device/Debug bundle/installed byte checks
+still govern sampling. An actual native self/path capability joins preflight;
+negative bounds and timeout controls remain. No timeout extension or blind retry.
+
+Also defer observer error/absent-stack validation until **after** original result
+admission and normal cleanup. The final stack reader still rejects either defect;
+a failed observer must not prevent preserving actual XCTest outcomes. Native
+journals stay truthful; no missing stack is waived. The unchanged completed native
+pair is retained, not claimed as a shipping correction. A corrected observation
+is needed because no stack boundary was obtained, not because the app passed.

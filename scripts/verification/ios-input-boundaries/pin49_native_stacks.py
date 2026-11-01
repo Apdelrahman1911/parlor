@@ -11,6 +11,7 @@ from pathlib import Path
 import plistlib
 import re
 import subprocess
+import sys
 import threading
 import time
 
@@ -114,24 +115,20 @@ class NativeSampler:
     def _discover(self):
         self.discoveries += 1
         require(self.discoveries <= MAX_DISCOVERIES, 'Finite OS process-discovery budget')
-        result = subprocess.run(['/bin/ps', '-axo', 'pid=,ucomm='], env=environment(),
+        helper = Path(__file__).with_name('pin49_process_paths.py')
+        result = subprocess.run([sys.executable, '-B', str(helper), self.simulator], env=environment(),
                                 stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3)
-        require(result.returncode == 0 and len(result.stdout) <= 1024 * 1024, 'Bounded native process names')
+        require(result.returncode == 0 and len(result.stdout) <= 65536, 'Bounded current-UID native image child')
+        receipt = json.loads(result.stdout)
+        require(receipt['schema'] == 1 and receipt['selector'] == 'PROC_UID_ONLY'
+                and receipt['simulator'] == self.simulator and receipt['own_process_seen'] is True,
+                'Actual current-UID kernel path capability')
         found = []
-        for line in result.stdout.decode().splitlines():
-            parts = line.split()
-            if len(parts) != 2 or parts[1] != 'Parlor' or not parts[0].isdigit():
-                continue
-            pid = int(parts[0])
-            files = subprocess.run(['/usr/sbin/lsof', '-a', '-p', str(pid), '-d', 'txt', '-Fn'],
-                                   env=environment(), stdout=subprocess.PIPE,
-                                   stderr=subprocess.DEVNULL, timeout=3)
-            # The public test may terminate between enumeration and image inspection.
-            if files.returncode == 1:
-                continue
-            require(files.returncode == 0 and len(files.stdout) <= 1024 * 1024, 'Bounded native image inventory')
-            for image in owned_images(files.stdout, self.simulator, self.executable_sha, self.home):
-                found.append(dict(pid=pid, **image))
+        for candidate in receipt['paths']:
+            # Common strict image/bundle/byte validator; the path came from libproc,
+            # not a fabricated ps row, command-line arguments or arbitrary file.
+            for image in owned_images(('n'+candidate['image']).encode(), self.simulator, self.executable_sha, self.home):
+                found.append(dict(pid=candidate['pid'], **image))
         require(len(found) <= 1, 'Only one owned application may be live')
         return found
 
@@ -154,9 +151,8 @@ class NativeSampler:
         else:
             # A nonzero sampler exit is not a successful observation. Preserve it;
             # admit only a confirmed app exit, not an attach/permissions error.
-            alive = subprocess.run(['/bin/ps', '-p', str(image['pid']), '-o', 'pid='], env=environment(),
-                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3)
-            require(alive.returncode == 1 and not alive.stdout.strip(), 'Native sampler failed on a live application')
+            require(not any(current['pid'] == image['pid'] for current in self._discover()),
+                    'Native sampler failed on a live owned application')
             row['status'] = 'APPLICATION_EXITED_DURING_SAMPLE'
             if report.exists():
                 raw = frozen_sources._read(report, MAX_REPORT)
@@ -199,9 +195,9 @@ class NativeSampler:
         self.thread.join(timeout=12)
         require(not self.thread.is_alive(), 'Owned native sampler must finish and reap before Simulator cleanup')
         self._checkpoint()
-        if kind is None:
-            require(self.error is None, self.error or 'Native sampler failed')
-            require(any(row['status'] == 'SAMPLED' for row in self.rows), 'At least one actual owned-process stack required')
+        # Validate in final verify_receipt, AFTER original XCTest result decoding
+        # and cleanup, so an observer error cannot erase actual native outcomes.
+        # Final receipt still fails closed on any error or absent stack report.
 
 
 def execute_observed(capture, arguments, label, timeout, **kwargs):

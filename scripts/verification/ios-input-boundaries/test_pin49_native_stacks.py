@@ -1,4 +1,5 @@
 import hashlib
+import ctypes
 import json
 import os
 from pathlib import Path
@@ -94,7 +95,8 @@ class NativeStacksControls(unittest.TestCase):
                 sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
                 sampler.error = 'ActualAttachFailure'
                 sampler.thread = Mock(); sampler.thread.is_alive.return_value = False
-                with self.assertRaises(ValueError): sampler.__exit__(None, None, None)
+                sampler.__exit__(None, None, None)
+                with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
                 saved = json.loads((sampler.directory/'samples.json').read_text())
                 self.assertEqual(saved['error'], 'ActualAttachFailure')
                 self.assertFalse(saved['shipping_qualified'])
@@ -104,8 +106,8 @@ class NativeStacksControls(unittest.TestCase):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
                 sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
-                run = Mock(side_effect=[subprocess.CompletedProcess([], 1), subprocess.CompletedProcess([], 0, stdout=b'23\n')])
-                with patch.object(c.subprocess, 'run', run), self.assertRaises(ValueError):
+                run = Mock(return_value=subprocess.CompletedProcess([], 1))
+                with patch.object(c.subprocess, 'run', run), patch.object(sampler, '_discover', return_value=[{'pid': 23}]), self.assertRaises(ValueError):
                     sampler._sample({'pid': 23, 'image': '/owned/Parlor', 'executable_sha256': 'a'*64})
                 self.assertEqual(sampler.rows[0]['exit'], 1)
                 self.assertNotEqual(sampler.rows[0]['status'], 'SAMPLED')
@@ -129,6 +131,39 @@ class NativeStacksControls(unittest.TestCase):
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_2')
                 with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
 
+    def test_current_uid_kernel_paths_filter_other_devices_and_no_arguments_or_root_user_scan(self):
+        import pin49_process_paths as paths
+        own = os.getpid()
+        proc = Mock()
+        def listpids(selector, uid, values, size):
+            self.assertEqual((selector, uid), (4, os.geteuid()))
+            values[0], values[1], values[2] = own, 123, 0
+            return 12
+        def pidpath(pid, buffer, size):
+            raw = (b'/owned/Python' if pid == own else
+                ('/owned/Library/Developer/CoreSimulator/Devices/'+SIM+'/data/Containers/Bundle/Application/'+INSTALL+'/Parlor.app/Parlor').encode())
+            buffer.value = raw
+            return len(raw)
+        proc.proc_listpids.side_effect = listpids
+        proc.proc_pidpath.side_effect = pidpath
+        receipt = paths.collect(proc, SIM)
+        self.assertTrue(receipt['own_process_seen'])
+        self.assertEqual(receipt['paths'][0]['pid'], 123)
+        self.assertEqual(paths.collect(proc, INSTALL)['paths'], [])
+        proc.proc_listpids.return_value = 4097*4; proc.proc_listpids.side_effect = None
+        with self.assertRaises(ValueError): paths.collect(proc, SIM)
+
+    def test_observer_timeout_still_fails_receipt_but_does_not_discard_original_test_exit(self):
+        with TemporaryDirectory() as d:
+            with patch.dict(os.environ, HOME=d):
+                sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
+                sampler.error = 'TimeoutExpired'
+                with patch.object(sampler, '_discover', side_effect=subprocess.TimeoutExpired('native-child', 3)):
+                    sampler.__enter__()
+                    sampler.thread.join(timeout=1)
+                sampler.__exit__(None, None, None)
+                with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
+
     @unittest.skipUnless(sys.platform == 'darwin', 'Actual Apple OS sampler unavailable locally')
     def test_actual_os_tool_control_reaps_child_and_retains_real_stack_report(self):
         with TemporaryDirectory() as d:
@@ -138,3 +173,9 @@ class NativeStacksControls(unittest.TestCase):
             self.assertEqual(value['exit'], 0)
             self.assertTrue(value['child_reaped'])
             self.assertFalse(value['simulator_attach_verified'])
+            import pin49_process_paths as paths
+            metadata = paths.collect(paths.load_proc(), SIM)
+            self.assertTrue(metadata['own_process_seen'])
+            self.assertEqual(metadata['selector'], 'PROC_UID_ONLY')
+            with (directory/'kernel-path-control.json').open('x') as out:
+                json.dump(metadata, out, indent=2)
