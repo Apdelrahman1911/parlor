@@ -1,0 +1,32 @@
+// ACTUAL MACOS SOFTWARE CONTROL. Not iOS execution or an original causal proof.
+import Foundation
+import CoreFoundation
+
+@main
+struct PIN46MainRunLoopControl {
+    static func main() throws {
+        precondition(Thread.isMainThread)
+        let owner = PIN46MainRunLoopObservation()
+        guard owner.installOnce(), !owner.installOnce() else { exit(2) }
+        // Deliberately block only this isolated control's main thread once.
+        // Never block or repair the application/Simulator's input path.
+        var blockingCalls = 0
+        DispatchQueue.main.async {
+            blockingCalls += 1
+            Thread.sleep(forTimeInterval: 0.08)
+        }
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+        guard blockingCalls == 1, let snapshot = owner.freezeOnce(), let active = snapshot["largestActiveMs"] as? [Double],
+              active.count == 3, active[2] >= 50, snapshot["invalid"] as? Int == 0 else { exit(3) }
+        let original = try JSONSerialization.data(withJSONObject: snapshot, options: [.sortedKeys])
+        var afterFreezeCalls = 0
+        DispatchQueue.main.async {
+            afterFreezeCalls += 1
+            Thread.sleep(forTimeInterval: 0.02)
+        }
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        guard afterFreezeCalls == 1, let frozen = owner.freezeOnce(), !owner.installOnce(),
+              try JSONSerialization.data(withJSONObject: frozen, options: [.sortedKeys]) == original else { exit(4) }
+        FileHandle.standardOutput.write(original)
+    }
+}

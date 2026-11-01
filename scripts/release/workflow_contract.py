@@ -143,6 +143,10 @@ NATIVE_ONLY_SAMPLES = 'ios-native-only-samples.yml'
 NATIVE_ONLY_SAMPLES_SHA256 = '3b3094e2fca4cf59fe30401b40d0103bf3feb5485c53567d9b7d1c16bb827ba9'
 NATIVE_ONLY_SAMPLES_COMPANIONS = {'pin40_native_only_samples.py': '5e69b7a12d6456c12e9863f818b183ba9b76193a72910a95926117990f0f04b2', 'test_pin40_native_only_samples.py': '6eb8c47eaa40348ffc974000aa889c8a4af2f639db2a0fee31ebf81f16c95c8f', 'run_pin40.py': '14ef62a2ef249acad8e1a3b5f609db8d7c0e0820c4e1bb5d4c82441034a86f14', 'pin30_public_session_stress.py': '46a85c59736dbfab7d8bcd247105f151b7da2871ec80eae6cf05ff75c245f96d', 'pin11_public_failure_coverage.py': '5f64cd0d1379ea6d907f301239c730b3fb0131db58ba4019695eecdeb6ab881f'}
 
+MAIN_RUNLOOP_CAPABILITY = 'ios-main-runloop-capability.yml'
+MAIN_RUNLOOP_CAPABILITY_SHA256 = '9e134e5c5e802e4897deedab3b75570aa316c06d1956fbc5825da7f1eceba34f'
+MAIN_RUNLOOP_CAPABILITY_COMPANIONS = {'PIN46MainRunLoop.swift.in': '579b56e44d46cf507dc2e2cdc8dfeeef474bc3e6ae283b148c826faec4816c4b', 'PIN46MainRunLoopControl.swift.in': 'bc41471caf2d33d8bf72549f935afdecdb9da6615e51a47e8d2bda599b12e619', 'pin46_main_runloop.py': '6d09e34cf9fec7f11feffd37142feab6403887538da0be5cdfc15dafb98e9616', 'test_pin46_main_runloop.py': '9caf0cda7556278310a4ac7d15526ed0c6919f9557c0f40b5a4eb2701ff37eb9'}
+
 ORIGINAL_RUNTIME_CONTEXT = 'ios-original-runtime-context.yml'
 ORIGINAL_RUNTIME_CONTEXT_SHA256 = '2e1b1042923b3292907b4e9c66b58758f8430dd62ddb91e46adefb5a27a2577b'
 ORIGINAL_RUNTIME_CONTEXT_COMPANIONS = {'pin45_original_runtime_context.py': '34e8ac8d71f472853f7da4689b767b1c074a5092c40d0b9b147293e64fef7b29', 'run_pin45.py': 'cc8edcf4abc01b9dd8f23eb00b31324dd5a17b4a8af230efb48ba20afdef1218', 'test_pin45_original_runtime_context.py': 'bf26aac39b045239ae37a82791e66f90a75cce6f6c183106f1e0325f7976470d'}
@@ -237,7 +241,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT}
+                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -454,6 +458,17 @@ def verify_original_touch_export_control(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Isolated touch-export companion differs from reviewed source: {name}")
+
+
+def verify_main_runloop_capability(text: str) -> None:
+    verify_common(MAIN_RUNLOOP_CAPABILITY, text)
+    verify_original_runtime_context((WORKFLOWS / ORIGINAL_RUNTIME_CONTEXT).read_text())
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != MAIN_RUNLOOP_CAPABILITY_SHA256:
+        fail("Main-runloop capability must use one free runner, original four controls once and retained native evidence")
+    for name, digest in MAIN_RUNLOOP_CAPABILITY_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Main-runloop capability source differs from reviewed bytes: {name}")
 
 
 def verify_original_runtime_context(text: str) -> None:
@@ -2257,6 +2272,8 @@ def main() -> int:
         verify_original_touch_delivery(files[ORIGINAL_TOUCH_DELIVERY])
     if ORIGINAL_TOUCH_EXPORT_CONTROL in files:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
+    if MAIN_RUNLOOP_CAPABILITY in files:
+        verify_main_runloop_capability(files[MAIN_RUNLOOP_CAPABILITY])
     if ORIGINAL_RUNTIME_CONTEXT in files:
         verify_original_runtime_context(files[ORIGINAL_RUNTIME_CONTEXT])
     if ORIGINAL_RUNTIME_LEAF in files:

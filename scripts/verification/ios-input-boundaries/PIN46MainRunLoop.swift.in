@@ -1,0 +1,128 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN46_CONTROL
+import Foundation
+import CoreFoundation
+
+/// COPY ONLY. Passive main-run-loop phase intervals, not AX getter/dispatch timing.
+/// No timer, polling, thread, gesture, view/AX access, label/value or app-state change.
+final class PIN46MainRunLoopObservation {
+    private var observer: CFRunLoopObserver?
+    private var attempted = false
+    private var frozen: [String: Any]?
+    private var counts = [0, 0, 0, 0, 0]
+    private var completedActive = 0
+    private var completedWaiting = 0
+    private var largestActive: [Double] = []
+    private var largestWaiting: [Double] = []
+    private var longestActive: [[Double]] = []
+    private var longestWaiting: [[Double]] = []
+    private var activeStart: Double?
+    private var waitingStart: Double?
+    private var invalid = 0
+    private static let maximumCount = 2_147_483_647
+
+    func installOnce() -> Bool {
+        guard Thread.isMainThread, !attempted else { return false }
+        attempted = true
+        let activities = CFRunLoopActivity.entry.rawValue | CFRunLoopActivity.beforeSources.rawValue |
+            CFRunLoopActivity.beforeWaiting.rawValue | CFRunLoopActivity.afterWaiting.rawValue |
+            CFRunLoopActivity.exit.rawValue
+        guard let value = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault, activities, true, 0,
+            { [weak self] _, activity in self?.observe(activity) }) else { return false }
+        observer = value
+        CFRunLoopAddObserver(CFRunLoopGetMain(), value, kCFRunLoopCommonModes)
+        return CFRunLoopObserverIsValid(value)
+    }
+
+    private func observe(_ activity: CFRunLoopActivity) {
+        guard Thread.isMainThread, frozen == nil else { return }
+        let at = ProcessInfo.processInfo.systemUptime * 1000
+        guard at.isFinite, at >= 0 else { invalid += 1; return }
+        let index: Int
+        switch activity {
+        case .entry: index = 0
+        case .beforeSources: index = 1
+        case .beforeWaiting: index = 2
+        case .afterWaiting: index = 3
+        case .exit: index = 4
+        default: invalid += 1; return
+        }
+        guard counts[index] < Self.maximumCount else { invalid += 1; return }
+        counts[index] += 1
+        // Nested loops can emit another entry without ending the outer interval.
+        // Preserve the earliest active start rather than reporting a shorter body.
+        switch activity {
+        case .entry, .beforeSources:
+            if activeStart == nil && waitingStart == nil { activeStart = at }
+        case .afterWaiting:
+            if let start = waitingStart { retain(start, at, waiting: true) }
+            waitingStart = nil
+            if activeStart == nil { activeStart = at }
+        case .beforeWaiting:
+            if let start = activeStart { retain(start, at, waiting: false) }
+            activeStart = nil
+            if waitingStart == nil { waitingStart = at }
+        case .exit:
+            if let start = activeStart { retain(start, at, waiting: false) }
+            activeStart = nil
+            // A loop can exit from waiting; do not invent a wake callback.
+            waitingStart = nil
+        default: break
+        }
+    }
+
+    private func retain(_ start: Double, _ end: Double, waiting: Bool) {
+        let duration = end - start
+        guard duration.isFinite, duration >= 0 else { invalid += 1; return }
+        if waiting {
+            guard completedWaiting < Self.maximumCount else { invalid += 1; return }
+            completedWaiting += 1
+            if longestWaiting.count < 8 || duration > longestWaiting.last![2] {
+                longestWaiting = longest(longestWaiting, adding: [start, end, duration])
+            }
+            if largestWaiting.isEmpty || duration > largestWaiting[2] { largestWaiting = [start, end, duration] }
+        } else {
+            guard completedActive < Self.maximumCount else { invalid += 1; return }
+            completedActive += 1
+            if longestActive.count < 8 || duration > longestActive.last![2] {
+                longestActive = longest(longestActive, adding: [start, end, duration])
+            }
+            if largestActive.isEmpty || duration > largestActive[2] { largestActive = [start, end, duration] }
+        }
+    }
+
+    private func longest(_ previous: [[Double]], adding interval: [Double]) -> [[Double]] {
+        Array((previous + [interval]).sorted { $0[2] > $1[2] }.prefix(8))
+    }
+
+    func freezeOnce() -> [String: Any]? {
+        guard Thread.isMainThread else { return nil }
+        if let frozen { return frozen }
+        let at = ProcessInfo.processInfo.systemUptime * 1000
+        guard let observer, CFRunLoopObserverIsValid(observer), at.isFinite, at >= 0 else { return nil }
+        let partial = activeStart.map { [$0, at, at - $0] } ?? []
+        var value: [String: Any] = ["schema": 1, "installed": true, "capturedMs": at,
+            "phaseCounts": counts, "completedActiveIntervals": completedActive,
+            "completedWaitingIntervals": completedWaiting, "largestActiveMs": largestActive,
+            "largestWaitingMs": largestWaiting, "partialActiveMs": partial, "invalid": invalid,
+            "longestActiveIntervalsMs": longestActive, "longestWaitingIntervalsMs": longestWaiting,
+            "boundary": "main-run-loop-phase-intervals-not-dispatch-or-AX-roundtrip",
+            "timerOrPolling": false, "additionalThread": false, "allIntervalsRetained": false, "observerRemoved": false]
+        frozen = value
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes)
+        CFRunLoopObserverInvalidate(observer)
+        guard !CFRunLoopObserverIsValid(observer),
+              !CFRunLoopContainsObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes) else { return nil }
+        value["observerRemoved"] = true
+        frozen = value
+        self.observer = nil
+        return value
+    }
+
+    deinit {
+        if let observer {
+            CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes)
+            CFRunLoopObserverInvalidate(observer)
+        }
+    }
+}
+#endif
