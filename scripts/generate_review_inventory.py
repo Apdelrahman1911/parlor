@@ -119,7 +119,7 @@ def classification_for(path: str, source_set: str) -> str:
     # Archived source/resource paths describe evidence, not a shipping source set.
     if path.startswith(ARCHIVE_PREFIX):
         return "historical-document" if suffix == ".md" else "historical-artifact"
-    if path in {".github/workflows/ios-input-investigation.yml", ".github/workflows/ios-public-scroll-export.yml"}:
+    if path in {".github/workflows/ios-input-investigation.yml", ".github/workflows/ios-public-scroll-export.yml", ".github/workflows/ios-public-scroll-natural.yml"}:
         return "ci-diagnostic-workflow"
     if path.startswith(".github/workflows/"):
         return "ci-workflow"

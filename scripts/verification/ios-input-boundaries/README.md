@@ -796,5 +796,20 @@ companions and a bounded, exclusive, primitive-only public-scroll export must
 pass custody checks. The exact prior14-file plan restores from the new16-file
 plan, and the original driver is unchanged. This sentinel cannot enter Permission
 or Name: linkage is not runtime evidence for those screens. Native exporter
-capability remains pending until the macOS run and independent readback complete.
+capability is independently verified by [run41287118490](https://github.com/Apdelrahman1911/parlor/actions/runs/41287118490):
+all422 Apple controls, original failed sentinel/exit65, old/new companions and
+owned cleanup passed. Actual Setup creation/mount/idle/getter facts exported;
+Permission/Name were not entered.
 Successful original-cohort tests are not replayed to manufacture causality.
+
+
+## Original English/Arabic public-scroll investigation (PIN37)
+
+Only the original two affected methods execute once, with the capability-tested
+PIN36 public-scroll boundary. The existing application/driver plan is unchanged;
+no isolated sentinel, successful23-case cohort or sampled-wrapper replay. Failure
+intake preserves zero public-scroll rows when Setup was never entered, without
+claiming Permission/Name execution. Actual native installation and every previous
+companion, exact source/product/command/outcome, and owned cleanup remain required.
+Passing journeys export no ledger. Original actions/assertions/deadlines stay
+unchanged; observation completion is neither a shipping fix nor causal proof.
