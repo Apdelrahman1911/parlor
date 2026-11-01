@@ -1,0 +1,54 @@
+#if DEBUG && targetEnvironment(simulator)
+import Foundation
+import Darwin
+
+/// COPY ONLY. Event-driven phases and failure-only durable capture; no view/AX/input hooks.
+final class PIN47FailureRunLoop {
+    private let observation = PIN46MainRunLoopObservation()
+    private var capture: PIN02Capture?
+
+    init?() {
+        let environment = ProcessInfo.processInfo.environment
+        guard Thread.isMainThread,
+              environment["PARLOR_PIN47_SCOPE"] == "failure-owned-main-runloop",
+              environment["PARLOR_PIN47_SOURCE"] == "5029b3f48c2d012b34dd2748f809dc775276a622",
+              let token = environment["PARLOR_PIN02_TOKEN"], PIN02Capture.canonicalUUID(token),
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], PIN02Capture.canonicalUUID(simulator),
+              environment["SIMULATOR_UDID"] == simulator,
+              Bundle.main.bundleIdentifier == environment["PARLOR_PIN02_BUNDLE"],
+              Bundle.main.bundleIdentifier?.hasSuffix(".debug") == true,
+              observation.installOnce() else { return nil }
+        capture = PIN02Capture.install(snapshot: { [weak self] in
+            // Request delivery occurs only after the original XCTest failure.
+            guard let self, self.exportAfterFailureOnce() else { return "" }
+            return "{\"schema\":1,\"nativeMode\":0,\"overflow\":0,\"invalid\":0,\"rows\":[]}"
+        })
+        guard capture != nil else { return nil }
+    }
+
+    private func exportAfterFailureOnce() -> Bool {
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], let simulator = environment["PARLOR_PIN02_SIMULATOR"],
+              let bundle = Bundle.main.bundleIdentifier, let frozen = observation.freezeOnce() else { return false }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator, "bundle": bundle,
+            "process": ProcessInfo.processInfo.processIdentifier, "observation": frozen]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 16384 else { return false }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin47-runloop-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return false }
+        let fd = open(directory.appendingPathComponent("runloop.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return false }
+        defer { close(fd) }
+        return raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return false }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return false }
+                offset += count
+            }
+            return fsync(fd) == 0
+        }
+    }
+}
+#endif
