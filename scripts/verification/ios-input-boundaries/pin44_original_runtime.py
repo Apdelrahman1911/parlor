@@ -122,21 +122,28 @@ def verify_commands(state, row):
 
 
 def accept_native_export(out, state):
+    return accept_original_runtime_export(out, state, profile=PROFILE, renderer=renderer_for_profile,
+        result_verifier=verify_results, command_verifier=verify_commands, cases=CASES,
+        result=RESULT, receipt_name='original-runtime-journeys.json')
+
+
+def accept_original_runtime_export(out, state, *, profile, renderer, result_verifier,
+                                   command_verifier, cases, result, receipt_name):
     require_pair_binding()
     require((state['profile'], state['source'], state['source_tree'], state['runtime'], state['device'],
              state['debug_bundle'], state['xcode'], state['sdk']) ==
-            (PROFILE, SOURCE, TREE, RUNTIME, DEVICE, 'me.parlor.ios.debug',
+            (profile, SOURCE, TREE, RUNTIME, DEVICE, 'me.parlor.ios.debug',
              'Xcode 26.3\nBuild version 17C529\n', '26.2') and len(state['arms']) == 1,
             'Exact original failed runtime/compiler/source/product identity')
     row = state['arms'][0]; d = out / 'compose'
     require(row['arm'] == 'compose' and row['build_exit'] == 0 and row['cleanup'] == 'PASS'
             and row['result'] in ('JOURNEYS_PASSED', 'JOURNEYS_FAILED'), 'Actual complete build, outcomes and cleanup')
-    methods = verify_results(load(d / 'summary.json'), load(d / 'tests.json'), row['simulator'], row['test_exit'])
+    methods = result_verifier(load(d / 'summary.json'), load(d / 'tests.json'), row['simulator'], row['test_exit'])
     require(methods == row['methods'] and row.get('attachment_test_ids', []) == sorted(k for k, v in methods.items() if v == 'Failed'),
             'All actual original outcomes and failed-method attachment ownership')
     leaf = pair_control.leaf
     require(all(state['original_inputs'].get(p) == h for p, h in leaf.pair.INPUTS.items()), 'All original input bindings')
-    plan = renderer_for_profile(PROFILE, SOURCE, RUNTIME, DEVICE)(
+    plan = renderer(profile, SOURCE, RUNTIME, DEVICE)(
         {p: leaf.pair.fixture(p) for p in leaf.pair.MODIFIED}, leaf.pair.INPUTS, arm='compose')
     require(load(d / 'inputs.json') == state['original_inputs'] | {p: hashlib.sha256(v.encode()).hexdigest() for p, v in plan.items()},
             'Entire original input manifest plus only reviewed copied Swift wrapper/driver')
@@ -164,17 +171,19 @@ def accept_native_export(out, state):
             cleanup['simulator']['result'] == 'PASS' and cleanup['simulator']['udid'] == row['simulator'], 'Exact owned workers/device retired')
     require(state['commands'] and all(c['status'] == 'EXITED' and c['direct_child_reaped'] and not c.get('signals')
             for c in state['commands']), 'Every actual child exited and reaped')
-    verify_commands(state, row)
+    command_verifier(state, row)
     require(state['build_profile']['test_timeout_seconds'] == 900, 'Original process budget, unchanged10s assertions')
     starts = re.findall(rb"Test Case '-\[iosAppUITests\.([A-Za-z0-9_]+) ([A-Za-z0-9_]+)\]' started\.",
                         frozen_sources._read(d / 'test.log', 4 * 1024 * 1024))
-    require(tuple(c.decode() + '/' + m.decode() + '()' for c, m in starts) == CASES, 'Original AR/EN identifiers execute exactly once in order')
+    require(tuple(c.decode() + '/' + m.decode() + '()' for c, m in starts) == cases, 'All original selected identifiers execute exactly once in order')
     receipt = dict(methods=methods, failed_sample_tokens=owners, native=reports, original_runtime='26.2',
                    original_device='iPhone 17 Pro', pair_run=PAIR_RUN, pair_harness=PAIR_HARNESS,
                    pair_receipt_sha256=PAIR_RECEIPT_SHA256, all_failed_samples_retained=True,
                    application_root_cause=False, shipping_qualified=False, native_timing_neutrality=False, physical_verified=False)
-    target = out / 'original-runtime-journeys.json'
+    require(receipt_name in ('original-runtime-journeys.json', 'original-runtime-context-native.json'),
+            'One declared original-runtime receipt owner')
+    target = out / receipt_name
     if target.exists(): require(load(target) == receipt, 'Exact original saved receipt')
     else:
         with target.open('x') as f: json.dump(receipt, f, indent=2)
-    return RESULT
+    return result
