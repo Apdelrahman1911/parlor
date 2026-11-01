@@ -1,0 +1,87 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.LocalOverscrollFactory
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.OverscrollFactory
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
+/** COPY ONLY. Records ORIGINAL overscroll reads, never another query or input. */
+object PIN32CatalogOverscroll {
+    private const val CAPACITY = 512
+    private const val WIDTH = 3
+    private val rows = DoubleArray(CAPACITY * WIDTH)
+    private var size = 0
+    private var overflow = 0
+    private var invalid = 0
+    private var created = 0
+    private var factoryMissing = false
+
+    fun creation() { created = (created + 1).coerceAtMost(CAPACITY + 1) }
+    fun missingFactory() { factoryMissing = true }
+
+    // Row: original-read start and finish uptime ms, original returned busy flag.
+    // Primitive bounded memory only on the event path. JSON is after failure.
+    fun originalRead(started: Double, finished: Double, busy: Boolean) {
+        if (!PIN01Observation.armed) return
+        if (!started.isFinite() || !finished.isFinite() || started < 0 || finished < started || finished > 1e12) {
+            invalid = (invalid + 1).coerceAtMost(1_000_000)
+            return
+        }
+        if (size == CAPACITY) {
+            overflow = (overflow + 1).coerceAtMost(1_000_000)
+            return
+        }
+        val at = size++ * WIDTH
+        rows[at] = started
+        rows[at + 1] = finished
+        rows[at + 2] = if (busy) 1.0 else 0.0
+    }
+
+    fun snapshot(): String = buildJsonObject {
+        put("created", created)
+        put("factoryMissing", factoryMissing)
+        put("overflow", overflow)
+        put("invalid", invalid)
+        put("rows", buildJsonArray {
+            for (row in 0 until size) add(buildJsonArray {
+                for (field in 0 until WIDTH) add(JsonPrimitive(rows[row * WIDTH + field]))
+            })
+        })
+    }.toString()
+}
+
+/** Delegate node, callbacks, arguments and results remain the exact original. */
+internal class PIN32ObservedEffect(private val original: OverscrollEffect) : OverscrollEffect by original {
+    override val isInProgress: Boolean
+        get() {
+            val started = PIN01Observation.clock()
+            val value = original.isInProgress
+            PIN32CatalogOverscroll.originalRead(started, PIN01Observation.clock(), value)
+            return value
+        }
+}
+
+internal data class PIN32ObservedFactory(private val original: OverscrollFactory) : OverscrollFactory {
+    override fun createOverscrollEffect(): OverscrollEffect {
+        val effect = original.createOverscrollEffect()
+        PIN32CatalogOverscroll.creation()
+        return PIN32ObservedEffect(effect)
+    }
+}
+
+@Composable
+fun PIN32ObserveCatalogOverscroll(content: @Composable () -> Unit) {
+    val original = LocalOverscrollFactory.current
+    val observed = remember(original) {
+        original?.let { PIN32ObservedFactory(it) }.also {
+            if (it == null) PIN32CatalogOverscroll.missingFactory()
+        }
+    }
+    CompositionLocalProvider(LocalOverscrollFactory provides observed, content = content)
+}

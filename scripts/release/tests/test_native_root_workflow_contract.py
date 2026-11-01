@@ -16,7 +16,10 @@ class NativeRootWorkflowContractTest(unittest.TestCase):
                 (contract.PUBLIC_SESSION_STRESS,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS,
                  contract.verify_public_session_stress),
                 (contract.CATALOG_INPUT_BOUNDARY,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS | contract.CATALOG_INPUT_BOUNDARY_COMPANIONS,
-                 contract.verify_catalog_input_boundary))
+                 contract.verify_catalog_input_boundary),
+                (contract.OVERSCROLL_GETTER_BOUNDARY,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS |
+                 contract.CATALOG_INPUT_BOUNDARY_COMPANIONS | contract.OVERSCROLL_GETTER_BOUNDARY_COMPANIONS,
+                 contract.verify_overscroll_getter_boundary))
 
     def test_exact_free_readonly_root_workflows_accepted(self):
         for name,_,verify in self.profiles(): verify((contract.WORKFLOWS/name).read_text())

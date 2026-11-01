@@ -1,5 +1,41 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN32 — original catalog overscroll getter boundary (preparation)
+
+Published Compose1.10.3 `Scrollable.kt` admits immediate drag when either the
+scroll state **or the overscroll effect** is busy; `Draggable.kt` then consumes
+the down event in the Initial pass. Cupertino's rounded visible bounce offset
+is separate from `LazyListState.isScrollInProgress`. Stable enabled AX geometry
+and PIN20's idle list rows therefore do not exclude bounce interception.
+Two executed Desktop controls demonstrate that gap: identical positive frames,
+idle scroll state and one original short touch give zero clicks with a synthetic
+busy effect, one click with a separate fresh idle effect. This is **not evidence
+that the original Parlor/UIKit failures had busy overscroll**.
+
+PIN32 delegates the original Home-scoped factory, effect node, callbacks, arguments
+and results. It records only the return of the original `isInProgress` getter,
+read once by the framework, in a bounded 512-row primitive ledger. There is no
+extra getter query, pointer modifier, gesture recognizer, polling, forced scroll,
+animation cancellation or success-path file/JSON output. The new native export
+runs only inside the existing once-only failed public-control capture; custody,
+privacy, all original companions and original ten fixed sample outcomes remain
+mandatory. Every original action, selector, assertion and deadline is unchanged.
+
+Five executed Desktop adapter controls cover original factory/node/getter/callback
+forwarding, actual busy/idle short touches, actual LazyColumn provider stability
+through unrelated recomposition and preservation of an absent factory. Those
+controls use synthetic effects/clocks, not UIKit or real iOS bounce. The actual
+Apple SDK export check and native application execution remain pending. No native
+timing neutrality, application cause/fix, physical acceptance or qualification
+is claimed. PIN31's terminal source-specific evidence must be inspected before
+publishing this separately justified missing-boundary campaign; it is not a
+replay of the completed original baseline.
+
+A busy getter row narrows recognition, not atomic original target identity.
+Missing rows cannot prove absent delivery: the framework can short-circuit the
+getter during an ongoing scroll, or no effect may exist. Passing all samples
+without a failure does not qualify an application repair.
+
 ## PIN31 — missing catalog-opening query and no-pointer observation arm
 
 PIN30 naturally fails **after** an admitted catalog tap, not its pre-tap waiter.
