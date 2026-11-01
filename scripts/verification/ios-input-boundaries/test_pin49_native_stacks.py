@@ -26,7 +26,7 @@ class NativeStacksControls(unittest.TestCase):
 
     def test_only_exact_owned_test_command_can_be_observed_and_actual_exit65_is_not_changed(self):
         with TemporaryDirectory() as d:
-            dest = Path(d)/'compose'; dest.mkdir()
+            dest = Path(d).resolve(strict=True)/'compose'; dest.mkdir()
             (dest/'product.json').write_text(json.dumps({'Parlor': 'a'*64}))
             argv = ['/bin/bash', '--', '/usr/bin/xcodebuild', '-destination',
                     'platform=iOS Simulator,id='+SIM, 'test-without-building']
@@ -43,7 +43,7 @@ class NativeStacksControls(unittest.TestCase):
 
     def test_stack_report_requires_actual_pid_and_thread_graph_not_fake_file_or_other_process(self):
         with TemporaryDirectory() as d:
-            path = Path(d)/'sample.txt'
+            path = Path(d).resolve(strict=True)/'sample.txt'
             for raw in (b'', b'Analysis of sampling Parlor (pid 24)\nCall graph:\nThread_1',
                         b'Analysis of sampling Parlor (pid 23)\nNo samples'):
                 path.write_bytes(raw)
@@ -51,21 +51,23 @@ class NativeStacksControls(unittest.TestCase):
             raw = b'Analysis of sampling Parlor (pid 23) every 10 milliseconds\nCall graph:\nThread_1 kfun:CPU'
             path.write_bytes(raw)
             self.assertEqual(c.read_sample(path, 23), {'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)})
-            link = Path(d)/'link'; link.symlink_to(path)
+            link = Path(d).resolve(strict=True)/'link'; link.symlink_to(path)
             with self.assertRaises(ValueError): c.read_sample(link, 23)
 
     def test_only_exact_owned_installed_debug_executable_admitted_never_other_device_bundle_or_bytes(self):
         with TemporaryDirectory() as d:
-            home = Path(d)
+            home = Path(d).resolve(strict=True)
             app = home/'Library/Developer/CoreSimulator/Devices'/SIM/'data/Containers/Bundle/Application'/INSTALL/'Parlor.app'
             app.mkdir(parents=True)
             exe = app/'Parlor'; exe.write_bytes(b'actual-built-image')
             info = app/'Info.plist'
             info.write_bytes(plistlib.dumps({'CFBundleIdentifier': c.BUNDLE, 'CFBundleExecutable': 'Parlor'}))
             digest = hashlib.sha256(exe.read_bytes()).hexdigest()
-            raw = ('p23\nftxt\nf'+str(exe)+'\nf/System/Library/A.framework/A\n').encode()
+            raw = ('p23\nftxt\nn'+str(exe)+'\nn/System/Library/A.framework/A\n').encode()
             self.assertEqual(c.owned_images(raw, SIM, digest, home), [{'image': str(exe), 'executable_sha256': digest}])
             self.assertEqual(c.owned_images(raw, INSTALL, digest, home), [])
+            # Actual lsof filename field is n; descriptor-shaped/fabricated f paths cannot admit an image.
+            self.assertEqual(c.owned_images(raw.replace(b'\nn/', b'\nf/'), SIM, digest, home), [])
             with self.assertRaises(ValueError): c.owned_images(raw, SIM, 'a'*64, home)
             info.write_bytes(plistlib.dumps({'CFBundleIdentifier': 'com.parlor.app', 'CFBundleExecutable': 'Parlor'}))
             with self.assertRaises(ValueError): c.owned_images(raw, SIM, digest, home)
@@ -89,7 +91,7 @@ class NativeStacksControls(unittest.TestCase):
     def test_sampler_observation_failure_is_not_a_success_and_all_child_errors_are_preserved(self):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
-                sampler = c.NativeSampler(Path(d)/'samples', SIM, 'a'*64)
+                sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
                 sampler.error = 'ActualAttachFailure'
                 sampler.thread = Mock(); sampler.thread.is_alive.return_value = False
                 with self.assertRaises(ValueError): sampler.__exit__(None, None, None)
@@ -101,7 +103,7 @@ class NativeStacksControls(unittest.TestCase):
     def test_live_native_sampler_failure_cannot_be_treated_as_normal_app_termination(self):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
-                sampler = c.NativeSampler(Path(d)/'samples', SIM, 'a'*64)
+                sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
                 run = Mock(side_effect=[subprocess.CompletedProcess([], 1), subprocess.CompletedProcess([], 0, stdout=b'23\n')])
                 with patch.object(c.subprocess, 'run', run), self.assertRaises(ValueError):
                     sampler._sample({'pid': 23, 'image': '/owned/Parlor', 'executable_sha256': 'a'*64})
@@ -111,7 +113,7 @@ class NativeStacksControls(unittest.TestCase):
     def test_real_path_readback_rejects_changed_report_and_accepts_only_explicit_producer_directory(self):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
-                sampler = c.NativeSampler(Path(d)/'samples', SIM, 'a'*64)
+                sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
                 path = sampler.directory/'sample-001.txt'
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_1')
                 sampler.discoveries = 1
@@ -131,7 +133,7 @@ class NativeStacksControls(unittest.TestCase):
     def test_actual_os_tool_control_reaps_child_and_retains_real_stack_report(self):
         with TemporaryDirectory() as d:
             # CI retains real capability bytes; a local Mac smoke test owns its temp output.
-            directory = Path(os.environ['PARLOR_PIN49_CONTROL']) if 'PARLOR_PIN49_CONTROL' in os.environ else Path(d)/'control'
+            directory = Path(os.environ['PARLOR_PIN49_CONTROL']) if 'PARLOR_PIN49_CONTROL' in os.environ else Path(d).resolve(strict=True)/'control'
             value = c.tool_control(directory)
             self.assertEqual(value['exit'], 0)
             self.assertTrue(value['child_reaped'])

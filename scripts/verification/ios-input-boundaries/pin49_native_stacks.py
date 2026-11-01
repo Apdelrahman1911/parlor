@@ -55,7 +55,8 @@ def owned_images(raw, simulator, executable_sha, home):
     base = home/'Library/Developer/CoreSimulator/Devices'/simulator/'data/Containers/Bundle/Application'
     candidates = []
     for line in raw.decode().splitlines():
-        if not line.startswith('f'):
+        # lsof -Fn emits n for file names; f (when selected) is a descriptor.
+        if not line.startswith('n'):
             continue
         path = Path(line[1:])
         if not path.is_absolute() or path.name != 'Parlor' or path.parent.name != 'Parlor.app':

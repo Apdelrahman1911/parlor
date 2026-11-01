@@ -46,3 +46,20 @@ window, but not automatically the cause of a missed input. All-pass execution
 cannot close #267/#276. Continue from actual stacks before shipping a correction.
 Phase1 remains open; Phases2/3 follow genuine protected correction and main
 verification. Physical Phase4 remains owner-reserved; AGENTS/security unchanged.
+
+## First execution and correction
+
+[41358053469](https://github.com/Apdelrahman1911/parlor/actions/runs/41358053469)
+failed **before native build/journeys**: strict positive-fixture tests used macOS's
+`/var` temporary alias instead of canonical `/private/var`, so unchanged secure
+readers correctly rejected four controls. Resolve the owned temporary fixture
+root *before construction*; do not relax redirected-file rejection. Actual OS
+sampler capability passed and its real report/child teardown are retained; this
+does not prove Simulator attach. No application failure was exercised in this run.
+
+Continued review also identified a concrete discovery bug before native use:
+`lsof -Fn` emits **n** filename fields, not **f** descriptor fields. Correct the
+parser and positive fixture to the actual field protocol, retaining a negative
+control rejecting fabricated descriptor-path admission. The reviewed collector
+correction changes no copied app/query/action/assertion and is not a shipping fix.
+Fresh Apple execution remains required, including capability on the new host.

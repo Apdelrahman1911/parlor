@@ -150,9 +150,9 @@ PASSIVE_FAILURE_SAMPLES_COMPANIONS = {'test_pin47_passive_samples.py': 'ab4de728
 NATIVE_STACK_BOUNDARY = 'ios-native-stack-boundary.yml'
 NATIVE_STACK_BOUNDARY_SHA256 = 'ac94f9151ea84471d8f989b73f58117e75256f9d7915b7effe5b62b9251b92ed'
 NATIVE_STACK_BOUNDARY_COMPANIONS = {
-    'pin49_native_stacks.py': '72ffc6384f56d87a37c0304769dbab083e6b7083a5c562aa41c2ccdfcb344570',
+    'pin49_native_stacks.py': '4230045563d95a7d0ffd6c895db326e7bd14137a0caf9e4c86277d7ccda865b2',
     'run_pin49.py': 'c187edc2f4549410da58322949db11d547335105ccc22f6acb216e6561988ad3',
-    'test_pin49_native_stacks.py': '8abb7e9fc1fa1975f99e68e573ac9f53d5dc72c0393f515e40f27b731fe81cde',
+    'test_pin49_native_stacks.py': '997f93e087505c03571168ec1e2e7981734d447b5162ec3304ebb673c3e5e6ac',
 }
 
 QUERY_PROPERTY_BOUNDARY = 'ios-query-property-boundary.yml'
