@@ -146,9 +146,14 @@ def verify_original_companions(out,state):
     return verify_companion_files(out,state)
 
 
-def verify_companion_files(out,state):
+def verify_companion_files(out,state,*,isolated_touch_token=None):
     # Callers independently bind their complete source plan, actual methods and
     # command first. The original two-method entry retains its exact gate above.
+    if isolated_touch_token is not None:
+        text.require(state['profile']=='isolated-original-native-touch-export-control' and
+            state['arms'][0]['methods']=={motion.CONTROL:'Failed'} and
+            type(isolated_touch_token) is str and pin02_capture.UUID.fullmatch(isolated_touch_token),
+            'Synthetic motion is confined to the exact isolated failed touch-export control')
     motion.root.accept_root_companions(out,state)
     row=state['arms'][0];dest=out/'compose';captures=sorted(dest.glob('capture-*.json'));decoded_motion=[]
     for p in captures:
@@ -157,7 +162,8 @@ def verify_companion_files(out,state):
         attributes=json.loads(frozen_sources._read(dest/('native-accessibility-'+token+'.json'),frame.native.MAX_BYTES))
         frame.decode_frames(frozen_sources._read(dest/('native-frame-'+token+'.json'),frame.MAX_BYTES),attributes=attributes,**args)
         m=motion.decode_motion(frozen_sources._read(dest/('catalog-motion-'+token+'.json'),motion.MAX_BYTES),**args)
-        text.require(m['synthetic_control'] is False,'No synthetic Host suppression in original journeys');decoded_motion.append(m)
+        text.require(m['synthetic_control']==(token==isolated_touch_token),
+            'No synthetic Host suppression outside the explicitly owned isolated control');decoded_motion.append(m)
         public=frozen_sources._read(dest/('public-text-'+token+'.json'),text.MAX_BYTES);decode_text_observation(public,**args)
         native=frozen_sources._read(dest/('native-input-'+token+'.json'),delivery.MAX_BYTES)
         native_report=delivery.validate_delivery(native,**args)

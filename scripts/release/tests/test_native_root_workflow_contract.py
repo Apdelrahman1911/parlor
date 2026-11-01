@@ -22,7 +22,11 @@ class NativeRootWorkflowContractTest(unittest.TestCase):
                  contract.verify_overscroll_getter_boundary),
                 (contract.ORIGINAL_TOUCH_DELIVERY,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS |
                  contract.CATALOG_INPUT_BOUNDARY_COMPANIONS | contract.OVERSCROLL_GETTER_BOUNDARY_COMPANIONS |
-                 contract.ORIGINAL_TOUCH_DELIVERY_COMPANIONS,contract.verify_original_touch_delivery))
+                 contract.ORIGINAL_TOUCH_DELIVERY_COMPANIONS,contract.verify_original_touch_delivery),
+                (contract.ORIGINAL_TOUCH_EXPORT_CONTROL,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS |
+                 contract.CATALOG_INPUT_BOUNDARY_COMPANIONS | contract.OVERSCROLL_GETTER_BOUNDARY_COMPANIONS |
+                 contract.ORIGINAL_TOUCH_DELIVERY_COMPANIONS | contract.ORIGINAL_TOUCH_EXPORT_CONTROL_COMPANIONS,
+                 contract.verify_original_touch_export_control))
 
     def test_exact_free_readonly_root_workflows_accepted(self):
         for name,_,verify in self.profiles(): verify((contract.WORKFLOWS/name).read_text())

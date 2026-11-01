@@ -1,13 +1,32 @@
 # PIN01 — copy-only public input boundaries
 
-## PIN33 — original UIKit touch delivery (unpublished preparation)
+## PIN34 — isolated original-touch failure export
+
+PIN33 run41276101184 passed399actual Apple controls and its ten fixed original
+EN/AR samples, but had no failure/export. PIN34 selects **only** the already
+rendered `testPIN20IsolatedMotionExportControl`, with the entire PIN33 application
+and driver plan unchanged. No successful journey replay or new synthetic input.
+The existing explicit Host-suppression flag creates an unexpected original
+transition assertion failure after the actual callback; native XCTest exit65
+and that exact assertion must remain failed in the retained evidence.
+
+Acceptance additionally requires the real uniquely installed original UIKit leaf,
+original primary began/ended/state rows, the failure-owned transition query and
+all earlier source/product/native/privacy/cleanup companions. Synthetic motion
+is allowed only for this exact isolated failed method and owned token; ordinary
+profiles continue rejecting it. The runner uses one standard free macos-15 job,
+JDK21/Xcode26.3, a finite900second control budget, no retries or repair. Actual
+export execution is pending; no app causality, neutrality or shipping claim.
+
+## PIN33 — original UIKit touch delivery (source-bound experiment)
 
 PIN31 retained an English Permission Continue failure and a Word Impostor
 catalog opening failure, but no original native touch ledger. PIN32 measures
 only original Home overscroll getter returns; that cannot distinguish UIKit
 non-delivery/cancellation from a swallowed Compose click on Permission.
-Corrected PIN32 execution remains separate; its results must be read before
-publishing this additional boundary. This is not a shipping fix or a retry.
+Corrected PIN32 run41272106252 was independently read back:390actual Apple
+controls and10fixed samples passed, zero failure-only exports. PIN33 publication
+followed that evidence; neither run is a shipping fix or an unchanged-code retry.
 
 PIN33 binds the already supplied `LocalUIView` and uniquely selects its existing
 `TouchesGestureRecognizer : CMPGestureRecognizer`, validating published lineage,
@@ -28,8 +47,10 @@ byte-identical to corrected PIN32.
 
 Portable inverse, privacy, nested-call, custody and inherited-gate controls are
 executed locally. Exact native argument/return forwarding, parent isolation,
-primary classification and weak admission transition controls are prepared;
-actual Apple execution is pending. A finite diagnostic pass is neither timing
+primary classification and weak admission transition controls actually passed
+on Apple in run41276101184, exact harness e265d1ee; all399controls and10fixed
+samples passed, zero failure-only exports. The real app-leaf installation/export
+is not verified by those zero-capture samples. A finite pass is neither timing
 neutrality, original failure causality, application qualification nor physical
 verification. Failure and incomplete ledgers stay explicitly retained.
 
@@ -49,7 +70,10 @@ diagnostic, while the corrected export must typecheck. The full native build
 still verifies the real Kotlin framework symbol; the isolated stub is not that
 proof. No original action/assertion/deadline, dependency, effect or required
 production gate is changed. Fresh corrected execution is required, not an
-unchanged-code retry. Original failed logs/artifact/readback remain retained.
+unchanged-code retry. Corrected run41272106252 passed390actual Apple controls,
+real copied linkage, ten fixed samples and owned cleanup; the independent
+readback retained zero captures and no causality verdict. Original failed
+logs/artifact/readback remain retained.
 
 ## PIN32 — original catalog overscroll getter boundary (preparation)
 
