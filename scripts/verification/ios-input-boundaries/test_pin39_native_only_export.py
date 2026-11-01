@@ -133,6 +133,23 @@ class NativeOnlyControls(unittest.TestCase):
                     p.write_text(json.dumps(v))
                 with self.assertRaises(ValueError): control.accept_native_export(out,state)
 
+    def test_missing_frame_export_preserves_status_and_other_available_original_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            out = Path(temporary).resolve(); state = evidence(out); d = out/'compose'
+            legacy = json.loads(next(d.glob('capture-*.json')).read_bytes()); token = legacy['token']
+            sandbox = out/'sandbox'; dest = out/'retained'; dest.mkdir()
+            specs = [('parlor-pin39-','status.json','native-only-'),
+                ('parlor-pin08-','accessibility.json','native-accessibility-'),
+                ('parlor-pin10-','root.json','native-root-'),('parlor-pin33-','touches.json','native-touch-')]
+            for prefix,filename,retained in specs:
+                p = sandbox/'tmp'/(prefix+token)/filename; p.parent.mkdir(parents=True)
+                p.write_bytes((d/(retained+token+'.json')).read_bytes())
+            with self.assertRaisesRegex(ValueError,'Missing native-only companions.*native-frame'):
+                control.retain_companion(sandbox,dest,token,state['arms'][0]['simulator'],state['debug_bundle'],legacy)
+            self.assertEqual(len(list(dest.glob('*.json'))),4)
+            for _,_,retained in specs:
+                self.assertEqual((dest/(retained+token+'.json')).read_bytes(),(d/(retained+token+'.json')).read_bytes())
+
     def test_actual_assertion_exit_duration_device_required(self):
         with tempfile.TemporaryDirectory() as temporary:
             out = Path(temporary).resolve(); state = evidence(out); d = out/'compose'

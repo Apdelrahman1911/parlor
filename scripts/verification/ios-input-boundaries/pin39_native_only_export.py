@@ -178,16 +178,20 @@ def decode_status(raw, *, token, simulator, bundle, legacy):
 
 def retain_companion(sandbox, destination, token, simulator, bundle, legacy):
     # Preserve raw files BEFORE validating installation; failures never erase evidence.
-    specs = (('parlor-pin08-', 'accessibility.json', 'native-accessibility-', attributes.MAX_BYTES),
+    specs = (('parlor-pin39-', 'status.json', 'native-only-', MAX_BYTES),
+        ('parlor-pin08-', 'accessibility.json', 'native-accessibility-', attributes.MAX_BYTES),
         ('parlor-pin22-', 'frames.json', 'native-frame-', frames.MAX_BYTES),
         ('parlor-pin10-', 'root.json', 'native-root-', root.MAX_BYTES),
-        ('parlor-pin33-', 'touches.json', 'native-touch-', touch.decoder.MAX_BYTES),
-        ('parlor-pin39-', 'status.json', 'native-only-', MAX_BYTES))
+        ('parlor-pin33-', 'touches.json', 'native-touch-', touch.decoder.MAX_BYTES))
+    missing = []
     for prefix, filename, retained, maximum in specs:
         path = sandbox/'tmp'/(prefix+token)/filename
+        if not path.exists() and not path.is_symlink():
+            missing.append(retained.removesuffix('-')); continue
         require(not path.is_symlink() and path.resolve(strict=True) == path.absolute(), 'Exact owned native-only companion')
         raw = run_pin03.read_capture(path, maximum=maximum)
         with (destination/(retained+token+'.json')).open('xb') as f: f.write(raw)
+    require(not missing, 'Missing native-only companions after retaining all available evidence: '+','.join(missing))
     return decode_companions(destination, token, simulator, bundle, legacy)
 
 
