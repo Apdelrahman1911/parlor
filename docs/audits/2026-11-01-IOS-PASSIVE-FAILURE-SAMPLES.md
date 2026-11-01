@@ -76,3 +76,33 @@ native owner, original journeys, assertions and deadlines are unchanged. Fresh
 sampling is justified by this identified correction; no executed native cohort
 is being replayed. Five source-specific controls must pass on Apple, with zero
 skips, before execution.
+
+## Actual execution and artifact-only admission correction
+
+Run41345380934 (0523684a) completed **FAILURE** after native execution:
+five actual Apple controls PASS/zero skips, build PASS, ten native wrappers
+PASS/zero failures/zero skips, actual XCTest exit0, owned cleanup PASS.
+No natural failure was reproduced; zero failure-only exports are expected.
+
+The strict collector raised `KeyError: 'attachment_test_ids'` after XCTest.
+`run_pin03.py` recorded that ledger only for failed exits; the fabricated
+all-pass fixture populated it directly and missed the actual success path.
+The correction calls a shared helper after complete method verification to
+record an empty selection exactly once. Failed-exit export and strict missing-
+ledger rejection remain unchanged. Portable controls exercise the helper,
+actual main call boundary, immutable evidence and negative admission cases.
+
+The separate retained-correction workflow uses one standard free Ubuntu runner
+and no native build, Simulator, Gradle or journey replay. It verifies the
+original failed run, artifact13099894501, all455 supporting/all1,214 application
+inputs, copied native plan, actual outcomes, commands, product and cleanup.
+Only the omitted empty ledger is derived in a separate in-memory copy before
+unchanged strict admission. Original state bytes stay INCOMPLETE; original
+workflow stays failed. Original API/log/ZIP/state and separately named corrective
+receipts are uploaded. ZIP SHA256:
+`de717073c8dc36288cf6ce1cd420a94b345253c59c28b7f3aeea325d3752a8a3`.
+
+Corrective admission is diagnostic, not an application fix or qualification.
+It does not explain the original pre-tap failure, establish timing neutrality,
+close #267/#276, or satisfy Phase1. Causal investigation continues after exact
+source-bound terminal validation; no successful native cohort is replayed.

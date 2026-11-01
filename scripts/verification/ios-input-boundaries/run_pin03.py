@@ -79,6 +79,21 @@ def failed_method_exports(result, destination, outcomes):
             for index, method in enumerate(methods)]
 
 
+def record_successful_attachment_selection(row):
+    """Record zero failures only after verified complete successful outcomes.
+
+    Missing ledgers remain invalid in readers. Failed-case export/retention is
+    unchanged; this helper never fills missing failure evidence with defaults.
+    """
+    if type(row.get('test_exit')) is not int or row['test_exit'] != 0 or \
+            not isinstance(row.get('methods'), dict) or not row['methods'] or \
+            any(value != 'Passed' for value in row['methods'].values()):
+        raise ValueError('Verified successful methods required before zero attachment selection')
+    if 'attachment_test_ids' in row:
+        raise ValueError('Attachment selection must be recorded exactly once')
+    row['attachment_test_ids'] = []
+
+
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
@@ -682,6 +697,8 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                 (dest / (kind + '.json')).write_bytes(raw)
             row['methods'] = selected_verify_results(json.loads((dest / 'summary.json').read_bytes()),
                                             json.loads((dest / 'tests.json').read_bytes()), simulator_id, code)
+            if arm != 'original' and code == 0:
+                record_successful_attachment_selection(row)
             if combined_execution:
                 # All23 actual executed native outcomes establish that compilation
                 # succeeded. This is NOT a fabricated standalone build exit receipt.

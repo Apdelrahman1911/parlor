@@ -15,7 +15,9 @@ def sample_plan():
 def passing_evidence(out):
     state=evidence(out);d=out/'compose';row=state['arms'][0];control=c.select_profile(c.SAMPLE_PROFILE)
     methods={k:'Passed' for k in c.SAMPLE_CASES};state['profile']=control.PROFILE
-    row.update(methods=methods,test_exit=0,result='JOURNEYS_PASSED',attachment_test_ids=[],captures=[],companion_captures=[])
+    row.update(methods=methods,test_exit=0,result='JOURNEYS_PASSED',captures=[],companion_captures=[])
+    row.pop('attachment_test_ids')
+    c.runtime.pair_control.leaf.run_pin03.record_successful_attachment_selection(row)
     summary=c.load(d/'summary.json');tests=c.load(d/'tests.json')
     summary.update(totalTestCount=10,passedTests=10,failedTests=0,result='Passed',testFailures=[])
     tests['testNodes']=[dict(nodeType='Test Case',nodeIdentifier=k,result=v,durationInSeconds=200) for k,v in methods.items()]
