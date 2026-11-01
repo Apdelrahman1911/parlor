@@ -813,3 +813,25 @@ claiming Permission/Name execution. Actual native installation and every previou
 companion, exact source/product/command/outcome, and owned cleanup remain required.
 Passing journeys export no ledger. Original actions/assertions/deadlines stay
 unchanged; observation completion is neither a shipping fix nor causal proof.
+
+
+### PIN37 execution-order correction and retained-evidence verification
+
+[Run41289077117](https://github.com/Apdelrahman1911/parlor/actions/runs/41289077117)
+failed after both original native journeys passed: admission incorrectly equated
+`-only-testing` flag order with XCTest execution order. Actual log order is
+Arabic→English, also anchored by the original23-case inventory. Strict ordered
+equality remains required; new hardcoded-log controls reject reversed, missing
+or duplicated cases. Original command flags, app/driver plan and assertions are
+unchanged. The old frozen independent reader was executed once and rejected;
+its original bytes, incomplete state and failed workflow remain preserved.
+
+`read_pin37_order_correction.py` binds that one exact failed run/artifact API
+digest, all210 supporting inputs, all1214 application inputs, exact16-file plan,
+original product manifest, actual428 Apple controls, build/test commands, original
+strict rejection and owned cleanup. It uses a separate exclusive readback and
+labels its generated receipt **corrected diagnostic validation only**. It never
+rewrites original state or produces a backdated original receipt. A standard free
+Ubuntu runner performs artifact-only verification: no native build/test replay,
+new dependency or production qualification. Both journeys passed with no natural
+failure exports; original application causality and #267/#276 remain unresolved.

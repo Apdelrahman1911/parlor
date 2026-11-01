@@ -122,6 +122,12 @@ class ReviewInventoryTest(unittest.TestCase):
         ):
             self.assertNotIn(unsupported_claim, content)
 
+    def test_retained_order_correction_is_diagnostic_not_shipping_qualification(self) -> None:
+        path = ".github/workflows/ios-public-scroll-order-correction.yml"
+        rows = list(csv.DictReader(io.StringIO(review_inventory.render_inventory([path], {}, {}))))
+        self.assertEqual(rows[0]["classification"], "ci-diagnostic-workflow")
+        self.assertIn("not application qualification", rows[0]["inferred_production_reachability"])
+
     def test_natural_public_scroll_is_diagnostic_not_shipping_qualification(self) -> None:
         path = ".github/workflows/ios-public-scroll-natural.yml"
         rows = list(csv.DictReader(io.StringIO(review_inventory.render_inventory([path], {}, {}))))

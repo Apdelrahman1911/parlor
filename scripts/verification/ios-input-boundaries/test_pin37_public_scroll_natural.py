@@ -6,6 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
+import pin13_original_cohort as original_cohort
 import pin37_public_scroll_natural as control
 import test_pin33_original_touch_delivery as touch
 import test_pin36_public_scroll_boundary as scroll
@@ -28,7 +29,10 @@ def evidence(out):
     (d/'inputs.json').write_text(json.dumps(state['original_inputs']|{p:hashlib.sha256(v.encode()).hexdigest() for p,v in plan.items()}))
     for command in state['commands']:
         if command['label']=='compose-tests':command.update(command=control.test_command(['xcodebuild'],d/'tests.xcresult'),timeout_seconds=900)
-    (d/'test.log').write_text(''.join("Test Case '-[iosAppUITests."+c.split('/')[0]+" "+c.split('/')[1].removesuffix('()')+"]' started.\n" for c in control.CASES))
+    # Independent actual XCTest order, deliberately not generated from CASES.
+    (d/'test.log').write_text(
+        "Test Case '-[iosAppUITests.IOSAppLaunchUITests testAdditionalGamesExposeOnlyMultiplayerSetupInArabic]' started.\n"
+        "Test Case '-[iosAppUITests.IOSAppLaunchUITests testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish]' started.\n")
     legacy=json.loads(next(d.glob('capture-*.json')).read_bytes());v=scroll.sample()
     v.update(token=legacy['token'],simulator=row['simulator'],bundle=state['debug_bundle'],process=legacy['process'],capturedMs=legacy['capturedMs'])
     v['scroll']['rows']=[[0,0,0,2,1,0],[0,0,0,0,0,0]]
@@ -45,6 +49,28 @@ class NaturalPublicScrollControls(unittest.TestCase):
         self.assertEqual([a for a in argv if a.startswith('-only-testing:')],['-only-testing:'+t for t in control.run_pin03.TESTS])
         self.assertNotIn('-quiet',argv)
         self.assertFalse(any('testPIN' in a for a in argv))
+
+    def test_actual_order_is_independent_of_command_flags_and_remains_strict(self):
+        self.assertEqual(control.CASES, (
+            'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()',
+            'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()',
+        ))
+        self.assertEqual(control.CASES, tuple(
+            c for c in original_cohort.CASES
+            if c.startswith('IOSAppLaunchUITests/testAdditionalGames')))
+        self.assertEqual(control.run_pin03.TESTS, (
+            'iosAppUITests/IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish',
+            'iosAppUITests/IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic',
+        ))
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary).resolve(); state=evidence(out); path=out/'compose/test.log'
+            lines=path.read_text().splitlines(keepends=True)
+            for wrong in (lines[::-1], lines[:1], lines+lines[:1], lines+lines):
+                path.write_text(''.join(wrong))
+                with self.assertRaisesRegex(ValueError, 'Original two methods once in original order'):
+                    control.accept_native_export(out,state)
+            path.write_text(''.join(lines))
+            self.assertEqual(control.accept_native_export(out,state),control.RESULT)
 
     def test_entire_prior_plan_restores_and_original_driver_is_unchanged(self):
         plan=control.renderer_for_profile(control.PROFILE,control.SOURCE,control.pair.RUNTIME,control.pair.DEVICE)(

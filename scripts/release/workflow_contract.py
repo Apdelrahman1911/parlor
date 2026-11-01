@@ -134,9 +134,13 @@ ORIGINAL_TOUCH_COHORT_SHA256 = 'da5a8bf17f403f49a4a0371ae769083ef2414a837042f53e
 ORIGINAL_TOUCH_COHORT_COMPANIONS = {'pin35_original_touch_cohort.py': '032d8b93447fc1d2c87b4f36549f6543d3d41d6cdbd3429cd192bbaeed0d5fc8', 'test_pin35_original_touch_cohort.py': '53e4adb1ec62c3881d18dc614918c401b0c8c2effe4756e6ff70071def748d4e', 'run_pin35.py': 'd6f40329017e4b068ccbf1c53501df81d4750d5123a1728a499166f63204d80d'}
 
 
+PUBLIC_SCROLL_ORDER_CORRECTION = 'ios-public-scroll-order-correction.yml'
+PUBLIC_SCROLL_ORDER_CORRECTION_SHA256 = 'f7a5adbf4e3ff125c1d6e216fc750384730c67c8f7e620ff70ef71880922716a'
+PUBLIC_SCROLL_ORDER_CORRECTION_COMPANIONS = {'read_pin37_order_correction.py': 'bd68443cd19070352882c635c61f57e0df821237f8f1f758563ac161d3aa98b0', 'test_pin37_order_correction.py': 'e0bd7b7cc29cf811737701408878f179069cb01b06a1d5a484ffd4f95fbda383'}
+
 PUBLIC_SCROLL_NATURAL = 'ios-public-scroll-natural.yml'
 PUBLIC_SCROLL_NATURAL_SHA256 = '725f5f4b749acea459357665178d72c4856e74976fe7c05c0f12f5c92e95aeb5'
-PUBLIC_SCROLL_NATURAL_COMPANIONS = {'pin37_public_scroll_natural.py': '56259273acef4c35529c9aa03039aedd47244ce905b8917c3a761718a7c18065', 'test_pin37_public_scroll_natural.py': 'a19240760ec067d2106d3784ab3286e84ff589662f38e08022a4adfee027838c', 'run_pin37.py': 'a5d3002c15d22bbb93b2aa7fe7a643688e5c1cd49bb0905966c6afbe0f42ef10'}
+PUBLIC_SCROLL_NATURAL_COMPANIONS = {'pin37_public_scroll_natural.py': '4afa00f3618e6d214c62a586d213e9360bf69bdc8b2519ff9c6eaf2973cbf821', 'test_pin37_public_scroll_natural.py': '365f39fa9293c336a6b8b22a94689a4989e8beb8259bb402b0386da1ff4ef75e', 'run_pin37.py': 'a5d3002c15d22bbb93b2aa7fe7a643688e5c1cd49bb0905966c6afbe0f42ef10'}
 
 PUBLIC_SCROLL_EXPORT = 'ios-public-scroll-export.yml'
 PUBLIC_SCROLL_EXPORT_SHA256 = 'b45efb79aae661aaadedf43c4075aba0c038584868c34aba2d12cadadec2aa8a'
@@ -200,7 +204,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL}
+                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -417,6 +421,17 @@ def verify_original_touch_export_control(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Isolated touch-export companion differs from reviewed source: {name}")
+
+
+def verify_public_scroll_order_correction(text: str) -> None:
+    verify_common(PUBLIC_SCROLL_ORDER_CORRECTION, text)
+    verify_public_scroll_natural((WORKFLOWS / PUBLIC_SCROLL_NATURAL).read_text())
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_SCROLL_ORDER_CORRECTION_SHA256:
+        fail("Retained order correction must preserve exact evidence, free read-only runner and no native replay")
+    for name, digest in PUBLIC_SCROLL_ORDER_CORRECTION_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Retained order correction companion differs from reviewed source: {name}")
 
 
 def verify_public_scroll_natural(text: str) -> None:
@@ -2121,6 +2136,8 @@ def main() -> int:
         verify_original_touch_delivery(files[ORIGINAL_TOUCH_DELIVERY])
     if ORIGINAL_TOUCH_EXPORT_CONTROL in files:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
+    if PUBLIC_SCROLL_ORDER_CORRECTION in files:
+        verify_public_scroll_order_correction(files[PUBLIC_SCROLL_ORDER_CORRECTION])
     if PUBLIC_SCROLL_NATURAL in files:
         verify_public_scroll_natural(files[PUBLIC_SCROLL_NATURAL])
     if PUBLIC_SCROLL_EXPORT in files:

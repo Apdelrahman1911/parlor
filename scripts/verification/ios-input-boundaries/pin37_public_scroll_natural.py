@@ -15,7 +15,12 @@ import run_pin03
 
 SOURCE, TREE, ARMS, pair = public.SOURCE, public.TREE, public.ARMS, public.pair
 PROFILE = 'original-public-scroll-boundaries'
-CASES = tuple(t.removeprefix('iosAppUITests/') + '()' for t in run_pin03.TESTS)
+# XCTest execution is alphabetical, not -only-testing flag order. Anchored in
+# original41180128325 and PIN37 actual logs; keep command flags unchanged.
+CASES = (
+    'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()',
+    'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()',
+)
 RESULT = 'ORIGINAL_PUBLIC_SCROLL_OBSERVATIONS_COMPLETE_NOT_QUALIFICATION'
 SCOPE = ('Original EN/AR methods once with actual public ScrollState/getter observation; '
          'no successful full-cohort/sentinel/sampled-wrapper replay, retries, new gestures, '

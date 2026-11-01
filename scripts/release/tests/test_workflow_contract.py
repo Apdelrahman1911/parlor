@@ -19,6 +19,40 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_retained_order_correction_requires_exact_free_readonly_artifact_only_scope(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_ORDER_CORRECTION).read_text()
+        workflow_contract.verify_public_scroll_order_correction(text)
+        for before, after in (
+            ('runs-on: ubuntu-24.04', 'runs-on: ubuntu-24.04-large'),
+            ('actions: read', 'actions: write'),
+            ('contents: read', 'contents: write'),
+            ('cancel-in-progress: false', 'cancel-in-progress: true'),
+            ('if: always()', 'if: success()'),
+            ('if-no-files-found: error', 'if-no-files-found: warn'),
+            ('read_pin37_order_correction.py', 'read_pin37_order_correction.py || true #'),
+        ):
+            changed = text.replace(before, after, 1)
+            self.assertNotEqual(text, changed)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_order_correction(changed)
+        self.assertNotIn('xcodebuild', text)
+        self.assertNotIn('secrets.', text)
+
+    def test_retained_order_correction_rejects_changed_or_redirected_reader_controls(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_ORDER_CORRECTION).read_text()
+        for name in workflow_contract.PUBLIC_SCROLL_ORDER_CORRECTION_COMPANIONS:
+            target = workflow_contract.ROOT / 'scripts/verification/ios-input-boundaries' / name
+            original = Path.read_bytes
+            def changed(path):
+                return original(path) + b'\n' if path == target else original(path)
+            with self.subTest(name=name), patch.object(Path, 'read_bytes', changed), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_order_correction(text)
+            original_symlink = Path.is_symlink
+            def redirected(path):
+                return True if path == target else original_symlink(path)
+            with self.subTest(name=name), patch.object(Path, 'is_symlink', redirected), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_order_correction(text)
+
     def test_natural_public_scroll_requires_original_en_ar_free_readonly_failure_custody(self) -> None:
         text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_NATURAL).read_text()
         workflow_contract.verify_public_scroll_natural(text)
