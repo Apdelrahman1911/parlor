@@ -147,6 +147,13 @@ PASSIVE_FAILURE_SAMPLES = 'ios-passive-failure-samples.yml'
 PASSIVE_FAILURE_SAMPLES_SHA256 = 'c8f7d7a6cc7c8226cc14815f33b0c48bb3860a3f23bf10f5ac0ebe0670457fd0'
 PASSIVE_FAILURE_SAMPLES_COMPANIONS = {'test_pin47_passive_samples.py': 'ab4de72803beda6429d37ef99d2617074562462257ceec6a45d87f40ab57d2c9'}
 
+QUERY_PROPERTY_BOUNDARY = 'ios-query-property-boundary.yml'
+QUERY_PROPERTY_BOUNDARY_SHA256 = 'e843e33864d2734c0abe768afdc3d7e5683e97ce5f8c88f74e01ed7e93c0bd94'
+QUERY_PROPERTY_BOUNDARY_COMPANIONS = {
+    'pin48_property_timing.py': 'ca39cc6efd67f7f7322fe0f7ff0c166fde7ad0eb0f3e261b35b04c8551130fef',
+    'test_pin48_property_timing.py': '3c8c2599229b68694237cc16f598c7d88c97d0913636a68489da57913e05ab3e',
+}
+
 PASSIVE_RETAINED_CORRECTION = 'ios-passive-retained-correction.yml'
 PASSIVE_RETAINED_CORRECTION_SHA256 = 'f021b7078ac9b97d287c8c3cbe2423a853dc71c5cf7880b187011e7be4e1c7d3'
 PASSIVE_RETAINED_CORRECTION_COMPANIONS = {
@@ -157,7 +164,7 @@ PASSIVE_RETAINED_CORRECTION_COMPANIONS = {
 
 FAILURE_RUNLOOP = 'ios-failure-runloop.yml'
 FAILURE_RUNLOOP_SHA256 = '791116ffc1804608f265a52253c394c1177cc842ca0d674d117d71e97aaf5c44'
-FAILURE_RUNLOOP_COMPANIONS = {'PIN47FailureRunLoop.swift.in': 'b1de08dd3e770418e5f040c08eb48c33dd35d9e19971212b4f679d2a2493f824', 'pin47_failure_runloop.py': '6039cda1d353760f37671aecdfbd1599c33c51319c3f8ecb2807f7e2b8934c94', 'test_pin47_failure_runloop.py': '66fd18b03598cd279121dc5fc911e278f4be7bb95890b58cc827ca7fc4bd9c15', 'run_pin47.py': '0a9d15a96a2675d74d06e2b5de8b601dba1fbe02df481c09245832fbb3c2471c'}
+FAILURE_RUNLOOP_COMPANIONS = {'PIN47FailureRunLoop.swift.in': 'b1de08dd3e770418e5f040c08eb48c33dd35d9e19971212b4f679d2a2493f824', 'pin47_failure_runloop.py': '03c75561f4ea07b5d5dc86470e6ad6b68634044f24b80a1ba2df1eb6496ff20e', 'test_pin47_failure_runloop.py': '66fd18b03598cd279121dc5fc911e278f4be7bb95890b58cc827ca7fc4bd9c15', 'run_pin47.py': '0a9d15a96a2675d74d06e2b5de8b601dba1fbe02df481c09245832fbb3c2471c'}
 
 MAIN_RUNLOOP_CAPABILITY = 'ios-main-runloop-capability.yml'
 MAIN_RUNLOOP_CAPABILITY_SHA256 = '9e134e5c5e802e4897deedab3b75570aa316c06d1956fbc5825da7f1eceba34f'
@@ -257,7 +264,7 @@ def load_files() -> dict[str, str]:
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
-                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION}
+                                     SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -485,6 +492,17 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_query_property_boundary(text: str) -> None:
+    verify_common(QUERY_PROPERTY_BOUNDARY, text)
+    verify_failure_runloop((WORKFLOWS / FAILURE_RUNLOOP).read_text())
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != QUERY_PROPERTY_BOUNDARY_SHA256:
+        fail("Property boundary requires one free Mac, original pair once, unchanged queries/assertions and custody")
+    for name, digest in QUERY_PROPERTY_BOUNDARY_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f"Property boundary companion differs from reviewed source: {name}")
 
 
 def verify_passive_retained_correction(text: str) -> None:
@@ -2323,6 +2341,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if QUERY_PROPERTY_BOUNDARY in files:
+        verify_query_property_boundary(files[QUERY_PROPERTY_BOUNDARY])
     if PASSIVE_RETAINED_CORRECTION in files:
         verify_passive_retained_correction(files[PASSIVE_RETAINED_CORRECTION])
     if FAILURE_RUNLOOP in files:

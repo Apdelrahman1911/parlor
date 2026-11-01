@@ -13,10 +13,12 @@ SENTINEL_CASE='IOSAppLaunchUITests/testZPIN47FailureRunLoopExport()'
 CASES=runtime.CASES+(SENTINEL_CASE,)
 EXPORT_PROFILE='failure-owned-main-runloop-export-control'
 SAMPLE_PROFILE='failure-owned-main-runloop-fixed-samples'
-PROFILES=(PROFILE,EXPORT_PROFILE,SAMPLE_PROFILE)
+QUERY_PROFILE='failure-owned-query-property-boundary'
+PROFILES=(PROFILE,EXPORT_PROFILE,SAMPLE_PROFILE,QUERY_PROFILE)
 EXPORT_CASES=(SENTINEL_CASE,)
 SAMPLE_CASES=tuple('IOSAppLaunchUITests/testPIN47'+language+'Sample%02d()'%i
     for language in ('Arabic','English') for i in range(1,6))
+QUERY_CASES=runtime.CASES
 TESTS=tuple('iosAppUITests/'+c.removesuffix('()') for c in CASES)
 TEST_TIMEOUT_SECONDS=900
 RESULT='FAILURE_OWNED_MAIN_RUNLOOP_COMPLETE_NOT_QUALIFICATION'
@@ -66,7 +68,11 @@ def renderer_for_profile(profile,source,os,device):
             '            print("Public control settlement: " + samples.joined(separator: "; "))')
         sentinel=runtime.pair_control.leaf.native.SENTINEL.replace('testPIN39NativeOnlyExportCapability',
             SENTINEL_CASE.split('/')[1].removesuffix('()')).replace('PIN39Configure','PIN47Configure')
-        driver=pin01_copy.once(driver,'    private struct KeyboardCopy {',sentinel+'\n    private struct KeyboardCopy {')
+        if profile!=QUERY_PROFILE:
+            driver=pin01_copy.once(driver,'    private struct KeyboardCopy {',sentinel+'\n    private struct KeyboardCopy {')
+        else:
+            import pin48_property_timing
+            driver=pin48_property_timing.expand(driver)
         if profile==SAMPLE_PROFILE:
             driver=pin01_copy.once(driver,'    private struct KeyboardCopy {',sample_wrappers()+'    private struct KeyboardCopy {')
             # Clock metadata only AFTER XCTest has decided a failure, with no
@@ -86,7 +92,7 @@ def sample_wrappers():
         for language in ('Arabic','English') for c in SAMPLE_CASES if language in c)
 
 def selected_cases(cases):
-    require(cases in (CASES,EXPORT_CASES,SAMPLE_CASES),'Only original cohort, isolated correction or predeclared passive samples')
+    require(cases in (CASES,EXPORT_CASES,SAMPLE_CASES,QUERY_CASES),'Only original cohort, isolated correction, passive samples or property-boundary pair')
     return cases
 
 def test_command(base,result,*,cases=CASES):
@@ -178,7 +184,8 @@ def verify_commands(state,row,*,cases=CASES):
     require(state['build_profile']['test_timeout_seconds']==test_budget,'Exact declared cohort process budget; no assertion extension')
 
 def accept_native_export(out,state,*,cases=CASES,profile=PROFILE):
-    require((profile,cases) in ((PROFILE,CASES),(EXPORT_PROFILE,EXPORT_CASES),(SAMPLE_PROFILE,SAMPLE_CASES)),'Exact declared cohort/profile pair')
+    require((profile,cases) in ((PROFILE,CASES),(EXPORT_PROFILE,EXPORT_CASES),(SAMPLE_PROFILE,SAMPLE_CASES),
+                              (QUERY_PROFILE,QUERY_CASES)),'Exact declared cohort/profile pair')
     require_capability_binding()
     require((state['profile'],state['source'],state['source_tree'],state['runtime'],state['device'],state['debug_bundle'],state['xcode'],state['sdk'])==
         (profile,SOURCE,TREE,RUNTIME,DEVICE,'me.parlor.ios.debug','Xcode 26.3\nBuild version 17C529\n','26.2') and len(state['arms'])==1,'Exact source/compiler/platform/single arm')
@@ -242,9 +249,25 @@ class FixedSampleProfile(ExportControlProfile):
     accept_native_export=staticmethod(partial(accept_native_export,cases=SAMPLE_CASES,profile=SAMPLE_PROFILE))
 
 
+class QueryPropertyProfile(ExportControlProfile):
+    PROFILE=QUERY_PROFILE
+    SCOPE='Original AR/EN pair once with per-property XCTest clocks; same passive native owner, no added AX query, gesture, assertion extension, successful cohort/exporter replay or qualification'
+    test_command=staticmethod(partial(test_command,cases=QUERY_CASES))
+    verify_results=staticmethod(partial(verify_results,cases=QUERY_CASES))
+    failed_method_exports=staticmethod(partial(failed_method_exports,cases=QUERY_CASES))
+
+    @staticmethod
+    def accept_native_export(out,state):
+        result=accept_native_export(out,state,cases=QUERY_CASES,profile=QUERY_PROFILE)
+        import pin48_property_timing
+        pin48_property_timing.write_receipt(out,state)
+        return result
+
+
 def select_profile(profile):
     require(profile in PROFILES,'One explicit failure-runloop profile')
     if profile==EXPORT_PROFILE:return ExportControlProfile()
     if profile==SAMPLE_PROFILE:return FixedSampleProfile()
+    if profile==QUERY_PROFILE:return QueryPropertyProfile()
     import sys
     return sys.modules[__name__]
