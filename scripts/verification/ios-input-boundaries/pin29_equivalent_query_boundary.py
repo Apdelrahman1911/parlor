@@ -149,6 +149,11 @@ def accept_native_export(out, state):
     original.text.require(state['original_inputs'].get(original.text.NAME) == original.text.NAME_SHA256, 'Exact original public Name source required')
     original.motion.boundary.accept_observation_export(out, state, profile=PROFILE, renderer=renderer)
     original.verify_original_companions(out, state)
+    return verify_failed_queries(out,state)
+
+
+def verify_failed_queries(out,state):
+    # Each entry must first bind its own source, methods, command and companions.
     row = state['arms'][0]; dest = out/'compose'
     failures = sorted(k for k, value in row['methods'].items() if value == 'Failed')
     tokens = set()

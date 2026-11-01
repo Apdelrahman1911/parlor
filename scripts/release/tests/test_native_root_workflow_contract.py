@@ -12,7 +12,9 @@ class NativeRootWorkflowContractTest(unittest.TestCase):
         return ((contract.NATIVE_ROOT_CAPABILITY,contract.NATIVE_ROOT_CAPABILITY_COMPANIONS,
                  contract.verify_native_root_capability),
                 (contract.NATIVE_ROOT_OBSERVATIONS,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS,
-                 contract.verify_native_root_observations))
+                 contract.verify_native_root_observations),
+                (contract.PUBLIC_SESSION_STRESS,contract.NATIVE_ROOT_OBSERVATIONS_COMPANIONS | contract.PUBLIC_SESSION_STRESS_COMPANIONS,
+                 contract.verify_public_session_stress))
 
     def test_exact_free_readonly_root_workflows_accepted(self):
         for name,_,verify in self.profiles(): verify((contract.WORKFLOWS/name).read_text())

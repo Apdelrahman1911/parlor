@@ -137,14 +137,20 @@ def accept_native_export(out,state):
 def verify_original_companions(out,state):
     # Shared exact companion gates; each profile must separately validate its
     # complete original/rendered source manifest and command/result identity.
-    motion.root.accept_root_companions(out,state)
-    row=state['arms'][0];dest=out/'compose';captures=sorted(dest.glob('capture-*.json'));decoded_motion=[]
     commands=[c for c in state['commands'] if c.get('label')=='compose-tests']
     text.require(len(commands)==1 and commands[0].get('timeout_seconds')==900 and
         [a for a in commands[0].get('command',[]) if a.startswith('-only-testing:')]==
         ['-only-testing:'+t for t in run_pin03.TESTS] and
         not any(a.startswith(('-skip-testing','-test-iterations','-retry-tests')) for a in commands[0]['command']),
         'One original EN/AR command and unchanged deadline; no replayed sentinel or retries')
+    return verify_companion_files(out,state)
+
+
+def verify_companion_files(out,state):
+    # Callers independently bind their complete source plan, actual methods and
+    # command first. The original two-method entry retains its exact gate above.
+    motion.root.accept_root_companions(out,state)
+    row=state['arms'][0];dest=out/'compose';captures=sorted(dest.glob('capture-*.json'));decoded_motion=[]
     for p in captures:
         legacy=json.loads(frozen_sources._read(p,pin02_capture.MAX_BYTES));token=legacy['token']
         args=dict(token=token,simulator=row['simulator'],bundle=state['debug_bundle'],legacy=legacy)

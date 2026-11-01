@@ -1,5 +1,39 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN30 — fixed-size original/observed public-session stress
+
+PIN29 [41257164049](https://github.com/Apdelrahman1911/parlor/actions/runs/41257164049)
+independently passes 364 actual Apple controls, both original EN/AR methods and
+owned cleanup, zero skips. All1,214 original application inputs /164 supporting
+paths bind to the original artifact. **No natural failure or failure-only query
+report occurred.** This is not causality, a shipping correction or qualification.
+
+PIN30 addresses intermittency and the uninstrumented counterfactual with a
+**predeclared five-pair experiment**: ten distinct XCTest sample methods per arm
+call the original EN/AR methods unchanged, up to60 public Host/Join flows per arm.
+The original app arm adds only those driver wrappers; the observed arm preserves
+the exact PIN29 plan plus the same wrappers. Inverse restoration proves every
+original source, action, selector, query and ten-second assertion deadline remains.
+There are no test iterations, input repairs, retries, adaptive sample counts or
+stopping after a green sample. Every failed sample stays failed and exports its
+original XCTest evidence; observed failures additionally require all original
+native/root/frame/motion/text/attachment/lifecycle/query ownership/privacy gates.
+Early unobserved failures remain incomplete, never waived.
+
+Two standard free `macos-15` matrix runners retain separate owned iOS18.5/iPhone16Pro
+Simulators, builds, products, commands, outcomes and cleanup; fail-fast is disabled.
+Separate hosted machines are **not matched timing/CPU/energy benchmarks**. Ten
+samples receive five times the original two-method process budget, **not longer
+assertion deadlines**. No diagnostic cache saves, permissions, dependency pins,
+shipping source or required workflows change. Actual SDK checks typecheck both
+new drivers before execution. Missing/duplicate/skipped methods reject.
+
+Equal outcomes establish only this finite public-session observation, not the
+separate Desktop60-journey short/cancel/scroll/recreated-launch native-neutrality
+matrix, original causality, physical acceptance or production qualification.
+Any sampling uncertainty and partial flow count remain explicit. Prepared,
+source-specific hosted execution and independent pair readback are still pending.
+
 ## PIN29 — failure-only equivalent XCTest query
 
 PIN28 [41254126043](https://github.com/Apdelrahman1911/parlor/actions/runs/41254126043)
