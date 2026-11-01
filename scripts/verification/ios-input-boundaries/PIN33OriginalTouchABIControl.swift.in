@@ -1,0 +1,95 @@
+// Synthetic public objects, not application input or player information.
+let touches = NSObject()
+let event = NSObject()
+let other = NSObject()
+class PIN33Parent: NSObject {
+    static var stateCalls = 0
+    static var parentTouchCalls = 0
+    @objc(setState:) dynamic func setState(_ value: Int) { precondition(value == 0 || value == 3); PIN33Parent.stateCalls += 1 }
+    @objc(touchesBegan:withEvent:) dynamic func touchesBegan(_ input: AnyObject, withEvent event: AnyObject?) { PIN33Parent.parentTouchCalls += 1 }
+    @objc(touchesMoved:withEvent:) dynamic func touchesMoved(_ input: AnyObject, withEvent event: AnyObject?) { }
+    @objc(touchesEnded:withEvent:) dynamic func touchesEnded(_ input: AnyObject, withEvent event: AnyObject?) { }
+    @objc(touchesCancelled:withEvent:) dynamic func touchesCancelled(_ input: AnyObject, withEvent event: AnyObject?) { }
+    @objc(canBePreventedByGestureRecognizer:) dynamic func canBePreventedBy(_ other: AnyObject) -> Bool { false }
+    @objc(canPreventGestureRecognizer:) dynamic func canPrevent(_ other: AnyObject) -> Bool { true }
+    @objc(shouldRequireFailureOfGestureRecognizer:) dynamic func shouldRequireFailureOf(_ other: AnyObject) -> Bool { false }
+}
+class PIN33Inherited: PIN33Parent { }
+var admitted = true
+class PIN33Leaf: PIN33Parent {
+    var calls = [0, 0, 0, 0, 0, 0, 0]
+    var disarmOnEnd = false
+    override func touchesBegan(_ input: AnyObject, withEvent value: AnyObject?) {
+        precondition(input === touches && value === event)
+        calls[0] += 1; setState(0)
+    }
+    override func touchesMoved(_ input: AnyObject, withEvent value: AnyObject?) {
+        precondition(input === touches && value == nil); calls[1] += 1
+    }
+    override func touchesEnded(_ input: AnyObject, withEvent value: AnyObject?) {
+        precondition(input === touches && value === event); calls[2] += 1
+        if disarmOnEnd { admitted = false }
+    }
+    override func touchesCancelled(_ input: AnyObject, withEvent value: AnyObject?) {
+        precondition(input === touches && value === event); calls[3] += 1
+    }
+    override func canBePreventedBy(_ value: AnyObject) -> Bool {
+        precondition(value === other); calls[4] += 1; return true
+    }
+    override func canPrevent(_ value: AnyObject) -> Bool {
+        precondition(value === other); calls[5] += 1; return false
+    }
+    override func shouldRequireFailureOf(_ value: AnyObject) -> Bool {
+        precondition(value === other); calls[6] += 1; return true
+    }
+}
+let observer = PIN33OriginalTouchDelivery(armed: { admitted })
+precondition(!observer.installVerifiedTarget(PIN33Inherited.self))
+precondition(observer.installVerifiedTarget(PIN33Leaf.self))
+let leaf = PIN33Leaf()
+observer.controlBindPrimary(leaf)
+leaf.touchesBegan(touches, withEvent: event)
+leaf.touchesMoved(touches, withEvent: nil)
+leaf.touchesEnded(touches, withEvent: event)
+leaf.touchesCancelled(touches, withEvent: event)
+leaf.setState(3)
+precondition(leaf.canBePreventedBy(other))
+precondition(!leaf.canPrevent(other))
+precondition(leaf.shouldRequireFailureOf(other))
+precondition(leaf.calls == [1, 1, 1, 1, 1, 1, 1] && PIN33Parent.stateCalls == 2)
+let rows = observer.controlSnapshot()["rows"] as! [[Double]]
+precondition(rows.count == 18)
+precondition(rows[0][1...] == [1, 0, 0, 1] && rows[1][1...] == [5, 0, 0, 1])
+precondition(rows[2][1...] == [5, 1, 0, 1] && rows[3][1...] == [1, 1, 0, 1])
+precondition(rows.suffix(6).map { Array($0[1...]) } == [
+    [6, 0, 0, 1], [6, 1, 1, 1], [7, 0, 0, 1], [7, 1, 0, 1], [8, 0, 0, 1], [8, 1, 1, 1]])
+let parent = PIN33Parent()
+parent.touchesBegan(touches, withEvent: event)
+parent.setState(3)
+precondition(!parent.canBePreventedBy(other))
+precondition(parent.canPrevent(other))
+precondition(!parent.shouldRequireFailureOf(other))
+precondition(PIN33Parent.stateCalls == 3 && PIN33Parent.parentTouchCalls == 1)
+precondition((observer.controlSnapshot()["rows"] as! [[Double]]).count == 18)
+admitted = false
+leaf.touchesBegan(touches, withEvent: event)
+precondition(leaf.calls[0] == 2 && PIN33Parent.stateCalls == 4)
+precondition((observer.controlSnapshot()["rows"] as! [[Double]]).count == 18)
+admitted = true; leaf.disarmOnEnd = true
+leaf.touchesEnded(touches, withEvent: event)
+let final = observer.controlSnapshot()["rows"] as! [[Double]]
+precondition(!admitted && final.count == 20 && final.suffix(2).map { Array($0[1...]) } == [[3, 0, 0, 1], [3, 1, 0, 1]])
+admitted = true
+let background = PIN33Leaf()
+background.touchesCancelled(touches, withEvent: event)
+let classified = observer.controlSnapshot()["rows"] as! [[Double]]
+precondition(classified.count == 22 && classified.suffix(2).map { Array($0[1...]) } == [[4, 0, 0, 0], [4, 1, 0, 0]])
+precondition(observer.controlSnapshot()["installed"] as! Bool)
+precondition(observer.controlSnapshot()["overflow"] as! Int == 0)
+for _ in 0..<4096 { background.touchesCancelled(touches, withEvent: event) }
+precondition(background.calls[3] == 4097)
+let bounded = observer.controlSnapshot()
+precondition((bounded["rows"] as! [[Double]]).count == 8192)
+precondition(bounded["overflow"] as! Int == 22)
+precondition(!observer.installVerifiedTarget(PIN33Leaf.self))
+print("PIN33_ORIGINAL_CALL_ARGUMENT_RETURN_STATE_PARENT_SCOPE_CONTROLS_PASS")

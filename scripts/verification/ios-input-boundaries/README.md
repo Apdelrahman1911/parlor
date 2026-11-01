@@ -1,5 +1,38 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN33 — original UIKit touch delivery (unpublished preparation)
+
+PIN31 retained an English Permission Continue failure and a Word Impostor
+catalog opening failure, but no original native touch ledger. PIN32 measures
+only original Home overscroll getter returns; that cannot distinguish UIKit
+non-delivery/cancellation from a swallowed Compose click on Permission.
+Corrected PIN32 execution remains separate; its results must be read before
+publishing this additional boundary. This is not a shipping fix or a retry.
+
+PIN33 binds the already supplied `LocalUIView` and uniquely selects its existing
+`TouchesGestureRecognizer : CMPGestureRecognizer`, validating published lineage,
+owned overrides and exact64-bit Objective-C ABI. It forwards original touch,
+arbitration and state-setter calls once synchronously with unchanged arguments
+and return values. The inherited setter is added only to the verified leaf;
+UIKit parents remain untouched. No added recognizer, pointer modifier, policy
+change, gesture, polling, state query, input inspection or animation cancellation.
+
+Bounded primitive rows contain uptime, method kind, entry/exit, original state
+argument/arbitration return bit and a same-primary-recognizer bit. This separates
+the source-identical background instance without exporting object identity,
+coordinates, touch/event contents, names or private data. Public admission is
+sampled once per invocation; completion still records if the original call
+leaves that scope. JSON/file capture occurs only after the existing original
+XCTest failure. Original ten methods, actions, assertions and deadlines remain
+byte-identical to corrected PIN32.
+
+Portable inverse, privacy, nested-call, custody and inherited-gate controls are
+executed locally. Exact native argument/return forwarding, parent isolation,
+primary classification and weak admission transition controls are prepared;
+actual Apple execution is pending. A finite diagnostic pass is neither timing
+neutrality, original failure causality, application qualification nor physical
+verification. Failure and incomplete ledgers stay explicitly retained.
+
 ## PIN32 build-integration correction — November 1
 
 [41270022906](https://github.com/Apdelrahman1911/parlor/actions/runs/41270022906)
