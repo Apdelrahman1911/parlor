@@ -186,6 +186,44 @@ class CatalogOverscrollControls(unittest.TestCase):
             path.write_bytes(b'x'*(boundary.MAX_BYTES+1))
             with self.assertRaises(ValueError):run_pin03.read_capture(path,maximum=boundary.MAX_BYTES)
 
+    @unittest.skipUnless(platform.system()=='Darwin','Actual Swift closure capture requires Apple compiler')
+    def test_actual_failed_export_closure_weak_receiver_and_original_compile_negative(self):
+        # PIN32's standalone exporter compiled, but its integration failed at
+        # the actual weak-self snapshot callback. Compile that receiver context.
+        native=plan()[pin02_capture.CONTAINER]
+        self.assertEqual(native.count(boundary.EXPORT),1)
+        self.assertIn('[weak observation, weak rootObservation, weak motionExport, weak self] in',native)
+        old=boundary.EXPORT.replace('self?.pin32Overscroll','pin32Overscroll')
+        def source(export):
+            return boundary.template('PIN32CatalogOverscroll.swift.in')+"\n"+"""
+private enum MainViewControllerKt {
+    static func PIN32CatalogOverscrollSnapshot() -> String { "{}" }
+}
+private final class PIN32Owner: NSObject {
+"""+boundary.PROPERTY+"""
+    private var snapshot: (() -> String)?
+    override init() {
+        super.init()
+        snapshot = { [weak self] in
+"""+export+"""
+            return "{}"
+        }
+    }
+}
+"""
+        sdk=subprocess.check_output(['/usr/bin/xcrun','--sdk','iphonesimulator','--show-sdk-path'],text=True,timeout=45).strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary).resolve()
+            for name,export,should_compile in (('original-broken',old,False),('corrected',boundary.EXPORT,True)):
+                path=out/(name+'.swift');path.write_text(source(export))
+                result=subprocess.run(['/usr/bin/xcrun','swiftc','-typecheck','-D','DEBUG','-sdk',sdk,
+                    '-target','arm64-apple-ios18.5-simulator','-module-cache-path',str(out/'cache'),str(path)],
+                    capture_output=True,text=True,timeout=180)
+                if should_compile:self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+                else:
+                    self.assertNotEqual(result.returncode,0)
+                    self.assertIn("requires explicit use of 'self'",result.stderr)
+
     @unittest.skipUnless(platform.system()=='Darwin','Actual Apple SDK unavailable on Linux')
     def test_actual_native_export_template_typechecks_against_apple_sdk(self):
         sdk=subprocess.check_output(['/usr/bin/xcrun','--sdk','iphonesimulator','--show-sdk-path'],text=True,timeout=45).strip()

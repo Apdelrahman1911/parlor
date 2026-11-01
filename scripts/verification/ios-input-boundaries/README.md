@@ -1,5 +1,23 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN32 build-integration correction — November 1
+
+[41270022906](https://github.com/Apdelrahman1911/parlor/actions/runs/41270022906)
+failed **before application tests**: all389 actual Apple controls passed, but the
+full copied build exited65 at the added export line in the weak-self capture
+closure. Swift requires an explicit receiver; `self?.pin32Overscroll` preserves
+that weak ownership and failure-only behavior. Cleanup passed. No application
+journey, failure screenshot, getter trace or shipping qualification exists for
+this run. The independent reader correctly rejected the failed build.
+
+A new Apple compiler regression checks the exact integrated weak-receiver
+context: the original unqualified reference must fail with the retained compiler
+diagnostic, while the corrected export must typecheck. The full native build
+still verifies the real Kotlin framework symbol; the isolated stub is not that
+proof. No original action/assertion/deadline, dependency, effect or required
+production gate is changed. Fresh corrected execution is required, not an
+unchanged-code retry. Original failed logs/artifact/readback remain retained.
+
 ## PIN32 — original catalog overscroll getter boundary (preparation)
 
 Published Compose1.10.3 `Scrollable.kt` admits immediate drag when either the

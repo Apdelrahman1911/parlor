@@ -30,7 +30,7 @@ TEMPLATES = {'PIN32CatalogOverscroll.kt.in': 'c5fc5549f695f22660f0156c1e1bd8d907
 ADDITION = 'composeApp/src/commonMain/kotlin/com/parlor/app/inputcopy/PIN32CatalogOverscroll.kt'
 MAX_BYTES, MAX_ROWS = 65_536, 512
 BRIDGE = '\nfun PIN32CatalogOverscrollSnapshot(): String = com.parlor.app.inputcopy.PIN32CatalogOverscroll.snapshot()\n'
-EXPORT = '            pin32Overscroll.exportAfterFailureOnce { MainViewControllerKt.PIN32CatalogOverscrollSnapshot() }\n'
+EXPORT = '            self?.pin32Overscroll.exportAfterFailureOnce { MainViewControllerKt.PIN32CatalogOverscrollSnapshot() }\n'
 PROPERTY = '    private let pin32Overscroll = PIN32CatalogOverscrollExport()\n'
 PERMISSION_PROPERTY = '    @MainActor private var pin32PermissionControl: XCUIElement?\n'
 PERMISSION_REFERENCE = '                if pin11PublicApp === app && ["Continue and retry the real local-network operation.",\n                    "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية."].contains(prefix) {\n                    pin32PermissionControl = button // Original reference, no extra query.\n                }\n'
