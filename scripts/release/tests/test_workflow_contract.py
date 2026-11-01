@@ -19,6 +19,42 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_public_scroll_export_preserves_free_readonly_isolated_failure_scope(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_EXPORT).read_text()
+        workflow_contract.verify_public_scroll_export(text)
+        for before, after in (
+            ('runs-on: macos-15', 'runs-on: macos-15-large'),
+            ('contents: read', 'contents: write'),
+            ('persist-credentials: false', 'persist-credentials: true'),
+            ('cancel-in-progress: false', 'cancel-in-progress: true'),
+            ('--profile isolated-public-scroll-export-control', '--profile original-touch-full-cohort-context'),
+            ('if: always()', 'if: success()'),
+            ('if-no-files-found: error', 'if-no-files-found: warn'),
+            ('/compose/attachments', '/**'),
+            ('run_pin36.py', 'run_pin36.py || true #'),
+        ):
+            changed = text.replace(before, after, 1)
+            self.assertNotEqual(text, changed)
+            with self.subTest(before=before), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_export(changed)
+        self.assertNotIn('secrets.', text)
+        self.assertNotIn('workflow_dispatch:', text)
+
+    def test_public_scroll_export_rejects_every_changed_or_redirected_new_companion(self) -> None:
+        text = (workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SCROLL_EXPORT).read_text()
+        for name in workflow_contract.PUBLIC_SCROLL_EXPORT_COMPANIONS:
+            target = workflow_contract.ROOT / 'scripts/verification/ios-input-boundaries' / name
+            original = Path.read_bytes
+            def changed(path):
+                return original(path) + b'\n' if path == target else original(path)
+            with self.subTest(name=name), patch.object(Path, 'read_bytes', changed), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_export(text)
+            original_symlink = Path.is_symlink
+            def redirected(path):
+                return True if path == target else original_symlink(path)
+            with self.subTest(name=name), patch.object(Path, 'is_symlink', redirected), self.assertRaises(RuntimeError):
+                workflow_contract.verify_public_scroll_export(text)
+
     def test_frozen_public_setup_boundaries_require_exact_free_readonly_copy_only_workflow(self) -> None:
         path = workflow_contract.WORKFLOWS / workflow_contract.PUBLIC_SETUP_BOUNDARIES
         text = path.read_text()

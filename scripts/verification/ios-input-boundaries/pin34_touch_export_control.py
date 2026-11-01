@@ -77,8 +77,16 @@ retain_motion_companion = delivery.retain_motion_companion
 
 
 def accept_native_export(out,state):
-    original.motion.boundary.accept_observation_export(out,state,profile=PROFILE,
-        renderer=renderer_for_profile(PROFILE,SOURCE,pair.RUNTIME,pair.DEVICE),
+    return accept_touch_export(out,state,profile=PROFILE,
+        renderer=renderer_for_profile(PROFILE,SOURCE,pair.RUNTIME,pair.DEVICE),result=RESULT)
+
+
+def accept_touch_export(out,state,*,profile,renderer,result):
+    require((profile,result) in ((PROFILE,RESULT),
+        ('isolated-public-scroll-export-control','ISOLATED_PUBLIC_SCROLL_EXPORT_COMPLETE_NOT_QUALIFICATION')),
+        'Only two exact isolated sentinel consumers; no natural or qualified substitution')
+    original.motion.boundary.accept_observation_export(out,state,profile=profile,
+        renderer=renderer,
         result_verifier=verify_results,command_verifier=verify_commands)
     dest=out/'compose';captures=list(dest.glob('capture-*.json'))
     require(len(captures)==1,'Exactly one original unexpected control failure export required')
@@ -116,4 +124,4 @@ def accept_native_export(out,state):
     if target.exists():require(json.loads(target.read_bytes())==receipt,'Exact saved isolated-control receipt')
     else:
         with target.open('x') as f:json.dump(receipt,f,indent=2)
-    return RESULT
+    return result

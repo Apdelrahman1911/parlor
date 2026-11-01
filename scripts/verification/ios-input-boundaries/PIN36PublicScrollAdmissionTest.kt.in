@@ -1,0 +1,68 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.OverscrollFactory
+import androidx.compose.foundation.LocalOverscrollFactory
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.runComposeUiTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+
+/** Real Compose remember/effect ordering; not UIKit or application causality. */
+@OptIn(ExperimentalTestApi::class)
+class PublicScrollBoundaryAdmissionTest {
+    @Test
+    fun public_scope_metadata_survives_parent_stage_side_effect_order() = runComposeUiTest {
+        var actualCreations = 0
+        val factory = object : OverscrollFactory {
+            override fun equals(other: Any?): Boolean = this === other
+            override fun hashCode(): Int = 1
+            override fun createOverscrollEffect(): OverscrollEffect {
+                actualCreations++
+                return object : OverscrollEffect {
+                    override val node = object : Modifier.Node() {}
+                    override val isInProgress = false
+                    override fun applyToScroll(delta: Offset, source: NestedScrollSource,
+                        performScroll: (Offset) -> Offset): Offset = performScroll(delta)
+                    override suspend fun applyToFling(velocity: Velocity, performFling: suspend (Velocity) -> Velocity) {
+                        performFling(velocity)
+                    }
+                }
+            }
+        }
+        PIN01Observation.publicAXArmed = false
+        setContent {
+            SideEffect { PIN01Observation.publicAXArmed = true }
+            CompositionLocalProvider(LocalOverscrollFactory provides factory) {
+                ObservePublicOverscroll(0) {
+                    LocalOverscrollFactory.current!!.createOverscrollEffect()
+                    rememberObservedPublicScrollState(0)
+                }
+            }
+        }
+        waitForIdle()
+        runOnIdle {
+            val report = Json.parseToJsonElement(PublicScrollBoundary.snapshot()).jsonObject
+            assertEquals(1, actualCreations)
+            assertTrue(PIN01Observation.publicAXArmed)
+            // The original factory runs once; public metadata cannot depend on a later stage SideEffect.
+            assertEquals("1", report.getValue("created").jsonArray[0].jsonPrimitive.content)
+            assertTrue(report.getValue("rows").jsonArray.any { row ->
+                val fields = row.jsonArray
+                fields[2].jsonPrimitive.content == "0.0" && fields[3].jsonPrimitive.content == "2.0" &&
+                    fields[4].jsonPrimitive.content == "1.0"
+            })
+        }
+    }
+}

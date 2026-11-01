@@ -150,7 +150,7 @@ def verify_companion_files(out,state,*,isolated_touch_token=None):
     # Callers independently bind their complete source plan, actual methods and
     # command first. The original two-method entry retains its exact gate above.
     if isolated_touch_token is not None:
-        text.require(state['profile']=='isolated-original-native-touch-export-control' and
+        text.require(state['profile'] in ('isolated-original-native-touch-export-control','isolated-public-scroll-export-control') and
             state['arms'][0]['methods']=={motion.CONTROL:'Failed'} and
             type(isolated_touch_token) is str and pin02_capture.UUID.fullmatch(isolated_touch_token),
             'Synthetic motion is confined to the exact isolated failed touch-export control')

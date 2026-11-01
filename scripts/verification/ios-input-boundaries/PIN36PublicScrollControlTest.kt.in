@@ -1,0 +1,145 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
+
+@OptIn(ExperimentalTestApi::class)
+class PublicScrollBoundaryCandidateTest {
+    @Test
+    fun original_effect_node_arguments_results_and_callbacks_forward_once() = runTest {
+        var armed = true
+        var clock = 1.0
+        val ledger = PublicScrollLedger({ armed }, { clock++ })
+        var reads = 0
+        var callbacks = 0
+        val effect = object : OverscrollEffect {
+            override val node = object : Modifier.Node() {}
+            override val isInProgress: Boolean get() { reads++; return true }
+            override fun applyToScroll(delta: Offset, source: NestedScrollSource,
+                                       performScroll: (Offset) -> Offset): Offset {
+                assertEquals(Offset(2f, 4f), delta)
+                assertEquals(NestedScrollSource.UserInput, source)
+                return performScroll(delta)
+            }
+            override suspend fun applyToFling(velocity: Velocity, performFling: suspend (Velocity) -> Velocity) {
+                assertEquals(Velocity(3f, 6f), velocity)
+                performFling(velocity)
+            }
+        }
+        val observed = PublicObservedEffect(effect, 0, ledger)
+        assertSame(effect.node, observed.node)
+        assertTrue(observed.isInProgress)
+        assertEquals(1, reads)
+        assertEquals(1, rows(ledger).size)
+        armed = false
+        assertTrue(observed.isInProgress)
+        assertEquals(2, reads)
+        assertEquals(1, rows(ledger).size)
+        assertEquals(Offset(1f, 2f), observed.applyToScroll(Offset(2f, 4f), NestedScrollSource.UserInput) {
+            callbacks++; it / 2f
+        })
+        observed.applyToFling(Velocity(3f, 6f)) { callbacks++; it }
+        assertEquals(2, callbacks)
+    }
+
+    @Test
+    fun original_scope_departure_and_cancellation_are_not_repaired_or_swallowed() {
+        var armed = true
+        var clock = 1.0
+        val ledger = PublicScrollLedger({ armed }, { clock++ })
+        assertTrue(ledger.originalGetter(1) { armed = false; true })
+        assertEquals(1, rows(ledger).size)
+        assertTrue(ledger.originalGetter(1) { true })
+        assertEquals(1, rows(ledger).size)
+        armed = true
+        assertFailsWith<CancellationException> {
+            ledger.originalGetter(1) { throw CancellationException("controlled cancellation") }
+        }
+        assertEquals(1, rows(ledger).size)
+        assertFalse(ledger.snapshot().contains("controlled cancellation"))
+    }
+
+    @Test
+    fun bounded_ledgers_reject_invalid_state_without_normalizing_it() {
+        val ledger = PublicScrollLedger({ true }, { 1.0 })
+        ledger.creation(3)
+        ledger.state(0, false, -1)
+        repeat(8193) { ledger.state(0, false, 0) }
+        val snapshot = Json.parseToJsonElement(ledger.snapshot()).jsonObject
+        assertEquals(setOf("created", "factoryMissing", "overflow", "invalid", "rows"), snapshot.keys)
+        assertEquals("2", snapshot.getValue("invalid").jsonPrimitive.content)
+        assertEquals("1", snapshot.getValue("overflow").jsonPrimitive.content)
+        assertEquals(8192, snapshot.getValue("rows").jsonArray.size)
+    }
+
+    @Test
+    fun actual_scroll_state_invalidations_and_disposal_are_observed_without_polling() = runComposeUiTest {
+        lateinit var state: ScrollState
+        lateinit var scope: CoroutineScope
+        lateinit var job: Job
+        val shown = mutableStateOf(true)
+        PIN01Observation.publicAXArmed = true
+        setContent {
+            scope = rememberCoroutineScope()
+            if (shown.value) {
+                state = rememberObservedPublicScrollState(0)
+                Box(Modifier.size(300.dp))
+            }
+        }
+        runOnIdle {
+            assertFalse(state.isScrollInProgress)
+            job = scope.launch(start = CoroutineStart.UNDISPATCHED) { state.scroll { awaitCancellation() } }
+        }
+        waitForIdle()
+        runOnIdle {
+            assertTrue(state.isScrollInProgress)
+            assertTrue(rows(PublicScrollBoundary).any { it[2] == 0.0 && it[3] == 0.0 && it[4] == 1.0 && it[5] == 0.0 })
+            job.cancel()
+        }
+        waitForIdle()
+        runOnIdle {
+            assertFalse(state.isScrollInProgress)
+            val changes = rows(PublicScrollBoundary).filter { it[2] == 0.0 && it[3] == 0.0 }
+            assertEquals(0.0, changes.last()[4])
+            shown.value = false
+        }
+        waitForIdle()
+        runOnIdle {
+            assertTrue(rows(PublicScrollBoundary).any { it[2] == 0.0 && it[3] == 2.0 && it[4] == 0.0 })
+        }
+    }
+
+    private fun rows(ledger: PublicScrollLedger): List<List<Double>> =
+        Json.parseToJsonElement(ledger.snapshot()).jsonObject.getValue("rows").jsonArray.map { row ->
+            row.jsonArray.map { it.jsonPrimitive.content.toDouble() }
+        }
+}

@@ -773,3 +773,28 @@ failures retain actual zero input rows; no fabricated callback can stand in for
 an unentered scope. Once a public attachment occurs, complete original native
 installation is required. Neither zero rows nor lifecycle status establishes
 causality. Original assertions, deadlines, values and actions stay unchanged.
+
+## Original full-cohort result and public-scroll export (PIN35–36)
+
+PIN35 [run41282962048](https://github.com/Apdelrahman1911/parlor/actions/runs/41282962048)
+finished successfully: all414 actual Apple adapter controls and all23 original
+XCTest cases passed without skips. Independent source/artifact/command/order and
+cleanup readback passed. No natural failure occurred and no failure-only ledger
+was exported. This does not resolve #267/#276 or qualify a shipping correction.
+
+PIN36 fills the unobserved public Setup/Permission/Name scroll boundary. It
+observes the original `ScrollState` invalidations and delegates the original
+overscroll getter exactly once; it does not poll, scroll, intercept input or
+change assertions. Five actual Desktop controls passed. One reproduced an
+adapter-admission defect: child factory/mount effects precede the parent's stage
+`SideEffect`. Public-wrapper metadata is now admitted at scope entry; original
+getter admission remains stage-bound. This is not an application root cause.
+
+The first native run executes only the existing isolated Host-suppression
+sentinel. Its original assertion must fail with XCTest exit65, while all previous
+companions and a bounded, exclusive, primitive-only public-scroll export must
+pass custody checks. The exact prior14-file plan restores from the new16-file
+plan, and the original driver is unchanged. This sentinel cannot enter Permission
+or Name: linkage is not runtime evidence for those screens. Native exporter
+capability remains pending until the macOS run and independent readback complete.
+Successful original-cohort tests are not replayed to manufacture causality.

@@ -1,0 +1,137 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.LocalOverscrollFactory
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.OverscrollFactory
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
+/** COPY ONLY candidate. Public Setup/Permission/Name scroll facts, never input contents. */
+open class PublicScrollLedger(private val armed: () -> Boolean, private val clock: () -> Double) {
+    private companion object {
+        const val KINDS = 3
+        const val CAPACITY = 8192
+        const val WIDTH = 6
+    }
+    private val rows = DoubleArray(CAPACITY * WIDTH)
+    private val created = IntArray(KINDS)
+    private val missing = BooleanArray(KINDS)
+    private var size = 0
+    private var overflow = 0
+    private var invalid = 0
+
+    // Metadata belongs to these public-only wrappers even before the parent stage SideEffect.
+    fun creation(kind: Int) {
+        if (kind !in 0 until KINDS) { invalid = (invalid + 1).coerceAtMost(1000000); return }
+        created[kind] = (created[kind] + 1).coerceAtMost(CAPACITY + 1)
+    }
+
+    fun missingFactory(kind: Int) {
+        if (kind !in 0 until KINDS) { invalid = (invalid + 1).coerceAtMost(1000000); return }
+        missing[kind] = true
+    }
+
+    fun state(kind: Int, scrolling: Boolean, offset: Int) {
+        val at = clock()
+        record(at, at, kind, 0, scrolling, offset)
+    }
+
+    fun lifecycle(kind: Int, mounted: Boolean) {
+        val at = clock()
+        record(at, at, kind, 2, mounted, 0, admitted = true)
+    }
+
+    fun originalGetter(kind: Int, original: () -> Boolean): Boolean {
+        val admitted = armed()
+        val started = if (admitted) clock() else 0.0
+        val result = original() // Exactly one original call; cancellation/errors are not caught.
+        if (admitted) record(started, clock(), kind, 1, result, 0, admitted = true)
+        return result
+    }
+
+    private fun record(started: Double, finished: Double, kind: Int, event: Int,
+                       flag: Boolean, offset: Int, admitted: Boolean = armed()) {
+        if (!admitted) return
+        if (!started.isFinite() || !finished.isFinite() || started < 0 ||
+            finished < started || finished > 1e12 || kind !in 0 until KINDS ||
+            event !in 0..2 || offset !in 0..100000 || (event != 0 && offset != 0)) {
+            invalid = (invalid + 1).coerceAtMost(1000000)
+            return
+        }
+        if (size == CAPACITY) { overflow = (overflow + 1).coerceAtMost(1000000); return }
+        val at = size++ * WIDTH
+        rows[at] = started
+        rows[at + 1] = finished
+        rows[at + 2] = kind.toDouble()
+        rows[at + 3] = event.toDouble()
+        rows[at + 4] = if (flag) 1.0 else 0.0
+        rows[at + 5] = offset.toDouble()
+    }
+
+    /** Called only by the future once-only failure exporter, never by an event path. */
+    fun snapshot(): String = buildJsonObject {
+        put("created", buildJsonArray { created.forEach { add(JsonPrimitive(it)) } })
+        put("factoryMissing", buildJsonArray { missing.forEach { add(JsonPrimitive(it)) } })
+        put("overflow", overflow)
+        put("invalid", invalid)
+        put("rows", buildJsonArray {
+            for (row in 0 until size) add(buildJsonArray {
+                for (field in 0 until WIDTH) add(JsonPrimitive(rows[row * WIDTH + field]))
+            })
+        })
+    }.toString()
+}
+
+object PublicScrollBoundary : PublicScrollLedger(
+    { PIN01Observation.publicAXArmed }, { PIN01Observation.clock() },
+)
+
+/** Same actual state with only invalidation-driven observation, never polling or scrolling. */
+@Composable
+fun rememberObservedPublicScrollState(kind: Int): ScrollState {
+    val state = rememberScrollState()
+    DisposableEffect(kind, state) {
+        PublicScrollBoundary.lifecycle(kind, true)
+        onDispose { PublicScrollBoundary.lifecycle(kind, false) }
+    }
+    LaunchedEffect(kind, state) {
+        snapshotFlow { state.isScrollInProgress to state.value }
+            .collect { (scrolling, offset) -> PublicScrollBoundary.state(kind, scrolling, offset) }
+    }
+    return state
+}
+
+internal class PublicObservedEffect(private val original: OverscrollEffect, private val kind: Int,
+                                    private val ledger: PublicScrollLedger = PublicScrollBoundary) : OverscrollEffect by original {
+    override val isInProgress: Boolean get() = ledger.originalGetter(kind) { original.isInProgress }
+}
+
+internal data class PublicObservedFactory(private val original: OverscrollFactory, private val kind: Int) : OverscrollFactory {
+    override fun createOverscrollEffect(): OverscrollEffect {
+        val effect = original.createOverscrollEffect()
+        PublicScrollBoundary.creation(kind)
+        return PublicObservedEffect(effect, kind)
+    }
+}
+
+@Composable
+fun ObservePublicOverscroll(kind: Int, content: @Composable () -> Unit) {
+    val original = LocalOverscrollFactory.current
+    val observed = remember(original, kind) {
+        original?.let { PublicObservedFactory(it, kind) }.also {
+            if (it == null) PublicScrollBoundary.missingFactory(kind)
+        }
+    }
+    CompositionLocalProvider(LocalOverscrollFactory provides observed, content = content)
+}

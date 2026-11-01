@@ -1,0 +1,41 @@
+#if DEBUG && targetEnvironment(simulator)
+import Foundation
+import Darwin
+
+/// COPY ONLY. Called by the existing once-only failed-control request.
+final class PIN36PublicScrollExport {
+    private var attempted = false
+    func exportAfterFailureOnce(snapshot: () -> String) {
+        guard Thread.isMainThread, !attempted else { return }
+        attempted = true
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_PIN02_TOKEN"], UUID(uuidString: token)?.uuidString == token,
+              let simulator = environment["PARLOR_PIN02_SIMULATOR"], UUID(uuidString: simulator)?.uuidString == simulator,
+              environment["SIMULATOR_UDID"] == simulator,
+              let bundle = Bundle.main.bundleIdentifier, bundle.hasSuffix(".debug"),
+              environment["PARLOR_PIN02_BUNDLE"] == bundle,
+              let data = snapshot().data(using: .utf8), data.count <= 1_048_576,
+              let numeric = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+        let report: [String: Any] = ["schema": 1, "token": token, "simulator": simulator,
+            "bundle": bundle, "process": ProcessInfo.processInfo.processIdentifier,
+            "capturedMs": ProcessInfo.processInfo.systemUptime * 1000, "scroll": numeric]
+        guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+              raw.count <= 1_048_576 else { return }
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-pin36-" + token, isDirectory: true)
+        guard mkdir(directory.path, 0o700) == 0 else { return }
+        let fd = open(directory.appendingPathComponent("scroll.json").path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard fd >= 0 else { return }
+        defer { close(fd) }
+        raw.withUnsafeBytes { bytes in
+            guard let base = bytes.baseAddress else { return }
+            var offset = 0
+            while offset < bytes.count {
+                let count = write(fd, base.advanced(by: offset), bytes.count - offset)
+                guard count > 0 else { return }
+                offset += count
+            }
+            _ = fsync(fd)
+        }
+    }
+}
+#endif

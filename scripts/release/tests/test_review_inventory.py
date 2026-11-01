@@ -122,6 +122,14 @@ class ReviewInventoryTest(unittest.TestCase):
         ):
             self.assertNotIn(unsupported_claim, content)
 
+    def test_public_scroll_export_is_diagnostic_not_shipping_or_production_qualification(self) -> None:
+        path = ".github/workflows/ios-public-scroll-export.yml"
+        rows = list(csv.DictReader(io.StringIO(review_inventory.render_inventory([path], {}, {}))))
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["classification"], "ci-diagnostic-workflow")
+        self.assertIn("not application qualification", rows[0]["inferred_production_reachability"])
+        self.assertIn("never substitutes", rows[0]["suggested_disposition"])
+
     def test_input_investigation_is_not_inventoried_as_production_qualification(self) -> None:
         diagnostic = ".github/workflows/ios-input-investigation.yml"
         production = ".github/workflows/production-verification.yml"
