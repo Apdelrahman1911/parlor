@@ -35,7 +35,16 @@ all earlier source/product/native/privacy/cleanup companions. Synthetic motion
 is allowed only for this exact isolated failed method and owned token; ordinary
 profiles continue rejecting it. The runner uses one standard free macos-15 job,
 JDK21/Xcode26.3, a finite900second control budget, no retries or repair. Actual
-export execution is pending; no app causality, neutrality or shipping claim.
+corrected run41280963928 (4658d1bd) passed all405actual Apple controls with
+zero skips; build and owned cleanup passed. One real app-leaf export preserved
+its original unexpected transition assertion and XCTest exit65: actual unique
+recognizer/ABI installation,392native rows/40primary entries/zero overflow,
+original failure-owned query/ACK and all companions independently validated.
+All190supporting/all1,214original inputs, exact14-file plan and artifact/product/
+command/device/cleanup custody were read once. Receipt SHA256
+`253fd6d0929d6a318c2a0610555d49af0a8734123aaae032dab1b5a448d33f13`.
+This proves adapter capability only; no original cause, neutrality or shipping
+qualification. [Terminal evidence](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6554681179).
 
 First PIN34 run41280245940 (59276ba3) failed in preflight:403PASS/1ERROR,
 zero Apple skips, no application build/test, zero artifacts. The new positive
