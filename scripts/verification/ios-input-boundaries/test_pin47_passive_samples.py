@@ -1,6 +1,7 @@
 """Fixed passive sampling controls; fabricated outcomes never certify application behavior."""
 import hashlib,json,platform,subprocess,tempfile,unittest
 from pathlib import Path
+from unittest.mock import patch
 import pin47_failure_runloop as c
 from test_pin47_failure_runloop import evidence,plan
 
@@ -21,7 +22,8 @@ def passing_evidence(out):
     for name,value in (('summary',summary),('tests',tests)):(d/(name+'.json')).write_text(json.dumps(value))
     for p in d.glob('capture-*.json'):p.unlink()
     for p in d.glob('native-runloop-*.json'):p.unlink()
-    for p in (d/'attachments').rglob('request.json'):p.unlink();p.parent.rmdir()
+    # Python 3.9 resumes descent after yielding; snapshot before removing directories.
+    for p in list((d/'attachments').rglob('request.json')):p.unlink();p.parent.rmdir()
     (d/'inputs.json').write_text(json.dumps(state['original_inputs']|{p:hashlib.sha256(v.encode()).hexdigest() for p,v in sample_plan().items()}))
     command=next(x for x in state['commands'] if x['label']=='compose-tests')
     command['command']=[a for a in command['command'] if not a.startswith('-only-testing:')]+[
@@ -32,6 +34,21 @@ def passing_evidence(out):
 
 
 class PassiveSampleControls(unittest.TestCase):
+    def test_owned_fixture_traversal_finishes_before_directory_removal(self):
+        original=Path.rglob;completed=[]
+        def guarded_traversal(directory,pattern):
+            for p in original(directory,pattern):
+                yield p
+                self.assertTrue(p.is_file(),'Fixture mutation preceded traversal completion')
+                self.assertTrue(p.parent.is_dir(),'Fixture directory removed during traversal')
+            completed.append(directory)
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp).resolve()
+            with patch.object(Path,'rglob',guarded_traversal):state=passing_evidence(out)
+            self.assertIn(out/'compose/attachments',completed)
+            self.assertEqual(list((out/'compose/attachments').iterdir()),[])
+            self.assertEqual(c.select_profile(c.SAMPLE_PROFILE).accept_native_export(out,state),c.RESULT)
+
     def test_only_ten_fixed_wrappers_change_from_accepted_export_plan(self):
         baseline=plan();sample=sample_plan();self.assertEqual(set(sample),set(baseline))
         for p in sample:

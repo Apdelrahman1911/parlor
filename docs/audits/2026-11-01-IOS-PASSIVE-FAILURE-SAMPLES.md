@@ -10,8 +10,8 @@ that is neither a cause nor evidence of timing neutrality.
 
 PIN47's lower-intervention original AR/EN journeys passed, but41340181840
 failed retaining its new run-loop companion. The corrected isolated exporter
-is being verified separately at41342659136; this study must not be published
-until that exact native retention has independently passed. Do not replay
+was independently accepted at41342659136 before this study's publication.
+That verifies diagnostic retention, not application causality. Do not replay
 that exporter, the successful KMP aggregate or full23-method qualification.
 
 ## Predeclared controlled scope
@@ -60,3 +60,19 @@ from its fabricated sentinel. The strict directory reader correctly rejected
 it. Fixture preparation now removes that directory; no reader relaxation or
 native workflow retry occurred. Actual Apple parser/runtime results and exact
 source/artifact readback remain required after publication.
+
+## Pre-execution fixture portability correction
+
+Run41344867937 failed before application execution: Python3.9's recursive
+`Path.rglob` resumed descent into a fabricated request directory already
+removed by fixture setup. Workflow contracts and the actual Swift parser
+passed; two outcome controls errored, and no native sample or artifact existed.
+The original terminal result/logs and rejected readback remain preserved.
+
+Fixture setup now materializes all request paths before deleting their owned
+directories. A guarded-iterator regression requires every yielded request and
+directory to survive until traversal completes. The strict attachment reader,
+native owner, original journeys, assertions and deadlines are unchanged. Fresh
+sampling is justified by this identified correction; no executed native cohort
+is being replayed. Five source-specific controls must pass on Apple, with zero
+skips, before execution.
