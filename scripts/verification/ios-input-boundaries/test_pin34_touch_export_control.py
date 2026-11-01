@@ -59,7 +59,7 @@ class IsolatedTouchExportControls(unittest.TestCase):
 
     def test_exact_unexpected_failure_and_all_real_companion_requirements(self):
         with tempfile.TemporaryDirectory() as temporary:
-            out=Path(temporary);state=evidence(out)
+            out=Path(temporary).resolve();state=evidence(out)
             self.assertEqual(control.accept_native_export(out,state),control.RESULT)
             for change in (lambda s:s.update(source='foreign'),lambda s:s['arms'][0].update(cleanup='FAIL'),
                            lambda s:s['arms'][0].update(test_exit=0),
@@ -73,7 +73,7 @@ class IsolatedTouchExportControls(unittest.TestCase):
 
     def test_installation_overflow_primary_begin_end_state_and_permission_negatives(self):
         with tempfile.TemporaryDirectory() as temporary:
-            out=Path(temporary);state=evidence(out);dest=out/'compose'
+            out=Path(temporary).resolve();state=evidence(out);dest=out/'compose'
             p=next(dest.glob('native-touch-*.json'));raw=p.read_bytes()
             for change in (lambda v:v.update(installed=False),lambda v:v.update(overflow=1),
                 lambda v:v.update(rows=[]),lambda v:[r.__setitem__(4,0) for r in v['rows']],
@@ -87,15 +87,26 @@ class IsolatedTouchExportControls(unittest.TestCase):
 
     def test_original_profiles_cannot_admit_synthetic_motion(self):
         with tempfile.TemporaryDirectory() as temporary:
-            out=Path(temporary);state=evidence(out);token=json.loads(next((out/'compose').glob('capture-*.json')).read_bytes())['token']
+            out=Path(temporary).resolve();state=evidence(out);token=json.loads(next((out/'compose').glob('capture-*.json')).read_bytes())['token']
             with self.assertRaises(ValueError):control.original.verify_companion_files(out,state)
             for profile in ('original-input-lifecycle-boundaries',control.delivery.PROFILE,'foreign'):
                 state['profile']=profile
                 with self.assertRaises(ValueError):control.original.verify_companion_files(out,state,isolated_touch_token=token)
 
+    def test_redirected_fixture_root_rejects_without_relaxing_frozen_reads(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();real=root/'real';real.mkdir()
+            alias=root/'alias';alias.symlink_to(real,target_is_directory=True)
+            state=evidence(alias)
+            with self.assertRaises(ValueError):control.accept_native_export(alias,state)
+            # Canonical fixture preparation, not a relaxed production reader.
+            with tempfile.TemporaryDirectory() as canonical:
+                out=Path(canonical).resolve();state=evidence(out)
+                self.assertEqual(control.accept_native_export(out,state),control.RESULT)
+
     def test_no_wrong_predicate_no_skips_no_nonfinite_duration_or_extra_command(self):
         with tempfile.TemporaryDirectory() as temporary:
-            out=Path(temporary);state=evidence(out);dest=out/'compose'
+            out=Path(temporary).resolve();state=evidence(out);dest=out/'compose'
             summary=json.loads((dest/'summary.json').read_bytes());tests=json.loads((dest/'tests.json').read_bytes())
             for change in (lambda s,t:s.update(skippedTests=1),lambda s,t:s.update(expectedFailures=1),
                 lambda s,t:s['testFailures'][0].update(failureText='Wrong earlier predicate'),

@@ -18,6 +18,17 @@ profiles continue rejecting it. The runner uses one standard free macos-15 job,
 JDK21/Xcode26.3, a finite900second control budget, no retries or repair. Actual
 export execution is pending; no app causality, neutrality or shipping claim.
 
+First PIN34 run41280245940 (59276ba3) failed in preflight:403PASS/1ERROR,
+zero Apple skips, no application build/test, zero artifacts. The new positive
+fixture supplied macOS's redirected `/var` temporary root; the existing strict
+frozen-file reader correctly rejected it. Fixture preparation now resolves the
+canonical root, with an additional regression proving symlinked roots remain
+rejected. No production reader, app/driver plan, assertion or deadline changed.
+A fresh corrected source must execute405 actual Apple controls and the same
+isolated sentinel before real app-leaf export can be accepted. The original
+failed logs and rejected one-time readback remain preserved. See
+[#276 failure evidence](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6554425073).
+
 ## PIN33 — original UIKit touch delivery (source-bound experiment)
 
 PIN31 retained an English Permission Continue failure and a Word Impostor
