@@ -1,5 +1,27 @@
 # PIN01 — copy-only public input boundaries
 
+## PIN31 — missing catalog-opening query and no-pointer observation arm
+
+PIN30 naturally fails **after** an admitted catalog tap, not its pre-tap waiter.
+The original arm cannot provide native ledgers; the fully observed arm never fails.
+PIN31 fills that precise failed-query gap and investigates a less intrusive source
+plan: omit only the three added Compose pointer modifiers/imports. Original native
+root/attributes/frame, lifecycle, input attachment/mutations, public text/session,
+scroll motion, stages/callbacks, products and owned cleanup gates remain mandatory.
+**No gesture ledger exists in this arm**; absent rows cannot establish lost delivery.
+One discordant PIN30 sample does not prove instrumentation caused the difference.
+
+The XCTest driver retains the exact original catalog tap reference without a new
+query. Only after its unchanged failed ten-second Host waiter and screenshot, the
+existing once-only native capture precedes retained/equivalent catalog queries.
+Every original action, selector, predicate and deadline is exactly recoverable;
+no repair, retyping, slower gesture, retry or changed shipping input path is added.
+Five predeclared EN/AR pairs execute once on one standard free macOS runner, with
+all ten unique outcomes retained. The original PIN30 baseline is not replayed.
+An actual generated-driver Apple SDK control joins portable inverse/privacy/
+ownership/command/companion rejection controls. Native execution, actual failed-path
+capture and independent source-specific readback remain pending, not qualification.
+
 ## PIN30 — fixed-size original/observed public-session stress
 
 PIN29 [41257164049](https://github.com/Apdelrahman1911/parlor/actions/runs/41257164049)
@@ -28,11 +50,15 @@ assertion deadlines**. No diagnostic cache saves, permissions, dependency pins,
 shipping source or required workflows change. Actual SDK checks typecheck both
 new drivers before execution. Missing/duplicate/skipped methods reject.
 
-Equal outcomes establish only this finite public-session observation, not the
-separate Desktop60-journey short/cancel/scroll/recreated-launch native-neutrality
-matrix, original causality, physical acceptance or production qualification.
-Any sampling uncertainty and partial flow count remain explicit. Prepared,
-source-specific hosted execution and independent pair readback are still pending.
+Terminal [41261699973](https://github.com/Apdelrahman1911/parlor/actions/runs/41261699973)
+and independent readback pass **collection only**: 373 actual Apple controls per arm,
+zero skips, all1,214 original /169 supporting inputs, actual builds and owned cleanup.
+**Original 9PASS/1FAIL**, exit65: final English Word Impostor catalog tap does not
+expose Host within the unchanged deadline (rendered line166). The original event,
+AX hierarchy and recording are retained. Observed **10PASS/0FAIL**, zero exports.
+A discordant finite sample on different runners is not proof of observer masking,
+original causality, timing neutrality, physical acceptance or qualification.
+The source-specific original failure remains failed; no shipping correction exists.
 
 ## PIN29 — failure-only equivalent XCTest query
 
