@@ -26,12 +26,38 @@ SCOPE = ('Five fixed EN/AR pairs once with original actions/deadlines; record on
          'no added pointer observer, recognizer, polling, input repair, bounce cancellation, '
          'native timing neutrality, causality, shipping qualification or physical acceptance')
 HERE = Path(__file__).resolve().parent
-TEMPLATES = {'PIN32CatalogOverscroll.kt.in': 'dc0772b5e8055b56e8317d1088bf6e38a0114155de0a2f273421d8256df12a21', 'PIN32CatalogOverscroll.swift.in': 'efa38e8cbce7ced4fd2f079f347fee226c2922561fd365b31f4e009e54f2aab7'}
+TEMPLATES = {'PIN32CatalogOverscroll.kt.in': 'c5fc5549f695f22660f0156c1e1bd8d90737483872c964b3caa0294fdb42d090', 'PIN32CatalogOverscroll.swift.in': 'efa38e8cbce7ced4fd2f079f347fee226c2922561fd365b31f4e009e54f2aab7'}
 ADDITION = 'composeApp/src/commonMain/kotlin/com/parlor/app/inputcopy/PIN32CatalogOverscroll.kt'
 MAX_BYTES, MAX_ROWS = 65_536, 512
 BRIDGE = '\nfun PIN32CatalogOverscrollSnapshot(): String = com.parlor.app.inputcopy.PIN32CatalogOverscroll.snapshot()\n'
 EXPORT = '            pin32Overscroll.exportAfterFailureOnce { MainViewControllerKt.PIN32CatalogOverscrollSnapshot() }\n'
 PROPERTY = '    private let pin32Overscroll = PIN32CatalogOverscrollExport()\n'
+PERMISSION_PROPERTY = '    @MainActor private var pin32PermissionControl: XCUIElement?\n'
+PERMISSION_REFERENCE = '                if pin11PublicApp === app && ["Continue and retry the real local-network operation.",\n                    "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية."].contains(prefix) {\n                    pin32PermissionControl = button // Original reference, no extra query.\n                }\n'
+HOST_NAME_WAIT = '            XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))\n'
+HOST_NAME_CAPTURE = '            let pin32HostNameAppeared = app.textViews.firstMatch.waitForExistence(timeout: 10)\n            if !pin32HostNameAppeared {\n                let screenshot = XCTAttachment(screenshot: app.screenshot())\n                screenshot.name = "Failed public Permission Continue after original single tap"\n                screenshot.lifetime = .keepAlways\n                add(screenshot)\n                pin11CapturePublicFailureOnce(app) // Native rows before either new query.\n                if let source = pin32PermissionControl {\n                    PIN29EquivalentQuery.capture(source, equivalent: self.setupButton(app, prefix: copy.permission),\n                                                 app: app, kind: 3)\n                }\n            }\n            XCTAssertTrue(pin32HostNameAppeared)\n'
+PERMISSION_CALLBACK = '{ step = ShellStep.HostName }'
+OBSERVED_PERMISSION_CALLBACK = '{ com.parlor.app.inputcopy.PIN32CatalogOverscroll.permissionContinuation(); step = ShellStep.HostName }'
+
+
+def extend_permission_driver(driver):
+    driver = pin01_copy.once(driver, previous.PROPERTY, previous.PROPERTY+PERMISSION_PROPERTY)
+    driver = pin01_copy.once(driver, '            pin31CatalogControl = nil\n',
+        '            pin31CatalogControl = nil\n            pin32PermissionControl = nil\n')
+    driver = pin01_copy.once(driver, previous.REFERENCE, previous.REFERENCE+PERMISSION_REFERENCE)
+    # Only the first (Host) Name waiter: preserve the separate original Join waiter.
+    require = previous.observed.original.text.require
+    require(driver.count(HOST_NAME_WAIT) == 2, 'Exact original Host and Join Name waiters')
+    return driver.replace(HOST_NAME_WAIT,HOST_NAME_CAPTURE,1)
+
+
+def restore_permission_driver(driver):
+    driver = pin01_copy.once(driver, HOST_NAME_CAPTURE, HOST_NAME_WAIT)
+    driver = pin01_copy.once(driver, previous.REFERENCE+PERMISSION_REFERENCE, previous.REFERENCE)
+    driver = pin01_copy.once(driver, '            pin31CatalogControl = nil\n            pin32PermissionControl = nil\n',
+        '            pin31CatalogControl = nil\n')
+    return pin01_copy.once(driver,previous.PROPERTY+PERMISSION_PROPERTY,previous.PROPERTY)
+
 HOME_OPEN = '    HeroBackdrop(modifier = modifier.fillMaxSize()) {\n'
 OBSERVED_OPEN = '    com.parlor.app.inputcopy.PIN32ObserveCatalogOverscroll {\n'+HOME_OPEN
 HOME_CLOSE = '        }\n    }\n}\n\n@Composable\nprivate fun catalogGameCount'
@@ -53,6 +79,8 @@ def renderer_for_profile(profile, source, runtime, device):
     def render(sources, digests, *, arm):
         plan = base(sources,digests,arm=arm)
         plan[ADDITION] = template('PIN32CatalogOverscroll.kt.in')
+        plan[pin02_capture.DRIVER] = extend_permission_driver(plan[pin02_capture.DRIVER])
+        plan[pin01_copy.SHELL] = pin01_copy.once(plan[pin01_copy.SHELL], PERMISSION_CALLBACK, OBSERVED_PERMISSION_CALLBACK)
         plan[pin01_copy.MAIN] += BRIDGE
         home = pin01_copy.once(plan[previous.catalog.HOME], HOME_OPEN, OBSERVED_OPEN)
         plan[previous.catalog.HOME] = pin01_copy.once(home, HOME_CLOSE, OBSERVED_CLOSE)
@@ -77,8 +105,9 @@ def decode_overscroll(raw, *, token, simulator, bundle, legacy):
     req(type(v['capturedMs']) in (int,float) and math.isfinite(v['capturedMs']) and
         0 <= v['capturedMs'] <= legacy['capturedMs'], 'Original same-process failure capture clock')
     s = v['overscroll']
-    req(type(s) is dict and set(s) == {'created','factoryMissing','overflow','invalid','rows'} and
+    req(type(s) is dict and set(s) == {'created','factoryMissing','permissionCallbacks','overflow','invalid','rows'} and
         type(s['created']) is int and 0 <= s['created'] <= MAX_ROWS and type(s['factoryMissing']) is bool and
+        type(s['permissionCallbacks']) is int and 0 <= s['permissionCallbacks'] <= MAX_ROWS and
         all(type(s[k]) is int and s[k] == 0 for k in ('overflow','invalid')), 'Complete primitive getter ledger')
     req(type(s['rows']) is list and len(s['rows']) <= MAX_ROWS, 'Bounded original getter rows')
     finished = 0
@@ -91,7 +120,7 @@ def decode_overscroll(raw, *, token, simulator, bundle, legacy):
     req(s['created'] > 0 or s['factoryMissing'], 'Actual factory creation or absent-factory observation required')
     req(not s['rows'] or s['created'] > 0, 'No invented getter when no original effect exists')
     return dict(sha256=hashlib.sha256(raw).hexdigest(),token=token,rows=len(s['rows']),created=s['created'],
-        factory_missing=s['factoryMissing'],busy_reads=sum(int(r[2]) for r in s['rows']),complete=True,
+        factory_missing=s['factoryMissing'],permission_callbacks=s['permissionCallbacks'],busy_reads=sum(int(r[2]) for r in s['rows']),complete=True,
         scope='Actual original getter returns only; not original UIKit delivery, atomic target or causality')
 
 

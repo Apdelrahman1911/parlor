@@ -26,7 +26,7 @@ def fixture():
     return dict(schema=1,token='A'*8+'-'+ 'A'*4+'-'+ 'A'*4+'-'+ 'A'*4+'-'+ 'A'*12,
         simulator='B'*8+'-'+ 'B'*4+'-'+ 'B'*4+'-'+ 'B'*4+'-'+ 'B'*12,
         bundle='me.parlor.ios.debug',process=100,capturedMs=19,
-        overscroll=dict(created=1,factoryMissing=False,overflow=0,invalid=0,rows=[[1,2,0],[3,4,1]]))
+        overscroll=dict(created=1,factoryMissing=False,permissionCallbacks=0,overflow=0,invalid=0,rows=[[1,2,0],[3,4,1]]))
 
 
 def decode(v):
@@ -54,7 +54,10 @@ class CatalogOverscrollControls(unittest.TestCase):
         self.assertEqual(set(after),set(before)|{boundary.ADDITION})
         for p in before:
             restored=after[p]
-            if p==pin01_copy.MAIN: restored=restored.removesuffix(boundary.BRIDGE)
+            if p==pin01_copy.SHELL:
+                restored=pin01_copy.once(restored,boundary.OBSERVED_PERMISSION_CALLBACK,boundary.PERMISSION_CALLBACK)
+            elif p==pin02_capture.DRIVER: restored=boundary.restore_permission_driver(restored)
+            elif p==pin01_copy.MAIN: restored=restored.removesuffix(boundary.BRIDGE)
             elif p==boundary.previous.catalog.HOME:
                 restored=pin01_copy.once(restored,boundary.OBSERVED_OPEN,boundary.HOME_OPEN)
                 restored=pin01_copy.once(restored,boundary.OBSERVED_CLOSE,boundary.HOME_CLOSE)
@@ -65,7 +68,9 @@ class CatalogOverscrollControls(unittest.TestCase):
                 restored=pin01_copy.once(restored,boundary.EXPORT+boundary.previous.observed.original.EXPORT,
                     boundary.previous.observed.original.EXPORT)
             self.assertEqual(restored,before[p],p)
-        self.assertEqual(after[pin02_capture.DRIVER],before[pin02_capture.DRIVER])
+        self.assertEqual(boundary.restore_permission_driver(after[pin02_capture.DRIVER]),before[pin02_capture.DRIVER])
+        for token in ('.tap()', '.typeText(', '.swipeUp(', '.swipeDown(', 'timeout: ', 'XCTAssert'):
+            self.assertEqual(after[pin02_capture.DRIVER].count(token),before[pin02_capture.DRIVER].count(token),token)
         kotlin=boundary.template('PIN32CatalogOverscroll.kt.in')
         self.assertEqual(kotlin.count('original.isInProgress'),1)
         self.assertEqual(kotlin.count('original.createOverscrollEffect()'),1)
@@ -80,6 +85,30 @@ class CatalogOverscrollControls(unittest.TestCase):
         self.assertIn('!attempted',swift)
         self.assertIn('O_EXCL | O_NOFOLLOW',swift)
         self.assertIn('0o600',swift)
+
+    def test_permission_query_is_only_after_original_failed_host_name_wait_and_native_capture(self):
+        driver=plan()[pin02_capture.DRIVER]
+        section=boundary.HOST_NAME_CAPTURE
+        self.assertLess(section.index('waitForExistence(timeout: 10)'),section.index('if !pin32HostNameAppeared'))
+        self.assertLess(section.index('app.screenshot()'),section.index('pin11CapturePublicFailureOnce(app)'))
+        self.assertLess(section.index('pin11CapturePublicFailureOnce(app)'),section.index('PIN29EquivalentQuery.capture'))
+        self.assertLess(section.index('PIN29EquivalentQuery.capture'),section.index('XCTAssertTrue(pin32HostNameAppeared)'))
+        self.assertNotIn('.exists',boundary.PERMISSION_REFERENCE)
+        self.assertNotIn('.frame',boundary.PERMISSION_REFERENCE)
+        self.assertEqual(driver.count(boundary.HOST_NAME_WAIT),1)
+        with self.assertRaises(ValueError):boundary.extend_permission_driver(driver)
+
+    @unittest.skipUnless(platform.system()=='Darwin','Actual generated XCTest driver requires Apple SDK')
+    def test_actual_permission_failure_driver_typechecks_against_apple_sdk(self):
+        sdk=subprocess.check_output(['/usr/bin/xcrun','--sdk','iphonesimulator','--show-sdk-path'],text=True,timeout=45).strip()
+        platform_path=subprocess.check_output(['/usr/bin/xcrun','--sdk','iphonesimulator','--show-sdk-platform-path'],text=True,timeout=45).strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary).resolve();source=out/'driver.swift';source.write_text(plan()[pin02_capture.DRIVER])
+            result=subprocess.run(['/usr/bin/xcrun','swiftc','-typecheck','-D','DEBUG','-sdk',sdk,
+                '-target','arm64-apple-ios18.5-simulator','-F',platform_path+'/Developer/Library/Frameworks',
+                '-I',platform_path+'/Developer/usr/lib','-module-cache-path',str(out/'cache'),str(source)],
+                capture_output=True,text=True,timeout=180)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
     def test_exact_profile_source_arm_and_original_case_budget_required(self):
         pair=boundary.previous.observed.original.motion.pair
@@ -102,6 +131,8 @@ class CatalogOverscrollControls(unittest.TestCase):
             lambda v:v.update(process=True),lambda v:v.update(token='foreign'),lambda v:v.update(capturedMs=21),
             lambda v:v['overscroll'].update(overflow=1),lambda v:v['overscroll'].update(invalid=1),
             lambda v:v['overscroll'].update(created=True),lambda v:v['overscroll'].update(factoryMissing=1),
+            lambda v:v['overscroll'].update(permissionCallbacks=True),
+            lambda v:v['overscroll'].update(permissionCallbacks=513),
             lambda v:v['overscroll'].update(rows=v['overscroll']['rows']*513),
             lambda v:v['overscroll']['rows'][0].__setitem__(0,float('nan')),
             lambda v:v['overscroll']['rows'][0].__setitem__(2,True),

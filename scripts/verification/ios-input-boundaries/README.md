@@ -21,6 +21,14 @@ runs only inside the existing once-only failed public-control capture; custody,
 privacy, all original companions and original ten fixed sample outcomes remain
 mandatory. Every original action, selector, assertion and deadline is unchanged.
 
+PIN31's newly observed missing Host Name-existence boundary is now covered:
+retain the original Permission tap reference without another query; only after
+the unchanged failed Name waiter, screenshot and native capture, obtain its
+retained/equivalent public-button snapshots. A bounded primitive counter marks
+only the actual public Host Permission continuation callback. It never submits
+networking, Name or gameplay data. The new driver is exactly invertible; the
+original independent Join waiter, all taps and all ten-second deadlines remain.
+
 Five executed Desktop adapter controls cover original factory/node/getter/callback
 forwarding, actual busy/idle short touches, actual LazyColumn provider stability
 through unrelated recomposition and preservation of an absent factory. Those
@@ -37,6 +45,21 @@ getter during an ongoing scroll, or no effect may exist. Passing all samples
 without a failure does not qualify an application repair.
 
 ## PIN31 — missing catalog-opening query and no-pointer observation arm
+
+Terminal [41266302640](https://github.com/Apdelrahman1911/parlor/actions/runs/41266302640)
+retains **8PASS/2FAIL**, actual XCTest exit65, all ten cases executed; 380 actual
+Apple controls pass without skips, build and owned cleanup pass. Independent
+all1,214 application /173 supporting-input custody and the two native companion
+sets were validated. Collection remains **INCOMPLETE**, not qualified: English
+sample01 fails the original Host Name-existence waiter after one Permission
+Continue tap; that earlier boundary has no targeted query report. Its final AX
+and original recording remain on Permission, no Name session/attachment exists.
+English sample04 fails Word Impostor's original Host-existence waiter after one
+catalog tap. Screenshot, actual callback/stage/motion/root/frame/attribute and
+retained/equivalent query reports remain on Home; both later snapshots resolve
+the enabled card. No original native touch ledger or actual overscroll getter
+exists, so missing callback does not distinguish delivery from recognition.
+Neither failure is a correction or an external blocker; both remain failed.
 
 PIN30 naturally fails **after** an admitted catalog tap, not its pre-tap waiter.
 The original arm cannot provide native ledgers; the fully observed arm never fails.
@@ -55,8 +78,8 @@ no repair, retyping, slower gesture, retry or changed shipping input path is add
 Five predeclared EN/AR pairs execute once on one standard free macOS runner, with
 all ten unique outcomes retained. The original PIN30 baseline is not replayed.
 An actual generated-driver Apple SDK control joins portable inverse/privacy/
-ownership/command/companion rejection controls. Native execution, actual failed-path
-capture and independent source-specific readback remain pending, not qualification.
+ownership/command/companion rejection controls. The original terminal failure and incomplete query collection are recorded above;
+source-specific application correction remains unresolved, not qualified.
 
 ## PIN30 — fixed-size original/observed public-session stress
 

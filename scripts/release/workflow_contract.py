@@ -119,7 +119,7 @@ CATALOG_INPUT_BOUNDARY_COMPANIONS = {'pin31_catalog_input_boundary.py': '349c4ce
 
 OVERSCROLL_GETTER_BOUNDARY = 'ios-overscroll-getter-boundary.yml'
 OVERSCROLL_GETTER_BOUNDARY_SHA256 = '58c388e9032236f1fc2199c43dbcb87c4d1707f006ba9389b427cfff9daec5f3'
-OVERSCROLL_GETTER_BOUNDARY_COMPANIONS = {'PIN32CatalogOverscroll.kt.in': 'dc0772b5e8055b56e8317d1088bf6e38a0114155de0a2f273421d8256df12a21', 'PIN32CatalogOverscroll.swift.in': 'efa38e8cbce7ced4fd2f079f347fee226c2922561fd365b31f4e009e54f2aab7', 'pin32_catalog_overscroll_boundary.py': 'd4e2c29869badd5a7f6eb393dcc21ae5722620d934868b4249268861fec16b78', 'test_pin32_catalog_overscroll_boundary.py': '1499a950a2d2a68e77d995717b689b6ad51f361319f181879def8aed24e3693e', 'run_pin32.py': 'f84885a91bb921e8203781a7ecdc2a038222f135d2eb71a561be4dcfff45a5e0'}
+OVERSCROLL_GETTER_BOUNDARY_COMPANIONS = {'PIN32CatalogOverscroll.kt.in': 'c5fc5549f695f22660f0156c1e1bd8d90737483872c964b3caa0294fdb42d090', 'PIN32CatalogOverscroll.swift.in': 'efa38e8cbce7ced4fd2f079f347fee226c2922561fd365b31f4e009e54f2aab7', 'pin32_catalog_overscroll_boundary.py': '789ee315080c933ea5a2f41279b65232323180a016ee150321b2f21cc0cb4eb6', 'test_pin32_catalog_overscroll_boundary.py': '2b5750acd1da8117438d0360683a4325184b47c7b33b58a6dc3927864c281949', 'run_pin32.py': 'f84885a91bb921e8203781a7ecdc2a038222f135d2eb71a561be4dcfff45a5e0'}
 
 PUBLIC_FAILURE_COVERAGE_CONTROL = 'ios-public-failure-coverage-control.yml'
 PUBLIC_FAILURE_COVERAGE_CONTROL_SHA256 = 'b5a1e83f46e691d6967f45eb27ae13ac24cee19bd6184178db5974bb64251ab4'

@@ -20,10 +20,14 @@ object PIN32CatalogOverscroll {
     private var overflow = 0
     private var invalid = 0
     private var created = 0
+    private var permissionCallbacks = 0
     private var factoryMissing = false
 
     fun creation() { created = (created + 1).coerceAtMost(CAPACITY + 1) }
     fun missingFactory() { factoryMissing = true }
+
+    // Actual public Host Permission callback only; no Name, networking or gameplay data.
+    fun permissionContinuation() { permissionCallbacks = (permissionCallbacks + 1).coerceAtMost(CAPACITY + 1) }
 
     // Row: original-read start and finish uptime ms, original returned busy flag.
     // Primitive bounded memory only on the event path. JSON is after failure.
@@ -46,6 +50,7 @@ object PIN32CatalogOverscroll {
     fun snapshot(): String = buildJsonObject {
         put("created", created)
         put("factoryMissing", factoryMissing)
+        put("permissionCallbacks", permissionCallbacks)
         put("overflow", overflow)
         put("invalid", invalid)
         put("rows", buildJsonArray {
