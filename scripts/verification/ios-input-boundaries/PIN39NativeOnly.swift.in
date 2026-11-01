@@ -16,11 +16,12 @@ final class PIN39NativeOnlyObservation {
     private var attributesInstalled = false
     private var rootInstalled = false
     private var touchInstalled = false
+    private var inputBindingAttempted = false
     private var visited = 0
     private var candidates = 0
     private var treeComplete = true
 
-    init?(view: UIView) {
+    init?() {
         let environment = ProcessInfo.processInfo.environment
         guard Thread.isMainThread,
               environment["PARLOR_PIN39_SCOPE"] == "isolated-native-only-export",
@@ -38,9 +39,6 @@ final class PIN39NativeOnlyObservation {
         rootInstalled = root.install()
         self.root = root
         let touches = PIN33OriginalTouchDelivery(armed: armed)
-        let inputs = inputViews(view, depth: 0)
-        candidates = inputs.count
-        if treeComplete && inputs.count == 1 { touchInstalled = touches.bindInputContainer(inputs[0]) }
         self.touches = touches
         capture = PIN02Capture.install(snapshot: { [weak self] in
             guard let self else { return "" }
@@ -52,6 +50,18 @@ final class PIN39NativeOnlyObservation {
             // Durable request/ACK envelope ONLY, not invented Kotlin observations.
             return complete ? "{\"schema\":1,\"nativeMode\":0,\"overflow\":0,\"invalid\":0,\"rows\":[]}" : ""
         })
+    }
+
+    func bindOriginalInputOnce(view: UIView) {
+        // The original content view is empty during outer viewDidLoad. Compose
+        // creates its mediator/overlay only after entering the window hierarchy.
+        // Observe from the original appearance boundary, once, without polling,
+        // forced layout, Kotlin callbacks, extra recognizers or input retries.
+        guard Thread.isMainThread, active, !inputBindingAttempted else { return }
+        inputBindingAttempted = true
+        let inputs = inputViews(view, depth: 0)
+        candidates = inputs.count
+        if treeComplete && inputs.count == 1 { touchInstalled = touches?.bindInputContainer(inputs[0]) == true }
     }
 
     private func inputViews(_ view: UIView, depth: Int) -> [UIView] {
@@ -73,6 +83,7 @@ final class PIN39NativeOnlyObservation {
             "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
             "viewCount": visited, "eligibleInputViews": candidates, "treeComplete": treeComplete,
             "attributesInstalled": attributesInstalled, "rootInstalled": rootInstalled, "touchInstalled": touchInstalled,
+            "inputBindingAttempted": inputBindingAttempted,
             "kotlinInstrumentation": false, "composePointerObservers": false, "addedRecognizer": false,
             "primaryEnvelopePurpose": "durable-failure-ack-only"]
         guard let raw = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),

@@ -36,7 +36,7 @@ def evidence(out):
     token = legacy['token']
     row['captures'] = [control.run_pin03.decode_capture(path.read_bytes(),{token},row['simulator'],state['debug_bundle'])]
     status = dict(schema=1,token=token,simulator=row['simulator'],bundle=state['debug_bundle'],
-        process=legacy['process'],capturedMs=legacy['capturedMs'],viewCount=5,eligibleInputViews=1,treeComplete=True,
+        process=legacy['process'],capturedMs=legacy['capturedMs'],viewCount=5,eligibleInputViews=1,treeComplete=True,inputBindingAttempted=True,
         attributesInstalled=True,rootInstalled=True,touchInstalled=True,kotlinInstrumentation=False,
         composePointerObservers=False,addedRecognizer=False,primaryEnvelopePurpose='durable-failure-ack-only')
     (d/('native-only-'+token+'.json')).write_text(json.dumps(status))
@@ -55,8 +55,26 @@ class NativeOnlyControls(unittest.TestCase):
         self.assertNotIn('MainViewControllerKt.',container)
         self.assertNotIn('addGestureRecognizer(',container)
         self.assertNotIn('PIN01Public',container)
-        self.assertIn('PIN39NativeOnlyObservation(view: contentView)',container)
+        self.assertIn('PIN39NativeOnlyObservation()',container)
+        self.assertIn('override func viewDidAppear(_ animated: Bool)',container)
+        self.assertIn('pin39Native?.bindOriginalInputOnce(view: contentController.view!)',container)
         self.assertIn('contentController.didMove(toParent: self)',container)
+
+    def test_input_binding_is_once_after_original_appearance_without_delaying_verified_ax_hooks(self):
+        source = (control.HERE/control.TEMPLATE).read_text()
+        self.assertIn('guard Thread.isMainThread, active, !inputBindingAttempted',source)
+        self.assertIn('inputBindingAttempted = true',source)
+        init, binding = source.split('    func bindOriginalInputOnce',1)
+        self.assertNotIn('inputViews(view, depth: 0)',init)
+        self.assertIn('attributesInstalled = attributes.install()',init)
+        self.assertIn('rootInstalled = root.install()',init)
+        self.assertIn('inputViews(view, depth: 0)',binding)
+        for forbidden in ('Timer(', 'layoutIfNeeded(', 'loadViewIfNeeded(', 'MainViewControllerKt.'):
+            self.assertNotIn(forbidden,source)
+        # The original native templates that actually passed do not change.
+        container = plan()[control.pin02_capture.CONTAINER]
+        self.assertIn((control.HERE/control.root.TEMPLATE).read_text(),container)
+        self.assertIn(control.frames.native_template_extension((control.HERE/control.attributes.TEMPLATE).read_text()),container)
 
     def test_original_helper_byte_identical_and_sentinel_capture_after_assertion(self):
         v = plan()[control.pin02_capture.DRIVER]
@@ -107,7 +125,7 @@ class NativeOnlyControls(unittest.TestCase):
                 with self.assertRaises((ValueError,OSError)): control.accept_native_export(out,state)
                 p.write_bytes(raw)
             p = next(d.glob('native-only-*.json')); raw = p.read_bytes()
-            for change in (lambda v:v.update(treeComplete=False),lambda v:v.update(eligibleInputViews=2),
+            for change in (lambda v:v.update(inputBindingAttempted=False),lambda v:v.update(treeComplete=False),lambda v:v.update(eligibleInputViews=2),
                 lambda v:v.update(viewCount=257),lambda v:v.update(attributesInstalled=False),
                 lambda v:v.update(rootInstalled=False),lambda v:v.update(touchInstalled=False),
                 lambda v:v.update(kotlinInstrumentation=True),lambda v:v.update(addedRecognizer=True),

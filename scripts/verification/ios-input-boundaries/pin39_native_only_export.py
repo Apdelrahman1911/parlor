@@ -33,7 +33,7 @@ SCOPE = ('One isolated deliberately absent-destination control with original Kot
          'and failure-only native exports required; not causality, timing neutrality or qualification')
 HERE = Path(__file__).resolve().parent
 TEMPLATE = 'PIN39NativeOnly.swift.in'
-TEMPLATE_SHA256 = 'fc0d5e27eba7d9b7efc7762d4861a3b6f9a8540912102cd9201598b8a0619bb7'
+TEMPLATE_SHA256 = '5091e6b8e823d114e8eb3d1c637608fd875cda92b400ca193cba136ba7f93c78'
 MAX_BYTES = 65_536
 require = current.require
 ABSENT = 'PIN39 intentionally absent destination; capability control only'
@@ -97,7 +97,13 @@ def renderer_for_profile(profile, source, runtime, device):
             '    private var pin39Native: PIN39NativeOnlyObservation?\n#endif\n')
         container = pin01_copy.once(container, '        contentController.didMove(toParent: self)\n',
             '        contentController.didMove(toParent: self)\n#if DEBUG && targetEnvironment(simulator)\n'
-            '        pin39Native = PIN39NativeOnlyObservation(view: contentView)\n#endif\n')
+            '        pin39Native = PIN39NativeOnlyObservation()\n#endif\n')
+        container = pin01_copy.once(container, '    override var childForStatusBarStyle:',
+            '#if DEBUG && targetEnvironment(simulator)\n'
+            '    override func viewDidAppear(_ animated: Bool) {\n'
+            '        super.viewDidAppear(animated)\n'
+            '        pin39Native?.bindOriginalInputOnce(view: contentController.view!)\n'
+            '    }\n#endif\n\n    override var childForStatusBarStyle:')
         container += '\n'+'\n'.join((t['PIN02Capture.swift.in'],
             frames.native_template_extension(t[attributes.TEMPLATE]), t[frames.TEMPLATE],
             t[root.TEMPLATE], t[touch.TEMPLATE], t[TEMPLATE]))
@@ -161,7 +167,7 @@ def decode_status(raw, *, token, simulator, bundle, legacy):
     v = json.loads(raw, object_pairs_hook=pin01_receipts.reject_duplicates,
         parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite status')))
     require(type(v) is dict and set(v) == {'schema','token','simulator','bundle','process','capturedMs',
-        'viewCount','eligibleInputViews','treeComplete','attributesInstalled','rootInstalled','touchInstalled',
+        'viewCount','eligibleInputViews','treeComplete','inputBindingAttempted','attributesInstalled','rootInstalled','touchInstalled',
         'kotlinInstrumentation','composePointerObservers','addedRecognizer','primaryEnvelopePurpose'}, 'Only native-only status fields')
     require(type(v['schema']) is int and v['schema'] == 1 and type(v['process']) is int and
         (v['token'],v['simulator'],v['bundle'],v['process']) == (token,simulator,bundle,legacy['process']), 'Exact status owner')
@@ -169,7 +175,7 @@ def decode_status(raw, *, token, simulator, bundle, legacy):
         0 <= v['capturedMs'] <= legacy['capturedMs'], 'Actual status clock')
     require(type(v['viewCount']) is int and 1 <= v['viewCount'] <= 256 and
         type(v['eligibleInputViews']) is int and v['eligibleInputViews'] == 1 and
-        all(v[k] is True for k in ('treeComplete','attributesInstalled','rootInstalled','touchInstalled')),
+        all(v[k] is True for k in ('treeComplete','inputBindingAttempted','attributesInstalled','rootInstalled','touchInstalled')),
         'Complete bounded original input-tree and all actual installations required')
     require(all(v[k] is False for k in ('kotlinInstrumentation','composePointerObservers','addedRecognizer')) and
         v['primaryEnvelopePurpose'] == 'durable-failure-ack-only', 'No invented Kotlin observations')
