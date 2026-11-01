@@ -45,6 +45,16 @@ def successful(out):
 
 
 class OrderCorrectionControls(unittest.TestCase):
+    def test_raw_escape_allowance_is_exact_log_only_and_never_general_api(self):
+        self.assertEqual(reader.api_command(f'actions/jobs/{reader.JOB}/logs'),
+            ['gh', 'api', f'repos/{reader.REPOSITORY}/actions/jobs/{reader.JOB}/logs',
+             '--allow-escape-sequences'])
+        for endpoint in (f'actions/runs/{reader.RUN}', f'actions/runs/{reader.RUN}/artifacts',
+                         f'actions/artifacts/{reader.ARTIFACT}/zip', f'actions/jobs/{reader.JOB}',
+                         'actions/jobs/1/logs'):
+            self.assertNotIn('--allow-escape-sequences', reader.api_command(endpoint))
+
+
     def old(self, error='Original two methods once in original order'):
         return SimpleNamespace(CASES=reader.ORDER[::-1], accept_native_export=Mock(side_effect=ValueError(error)))
 

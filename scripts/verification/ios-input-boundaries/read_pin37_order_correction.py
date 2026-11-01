@@ -70,6 +70,14 @@ def load(raw):
         parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite JSON')))
 
 
+def api_command(endpoint):
+    # gh's runner version blocks ANSI-bearing logs even when stdout is a pipe.
+    # Explicit allowance is limited to the exact raw log endpoint; the caller
+    # captures bytes, retains them to an owned file and never displays them.
+    argv = ['gh', 'api', 'repos/'+REPOSITORY+'/'+endpoint]
+    return argv + (['--allow-escape-sequences'] if endpoint == f'actions/jobs/{JOB}/logs' else [])
+
+
 def verify_api(run, artifacts, raw):
     require(run['id'] == RUN and run['head_sha'] == HARNESS and run['head_branch'] == BRANCH
         and run['run_attempt'] == 1 and run['event'] == 'push'
@@ -156,7 +164,7 @@ def main():
     def git(*argv):
         return subprocess.check_output(['git', *argv], cwd=root)
     def api(endpoint):
-        return subprocess.check_output(['gh', 'api', 'repos/'+REPOSITORY+'/'+endpoint], cwd=root)
+        return subprocess.check_output(api_command(endpoint), cwd=root)
     run_raw = api(f'actions/runs/{RUN}')
     artifact_raw = api(f'actions/runs/{RUN}/artifacts')
     raw = api(f'actions/artifacts/{ARTIFACT}/zip')

@@ -835,3 +835,13 @@ rewrites original state or produces a backdated original receipt. A standard fre
 Ubuntu runner performs artifact-only verification: no native build/test replay,
 new dependency or production qualification. Both journeys passed with no natural
 failure exports; original application causality and #267/#276 remain unresolved.
+
+
+The first retained-evidence job [41291908512](https://github.com/Apdelrahman1911/parlor/actions/runs/41291908512)
+passed all15 targeted and114 workflow/inventory controls but failed retrieving
+the original ANSI-bearing job log: the runner's newer GitHub CLI refuses terminal
+escape sequences even on captured stdout. No permission failure or native test
+occurred. Raw escape allowance is now limited to that exact retained-log endpoint;
+bytes are captured and written, never displayed. A new regression rejects allowance
+on every general API/artifact endpoint. The failed run/artifact and rejected frozen
+reader remain preserved; fresh corrected artifact-only execution is required.
