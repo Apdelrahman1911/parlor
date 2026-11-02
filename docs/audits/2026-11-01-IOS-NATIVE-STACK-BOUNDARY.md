@@ -301,3 +301,40 @@ absent, not to replay a completed green cohort as qualification. Failure-only
 exports, exact original outcomes/product/owned cleanup and all35 actual Apple
 controls remain mandatory. Phase1/#267/#276 stay open; no shipping correction,
 protected merge, native timing neutrality or physical acceptance is claimed.
+
+## Non-eager failure and owned sampler-stage observation
+
+[41407317851](https://github.com/Apdelrahman1911/parlor/actions/runs/41407317851)
+completed **FAILURE**:35 actual Apple controls/0 SKIP; original AR/EN/build/owned
+cleanup PASS (exit0). Helper6468 ready168.9ms; first exact app36952 discovery114ms
+parent/31.6ms native/one path lookup. Normal1s sampling **without `-mayDie` still
+exceeded8s**. Only start output; no sampling-completed marker or report. Helper
+terminated/reaped exit-15. Removing documented eager loading was insufficient;
+no internal tool stage or application cause established. Frozen full reader
+rejects. Scoped original-only admission accepts all473 supporting/all1,214 original
+inputs/product/commands/outcomes/cleanup once, excluding stack/shipping evidence.
+API artifact13125511073/2,978,211bytes/SHA256
+`2553449412c87235a82ba58bbb27be51b6556e27a80cd4de51081374dc5cdaaf` retained.
+[Issue267 terminal](https://github.com/Apdelrahman1911/parlor/issues/267#issuecomment-6572356611)
+and [Issue276 terminal](https://github.com/Apdelrahman1911/parlor/issues/276#issuecomment-6572358001).
+
+To establish the **owned tool's actual stalled stage**, retain its explicit Popen
+PID and absolute8s deadline. Only the first primary sample, if still running after
+2s, receives **one** auxiliary1s/10ms OS sample of that exact owned sampler PID.
+Auxiliary observation has a3s maximum **within**, never beyond, the primary8s
+window. Fast tools receive none; no recursion, additional host thread, app/AX
+query/action, flags experiment or original test change. Reap both owned tools;
+retain actual auxiliary report/log/PID/command/clocks/hash and incomplete errors.
+A failed auxiliary does not discard the original primary window/report, but
+remains rejected afterward. Late observed exits cannot extend either deadline.
+
+Portable regressions cover fast/slow first commands, actual owned target, late
+primary observation, failed auxiliary preservation and strict report/PID/clock/
+status/orphan rejection. Fresh macOS preflight requires **39 actual controls**
+(33 stack +6 unchanged property), zero skips; Linux cannot certify native attach.
+Full admission still needs actual complete app stacks and unchanged original
+outcomes; a real auxiliary report in a failed run needs separate scoped admission,
+not fabricated full acceptance or application-stack interpretation. Observation
+can perturb scheduling; no neutrality, root cause, shipping qualification or
+physical verification claimed. #267/#276/Phase1 remain open; Phases2/3 sequential,
+physical4 owner-reserved. No shipping or AGENTS/dependency/security changes.

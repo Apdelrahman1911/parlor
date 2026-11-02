@@ -27,6 +27,9 @@ SAMPLE_SECONDS = 1
 SAMPLE_CADENCE_SECONDS = 5
 DISCOVERY_CADENCE_SECONDS = 1
 INTERVAL_MS = 10
+SAMPLE_DEADLINE_SECONDS = 8
+TOOL_STACK_AFTER_SECONDS = 2
+TOOL_STACK_DEADLINE_SECONDS = 3
 BUNDLE = 'me.parlor.ios.debug'
 UUID = re.compile(r'[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}')
 MAX_TEST_LOG = 4 * 1024 * 1024
@@ -180,14 +183,14 @@ class NativeSampler:
         log = self.directory/('sample-%03d.log' % index)
         row = dict(index=index, **image, started_ms=time.monotonic() * 1000,
                    started_unix=time.time(), command=sample_command(image['pid'], report),
-                   status='STARTED', report=report.name)
+                   status='STARTED', report=report.name, sampler_deadline_seconds=SAMPLE_DEADLINE_SECONDS)
         self.rows.append(row)
         self._checkpoint()
         with log.open('xb') as stream:
-            result = subprocess.run(row['command'], env=environment(), stdout=stream, stderr=stream, timeout=8)
-        row.update(ended_ms=time.monotonic() * 1000, ended_unix=time.time(), exit=result.returncode,
+            exit_code = self._run_owned_sample(row, stream)
+        row.update(ended_ms=time.monotonic() * 1000, ended_unix=time.time(), exit=exit_code,
                    sampler_child_reaped=True)
-        if result.returncode == 0:
+        if exit_code == 0:
             row.update(status='SAMPLED', **read_sample(report, image['pid']))
         else:
             # A nonzero sampler exit is not a successful observation. Preserve it;
@@ -199,6 +202,78 @@ class NativeSampler:
                 raw = frozen_sources._read(report, MAX_REPORT)
                 row.update(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw))
         self._checkpoint()
+        if row['collector_stack'] is not None:
+            require(row['collector_stack']['status'] == 'SAMPLED', 'Owned slow-tool observation remains incomplete')
+
+    def _run_owned_sample(self, row, stream):
+        """Diagnose the first slow owned tool inside, never beyond, its8s bound.
+
+        Both eager and normal sampling stalled without a completion marker.
+        Sampling our own Popen child distinguishes tool stages, not app cause.
+        No unrelated process, original test action, added app query or retry.
+        """
+        started = time.monotonic()
+        deadline = started + SAMPLE_DEADLINE_SECONDS
+        row['sampler_started_ms'] = started*1000
+        child = subprocess.Popen(row['command'], env=environment(), stdout=stream, stderr=stream)
+        row['sampler_pid'] = child.pid
+        row['collector_stack'] = None
+        try:
+            initial_remaining = deadline-time.monotonic()
+            if initial_remaining <= 0:
+                raise subprocess.TimeoutExpired(row['command'], SAMPLE_DEADLINE_SECONDS)
+            if row['index'] == 1:
+                try:
+                    child.wait(timeout=min(TOOL_STACK_AFTER_SECONDS, initial_remaining))
+                except subprocess.TimeoutExpired:
+                    # The only additional target is this exact owned sample
+                    # child, not another app/runner/System process.
+                    if child.poll() is None:
+                        if time.monotonic() >= deadline:
+                            raise subprocess.TimeoutExpired(row['command'], SAMPLE_DEADLINE_SECONDS)
+                        target = self.directory/'collector-001.txt'
+                        command = sample_command(child.pid, target)
+                        observation = dict(pid=child.pid, command=command, report=target.name,
+                                           started_ms=time.monotonic()*1000, started_unix=time.time(),
+                                           deadline_seconds=TOOL_STACK_DEADLINE_SECONDS, status='STARTED')
+                        row['collector_stack'] = observation
+                        self._checkpoint()
+                        try:
+                            with (self.directory/'collector-001.log').open('xb') as output:
+                                observed = subprocess.run(command, env=environment(), stdout=output, stderr=output,
+                                                      timeout=min(TOOL_STACK_DEADLINE_SECONDS, max(0, deadline-time.monotonic())))
+                            observation.update(ended_ms=time.monotonic()*1000, ended_unix=time.time(),
+                                               exit=observed.returncode, child_reaped=True)
+                            require(observation['ended_ms']-observation['started_ms'] < TOOL_STACK_DEADLINE_SECONDS*1000,
+                                    'Owned slow-tool observation exceeded its own deadline')
+                            require(observed.returncode == 0, 'Owned slow-tool stack collection failed')
+                            observation.update(status='SAMPLED', **read_sample(target, child.pid))
+                        except (subprocess.TimeoutExpired, ValueError) as error:
+                            # Still allow the ORIGINAL primary8s window to
+                            # finish; retain any real report before rejecting
+                            # the incomplete auxiliary observation. No waiver.
+                            observation.update(status='FAILED', error=type(error).__name__+': '+str(error))
+                            if isinstance(error, subprocess.TimeoutExpired):
+                                # subprocess.run kills/reaps this exact child
+                                # before surfacing TimeoutExpired.
+                                observation.update(ended_ms=time.monotonic()*1000, ended_unix=time.time(),
+                                                   child_reaped=True)
+            remaining = deadline-time.monotonic()
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(row['command'], SAMPLE_DEADLINE_SECONDS)
+            result = child.wait(timeout=remaining)
+            row['sampler_observed_end_ms'] = time.monotonic()*1000
+            if row['sampler_observed_end_ms'] >= deadline*1000:
+                raise subprocess.TimeoutExpired(row['command'], SAMPLE_DEADLINE_SECONDS)
+            return result
+        finally:
+            if child.poll() is None:
+                child.kill()
+            # Cleanup is not extra sampling time; the original command cannot
+            # continue after its deadline. Reap the exact owned child.
+            child.wait(timeout=3)
+            row['sampler_child_reaped'] = child.poll() is not None
+            self._checkpoint()
 
     def _observe(self):
         try:
@@ -335,11 +410,31 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
         path = directory/('sample-%03d.txt' % index)
         require(all(type(row[k]) in (int, float) and math.isfinite(row[k]) and row[k] >= 0
                     for k in ('started_ms', 'ended_ms', 'started_unix', 'ended_unix')), 'Finite actual sample clocks')
+        require(all(type(row[k]) in (int,float) and math.isfinite(row[k]) for k in ('sampler_started_ms','sampler_observed_end_ms'))
+                and row['started_ms'] <= row['sampler_started_ms'] <= row['sampler_observed_end_ms'] <= row['ended_ms']
+                and row['sampler_observed_end_ms']-row['sampler_started_ms'] < SAMPLE_DEADLINE_SECONDS*1000,
+                'Actual primary sampler observation stayed within its original deadline')
         require(row['index'] == index and row['report'] == path.name and row['sampler_child_reaped'] is True
+                and type(row['sampler_pid']) is int and row['sampler_pid'] > 0 and row['sampler_pid'] != row['pid']
+                and row['sampler_deadline_seconds'] == SAMPLE_DEADLINE_SECONDS
                 and row['executable_sha256'] == executable_sha and type(row['pid']) is int and row['pid'] > 0
                 and previous <= row['started_ms'] <= row['ended_ms'] <= receipt['started_ms']+912000
                 and row['command'] == sample_command(row['pid'], producer_directory/path.name), 'Exact ordered real OS commands and ownership')
         previous = row['ended_ms']
+        observer = row['collector_stack']
+        if observer is not None:
+            collector_path = directory/'collector-001.txt'
+            require(index == 1 and observer['pid'] == row['sampler_pid'] and observer['report'] == collector_path.name
+                    and observer['command'] == sample_command(row['sampler_pid'], producer_directory/collector_path.name)
+                    and observer['status'] == 'SAMPLED' and observer['exit'] == 0 and observer['child_reaped'] is True
+                    and observer['deadline_seconds'] == TOOL_STACK_DEADLINE_SECONDS
+                    and all(type(observer[k]) in (int,float) and math.isfinite(observer[k]) for k in ('started_ms','ended_ms','started_unix','ended_unix'))
+                    and 0 < observer['started_unix'] <= observer['ended_unix']
+                    and observer['ended_ms']-observer['started_ms'] < TOOL_STACK_DEADLINE_SECONDS*1000
+                    and row['sampler_started_ms']+TOOL_STACK_AFTER_SECONDS*1000 <= observer['started_ms']
+                    <= observer['ended_ms'] <= row['sampler_observed_end_ms']
+                    and read_sample(collector_path,row['sampler_pid']) == {k:observer[k] for k in ('sha256','bytes')},
+                    'Actual owned sampler-child stack, never an unrelated process or incomplete tool report')
         if row['status'] == 'SAMPLED':
             require(row['exit'] == 0 and read_sample(path, row['pid']) == {k: row[k] for k in ('sha256', 'bytes')},
                     'Exact actual stack bytes and native PID')
@@ -355,6 +450,9 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
                 require(not path.exists(), 'No unrecorded OS report')
     require(actual and {p.name for p in directory.glob('sample-*.txt')} ==
             {row['report'] for row in receipt['samples'] if 'sha256' in row}, 'All actual native stacks retained')
+    require({p.name for p in directory.glob('collector-*.txt')} ==
+            {row['collector_stack']['report'] for row in receipt['samples'] if row['collector_stack'] is not None},
+            'All actual owned collector stacks retained')
     return {'sampled_reports': len(actual), 'sampled_processes': sorted(set(actual)),
             'receipt_sha256': hashlib.sha256((directory/'samples.json').read_bytes()).hexdigest(),
             'application_root_cause': False, 'shipping_qualified': False, 'physical_verified': False}

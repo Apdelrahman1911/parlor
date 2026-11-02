@@ -113,11 +113,67 @@ class NativeStacksControls(unittest.TestCase):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
                 sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
-                run = Mock(return_value=subprocess.CompletedProcess([], 1))
-                with patch.object(c.subprocess, 'run', run), patch.object(sampler, '_discover', return_value=[{'pid': 23}]), self.assertRaises(ValueError):
+                child = Mock(pid=42); child.wait.return_value=1; child.poll.return_value=1
+                with patch.object(c.subprocess, 'Popen', return_value=child), patch.object(sampler, '_discover', return_value=[{'pid': 23}]), self.assertRaises(ValueError):
                     sampler._sample({'pid': 23, 'image': '/owned/Parlor', 'executable_sha256': 'a'*64})
                 self.assertEqual(sampler.rows[0]['exit'], 1)
                 self.assertNotEqual(sampler.rows[0]['status'], 'SAMPLED')
+
+    def test_fast_owned_sample_has_no_extra_tool_observation(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler=c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            child=Mock(pid=42);child.wait.return_value=0;child.poll.return_value=0
+            row=dict(index=1,command=c.sample_command(23,sampler.directory/'sample-001.txt'))
+            with patch.object(c.subprocess,'Popen',return_value=child), patch.object(c.subprocess,'run') as extra:
+                self.assertEqual(sampler._run_owned_sample(row,io.BytesIO()),0)
+            extra.assert_not_called();child.kill.assert_not_called()
+            self.assertTrue(row['sampler_child_reaped']);self.assertIsNone(row['collector_stack'])
+
+    def test_slow_first_sample_observes_only_its_owned_tool_pid_and_keeps_eight_second_budget(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler=c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            row=dict(index=1,command=c.sample_command(23,sampler.directory/'sample-001.txt'))
+            child=Mock(pid=42);child.wait.side_effect=[subprocess.TimeoutExpired(row['command'],2),0,0]
+            child.poll.side_effect=[None,0,0]
+            def observe(command,**kwargs):
+                self.assertEqual(command,c.sample_command(42,sampler.directory/'collector-001.txt'))
+                self.assertLessEqual(kwargs['timeout'],3)
+                Path(command[-1]).write_bytes(b'Analysis of sampling sample (pid 42)\nCall graph:\nThread_1')
+                return subprocess.CompletedProcess(command,0)
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c.subprocess,'run',side_effect=observe) as extra:
+                self.assertEqual(sampler._run_owned_sample(row,io.BytesIO()),0)
+            extra.assert_called_once();self.assertEqual(row['collector_stack']['pid'],42)
+            self.assertEqual(row['collector_stack']['status'],'SAMPLED')
+            self.assertTrue(row['sampler_child_reaped'])
+            self.assertLessEqual(child.wait.call_args_list[1].kwargs['timeout'],8)
+
+    def test_late_observer_cannot_extend_primary_deadline_even_if_tool_already_exited(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler=c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            row=dict(index=1,command=c.sample_command(23,sampler.directory/'sample-001.txt'))
+            child=Mock(pid=42);child.wait.side_effect=[subprocess.TimeoutExpired(row['command'],2),0]
+            child.poll.side_effect=[None,0,0]
+            def observe(command,**kwargs):
+                Path(command[-1]).write_bytes(b'Analysis of sampling sample (pid 42)\nCall graph:\nThread_1')
+                return subprocess.CompletedProcess(command,0)
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c.subprocess,'run',side_effect=observe), \
+                    patch.object(c.time,'monotonic',side_effect=[0,0.1,2,2.1,2.2,8.5,8.6]),self.assertRaises(subprocess.TimeoutExpired):
+                sampler._run_owned_sample(row,io.BytesIO())
+            self.assertEqual(len(child.wait.call_args_list),2)
+            self.assertTrue(row['sampler_child_reaped'])
+
+    def test_failed_auxiliary_is_retained_without_discarding_original_primary_window(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ, HOME=d):
+            sampler=c.NativeSampler(Path(d).resolve()/'samples', SIM, 'a'*64)
+            row=dict(index=1,command=c.sample_command(23,sampler.directory/'sample-001.txt'))
+            child=Mock(pid=42);child.wait.side_effect=[subprocess.TimeoutExpired(row['command'],2),0,0]
+            child.poll.side_effect=[None,0,0]
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c.subprocess,'run',side_effect=subprocess.TimeoutExpired('owned auxiliary',3)):
+                self.assertEqual(sampler._run_owned_sample(row,io.BytesIO()),0)
+            self.assertEqual(row['collector_stack']['status'],'FAILED')
+            self.assertTrue(row['collector_stack']['child_reaped'])
+            self.assertTrue(row['sampler_child_reaped'])
+            self.assertLessEqual(child.wait.call_args_list[1].kwargs['timeout'],8)
 
     def test_real_path_readback_rejects_changed_report_and_accepts_only_explicit_producer_directory(self):
         with TemporaryDirectory() as d:
@@ -130,8 +186,10 @@ class NativeStacksControls(unittest.TestCase):
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_1')
                 sampler.discoveries = 1
                 sampler.rows = [{'index': 1, 'report': path.name, 'pid': 23, 'image': '/owned/Parlor',
+                    'sampler_pid': 42, 'sampler_deadline_seconds': 8, 'collector_stack': None,
                     'executable_sha256': 'a'*64, 'started_ms': sampler.started_ms+1,
                     'ended_ms': sampler.started_ms+5001, 'started_unix': 1, 'ended_unix': 6,
+                    'sampler_started_ms': sampler.started_ms+2, 'sampler_observed_end_ms': sampler.started_ms+5000,
                     'command': c.sample_command(23, path), 'sampler_child_reaped': True,
                     'exit': 0, 'status': 'SAMPLED', **c.read_sample(path, 23)}]
                 sampler.kernel = Mock()
@@ -144,6 +202,23 @@ class NativeStacksControls(unittest.TestCase):
                     started_before_original_command=True, reply_timeout_seconds=3)
                 sampler._checkpoint()
                 self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64)['sampled_reports'], 1)
+                collector=sampler.directory/'collector-001.txt'
+                collector.write_bytes(b'Analysis of sampling sample (pid 42)\nCall graph:\nThread_1')
+                observed=dict(pid=42,command=c.sample_command(42,collector),report=collector.name,
+                    started_ms=sampler.started_ms+2003,ended_ms=sampler.started_ms+3500,
+                    started_unix=3,ended_unix=4,deadline_seconds=3,status='SAMPLED',exit=0,child_reaped=True,
+                    **c.read_sample(collector,42))
+                sampler.rows[0]['collector_stack']=observed;sampler._checkpoint()
+                self.assertEqual(c.verify_receipt(sampler.directory,SIM,'a'*64)['sampled_reports'],1)
+                for invalid in ({'pid':43},{'command':c.sample_command(43,collector)},{'status':'FAILED'},
+                                {'child_reaped':False},{'sha256':'b'*64},{'deadline_seconds':4},
+                                {'started_ms':sampler.started_ms+2},{'ended_ms':sampler.started_ms+5004}):
+                    sampler.rows[0]['collector_stack']=observed|invalid;sampler._checkpoint()
+                    with self.assertRaises(ValueError):c.verify_receipt(sampler.directory,SIM,'a'*64)
+                sampler.rows[0]['collector_stack']=None;sampler._checkpoint()
+                with self.assertRaisesRegex(ValueError,'All actual owned collector stacks retained'):
+                    c.verify_receipt(sampler.directory,SIM,'a'*64)
+                collector.unlink();sampler._checkpoint()
                 # Removing eager symbol lookup must not admit vanished-app
                 # annotations as a substitute for actual native stack reports.
                 sampler.rows[0].update(status='APPLICATION_EXITED_DURING_SAMPLE', exit=1)
