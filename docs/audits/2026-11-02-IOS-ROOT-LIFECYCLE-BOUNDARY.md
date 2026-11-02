@@ -16,7 +16,8 @@ qualification. Do not replay an unchanged successful pair hoping for reproductio
 Pinned Compose1.10.3 reference `c6b30f209d13913cb34d414db927f9a6bc41127d` assigns
 `AccessibilityRoot` to the original `OverlayInputView`'s elements array. Actual
 root reads activate synchronization and cancel pending deactivation; a scheduled
-2,000ms cleanup clears the root and disposes semantic elements. Leaf validity and
+2,000ms cleanup clears the root and tracked map. Unlike disposal/removal, this
+method does not explicitly iterate leaf disposal. Leaf validity and
 XCTest observations need not coincide. This is a **hypothesis**, not evidence that
 cleanup caused original41180128325/41354641122 or native Host/typing failures.
 A native insert return also cannot prove active optional Skiko input/edit delivery.
