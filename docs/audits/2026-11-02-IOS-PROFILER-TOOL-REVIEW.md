@@ -135,3 +135,29 @@ cannot replace or waive it. An eighth portable guard rejects foreign/injected lo
 selectors. Fresh actual metadata/error messages, rather than silent assumptions,
 must determine whether initialization, authorization or another boundary blocks
 the instrument. This remains tool diagnosis, never Parlor root-cause acceptance.
+
+## Actual bootstrap evidence and device-service boundary
+
+[41419388326](https://github.com/Apdelrahman1911/parlor/actions/runs/41419388326)
+completed **FAILURE**. Eight actual Mac safeguards passed/zero skips. Developer
+mode reports enabled; selected Xcode first-launch status exits0. Recording still
+exceeds8s, with no trace. Owned recorder1628/target1627 reaped. Default-redacted,
+recorder-only unified logs (16,634bytes) retain successful CoreDevice check-in,
+TCC response `result=true`, LaunchServices registration errors, and the last
+CoreSimulator service connections at09:17:59.815–.818UTC. No stack establishes
+which call blocked, and those errors are not proven causes. Do not grant extra
+permissions or run first-launch initialization based on this evidence.
+
+Full frozen attachment reader rejects. Separately frozen failed-tool fact reader
+accepts exact source/API/commands/log custody, **not attachment or app behavior**.
+Artifact13128518523/5,979bytes/SHA256
+`1560bcda4a15bd486ff5628d04b7d662830c3e8221e5b8d58f373fc07c8ce51a`.
+
+Installed general help in accepted41416484173 documents `list devices`. Complete
+one such read before creating any busy target, isolating service enumeration from
+the active capture. No device boot/app launch, permission change, guessed flag,
+longer8s command or original-test replay. An enumeration failure prevents target
+creation and retains only its exact owned CLI PID's default-redacted logs. Its
+outcome can identify the startup boundary, not by itself its internal cause.
+Existing capture and full actual-target/stack gates stay unchanged. Phase1 and
+#267/#276 remain unresolved; physical4 stays owner-reserved.

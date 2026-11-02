@@ -54,6 +54,9 @@ class ProfilerAttachControls(unittest.TestCase):
                     (directory/'ready-path.log').write_bytes(c.PROFILER.encode()+b'\n');return
                 if label=='ready-help':
                     (directory/'ready-help.log').write_bytes(b'--attach');return
+                if label=='ready-devices':
+                    self.assertEqual(argv,[c.PROFILER,'list','devices'])
+                    (directory/'ready-devices.log').write_bytes(b'actual owned host enumeration');return
                 self.assertEqual(label,'record');self.assertEqual(argv,c.record_command(42,target/'owned.trace'))
                 raise ValueError('actual recording failed')
             with patch.object(c.subprocess,'Popen',return_value=child) as spawn,patch.object(c,'command',side_effect=fail),self.assertRaises(ValueError):
@@ -88,3 +91,18 @@ class ProfilerAttachControls(unittest.TestCase):
         for pid in (0,-1,True,'42 OR true'):
             with self.assertRaises(ValueError):c.startup_log_command(pid)
         self.assertNotIn('--private',c.startup_log_command(42))
+
+    def test_failed_device_enumeration_never_creates_a_busy_target_or_changes_permissions(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
+            out=Path(d).resolve()/'control';commands=[]
+            def fail(directory,receipt,label,argv):
+                commands.append(argv)
+                if label=='ready-path':(directory/'ready-path.log').write_bytes(c.PROFILER.encode()+b'\n')
+                if label=='ready-help':(directory/'ready-help.log').write_bytes(b'--attach')
+                if label=='ready-devices':raise ValueError('actual enumeration failure')
+            with patch.object(c.subprocess,'Popen') as target,patch.object(c,'command',side_effect=fail),self.assertRaisesRegex(ValueError,'enumeration failure'):
+                c.control(out)
+            target.assert_not_called()
+            self.assertEqual(commands[-1],[c.PROFILER,'list','devices'])
+            self.assertIn(['/usr/sbin/DevToolsSecurity','-status'],commands)
+            self.assertNotIn('owned_target_pid',json.loads((out/'receipt.json').read_text()))

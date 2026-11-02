@@ -92,9 +92,20 @@ def control(directory):
             raise ValueError('Actual selected tool readiness required before target creation')
         command(directory,receipt,'developer-status',['/usr/sbin/DevToolsSecurity','-status'])
         command(directory,receipt,'first-launch-status',[DEVELOPER+'/usr/bin/xcodebuild','-checkFirstLaunchStatus'])
+        # 41419388326 reached CoreSimulator service connections before its
+        # silent recording timeout. Complete the installed, documented device
+        # enumeration before capture, without booting/launching any Simulator.
+        command(directory,receipt,'ready-devices',[PROFILER,'list','devices'])
+        if not 0<len((directory/'ready-devices.log').read_bytes())<=256*1024:
+            raise ValueError('Bounded actual device enumeration readiness required')
         receipt['ready_before_target']=True;checkpoint(directory,receipt)
     except BaseException as error:
-        receipt['error']=type(error).__name__+': '+str(error);checkpoint(directory,receipt);raise
+        receipt['error']=type(error).__name__+': '+str(error)
+        enumerated=[row for row in receipt['commands'] if row['label']=='ready-devices']
+        if len(enumerated)==1 and 'owned_command_pid' in enumerated[0]:
+            try:command(directory,receipt,'startup-log',startup_log_command(enumerated[0]['owned_command_pid']))
+            except BaseException as log_error:receipt['startup_log_error']=type(log_error).__name__+': '+str(log_error)
+        checkpoint(directory,receipt);raise
     target=subprocess.Popen(receipt['target_command'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL,env=environment())
     receipt['owned_target_pid']=target.pid;receipt['owned_target_started_unix']=time.time();checkpoint(directory,receipt)
