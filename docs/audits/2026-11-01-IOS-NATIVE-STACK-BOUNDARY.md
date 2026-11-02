@@ -237,3 +237,40 @@ reach the marker naturally; there is no wait in the original execution path.
 Three new controls verify first-method launch ownership, safe live prefix reading,
 and helper idling without app queries. Native stack acceptance/root-cause work
 remain pending; Phase1/#267/#276 stay open, no security or physical gate waived.
+
+## First launch-gated sample: actual tool boundary
+
+[41401509909](https://github.com/Apdelrahman1911/parlor/actions/runs/41401509909)
+finished **FAILURE** on November2. All35 actual Apple controls/original AR/EN
+methods/build/owned cleanup passed (exit0). The first unchanged original log
+marker activated discovery with zero earlier requests. Same prebuild helper4676
+readied in101.9ms and resolved the exact installed owned app38942 in147.0ms
+(native collection47.8ms, one path lookup). Cold-start discovery was avoided.
+
+The first **1s** `/usr/bin/sample` command then exceeded its unchanged8s budget.
+Only the start log survives; **no actual stack report**. Same helper was
+terminated/reaped (exit-15). Frozen full reader rejects. Separate reviewed
+original-only admission accepts all473 supporting/all1,214 original inputs,
+actual product/outcomes/cleanup without replay, explicitly excluding stack or
+shipping qualification. Artifact13122049560/3,034,261bytes/SHA256
+`92327d0ec459e2f13b65ebffed4252bfe67b0e3160b765cc0a14ef2aa8424414`
+matches the API. Original failures41180128325/41354641122 remain unresolved;
+these two passing methods do not identify their causes or qualify PR296.
+
+Before another original journey, inspect the **installed Apple sampler's actual
+help, manual and option/stage strings** on one standard free macos-15 runner.
+The separate five-minute read-only tool profile launches no app, performs no AX
+query/sampling, compiles nothing, and replays no completed application controls.
+Its four fixed read-only commands retain actual exits,8s bounds and output hashes;
+usage/man absence is evidence, not an application pass. Exact workflow/companions
+join the existing fail-closed security allowlist; original workflows are unchanged.
+The man-page description of `-mayDie` identifies eager symbol-location work, but
+the retained start log alone does **not** prove symbolication caused the timeout.
+Do not select a speculative shipping workaround or enlarge assertion deadlines.
+
+Current upstream investigation also separates hypotheses: CMP-10941 describes a
+newer parallel-rendering/native-navigation topology, not Parlor's1.10.3/default
+legacy pipeline; CMP-7408 is an old snackbar-only observation. CMP-11004 identifies
+a similar accessibility display-link lifetime path in newer releases, but neither
+its external device measurements nor pinned source establish Parlor input
+causality. Preserve dependencies and OS coverage; use actual observed stacks.

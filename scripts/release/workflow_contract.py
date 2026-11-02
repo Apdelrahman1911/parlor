@@ -21,6 +21,14 @@ EXPECTED = {
     "production-promotion.yml",
     "ios-input-investigation.yml",
 }
+# Installed-tool facts only, after first1s Simulator sample exceeded8s.
+# Separate exact profile; original application/stack workflows stay unchanged.
+SAMPLER_TOOL_REVIEW = 'ios-sampler-tool-review.yml'
+SAMPLER_TOOL_REVIEW_SHA256 = 'e8ee2653195fb54082a00ab95e182cca4d6200474450f9961a593bf3d4dc4b0b'
+SAMPLER_TOOL_REVIEW_COMPANIONS = {
+    'review_sampler_tool.py': '6f1dde57fbc764dfb87b84e8487af1fce64338dc582570c00b95b515e3df38e6',
+    'test_review_sampler_tool.py': '94e60f3b1dd2a355b5b3b2025e10ae5975380aef43cfd68037161af65a6b27dc',
+}
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
 INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
@@ -275,6 +283,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
+    unexpected -= {SAMPLER_TOOL_REVIEW}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -502,6 +511,16 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_sampler_tool_review(text: str) -> None:
+    verify_common(SAMPLER_TOOL_REVIEW, text)
+    if hashlib.sha256(text.encode()).hexdigest() != SAMPLER_TOOL_REVIEW_SHA256:
+        fail('Sampler tool review requires exact free, read-only, no-app scope')
+    for name, digest in SAMPLER_TOOL_REVIEW_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Sampler tool companion differs from reviewed source: {name}')
 
 
 def verify_native_stack_boundary(text: str) -> None:
@@ -2364,6 +2383,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if NATIVE_STACK_BOUNDARY in files:
         verify_native_stack_boundary(files[NATIVE_STACK_BOUNDARY])
+    if SAMPLER_TOOL_REVIEW in files:
+        verify_sampler_tool_review(files[SAMPLER_TOOL_REVIEW])
     if QUERY_PROPERTY_BOUNDARY in files:
         verify_query_property_boundary(files[QUERY_PROPERTY_BOUNDARY])
     if PASSIVE_RETAINED_CORRECTION in files:

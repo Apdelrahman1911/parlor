@@ -1,0 +1,38 @@
+name: Native sampler tool review (not app qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-sampler-tool-review-2026-11-02]
+
+permissions:
+  contents: read
+
+jobs:
+  tool:
+    name: Installed Apple sampler documentation and options
+    runs-on: macos-15
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact tool-only review source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify exact read-only tool scope and source safeguards
+        shell: bash
+        run: |
+          /usr/bin/python3 -B scripts/release/workflow_contract.py
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_review_sampler_tool.py -v
+      - name: Retain native sampler options without launching or querying an app
+        shell: bash
+        env:
+          TOOL_OUTPUT: ${{ runner.temp }}/parlor-sampler-tool-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_sampler_tool.py "$TOOL_OUTPUT"
+      - name: Preserve actual installed-tool output and bounded command receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sampler-tool-review-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-sampler-tool-${{ github.run_id }}-${{ github.run_attempt }}
