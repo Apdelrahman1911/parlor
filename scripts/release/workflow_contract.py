@@ -23,6 +23,11 @@ EXPECTED = {
 }
 # Installed-tool facts only, after first1s Simulator sample exceeded8s.
 # Separate exact profile; original application/stack workflows stay unchanged.
+
+APP_SPINDUMP_BOUNDARY = 'ios-app-spindump-boundary.yml'
+APP_SPINDUMP_BOUNDARY_SHA256 = '3209e925d9af4cf993392a545720c8fb789f632c5f7bda06a462bbaaefeb0195'
+APP_SPINDUMP_BOUNDARY_COMPANIONS = {'pin50_app_spindump.py': 'b73f4df5ce3e28f4c997d502be9d96276be17dd2eaed1fedebc62730f4bc8307', 'run_pin50.py': '1396663777022832068e834af5dc5d40bb705c249dfbe73a5b3d79ddf2b9219b', 'test_pin50_app_spindump.py': 'a68d1eb6e07e9fef028b2678e7370e524a0b208b7fdb8a0c696fac6e3f2c2390'}
+
 PROFILER_ATTACH_CONTROL = 'ios-profiler-attach-control.yml'
 PROFILER_ATTACH_CONTROL_SHA256 = '357f16646af1ca02da28ec50fd3741eec191d81a8fb930c50c2c93f964b746ff'
 PROFILER_ATTACH_CONTROL_COMPANIONS = {
@@ -299,7 +304,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL}
+    unexpected -= {SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -527,6 +532,18 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_app_spindump_boundary(text: str) -> None:
+    verify_common(APP_SPINDUMP_BOUNDARY, text)
+    verify_native_stack_boundary((WORKFLOWS / NATIVE_STACK_BOUNDARY).read_text())
+    verify_profiler_attach_control((WORKFLOWS / PROFILER_ATTACH_CONTROL).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != APP_SPINDUMP_BOUNDARY_SHA256:
+        fail('App spindump requires exact free runner, original pair, private capture and offline analysis')
+    for name, digest in APP_SPINDUMP_BOUNDARY_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'App spindump companion differs from reviewed source: {name}')
 
 
 def verify_profiler_attach_control(text: str) -> None:
@@ -2417,6 +2434,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if APP_SPINDUMP_BOUNDARY in files:
+        verify_app_spindump_boundary(files[APP_SPINDUMP_BOUNDARY])
     if NATIVE_STACK_BOUNDARY in files:
         verify_native_stack_boundary(files[NATIVE_STACK_BOUNDARY])
     if PROFILER_ATTACH_CONTROL in files:
