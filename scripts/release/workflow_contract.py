@@ -25,6 +25,12 @@ EXPECTED = {
 # Separate exact profile; original application/stack workflows stay unchanged.
 
 
+ORIGINAL_OWNED_TEXT = 'ios-original-owned-text.yml'
+ORIGINAL_OWNED_TEXT_SHA256 = 'd5a717db0f78b67cbf3d8f505cf84350642b1d20ec0d7f37d07f91accae5235c'
+ORIGINAL_OWNED_TEXT_COMPANIONS = {'pin52_owned_text_pair.py': '1e821f5f3301556a9827327d288d8be2f58275e57baa527a7251d39765762ada', 'run_pin52.py': 'f4015be3dd5dc10cc9093754e29e732f59245fdd68a84f25c915c835c6d1fe9c', 'test_pin52_owned_text_pair.py': '7b2f4684e10b3adf63af1daed71621bff30e4c7a4e07d4db4e92d78e52d37b81'}
+ORIGINAL_OWNED_TEXT_RECEIPT = 'docs/audits/2026-11-02-IOS-OWNED-TEXT-CAPABILITY.json'
+ORIGINAL_OWNED_TEXT_RECEIPT_SHA256 = '8c42b5074fdc68acbc46c2ef82ea0511cd705edfa465cd86679b5c87ad621aa6'
+
 OWNED_TEXT_BOUNDARY = 'ios-owned-text-boundary.yml'
 OWNED_TEXT_BOUNDARY_SHA256 = '941435c410e39f621e557e69abc7e131b434bdd7465c1082bb98433d9a179a29'
 OWNED_TEXT_BOUNDARY_COMPANIONS = {'PIN51OwnedTextDelivery.swift.in': '519ea395c579b6e86f1ed333ff208be74b4c66fb52a1c3991db09653668dc846', 'PIN51OwnedTextObservation.swift.in': 'fba462c5290cc6bc294deebaa714fec6c7fb73de000a609514c838edee520e58', 'pin51_owned_text.py': 'efe3bcbe283fcdfec44d0ef0e652d405b074d0b3336294b756d4886b2cbc6d27', 'run_pin51.py': '4985e9e7647e2026697b31b6fc9dbeb1a5e8b1fdb89a25ecc4742c6560585ec6', 'test_pin51_owned_text.py': 'b42a8ef7cf6f6f65b977371db327e291ee223768c25379333527d5607651199d'}
@@ -313,7 +319,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -541,6 +547,20 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_original_owned_text(text: str) -> None:
+    verify_common(ORIGINAL_OWNED_TEXT, text)
+    verify_owned_text_boundary((WORKFLOWS / OWNED_TEXT_BOUNDARY).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != ORIGINAL_OWNED_TEXT_SHA256:
+        fail('Original text observations require exact free runner, original pair once and actual capability receipt')
+    for name, digest in ORIGINAL_OWNED_TEXT_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Original text companion differs from reviewed source: {name}')
+    path = ROOT / ORIGINAL_OWNED_TEXT_RECEIPT
+    if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != ORIGINAL_OWNED_TEXT_RECEIPT_SHA256:
+        fail('Original text capability must match actual independently accepted native export')
 
 
 def verify_owned_text_boundary(text: str) -> None:
@@ -2465,6 +2485,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if ORIGINAL_OWNED_TEXT in files:
+        verify_original_owned_text(files[ORIGINAL_OWNED_TEXT])
     if OWNED_TEXT_BOUNDARY in files:
         verify_owned_text_boundary(files[OWNED_TEXT_BOUNDARY])
     if PROFILER_BOOTED_READINESS in files:

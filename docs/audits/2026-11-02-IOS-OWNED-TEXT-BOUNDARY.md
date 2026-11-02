@@ -90,3 +90,34 @@ Original input actions/assertions/deadlines, native templates/ABI, dependency
 verification, failure-only policy and existing evidence remain untouched. A new
 source-specific control is justified by this correction, not an unchanged retry.
 #267/#276/Phase1 still require actual capability and application causality/fixes.
+
+## Corrected capability admitted; new original-pair observation
+
+[41438650444](https://github.com/Apdelrahman1911/parlor/actions/runs/41438650444),
+`753d7389b034b62aeea6d0217bf177bc594fc223`, is terminal success. The independently
+frozen reader admits nine actual Mac controls/zero skips, all500 supporting and
+1,214 original inputs, real XCTest65 solely at the declared exporter, failure-only
+request/ACK, native attachment/delivery/return and owned cleanup. One owned editor
+was attached; 11 insert calls return, including Done, followed by successful
+resign. Artifact13140445703/90,239,962bytes/SHA256
+`ad393a3130b9feeee0f2c20ffbe70d120ba4653f6e50690774498a4100bbf73f`.
+The private-free admission receipt is retained separately and hash-bound. This
+is actual diagnostic capability, not a historical/application-causality verdict.
+
+PIN52 now observes the original Arabic and English identifiers **once** using
+that unchanged native collector, exact source/runtime and original process/assertion
+budgets. Remove the isolated exporter testcase. Preserve original actions/queries;
+only add text-query origin and record clocks on already-decided failures, enabling
+comparison with native arrival/return. Exact reverse-driver/source controls prove
+preserved bodies; newly assembled wrapper/typecheck and driver parser run on the
+standard free Mac. Reuse admitted unchanged ABI capability rather than replaying it.
+
+Synthetic all-pass/partial-failure/all-fail intake guards cover natural outcomes,
+missing/duplicate/unacknowledged captures, wrong PID/source/commands, skipped tests,
+cleanup and unchanged900-second process budget. Safely incomplete installation is
+retained as incomplete, never delivery proof. Diagnostic success admits actual
+outcomes and cleanup only. All-pass yields zero failure exports, **not** resolution
+of intermittent failures. Complete attachment with no mutation narrows delivery
+only when original timing and scope support it; completed insert calls do not show
+which private-free characters reached Compose or prove delegate processing. No
+speculative shipping change, qualification, protected merge, or Issue closure.
