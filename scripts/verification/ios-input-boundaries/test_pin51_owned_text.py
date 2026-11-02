@@ -160,6 +160,9 @@ class OwnedTextControls(unittest.TestCase):
                 self.assertEqual(p[path],leaf.pair.fixture(path))
         driver=p[pin02_capture.DRIVER]
         self.assertIn(text.SENTINEL,driver)
+        self.assertEqual(text.SENTINEL.count("pin11PublicApp = app"),1)
+        self.assertLess(text.SENTINEL.index("pin11PublicApp = app"),text.SENTINEL.index("app.launch()"))
+        self.assertNotIn("captureAfterFailedTransition",text.SENTINEL) # Original record owns exactly one post-failure request.
         self.assertEqual(driver.count('name.typeText("Table Test")'),2) # Original helper body + separately named control.
         self.assertNotIn('test-iterations',text.test_command([],Path('/owned/result')))
         self.assertEqual(text.CASES,(text.CASE,))

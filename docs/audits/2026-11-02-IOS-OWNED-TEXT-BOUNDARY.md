@@ -64,3 +64,29 @@ retained and rejects the capability; it is not ignored. Fresh original AR/EN
 causal work is justified only after independently admitting the new capability.
 #267/#276/Phase1 remain unresolved; no shipping correction, merge or Issue closure.
 Phases2/3 remain sequential; physical Phase4 is owner-reserved.
+
+## First actual attempt: exact diagnostic root cause
+
+[41434446453](https://github.com/Apdelrahman1911/parlor/actions/runs/41434446453)
+at `24bb0fa3c678c72339999cb8e6077bba6b69eaae` is terminal failure. Independent
+frozen readback admits all500 supporting/1,214 original inputs, nine actual Mac
+controls/zero skips, built Debug product, sole declared exporter failure after
+original public-name/exact-text/Done helpers, real XCTest65, and owned cleanup.
+No request/ACK/native companion exists; strict capability admission correctly
+rejects the missing actual acknowledged post-failure request. No native editor
+installation or delivery may be inferred from the absent export. Artifact
+13138010437/79,991,898bytes/SHA256
+`172671e97fba47cb18eb6740457d079edd93178dc43be0ce2c619913b05b1741`.
+
+Root cause is the new **isolated diagnostic testcase**, not a shipping finding:
+it configured the app but omitted registration in `pin11PublicApp`. The copied
+original `record(_:)` interceptor requests capture only for that registered app.
+Original journey helpers perform that registration; this separately named control
+did not. With `continueAfterFailure=false`, a post-assertion/defer request is not
+a legitimate repair. Register the exact app once **before launch/any helper** so
+the existing unchanged interceptor captures before forwarding the real failure.
+Add a regression check for registration-before-launch and no extra request.
+Original input actions/assertions/deadlines, native templates/ABI, dependency
+verification, failure-only policy and existing evidence remain untouched. A new
+source-specific control is justified by this correction, not an unchanged retry.
+#267/#276/Phase1 still require actual capability and application causality/fixes.

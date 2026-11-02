@@ -37,6 +37,7 @@ SENTINEL = '''
         continueAfterFailure = false
         let app = XCUIApplication()
         PIN51Configure(app)
+        pin11PublicApp = app // Register before any original helper can fail; record captures before defer bypass.
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         defer { app.terminate() }

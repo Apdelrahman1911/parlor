@@ -27,7 +27,7 @@ EXPECTED = {
 
 OWNED_TEXT_BOUNDARY = 'ios-owned-text-boundary.yml'
 OWNED_TEXT_BOUNDARY_SHA256 = '941435c410e39f621e557e69abc7e131b434bdd7465c1082bb98433d9a179a29'
-OWNED_TEXT_BOUNDARY_COMPANIONS = {'PIN51OwnedTextDelivery.swift.in': '519ea395c579b6e86f1ed333ff208be74b4c66fb52a1c3991db09653668dc846', 'PIN51OwnedTextObservation.swift.in': 'fba462c5290cc6bc294deebaa714fec6c7fb73de000a609514c838edee520e58', 'pin51_owned_text.py': '23b290052b18564faadb05c7eeae1e6fa5e32047d73dc2963d5ecbcb054f1dec', 'run_pin51.py': '4985e9e7647e2026697b31b6fc9dbeb1a5e8b1fdb89a25ecc4742c6560585ec6', 'test_pin51_owned_text.py': 'e0a772844dcf0af7dd190dae8c50f83ba384fc7b20bfa395e61efab2ab1baab4'}
+OWNED_TEXT_BOUNDARY_COMPANIONS = {'PIN51OwnedTextDelivery.swift.in': '519ea395c579b6e86f1ed333ff208be74b4c66fb52a1c3991db09653668dc846', 'PIN51OwnedTextObservation.swift.in': 'fba462c5290cc6bc294deebaa714fec6c7fb73de000a609514c838edee520e58', 'pin51_owned_text.py': 'efe3bcbe283fcdfec44d0ef0e652d405b074d0b3336294b756d4886b2cbc6d27', 'run_pin51.py': '4985e9e7647e2026697b31b6fc9dbeb1a5e8b1fdb89a25ecc4742c6560585ec6', 'test_pin51_owned_text.py': 'b42a8ef7cf6f6f65b977371db327e291ee223768c25379333527d5607651199d'}
 
 PROFILER_BOOTED_READINESS = 'ios-profiler-booted-readiness.yml'
 PROFILER_BOOTED_READINESS_SHA256 = '722e40e86f1e3d4083969774b7da80f1d15d7b42be8887757afbc9ecab2ea4e7'
