@@ -9,12 +9,13 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotFocused
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import com.parlor.designsystem.localization.AppLanguage
@@ -26,7 +27,7 @@ import java.util.Locale
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/** Application-state coverage only; Desktop input is not native UIKit/XCTest delivery. */
+/** Real Desktop pointer and edit-state coverage, not native UIKit/XCTest delivery. */
 @OptIn(ExperimentalTestApi::class)
 class NameInputUiStateTest {
     @Test
@@ -78,7 +79,7 @@ class NameInputUiStateTest {
                 }
             }
         }
-        onNode(hasSetTextAction()).performClick().performTextInput("Table Test")
+        onNode(hasSetTextAction()).performTouchInput { click() }.performTextInput("Table Test")
         onNodeWithText("Your name").assertExists()
         assertEquals(LayoutDirection.Ltr, observedDirection)
         assertEquals(ThemeMode.Light, observedTheme)
@@ -126,7 +127,7 @@ class NameInputUiStateTest {
             }
         }
         val field = onNode(hasSetTextAction())
-        field.performClick().assertIsFocused()
+        field.performTouchInput { click() }.assertIsFocused()
         input.forEachIndexed { index, character ->
             field.performTextInput(character.toString())
             assertDraft(input.take(index + 1))
@@ -135,9 +136,10 @@ class NameInputUiStateTest {
         field.assertIsNotFocused()
         assertDraft(input)
         assertEquals(emptyList(), submissions, "Done dismisses focus; only explicit Continue submits")
-        field.performClick().assertIsFocused()
+        field.performTouchInput { click() }.assertIsFocused()
         assertDraft(input)
-        onNodeWithContentDescription(continueDescription(language, isHost)).assertIsEnabled().performClick()
+        onNodeWithContentDescription(continueDescription(language, isHost)).assertIsEnabled()
+            .performTouchInput { click() }
         assertEquals(listOf(input), submissions)
     }
 
