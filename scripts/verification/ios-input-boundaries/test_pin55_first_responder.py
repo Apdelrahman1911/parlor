@@ -134,7 +134,9 @@ class FirstResponderControls(unittest.TestCase):
         for forbidden in ('.becomeFirstResponder(','.isFirstResponder','accessibilityValue','accessibilityLabel','objc_copyClassList',
                 'DispatchQueue','Timer(','addGestureRecognizer','selectedTextRange','setValue(','value(forKey'):
             self.assertNotIn(forbidden,source)
-        self.assertEqual(source.count('call(object, selector)'),1)
+        self.assertEqual(source.count('call(object, originalSelector)'),1)
+        self.assertNotIn('selector = self.selector',source)
+        self.assertIn('originalSelector = self.selector',source)
         self.assertIn('class_addMethod(target, selector',source)
         self.assertNotIn('method_setImplementation',source)
 
@@ -190,6 +192,13 @@ class FirstResponderControls(unittest.TestCase):
             out=Path(tmp).resolve();source=out/'main.swift';source.write_text(p.focus_source()+CONTROL);binary=out/'control'
             r=subprocess.run(['/usr/bin/xcrun','swiftc','-D','PIN55_CONTROL','-module-cache-path',str(out/'cache'),str(source),'-o',str(binary)],capture_output=True,text=True,timeout=180)
             self.assertEqual(r.returncode,0,r.stdout+r.stderr)
+            # Actual failed run41508753655: the earlier closure captured a later
+            # local selector, not the instance property. Preserve negative compiler
+            # reproduction instead of relying solely on a source-text assertion.
+            source.write_text(p.focus_source().replace('originalSelector', 'selector')+CONTROL)
+            negative=subprocess.run(['/usr/bin/xcrun','swiftc','-D','PIN55_CONTROL','-module-cache-path',str(out/'cache'),str(source),'-o',str(out/'negative')],capture_output=True,text=True,timeout=180)
+            self.assertNotEqual(negative.returncode,0)
+            self.assertIn("closure captures 'selector' before it is declared",negative.stdout+negative.stderr)
             r=subprocess.run([str(binary)],capture_output=True,text=True,timeout=30)
             self.assertEqual(r.returncode,0,r.stdout+r.stderr)
             self.assertIn('ACTUAL_ORIGINAL_FOCUS_FALSE_TRUE_RETURN_NO_PRIMING_WEAK_INSTANCE_PARENT_ABI_BOUNDING_PASS',r.stdout)

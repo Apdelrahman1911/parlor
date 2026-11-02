@@ -61,10 +61,10 @@ final class PIN55FirstResponderObservation {
               unsafeBitCast(method_getImplementation(method), to: UInt.self) ==
                 unsafeBitCast(method_getImplementation(parentMethod), to: UInt.self) else { return }
         let original = method_getImplementation(method)
-        let call = unsafeBitCast(original, to: Become.self), selector = self.selector
+        let call = unsafeBitCast(original, to: Become.self), originalSelector = self.selector
         let block: @convention(block) (AnyObject) -> Bool = { [weak self] object in
             self?.record(object, phase: 0)
-            let result = call(object, selector) // Same object/selector, once, synchronous; never force focus.
+            let result = call(object, originalSelector) // Same object/selector, once, synchronous; never force focus.
             self?.record(object, phase: 1, result: result)
             return result
         }

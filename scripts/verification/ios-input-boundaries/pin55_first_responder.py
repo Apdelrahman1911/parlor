@@ -24,7 +24,7 @@ RESULT = 'ORIGINAL_FIRST_RESPONDER_BOUNDARY_COMPLETE_NOT_QUALIFICATION'
 SCOPE = ('One new responder exporter control then original AR/EN methods once; original helpers/actions/assertions/10s budgets, '
          'passive original focus result and weak editor lifetime; no focus repair, query/tap retry, Kotlin/Compose change or qualification')
 FOCUS_FILE = Path(__file__).resolve().parent/'PIN55FirstResponder.swift.in'
-FOCUS_SHA256 = '4055c2046487655a512b9ed0e6a0bb2db940a31adec9dc1219cc50fcba29448a'
+FOCUS_SHA256 = 'e14cdeae1df88eeee2096b2ed4b2652187ee466a4f0fe4c9f8118fd4b62786f3'
 PREREQUISITE_FILE = Path(__file__).resolve().parents[3]/'docs/audits/2026-11-02-IOS-ORIGINAL-ROOT-FAILURE.json'
 PREREQUISITE_SHA256 = 'ad6e2a10e5cc6eee3f43982ce89bdbe2b5875a3b3923949f7a276899bdba8ecc'
 require, load = root.require, root.load

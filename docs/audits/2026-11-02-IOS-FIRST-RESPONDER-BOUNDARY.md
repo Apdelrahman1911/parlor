@@ -46,3 +46,21 @@ runner, Xcode 26.3, JDK 21, wrapper and strict dependencies; no release or paid
 infrastructure. Admit collection only with positive original focus return, live
 control editor, intact hooks and exact source/product/request/ACK/cleanup evidence.
 Preserve every original failure. #267/#276 and Phase 1 remain OPEN.
+
+## Actual preflight failure and correction
+
+[41508753655](https://github.com/Apdelrahman1911/parlor/actions/runs/41508753655),
+`35c2d5002e21447bed99ef789505fd94e6d40b29`, terminal FAILURE. Nine Mac controls
+executed: eight passed, zero skipped, one failed. Actual Swift binary compilation
+reported `closure captures 'selector' before it is declared`: a later local
+binding shadowed the instance property referenced by an earlier method-list closure.
+The assembled typecheck alone did not catch this definite-initialization error.
+**No application journey ran; no artifact exists.** The frozen runtime reader was
+not executed on absent evidence. Original PIN54 failure and custody remain retained.
+
+Correction names the immutable forwarded selector `originalSelector`, retaining
+the same original IMP/object/selector/result. The Apple control also reproduces the
+old compiler failure as a negative regression before executing the corrected
+binary. Seven affected portable controls pass; two Apple checks remain unavailable
+locally. Fresh actual corrected execution is necessary; no unchanged rerun or
+application root-cause fix is claimed.
