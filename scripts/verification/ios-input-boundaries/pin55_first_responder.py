@@ -17,11 +17,11 @@ SOURCE, TREE, RUNTIME, DEVICE = base.SOURCE, base.TREE, base.RUNTIME, base.DEVIC
 PROFILE = 'original-first-responder-boundary'
 ARMS = ('compose',)
 CONTROL_CASE = 'IOSAppLaunchUITests/testAPIN55FirstResponderCapability()'
-CASES = (CONTROL_CASE, *original.QUERY_CASES)
+CASES = (*original.QUERY_CASES, CONTROL_CASE)
 FAILURE = 'PIN55 intentional failure after original public name input; responder exporter control only'
 TEST_TIMEOUT_SECONDS = 900
 RESULT = 'ORIGINAL_FIRST_RESPONDER_BOUNDARY_COMPLETE_NOT_QUALIFICATION'
-SCOPE = ('One new responder exporter control then original AR/EN methods once; original helpers/actions/assertions/10s budgets, '
+SCOPE = ('Original AR/EN methods once then one new responder exporter control; original helpers/actions/assertions/10s budgets, '
          'passive original focus result and weak editor lifetime; no focus repair, query/tap retry, Kotlin/Compose change or qualification')
 FOCUS_FILE = Path(__file__).resolve().parent/'PIN55FirstResponder.swift.in'
 FOCUS_SHA256 = 'e14cdeae1df88eeee2096b2ed4b2652187ee466a4f0fe4c9f8118fd4b62786f3'
@@ -230,7 +230,7 @@ def accept_native_export(out, state):
             require(argv.count(flag) == 1 and argv[argv.index(flag)+1] == value, 'Exact owned Debug command flags')
     require(state['build_profile']['test_timeout_seconds'] == 900, 'Original process limit unchanged')
     starts = re.findall(rb"Test Case '-\[iosAppUITests\.([A-Za-z0-9_]+) ([A-Za-z0-9_]+)\]' started\.",frozen_sources._read(d/'test.log',4194304))
-    require(tuple(c.decode()+'/'+m.decode()+'()' for c,m in starts) == CASES, 'Only original AR/EN methods executed once')
+    require(tuple(c.decode()+'/'+m.decode()+'()' for c,m in starts) == CASES, 'Exact original Arabic, English then new responder control order required')
     receipt = dict(root_capability_run=41497962566,prerequisite_failure_run=41502134475,root_queries_added=False,methods=row['methods'],failed_sample_tokens=owners,native=reports,application_root_cause=False,
                    shipping_qualified=False,physical_verified=False,native_timing_neutrality=False)
     target = out/'first-responder-boundary.json'

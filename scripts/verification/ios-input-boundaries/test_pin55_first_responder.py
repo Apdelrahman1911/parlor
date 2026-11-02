@@ -113,7 +113,7 @@ class FirstResponderControls(unittest.TestCase):
         with patch.object(p,'PREREQUISITE_SHA256','a'*64),self.assertRaises(ValueError):p.require_capability()
         with patch.object(p,'FOCUS_SHA256','a'*64),self.assertRaises(ValueError):p.focus_source()
         self.assertEqual(p.TEST_TIMEOUT_SECONDS,900)
-        self.assertEqual(p.CASES[1:],p.previous.CASES)
+        self.assertEqual(p.CASES[:-1],p.previous.CASES)
 
     def test_original_driver_helpers_and_mutator_calls_preserved(self):
         current=plan();old=original.plan();leaf=p.runtime.pair_control.leaf
@@ -141,7 +141,7 @@ class FirstResponderControls(unittest.TestCase):
         self.assertNotIn('method_setImplementation',source)
 
     def test_real_exporter_and_all_original_outcomes_retained_without_application_qualification(self):
-        for failed in ((),p.CASES[1:2],p.CASES[1:]):
+        for failed in ((),p.CASES[:1],p.CASES[:-1]):
             with self.subTest(failed=failed),tempfile.TemporaryDirectory() as tmp:
                 out=Path(tmp).resolve();state=evidence(out,failed)
                 self.assertEqual(p.accept_native_export(out,state),p.RESULT)
@@ -178,6 +178,24 @@ class FirstResponderControls(unittest.TestCase):
             with self.assertRaises(ValueError):p.verify_results(summary,tests,state['arms'][0]['simulator'],65)
             summary['skippedTests']=1
             with self.assertRaises(ValueError):p.verify_results(summary,tests,state['arms'][0]['simulator'],65)
+
+    def test_observed_order_and_requested_order_each_required_no_capitalization_assumption(self):
+        self.assertEqual(p.CASES, (*p.original.QUERY_CASES, p.CONTROL_CASE))
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp).resolve();state=evidence(out)
+            self.assertEqual(p.accept_native_export(out,state),p.RESULT)
+            (out/'first-responder-boundary.json').unlink()
+            log=out/'compose/test.log';lines=log.read_text().splitlines(True)
+            log.write_text(lines[-1]+''.join(lines[:-1]))
+            with self.assertRaisesRegex(ValueError, 'Exact original Arabic, English'):
+                p.accept_native_export(out,state)
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp).resolve();state=evidence(out)
+            argv=next(c for c in state['commands'] if c['label']=='compose-tests')['command']
+            flags=[a for a in argv if a.startswith('-only-testing:')]
+            argv[:]=[a for a in argv if not a.startswith('-only-testing:')]+[flags[-1],*flags[:-1]]
+            with self.assertRaisesRegex(ValueError, 'One exact control'):
+                p.accept_native_export(out,state)
 
     def test_external_profile_dispatch_restores_and_never_maps_collection_to_shipping_success(self):
         profiles,select=run_pin55.prior.PROFILES,run_pin55.prior.select_profile

@@ -64,3 +64,37 @@ old compiler failure as a negative regression before executing the corrected
 binary. Seven affected portable controls pass; two Apple checks remain unavailable
 locally. Fresh actual corrected execution is necessary; no unchanged rerun or
 application root-cause fix is claimed.
+
+## Runtime evidence and exact-order correction
+
+Run41509676291/source `e00e4fdf0907053ca7d9f3d109604fe6435e22ec` is terminal
+FAILURE. All nine Mac controls passed without skips; build882.800s, test842.497s,
+cleanupPASS. Actual order was **original Arabic, original English, new control**;
+`-only-testing` argument order and uppercase naming did not determine XCTest order.
+Both originals passed, before any new-control keyboard use. The sole XCTest65
+failure was the declared exporter. The control has one live weak editor, positive
+original focus return, intact hook/parent and ten paired insert calls, no overflow.
+The producer's strict order guard rejected the planned control-first sequence.
+Do not reinterpret that failed workflow as green or infer historical causality.
+
+Artifact13174522976/114,435,402bytes SHA256
+`f1e591fd0e77e85d9afe73ad52b923d38c9695c148d1a1a149879658a1deeae6`.
+The original frozen reader rejected an inadvertently changed repository-ID literal;
+its source/log remain unchanged. Separately frozen v2 corrected that literal/new
+exclusive readback and independently admitted actual failure facts, still rejecting
+producer ordering. The verified original inputs, commands, PID/native evidence,
+public assertions and cleanup remain retained, not discarded.
+
+Correct the new command/contract to the **observed original Arabic, English, then
+control** order. Do not rename tests, prime keyboards, alter original helpers, move
+Done or weaken the order assertion. A regression rejects both wrong observed order
+and wrong requested order. The affected new-source checks and fresh corrected
+execution are required; previous successful application bodies are evidence, not
+qualification of a changed harness. Native forwarding sources are unchanged.
+
+Recording review of PIN54 also found differing screenshot and sequential-video
+content; seek-derived frames disagree with full sequential decode. These observations
+are retained but are not admitted as exact failed-clock state or a tutorial/input-delay
+cause. Main-thread-only observation still cannot rule out off-main input delivery.
+Phase1 OPEN; no shipping correction or merge. AGENTS, stashes, strict verification,
+security requirements and owner-reserved physical Phase4 remain unchanged.
