@@ -161,3 +161,25 @@ creation and retains only its exact owned CLI PID's default-redacted logs. Its
 outcome can identify the startup boundary, not by itself its internal cause.
 Existing capture and full actual-target/stack gates stay unchanged. Phase1 and
 #267/#276 remain unresolved; physical4 stays owner-reserved.
+
+## Device enumeration result and alternative observation gate
+
+[41420005706](https://github.com/Apdelrahman1911/parlor/actions/runs/41420005706)
+completed **FAILURE**: nine actual Mac controls/zero skips. Read-only `list devices`
+itself exceeds8s with empty output; **no target or recording was created**. The
+owned enumeration CLI1350 was reaped; its default-redacted logs end at
+CoreSimulator service connections (09:22:20.703UTC). Independent failed-tool facts
+accepted, full attachment reader rejected. Artifact13128932632/5,730bytes/SHA256
+`4af484c411065b4c4fbfaf218c3b7ac3c8389edbfbce7bb00aa5df18df1f18c5`.
+The failing boundary precedes target attachment. Actual synchronous call/OS
+service cause remains unproven; do not infer harmless infrastructure or grant
+permissions. No unchanged recorder/device-list retry is justified.
+
+The already accepted installed `sample` manual points to `spindump(8)`. Read
+**only that installed manual** on one standard free macos-15 runner, not help
+options that might inadvertently start a system-wide capture. No sampling,
+application/Simulator launch, AX query, compilation, privilege grant or successful
+interface replay. Retain native manual/exit/tool hash under8s. Investigate whether
+its documented interface can collect only an owned target and defer costly symbol
+processing. Actual availability, permissions, privacy isolation, stacks and app
+causality require separate evidence; a manual pass is not attachment admission.

@@ -21,6 +21,7 @@ COMMANDS = (
     ('string-options', ['/usr/bin/strings', '-a', '/usr/bin/sample']),
 )
 MAX_OUTPUT = 4 * 1024 * 1024
+SPINDUMP_COMMANDS = (('spindump-man', ['/usr/bin/man', '-P', '/bin/cat', 'spindump']),)
 
 
 def selected_strings(raw):
@@ -29,7 +30,9 @@ def selected_strings(raw):
                       re.search(rb'^\s*-[A-Za-z]|[Ss]ymbol|[Ss]ampl|[Uu]nwind|task_for_pid', line)) + b'\n'
 
 
-def review(directory):
+def review(directory, *, mode='sample'):
+    if mode not in ('sample', 'spindump-man'):
+        raise ValueError('Only fixed installed-tool read-only profiles')
     if sys.platform != 'darwin':
         raise RuntimeError('Installed Apple tool facts require an actual macOS runner')
     if directory.resolve() != directory.absolute() or directory.exists():
@@ -38,7 +41,7 @@ def review(directory):
     env = {k: os.environ[k] for k in ('HOME', 'TMPDIR') if k in os.environ}
     env.update(PATH='/usr/bin:/bin:/usr/sbin:/sbin', LC_ALL='C', MANWIDTH='120')
     rows = []
-    for label, command in COMMANDS:
+    for label, command in (COMMANDS if mode == 'sample' else SPINDUMP_COMMANDS):
         started = time.monotonic()
         # No app identifier/PID, privileged option, injected loader or credential.
         completed = subprocess.run(command, env=env, stdin=subprocess.DEVNULL,
@@ -53,15 +56,21 @@ def review(directory):
                          seconds=time.monotonic()-started, original_bytes=len(raw),
                          original_sha256=hashlib.sha256(raw).hexdigest(),
                          retained_bytes=len(saved), retained_sha256=hashlib.sha256(saved).hexdigest()))
-    tool = Path('/usr/bin/sample').read_bytes()
+    tool_path = '/usr/bin/sample' if mode == 'sample' else '/usr/sbin/spindump'
+    tool = Path(tool_path).read_bytes()
     value = dict(schema=1, platform=sys.platform, command_timeout_seconds=8,
                  sampler_sha256=hashlib.sha256(tool).hexdigest(), commands=rows,
                  apps_launched=0, accessibility_queries=0, processes_sampled=0,
                  application_root_cause=False, shipping_qualified=False, physical_verified=False)
+    if mode != 'sample':
+        value.update(mode=mode, tool_path=tool_path)
     with (directory/'receipt.json').open('x') as f:
         json.dump(value, f, indent=2)
     print(json.dumps(value, indent=2))
 
 
 if __name__ == '__main__':
-    review(Path(sys.argv[1]))
+    if len(sys.argv) == 3 and sys.argv[1] == '--spindump-man':
+        review(Path(sys.argv[2]), mode='spindump-man')
+    else:
+        review(Path(sys.argv[1]))

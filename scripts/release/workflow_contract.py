@@ -38,10 +38,10 @@ PROFILER_TOOL_REVIEW_COMPANIONS = {
 }
 
 SAMPLER_TOOL_REVIEW = 'ios-sampler-tool-review.yml'
-SAMPLER_TOOL_REVIEW_SHA256 = 'e8ee2653195fb54082a00ab95e182cca4d6200474450f9961a593bf3d4dc4b0b'
+SAMPLER_TOOL_REVIEW_SHA256 = '418579966ac2265874aca054185d6d276a2c75946c870d9f7ab8abc1e73b2ee2'
 SAMPLER_TOOL_REVIEW_COMPANIONS = {
-    'review_sampler_tool.py': '6f1dde57fbc764dfb87b84e8487af1fce64338dc582570c00b95b515e3df38e6',
-    'test_review_sampler_tool.py': '94e60f3b1dd2a355b5b3b2025e10ae5975380aef43cfd68037161af65a6b27dc',
+    'review_sampler_tool.py': 'dfd4ba95fde4988e3da4251d356635d14405fce75553a746cd4a8dc00c0df9d3',
+    'test_review_sampler_tool.py': '9d8a1cb9533eff9ad61b15b55fa381368384b076acd714c4da48cdc00cd7f842',
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.

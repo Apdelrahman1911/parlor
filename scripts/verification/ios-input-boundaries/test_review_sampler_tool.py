@@ -19,6 +19,16 @@ class SamplerToolReviewTests(unittest.TestCase):
         self.assertEqual(tool.selected_strings(b'noise\n -mayDie\nSymbolication\nUnwinding\n'),
                          b' -mayDie\nSymbolication\nUnwinding\n')
 
+    def test_spindump_profile_reads_only_installed_documentation_never_executes_sampler(self):
+        self.assertEqual(tool.SPINDUMP_COMMANDS, (
+            ('spindump-man', ['/usr/bin/man', '-P', '/bin/cat', 'spindump']),))
+        self.assertNotIn('/usr/sbin/spindump', tool.SPINDUMP_COMMANDS[0][1])
+
+    def test_unknown_profile_never_runs_a_command_or_creates_output(self):
+        with patch.object(tool.subprocess, 'run') as run, self.assertRaises(ValueError):
+            tool.review(Path('/unavailable'), mode='all-processes')
+        run.assert_not_called()
+
     def test_linux_cannot_attest_apple_capability(self):
         with patch.object(tool.sys, 'platform', 'linux'):
             with self.assertRaisesRegex(RuntimeError, 'actual macOS'):
