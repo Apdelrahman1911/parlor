@@ -117,3 +117,31 @@ collector design correction after an observed child deadline failure, **not proo
 of its internal cause or an application input correction**. Fresh native collection
 is needed because previous attempts obtained no stacks; accepted original evidence
 and exporter controls are retained rather than claimed as a qualified fix.
+
+## Short OS stack windows and strict observed deadline
+
+[41363658534](https://github.com/Apdelrahman1911/parlor/actions/runs/41363658534)
+failed at00:13:53UTC November2. All26 actual Apple controls, original AR/EN
+(exit0), build and owned cleanup passed. The prestarted helper reached the actual
+owned Debug image after376 replies (median34.3ms); startup1.050s. **First OS sample
+then exceeded8s** while collecting a5s window; its start log survives, but no
+report. This advances beyond the former discovery failure without establishing
+app causality or a qualified stack investigation. Actual helper control:
+startup68.0ms, warm replies1.425/1.136ms, same PID/exit0/reaped.
+
+Use **1s** native stack windows at the same10ms sampling interval, with starts
+paced at least5s apart (same maximum180 over the original900s process budget).
+The existing8s OS child deadline remains: shorter planned dwell leaves room for
+attach/report work. Discovery-only idle cadence becomes1s rather than250ms,
+reducing redundant host enumeration during Simulator startup. This is sparse
+observation, **not continuous coverage or guaranteed capture of every short
+operation**. No extra tap/query, assertion extension, replay-until-failure or
+shipping code change. Actual stack collection still must pass; no partial report
+or timed-out tool is admitted.
+
+One recorded helper response took3.231s even though its pipe became readable
+within the3s poll: the parent could resume after the deadline. Existing final
+reader rejects that duration. Add runtime deadline checks after poll and decode
+so late observation fails immediately; do not waive it. A deterministic portable
+regression verifies that fd readiness cannot authorize a late response. Previous
+natural native outcomes and failed collector remain retained and distinct.

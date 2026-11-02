@@ -37,6 +37,8 @@ class KernelChannel:
             remaining = deadline-time.monotonic()
             if remaining <= 0 or not select.select([self.child.stdout], [], [], remaining)[0]:
                 raise subprocess.TimeoutExpired('owned-kernel-reply', TIMEOUT)
+            if time.monotonic() >= deadline:
+                raise subprocess.TimeoutExpired('owned-kernel-reply', TIMEOUT)
             part = os.read(self.child.stdout.fileno(), min(4096, MAX_REPLY+1-len(data)))
             if not part: raise ValueError('Kernel child ended before its complete reply')
             data.extend(part)
@@ -48,6 +50,8 @@ class KernelChannel:
                         value.get('simulator') != self.simulator or value.get('own_process_seen') is not True or \
                         value.get('helper_pid') != self.child.pid:
                     raise ValueError('Exact owned child/current-UID native path capability')
+                if time.monotonic() >= deadline:
+                    raise subprocess.TimeoutExpired('owned-kernel-reply', TIMEOUT)
                 return value
         raise ValueError('Bounded kernel reply exceeded')
 

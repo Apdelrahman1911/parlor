@@ -79,7 +79,8 @@ class NativeStacksControls(unittest.TestCase):
         with patch.dict(os.environ, {'GITHUB_TOKEN': 'secret', 'DYLD_INSERT_LIBRARIES': 'hook', 'HOME': '/owned'}):
             self.assertNotIn('GITHUB_TOKEN', c.environment())
             self.assertNotIn('DYLD_INSERT_LIBRARIES', c.environment())
-        self.assertEqual(c.sample_command(23, Path('/owned/sample')), ['/usr/bin/sample', '23', '5', '10', '-mayDie', '-file', '/owned/sample'])
+        self.assertEqual(c.sample_command(23, Path('/owned/sample')), ['/usr/bin/sample', '23', '1', '10', '-mayDie', '-file', '/owned/sample'])
+        self.assertEqual((c.SAMPLE_CADENCE_SECONDS, c.DISCOVERY_CADENCE_SECONDS), (5, 1))
         for pid, seconds in ((False, 5), (0, 5), (-1, 5), (23, 30)):
             with self.assertRaises(ValueError): c.sample_command(pid, Path('/owned/sample'), seconds)
 
@@ -296,3 +297,15 @@ class KernelChannelControls(unittest.TestCase):
                 with sampler: self.fail('Original command must not start without native readiness')
             sampler.thread.start.assert_not_called()
             helper.close.assert_called_once_with(abort=True)
+
+    def test_response_ready_before_poll_but_observed_after_deadline_is_not_accepted(self):
+        child = self.owned()
+        try:
+            # A ready fd does not prove timely observation if the host observer
+            # was descheduled beyond its deadline. No real Apple inference.
+            with patch.object(channel.select, 'select', return_value=([child.child.stdout], [], [])), \
+                    patch.object(channel.time, 'monotonic', side_effect=[1.0, 3.231]), \
+                    patch.object(channel.os, 'read') as read, self.assertRaises(subprocess.TimeoutExpired):
+                child._read(3.0)
+            read.assert_not_called()
+        finally: child.close()

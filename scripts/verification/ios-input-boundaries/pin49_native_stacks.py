@@ -21,7 +21,9 @@ import pin49_kernel_channel as kernel
 MAX_REPORT = 4 * 1024 * 1024
 MAX_SAMPLES = 180
 MAX_DISCOVERIES = 3600
-SAMPLE_SECONDS = 5
+SAMPLE_SECONDS = 1
+SAMPLE_CADENCE_SECONDS = 5
+DISCOVERY_CADENCE_SECONDS = 1
 INTERVAL_MS = 10
 BUNDLE = 'me.parlor.ios.debug'
 UUID = re.compile(r'[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}')
@@ -162,9 +164,14 @@ class NativeSampler:
             while not self.stop.is_set():
                 found = self._discover()
                 if found and not self.stop.is_set():
+                    started = time.monotonic()
                     self._sample(found[0])
+                    # Short bounded stack windows leave the existing8s child
+                    # budget for attach/report work. No increased deadline.
+                    # Preserve maximum180 reports over the original900s window.
+                    self.stop.wait(max(0, SAMPLE_CADENCE_SECONDS-(time.monotonic()-started)))
                 else:
-                    self.stop.wait(0.25)  # Host discovery only; no app polling/query.
+                    self.stop.wait(DISCOVERY_CADENCE_SECONDS)  # Host only; no app polling/query.
         except BaseException as error:
             self.error = type(error).__name__ + ': ' + str(error)
         finally:
@@ -177,6 +184,8 @@ class NativeSampler:
                    'discoveries': self.discoveries, 'samples': self.rows, 'error': self.error,
                    'kernel_child': self.kernel.receipt() if self.kernel else None,
                    'sample_seconds': SAMPLE_SECONDS, 'interval_ms': INTERVAL_MS,
+                   'sample_cadence_seconds': SAMPLE_CADENCE_SECONDS,
+                   'discovery_cadence_seconds': DISCOVERY_CADENCE_SECONDS,
                    'original_sources_changed': False, 'additional_ax_queries': False,
                    'native_timing_neutrality': False, 'shipping_qualified': False, 'physical_verified': False}
         target = self.directory/'samples.json'
@@ -236,6 +245,7 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
                  'shipping_qualified', 'physical_verified'):
         require(receipt[flag] is False, 'No source/query/neutrality/qualification attestation')
     require((receipt['sample_seconds'], receipt['interval_ms']) == (SAMPLE_SECONDS, INTERVAL_MS)
+            and (receipt['sample_cadence_seconds'], receipt['discovery_cadence_seconds']) == (5, 1)
             and 0 < receipt['discoveries'] <= MAX_DISCOVERIES
             and 0 < len(receipt['samples']) <= MAX_SAMPLES, 'Exact bounded real sampling parameters')
     actual = []
