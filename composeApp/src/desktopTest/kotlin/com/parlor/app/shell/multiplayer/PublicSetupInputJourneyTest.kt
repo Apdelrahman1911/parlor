@@ -48,10 +48,11 @@ import com.parlor.session.multidevice.ProcessMultiplayerState
 import com.parlor.storage.settings.InMemorySettingsStore
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import com.parlor.storage.snapshot.SnapshotStore
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -175,10 +176,15 @@ private class PublicSetupFixture(language: AppLanguage) : AutoCloseable {
     val transport = PublicSetupTransport()
     val settings = InMemorySettingsStore(initialLanguageOverride = language.tag, initialReducedMotion = true)
     private val job = SupervisorJob()
-    val owner = ProcessMultiplayerSessionOwner(CoroutineScope(job + Dispatchers.Default))
+    private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    val owner = ProcessMultiplayerSessionOwner(CoroutineScope(job + dispatcher))
 
     override fun close() {
-        runBlocking { withTimeout(5_000) { job.cancelAndJoin() } }
+        try {
+            runBlocking { withTimeout(5_000) { job.cancelAndJoin() } }
+        } finally {
+            dispatcher.close()
+        }
     }
 }
 
