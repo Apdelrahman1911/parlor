@@ -51,6 +51,28 @@ class NameInputUiStateTest {
     }
 
     @Test
+    fun english_full_string_peer_edit_retains_the_original_native_test_payload() {
+        verifyEdits(AppLanguage.English, "Table Test", isHost = false, fullString = true)
+    }
+
+    @Test
+    fun arabic_full_string_peer_edit_retains_the_original_native_test_payload() {
+        // The original Arabic XCTest types Latin text, not the Arabic text in
+        // the incremental test above. Exercise that exact payload as one edit.
+        verifyEdits(AppLanguage.Arabic, "Table Test", isHost = false, fullString = true)
+    }
+
+    @Test
+    fun english_full_string_host_edit_preserves_mixed_direction_text() {
+        verifyEdits(AppLanguage.English, "Table Test نور", isHost = true, fullString = true)
+    }
+
+    @Test
+    fun arabic_full_string_host_edit_preserves_mixed_direction_text() {
+        verifyEdits(AppLanguage.Arabic, "Table Test نور", isHost = true, fullString = true)
+    }
+
+    @Test
     fun focused_draft_survives_language_theme_and_initial_argument_updates() = runComposeUiTest {
         val language = mutableStateOf(AppLanguage.English)
         val theme = mutableStateOf(ThemeMode.Light)
@@ -102,17 +124,22 @@ class NameInputUiStateTest {
         assertEquals(emptyList(), submissions)
     }
 
-    private fun verifyEdits(language: AppLanguage, input: String, isHost: Boolean) {
+    private fun verifyEdits(language: AppLanguage, input: String, isHost: Boolean, fullString: Boolean = false) {
         val previousLocale = Locale.getDefault()
         try {
-            runComposeUiTest { verifyEditsInComposition(language, input, isHost) }
+            runComposeUiTest { verifyEditsInComposition(language, input, isHost, fullString) }
             assertEquals(previousLocale, Locale.getDefault(), "Disposal must restore the process locale")
         } finally {
             Locale.setDefault(previousLocale)
         }
     }
 
-    private fun ComposeUiTest.verifyEditsInComposition(language: AppLanguage, input: String, isHost: Boolean) {
+    private fun ComposeUiTest.verifyEditsInComposition(
+        language: AppLanguage,
+        input: String,
+        isHost: Boolean,
+        fullString: Boolean,
+    ) {
         val submissions = mutableListOf<String>()
         setContent {
             ProvideAppLanguage(language) {
@@ -128,9 +155,16 @@ class NameInputUiStateTest {
         }
         val field = onNode(hasSetTextAction())
         field.performTouchInput { click() }.assertIsFocused()
-        input.forEachIndexed { index, character ->
-            field.performTextInput(character.toString())
-            assertDraft(input.take(index + 1))
+        if (fullString) {
+            // Desktop edit-command receiver coverage only: this does not
+            // synthesize UIKit keyboard events or certify native delivery.
+            field.performTextInput(input)
+            assertDraft(input)
+        } else {
+            input.forEachIndexed { index, character ->
+                field.performTextInput(character.toString())
+                assertDraft(input.take(index + 1))
+            }
         }
         field.performImeAction()
         field.assertIsNotFocused()
