@@ -30,6 +30,8 @@ class KernelChannel:
         self.child, self.ready = None, None
         self.requests, self.response_seconds = 0, []
         self.startup_seconds, self.exit, self.reaped = None, None, False
+        self.started_unix, self.ready_unix = None, None
+        self.before_build = False
 
     def _read(self, deadline):
         data = bytearray()
@@ -58,6 +60,7 @@ class KernelChannel:
     def start(self):
         if self.child is not None: raise ValueError('Kernel child may start only once')
         started = time.monotonic()
+        self.started_unix = time.time()
         self.child = subprocess.Popen(command(self.simulator), stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                       stderr=subprocess.DEVNULL, env=self.environment)
         os.set_blocking(self.child.stdin.fileno(), False)
@@ -67,6 +70,7 @@ class KernelChannel:
             if self.ready.get('kind') != 'ready' or 'index' in self.ready:
                 raise ValueError('Exact initial native readiness before XCTest')
             self.startup_seconds = time.monotonic()-started
+            self.ready_unix = time.time()
         except BaseException:
             self.close(abort=True)
             raise
@@ -107,6 +111,8 @@ class KernelChannel:
         return dict(schema=1, pid=self.child.pid if self.child else None, ready=self.ready,
                     requests=self.requests, startup_seconds=self.startup_seconds,
                     response_seconds=self.response_seconds, exit=self.exit, child_reaped=self.reaped,
+                    started_unix=self.started_unix, ready_unix=self.ready_unix,
+                    started_before_original_build=self.before_build,
                     started_before_original_command=True, reply_timeout_seconds=TIMEOUT)
 
 

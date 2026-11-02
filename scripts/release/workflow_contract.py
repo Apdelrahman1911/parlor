@@ -150,11 +150,11 @@ PASSIVE_FAILURE_SAMPLES_COMPANIONS = {'test_pin47_passive_samples.py': 'ab4de728
 NATIVE_STACK_BOUNDARY = 'ios-native-stack-boundary.yml'
 NATIVE_STACK_BOUNDARY_SHA256 = 'ac94f9151ea84471d8f989b73f58117e75256f9d7915b7effe5b62b9251b92ed'
 NATIVE_STACK_BOUNDARY_COMPANIONS = {
-    'pin49_kernel_channel.py': 'a144a0712743980a52bd71bbf9c472b923835dc17e33fd43f32ceadf7ae657d4',
+    'pin49_kernel_channel.py': '3a777778b6a9ab6f7ad153583679d0f36d139816881db021c50af533cd8964fd',
     'pin49_process_paths.py': '0e167e5611700724c208adf4d1404c2f9dc4d13013f8662ae6c5f92022c5da09',
-    'pin49_native_stacks.py': '5474b2e89b2e57d70a3a044eb36757e00ba1ab707951b25a1b9820f5c00fa648',
-    'run_pin49.py': 'c187edc2f4549410da58322949db11d547335105ccc22f6acb216e6561988ad3',
-    'test_pin49_native_stacks.py': '48a04e302663d58a6f8616f548a1774f43ef8b4dbb7c9d4f008009c85b4c024c',
+    'pin49_native_stacks.py': '3e08f7513ff13d711b0309209ddde09422299095f137db23b442f661820c5500',
+    'run_pin49.py': 'a9ff4b3918a17c1bbc3a2d5b2c1b093753f12ad1ae397895defa98798133fa64',
+    'test_pin49_native_stacks.py': '9a3cd44a4852ebada7b050264f575139d8571c15450e869b862344905dfab21f',
 }
 
 QUERY_PROPERTY_BOUNDARY = 'ios-query-property-boundary.yml'

@@ -4,6 +4,7 @@ No shipping/copy-source change, AX query, gesture, assertion or retry. Sampling
 can perturb scheduling; it is not qualification and never proves neutrality.
 """
 import hashlib
+import datetime
 import json
 import math
 import os
@@ -103,7 +104,7 @@ def tool_control(directory):
 
 class NativeSampler:
     """One host observer; serial bounded samples, never sample unrelated processes."""
-    def __init__(self, directory, simulator, executable_sha):
+    def __init__(self, directory, simulator, executable_sha, *, kernel_channel=None):
         require(UUID.fullmatch(simulator) is not None and re.fullmatch('[0-9a-f]{64}', executable_sha),
                 'Explicit owned device and exact product digest')
         require(not directory.exists(), 'Fresh native sample directory')
@@ -111,7 +112,7 @@ class NativeSampler:
         self.directory, self.simulator, self.executable_sha = directory, simulator, executable_sha
         self.stop = threading.Event()
         self.rows, self.error, self.discoveries = [], None, 0
-        self.kernel = None
+        self.kernel = kernel_channel
         self.thread = threading.Thread(target=self._observe, name='parlor-owned-os-sampler')
         self.started_ms = time.monotonic() * 1000
         self.home = Path(os.environ['HOME']).resolve(strict=True)
@@ -195,9 +196,15 @@ class NativeSampler:
         temporary.replace(target)
 
     def __enter__(self):
-        self.kernel = kernel.KernelChannel(self.simulator, environment())
         try:
-            self.kernel.start()  # Actual native readiness BEFORE the unchanged XCTest command.
+            if self.kernel is None:
+                self.kernel = kernel.KernelChannel(self.simulator, environment())
+                self.kernel.start()
+            else:
+                require(self.kernel.simulator == self.simulator and self.kernel.before_build
+                        and self.kernel.ready is not None and not self.kernel.reaped
+                        and self.kernel.child.poll() is None and self.kernel.requests == 0,
+                        'One actual prebuild-ready owned child; no late restart or stale requests')
             self.thread.start()
         except BaseException:
             self.kernel.close(abort=True)
@@ -218,7 +225,7 @@ class NativeSampler:
         # Final receipt still fails closed on any error or absent stack report.
 
 
-def execute_observed(capture, arguments, label, timeout, **kwargs):
+def execute_observed(capture, arguments, label, timeout, *, kernel_channel=None, **kwargs):
     """Exact existing test command, wrapped only by an external OS observer."""
     if label != 'compose-tests':
         return capture(arguments, label, timeout, **kwargs)
@@ -229,11 +236,12 @@ def execute_observed(capture, arguments, label, timeout, **kwargs):
     log = Path(kwargs['environment']['PARLOR_INPUT_LOG'])
     require(log.name == 'test.log' and log.parent.name == 'compose', 'Original public pair only')
     products = json.loads(frozen_sources._read(log.parent/'product.json', 2 * 1024 * 1024))
-    with NativeSampler(log.parent/'native-stacks', destinations[0], products['Parlor']):
+    options = {'kernel_channel': kernel_channel} if kernel_channel is not None else {}
+    with NativeSampler(log.parent/'native-stacks', destinations[0], products['Parlor'], **options):
         return capture(arguments, label, timeout, **kwargs)
 
 
-def verify_receipt(directory, simulator, executable_sha, *, producer_directory=None):
+def verify_receipt(directory, simulator, executable_sha, *, producer_directory=None, build_started_at=None):
     """Read back every actual report; unchanged receipt cannot invent coverage."""
     receipt = json.loads(frozen_sources._read(directory/'samples.json', 2 * 1024 * 1024))
     producer_directory = producer_directory or directory
@@ -250,6 +258,12 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
             and 0 < len(receipt['samples']) <= MAX_SAMPLES, 'Exact bounded real sampling parameters')
     actual = []
     kernel.verify(receipt['kernel_child'], simulator, receipt['discoveries'])
+    if build_started_at is not None:
+        child = receipt['kernel_child']
+        build_unix = datetime.datetime.fromisoformat(build_started_at.replace('Z', '+00:00')).timestamp()
+        require(child['started_before_original_build'] is True
+                and 0 < child['started_unix'] <= child['ready_unix'] <= build_unix,
+                'Actual native readiness precedes original source-specific build intent')
     previous = receipt['started_ms']
     for index, row in enumerate(receipt['samples'], 1):
         path = directory/('sample-%03d.txt' % index)

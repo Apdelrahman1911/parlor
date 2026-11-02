@@ -145,3 +145,28 @@ reader rejects that duration. Add runtime deadline checks after poll and decode
 so late observation fails immediately; do not waive it. A deterministic portable
 regression verifies that fd readiness cannot authorize a late response. Previous
 natural native outcomes and failed collector remain retained and distinct.
+
+## Prebuild readiness correction
+
+[41366447553](https://github.com/Apdelrahman1911/parlor/actions/runs/41366447553)
+failed at00:36:14UTC. All27 actual Apple controls and native build passed; owned
+cleanup passed. **No XCTest command or language journey ran.** Strict post-poll
+readiness rejected late observation after the3s deadline immediately after the
+compiler stage. Actual helper control was70.1ms startup/1.098/1.000ms replies,
+exit0/reaped, but cannot certify loaded post-build startup. Zero discoveries and
+stacks; state remains NOT_QUALIFIED. No previous native pass is substituted.
+
+Start the single helper **before** the original source-specific build, when the
+coordinator receives that exact owned-device build command. It remains blocked
+on its pipe throughout compilation (no discovery loop/observer thread/CPU polling
+in the build). Reuse that same ready child for the original XCTest command; never
+spawn/retry one after build load. Readiness keeps the original3s bound. Retain
+actual startup/readiness Unix clocks and prebuild owner receipt even if the build
+or subsequent test fails; verify readiness precedes the actual build-command
+intent, exact device identity, responses, exit and reaping. A failed readiness
+prevents build/test execution and remains an investigation failure, not a waived
+check. Fresh ordering/failed-start/actual-timestamp regressions join controls.
+
+The failed boundary is post-build observation/startup, not proven application
+input causality or proof of a specific internal scheduler/library stall. Sparse
+1s windows/5s cadence/8s OS budget and all original assertions stay unchanged.

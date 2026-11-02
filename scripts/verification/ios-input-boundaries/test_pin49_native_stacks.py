@@ -132,9 +132,15 @@ class NativeStacksControls(unittest.TestCase):
                     ready=dict(kind='ready', schema=1, selector='PROC_UID_ONLY', simulator=SIM,
                                own_process_seen=True, helper_pid=42), requests=1,
                     startup_seconds=0.1, response_seconds=[0.1], exit=0, child_reaped=True,
+                    started_unix=1.0, ready_unix=2.0, started_before_original_build=True,
                     started_before_original_command=True, reply_timeout_seconds=3)
                 sampler._checkpoint()
                 self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64)['sampled_reports'], 1)
+                self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64,
+                    build_started_at='1970-01-01T00:00:03+00:00')['sampled_reports'], 1)
+                with self.assertRaises(ValueError):
+                    c.verify_receipt(sampler.directory, SIM, 'a'*64,
+                        build_started_at='1970-01-01T00:00:01+00:00')
                 with self.assertRaises(ValueError):
                     c.verify_receipt(sampler.directory, SIM, 'a'*64, producer_directory=Path('/different'))
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_2')
@@ -309,3 +315,44 @@ class KernelChannelControls(unittest.TestCase):
                 child._read(3.0)
             read.assert_not_called()
         finally: child.close()
+
+    def test_prebuild_coordinator_starts_one_child_before_original_build_and_reuses_it_for_tests(self):
+        self.prebuild_control(fail_ready=False)
+
+    def test_failed_prebuild_readiness_preserves_failure_and_cannot_start_compilation(self):
+        self.prebuild_control(fail_ready=True)
+
+    def prebuild_control(self, *, fail_ready):
+        import run_pin49, run_pin03, pin47_failure_runloop
+        events = []
+        class OriginalCommands:
+            def capture(inner, arguments, label, timeout, **kwargs):
+                events.append(label)
+                return ({'exit_code': 65}, b'actual', b'')
+        helper = Mock();helper.receipt.return_value = {'portable_fixture_only': True}
+        helper.start.side_effect = subprocess.TimeoutExpired('prebuild-ready', 3) if fail_ready else lambda: events.append('ready')
+        helper.close.side_effect = lambda: events.append('reaped')
+        def observed(capture, arguments, label, timeout, **kwargs):
+            if label == 'compose-tests': self.assertIs(kwargs.pop('kernel_channel'), helper)
+            return capture(arguments, label, timeout, **kwargs)
+        def original_main(**kwargs):
+            self.assertEqual(kwargs, {'failure_runloop': True})
+            commands = run_pin03.Commands()
+            for label, timeout in [('compose-build',2700),('compose-tests',900)]:
+                commands.capture(['platform=iOS Simulator,id='+SIM], label, timeout)
+            return 1  # Explicit failed native fixture; no invented acceptance.
+        with TemporaryDirectory() as d:
+            output = Path(d).resolve();(output/'compose').mkdir()
+            args = ['run_pin49.py','--profile',pin47_failure_runloop.QUERY_PROFILE,'--output',str(output)]
+            with patch.object(sys, 'argv', args), patch.object(run_pin03, 'Commands', OriginalCommands), \
+                    patch.object(run_pin03, 'main', side_effect=original_main), \
+                    patch.object(c.kernel, 'KernelChannel', return_value=helper), \
+                    patch.object(c, 'execute_observed', side_effect=observed):
+                if fail_ready:
+                    with self.assertRaises(subprocess.TimeoutExpired): run_pin49.main()
+                    self.assertEqual(events, ['reaped'])
+                else:
+                    self.assertEqual(run_pin49.main(), 1)
+                    self.assertEqual(events, ['ready','compose-build','compose-tests','reaped'])
+                self.assertIs(run_pin03.Commands, OriginalCommands)
+            self.assertEqual(json.loads((output/'compose/kernel-prebuild.json').read_text()), {'portable_fixture_only': True})
