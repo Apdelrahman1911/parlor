@@ -26,8 +26,8 @@ EXPECTED = {
 
 
 PROFILER_BOOTED_READINESS = 'ios-profiler-booted-readiness.yml'
-PROFILER_BOOTED_READINESS_SHA256 = 'c2fd5ae59706d5188db5e883d2783aa0ccae0e1c2e79aa7d4a781419b64c5e3c'
-PROFILER_BOOTED_READINESS_COMPANIONS = {'profiler_booted_readiness.py': 'f2083603b1ef8d583ac8778b42053a41db2401780aa11aabc9d2da8a7ccbca47', 'test_profiler_booted_readiness.py': '68def22c82bf242f2d095e51ba81d6b28320dedd95eb9a4006ab4f525a74d5eb'}
+PROFILER_BOOTED_READINESS_SHA256 = '722e40e86f1e3d4083969774b7da80f1d15d7b42be8887757afbc9ecab2ea4e7'
+PROFILER_BOOTED_READINESS_COMPANIONS = {'profiler_booted_readiness.py': '903d927ec37cdb7ecf175716be922cb1aaeb334fbd0bf3820f95538931e5a1b0', 'test_profiler_booted_readiness.py': 'a7483d1e937ebecae44c2fdcae14d3e6b2bd70cfd8e6b497b69bc85f8841951c'}
 
 APP_SPINDUMP_BOUNDARY = 'ios-app-spindump-boundary.yml'
 APP_SPINDUMP_BOUNDARY_SHA256 = '3209e925d9af4cf993392a545720c8fb789f632c5f7bda06a462bbaaefeb0195'

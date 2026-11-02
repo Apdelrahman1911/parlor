@@ -6,6 +6,7 @@ under an explicitly different, boot-ready CoreSimulator condition. No app/XCTest
 permission change, build, corrective input, sampler deadline increase or retry.
 """
 import json
+import hashlib
 import os
 from pathlib import Path
 import re
@@ -21,6 +22,47 @@ RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
 DEVICE = 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'
 UUID = re.compile(r'[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}')
 MAX_LOG = 256*1024
+PREBOOT_COMMANDS = {
+    'ready-path': ['/usr/bin/xcrun','--find','xctrace'],
+    'ready-help': [profiler.PROFILER,'help','record'],
+    'developer-status': ['/usr/sbin/DevToolsSecurity','-status'],
+    'first-launch-status': [profiler.DEVELOPER+'/usr/bin/xcodebuild','-checkFirstLaunchStatus'],
+}
+
+
+def prepare_profiler(directory):
+    directory.mkdir(mode=0o700)
+    receipt = dict(schema=1,commands=[],purpose='actual-preboot-profiler-readiness')
+    for label, argv in PREBOOT_COMMANDS.items():
+        profiler.command(directory,receipt,label,argv)
+    if (directory/'ready-path.log').read_bytes()!=profiler.PROFILER.encode()+b'\n':
+        raise ValueError('Only exact selected profiler may be prepared')
+    if b'--attach' not in (directory/'ready-help.log').read_bytes():
+        raise ValueError('Actual documented attach interface before boot')
+    return receipt
+
+
+def execute_prepared_profiler(directory, prepared_directory, prepared):
+    original = profiler.command
+    admitted = set()
+    def dispatch(output, receipt, label, argv, **kwargs):
+        if label not in PREBOOT_COMMANDS:
+            return original(output,receipt,label,argv,**kwargs)
+        if output!=directory or argv!=PREBOOT_COMMANDS[label] or label in admitted or kwargs:
+            raise ValueError('One exact already-executed preboot readiness receipt, never replay/guess')
+        rows=[r for r in prepared['commands'] if r['label']==label]
+        if len(rows)!=1 or rows[0]['command']!=argv or rows[0]['status']!='COMPLETE' or rows[0]['exit']!=0 or not rows[0]['owned_child_reaped'] or not 0<=rows[0]['seconds']<8:
+            raise ValueError('Actual completed preboot command required')
+        raw=(prepared_directory/(label+'.log')).read_bytes()
+        if len(raw)>MAX_LOG:raise ValueError('Bounded preboot readiness output')
+        fd=os.open(output/(label+'.log'),os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+        with os.fdopen(fd,'wb') as f:f.write(raw)
+        receipt['commands'].append(dict(rows[0],preboot_observation=str(prepared_directory/(label+'.log')),
+                                        preboot_output_sha256=hashlib.sha256(raw).hexdigest()))
+        admitted.add(label);profiler.checkpoint(output,receipt)
+    profiler.command=dispatch
+    try:profiler.control(directory)
+    finally:profiler.command=original
 
 
 def operation(directory, receipt, label, args, timeout):
@@ -68,13 +110,16 @@ def control(directory):
     if sys.platform!='darwin':raise RuntimeError('Actual standard macOS runner required')
     if directory.resolve()!=directory.absolute() or directory.exists():raise ValueError('Fresh owned output')
     directory.mkdir(mode=0o700)
-    receipt=dict(schema=1,profile='owned-booted-profiler-readiness-v1',commands=[],runtime=RUNTIME,device=DEVICE,
+    receipt=dict(schema=1,profile='owned-booted-profiler-readiness-v2-preboot',commands=[],runtime=RUNTIME,device=DEVICE,
         owned_name='Parlor profiler readiness '+str(uuid.uuid4()),apps_launched=0,original_tests_replayed=0,
         accessibility_queries=0,permission_changes=False,application_root_cause=False,shipping_qualified=False,physical_verified=False)
     profiler.checkpoint(directory,receipt)
     try:
         profiler.command(directory,receipt,'simctl-path',['/usr/bin/xcrun','--find','simctl'])
         if (directory/'simctl-path.log').read_bytes()!=SIMCTL.encode()+b'\n':raise ValueError('Exact selected Xcode26.3 tool')
+        prepared_directory=directory/'prepared-profiler'
+        prepared=prepare_profiler(prepared_directory)
+        receipt['actual_preboot_ready_unix']=time.time();profiler.checkpoint(directory,receipt)
         identifier=operation(directory,receipt,'create',['create',receipt['owned_name'],DEVICE,RUNTIME],90).decode().strip()
         if not UUID.fullmatch(identifier):raise ValueError('Actual single newly-created device UUID required')
         receipt['owned_simulator']=identifier;profiler.checkpoint(directory,receipt)
@@ -84,7 +129,7 @@ def control(directory):
         # not any larger profiler/capture/assertion limit. Every profiler command
         # remains8s, Time Profiler records1s and the busy owned target is reaped.
         receipt['actual_boot_ready_unix']=time.time();profiler.checkpoint(directory,receipt)
-        profiler.control(directory/'profiler')
+        execute_prepared_profiler(directory/'profiler',prepared_directory,prepared)
         receipt['result']='BOOT_READY_PROFILER_CONTROL_REQUIRES_INDEPENDENT_TARGET_ADMISSION'
     except BaseException as error:
         receipt['error']=type(error).__name__+': '+str(error);raise

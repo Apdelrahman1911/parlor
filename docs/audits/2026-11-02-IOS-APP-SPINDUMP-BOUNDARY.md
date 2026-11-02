@@ -89,3 +89,30 @@ controls execute on the fresh standard macOS runner. Only bounded lifecycle logs
 profiler receipts/default-redacted own-CLI logs and plain XML are uploaded;
 opaque trace package remains private. Independent source/API/target/frame/exit/
 cleanup admission must precede any actual app use. #267/#276/Phase1 remain open.
+
+### Boot-ready attempt and readiness ordering correction
+
+[41430433874](https://github.com/Apdelrahman1911/parlor/actions/runs/41430433874)
+at `7d86acef9bb9c06d9851ef81b795da3a497e3e4c` is terminal FAILURE. Seventeen
+actual Mac safeguards pass/0 skip; exact owned device bootstatus completes in
+94.382s, ownership re-read/shutdown/delete succeed. The first profiler path
+resolution (`xcrun --find xctrace`) exceeds its absolute8s bound immediately
+after boot. No profiler help, device enumeration, target, record or trace exists.
+Thus the boot-ready enumeration hypothesis has **not been tested**. The full
+predeclared reader rejects missing completed profiler clocks; a separate frozen
+strict early-failure reader admits only these actual source/API/cleanup/empty-log
+facts. Artifact13134620508/9,021bytes/SHA256
+`bf2c152e9a6c01af8531c30f0d9f163d2a3fd23ae5d44120d002609e9c88be67`.
+
+Prepare the exact four existing read-only tool/interface/status commands before
+creating/booting the Simulator, rather than resolve the tool during cold boot
+work. Retain8s per original profiler command. After boot, forward those exact
+already-executed receipts/bytes with explicit preboot references and hashes;
+never execute them again or invent fresh execution clocks/PIDs. Then perform the
+original device enumeration/capture/export under the actual boot-ready condition.
+The original profiler source/flags remain unchanged and dispatch is restored on
+all errors. New profile `owned-booted-profiler-readiness-v2-preboot` distinguishes
+this ordering. Nine dedicated controls (including duplicate-reuse rejection and
+failed-preparation-before-device rejection) plus ten original profiler controls
+must execute on Mac. This is an evidence-based tool-ordering correction, not an
+asserted CPU/dispatch or application cause, shipping correction or Issue closure.
