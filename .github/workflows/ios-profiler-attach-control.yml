@@ -22,6 +22,7 @@ jobs:
         run: |
           /usr/bin/python3 -B scripts/release/workflow_contract.py
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_spindump_attach_control.py -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_profiler_attach_control.py -v
       - name: Record only the exact owned host-tool PID and analyze offline
         shell: bash
         env:

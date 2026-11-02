@@ -24,7 +24,7 @@ EXPECTED = {
 # Installed-tool facts only, after first1s Simulator sample exceeded8s.
 # Separate exact profile; original application/stack workflows stay unchanged.
 PROFILER_ATTACH_CONTROL = 'ios-profiler-attach-control.yml'
-PROFILER_ATTACH_CONTROL_SHA256 = '8570cdc2fb53e691204d55992bc6b8ea6e0db1fdbd1c1eb8e2dc2587644fce70'
+PROFILER_ATTACH_CONTROL_SHA256 = '357f16646af1ca02da28ec50fd3741eec191d81a8fb930c50c2c93f964b746ff'
 PROFILER_ATTACH_CONTROL_COMPANIONS = {
     'spindump_attach_control.py': '7f93c6a53244080d41b6016ef5ae4ebc3ea846b93b3828f6ae23e3e0cd041518',
     'test_spindump_attach_control.py': 'c718105cee9632c1a0b0db88896cc452061e82a48eed41d0b014c6b03a3a2604',
