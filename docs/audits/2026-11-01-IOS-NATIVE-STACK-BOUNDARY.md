@@ -203,3 +203,37 @@ cover reduced path calls, spoofed/wrong-device candidates, malformed/denied nati
 results and bounded metric rejection. Native measurement remains required;
 metadata-first discovery is a collector cost correction, **not a proven internal
 timeout cause or application input fix**. Phase1/#267/#276 remain unresolved.
+
+## Original-log launch activation
+
+[41397670043](https://github.com/Apdelrahman1911/parlor/actions/runs/41397670043)
+finished **FAILURE** at06:31:19UTC November2. All32 Apple controls/original AR/EN
+methods/build/cleanup passed (exit0); same prebuild helper startup131.9ms. It
+returned51 complete replies then request52 exceeded3s. Every reply made **zero
+path lookups**; zero app images/stacks. Metadata-first filtering is verified but
+cannot explain/solve the cold-start timeout. Actual median collection62.5ms,
+maximum1.416s; parent median359.5ms, maximum1.969s. These are wall clocks, not CPU.
+Artifact13120634686/2,987,514bytes/SHA256
+`b6e17617f8a5506abc9a77d184b97aeac2b7526d774309daff176fba18b223c6`
+and frozen stack-reader rejection retained. Independent original-only admission
+accepts source/product/outcomes/cleanup once, explicitly excluding stack/shipping
+qualification. No natural input failure or application correction was observed.
+
+The collector begins discovery as soon as the test command starts, while Xcode
+still starts its test environment: actual command06:20:44UTC, first method
+06:23:17.527, app launch1.15s later and original Home-brand waiter25.40s later.
+Keep the same prebuild-ready helper idle until the **existing original test log**
+contains that first Arabic method's launch followed by its unchanged Home-brand
+waiter. Host-only1s log observation neither queries the app nor changes XCTest,
+taps/input/assertions, timeouts or source plan. Retain the exact bounded log prefix
+hash/offsets and observer activation clocks; verify the retained final log prefix
+and zero preceding helper requests independently. Missing/foreign/later markers,
+redirected/nonregular/oversized log files fail closed; no late helper restart.
+
+This excludes startup from sparse stack observation, not from the original tests.
+The helper still has3s readiness/replies, OS samples8s/1s dwell/5s cadence, and all
+original10s assertions/900s command bounds remain. Existing original log must
+reach the marker naturally; there is no wait in the original execution path.
+Three new controls verify first-method launch ownership, safe live prefix reading,
+and helper idling without app queries. Native stack acceptance/root-cause work
+remain pending; Phase1/#267/#276 stay open, no security or physical gate waived.

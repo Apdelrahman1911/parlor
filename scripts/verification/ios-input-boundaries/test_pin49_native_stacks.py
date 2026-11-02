@@ -18,6 +18,8 @@ SIM = '12345678-1234-1234-1234-123456789ABC'
 INSTALL = 'ABCDE123-1234-1234-1234-123456789ABC'
 METRICS = dict(enumerated=1, disappeared=0, name_queries=1, path_lookups=0,
                collection_seconds=0.001, list_seconds=0.0001, name_seconds=0.0001, path_seconds=0.0)
+ORIGINAL_MARKER = (c.FIRST_METHOD + b'\n    t =     1.15s     Launch me.parlor.ios.debug\n'
+                   b'    t =    25.40s Waiting 30.0s for "parlor-home-brand" StaticText to exist\n')
 
 
 class NativeStacksControls(unittest.TestCase):
@@ -41,7 +43,7 @@ class NativeStacksControls(unittest.TestCase):
                 self.assertEqual(c.execute_observed(capture, argv, 'compose-tests', 900, **kwargs),
                                  ({'exit_code': 65}, b'out', b'err'))
                 capture.assert_called_once_with(argv, 'compose-tests', 900, **kwargs)
-                observer.assert_called_once_with(dest/'native-stacks', SIM, 'a'*64)
+                observer.assert_called_once_with(dest/'native-stacks', SIM, 'a'*64, original_log=dest/'test.log')
                 with self.assertRaises(ValueError):
                     c.execute_observed(capture, argv, 'compose-tests', 1200, **kwargs)
                 self.assertEqual(capture.call_count, 1)
@@ -121,6 +123,9 @@ class NativeStacksControls(unittest.TestCase):
         with TemporaryDirectory() as d:
             with patch.dict(os.environ, HOME=d):
                 sampler = c.NativeSampler(Path(d).resolve(strict=True)/'samples', SIM, 'a'*64)
+                (sampler.directory.parent/'test.log').write_bytes(ORIGINAL_MARKER)
+                sampler.activation = dict(**c.original_home_marker(ORIGINAL_MARKER), observed_ms=sampler.started_ms,
+                                          observed_unix=1.0, kernel_requests_before_activation=0)
                 path = sampler.directory/'sample-001.txt'
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_1')
                 sampler.discoveries = 1
@@ -148,6 +153,42 @@ class NativeStacksControls(unittest.TestCase):
                     c.verify_receipt(sampler.directory, SIM, 'a'*64, producer_directory=Path('/different'))
                 path.write_bytes(b'Analysis of sampling Parlor (pid 23)\nCall graph:\nThread_2')
                 with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
+
+    def test_observer_log_activation_requires_original_first_launch_not_later_method_or_synthetic_marker(self):
+        self.assertIsNone(c.original_home_marker(b'Xcode cold startup\n'))
+        self.assertIsNone(c.original_home_marker(ORIGINAL_MARKER[:ORIGINAL_MARKER.index(b'Waiting')]))
+        marker = c.original_home_marker(ORIGINAL_MARKER)
+        self.assertEqual(marker['kind'], 'original-first-home-waiter')
+        self.assertEqual(marker['log_prefix_sha256'], hashlib.sha256(ORIGINAL_MARKER).hexdigest())
+        for raw in (ORIGINAL_MARKER.replace(b'Launch me.parlor.ios.debug', b'Launch foreign'),
+                    ORIGINAL_MARKER.replace(b'    t =    25.40s', b"Test Case '-[foreign next]' started.\n    t =    25.40s")):
+            with self.assertRaises(ValueError): c.original_home_marker(raw)
+        with self.assertRaises(ValueError): c.original_home_marker(b'x'*(c.MAX_TEST_LOG+1))
+
+    def test_live_original_log_reads_bounded_prefix_not_symlink_or_other_file_type(self):
+        with TemporaryDirectory() as d:
+            path=Path(d).resolve()/'test.log'
+            self.assertEqual(c.read_live_log(path), b'')
+            path.write_bytes(ORIGINAL_MARKER)
+            self.assertEqual(c.read_live_log(path), ORIGINAL_MARKER)
+            link=path.with_name('alias');link.symlink_to(path)
+            with self.assertRaises(ValueError):c.read_live_log(link)
+            path.write_bytes(b'x'*(c.MAX_TEST_LOG+1))
+            with self.assertRaises(ValueError):c.read_live_log(path)
+
+    def test_prebuild_helper_is_idle_until_existing_first_launch_log_without_app_query_or_wait_extension(self):
+        with TemporaryDirectory() as d, patch.dict(os.environ,HOME=d):
+            root=Path(d).resolve();log=root/'test.log'
+            sampler=c.NativeSampler(root/'samples',SIM,'a'*64,original_log=log)
+            sampler.kernel=Mock();sampler.kernel.requests=0
+            sampler.kernel.receipt.return_value={'portable_fixture_only':True}
+            sampler.stop=Mock();sampler.stop.is_set.side_effect=[False,False,True]
+            with patch.object(c,'read_live_log',side_effect=[b'Xcode startup\n',ORIGINAL_MARKER]), \
+                    patch.object(sampler,'_discover') as discover:
+                sampler._observe()
+            discover.assert_not_called()
+            self.assertEqual(sampler.activation['kernel_requests_before_activation'],0)
+            sampler.stop.wait.assert_called_once_with(1)
 
     def test_current_uid_kernel_paths_filter_other_devices_and_no_arguments_or_root_user_scan(self):
         import pin49_process_paths as paths

@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import plistlib
 import re
+import stat
 import subprocess
 import sys
 import threading
@@ -28,6 +29,40 @@ DISCOVERY_CADENCE_SECONDS = 1
 INTERVAL_MS = 10
 BUNDLE = 'me.parlor.ios.debug'
 UUID = re.compile(r'[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}')
+MAX_TEST_LOG = 4 * 1024 * 1024
+FIRST_METHOD = b"Test Case '-[iosAppUITests.IOSAppLaunchUITests testAdditionalGamesExposeOnlyMultiplayerSetupInArabic]' started."
+HOME_WAITER = re.compile(rb'^    t = +[0-9]+\.[0-9]+s Waiting 30\.0s for "parlor-home-brand" StaticText to exist$', re.M)
+
+
+def original_home_marker(raw):
+    """Read only already-produced original log; never query/control the app."""
+    require(type(raw) is bytes and len(raw) <= MAX_TEST_LOG, 'Bounded existing original test log')
+    first = raw.find(FIRST_METHOD)
+    if first < 0: return None
+    following = raw.find(b"Test Case '-[", first+len(FIRST_METHOD))
+    marker = HOME_WAITER.search(raw, first+len(FIRST_METHOD))
+    if marker is None: return None
+    require(following < 0 or marker.start() < following, 'First original method owns observer activation')
+    require(b'Launch '+BUNDLE.encode() in raw[first:marker.start()], 'Existing first application launch before observer activation')
+    return dict(kind='original-first-home-waiter', log_bytes=len(raw), log_prefix_sha256=hashlib.sha256(raw).hexdigest(),
+                first_method_offset=first, marker_offset=marker.start(), marker_end=marker.end())
+
+
+def read_live_log(path):
+    require(path.resolve() == path.absolute(), 'Owned unredirected original log')
+    try: fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError: return b''
+    try:
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and before.st_size <= MAX_TEST_LOG,
+                'Bounded regular live original log')
+        chunks, size = [], 0
+        while size < before.st_size:
+            part = os.read(fd, min(8192, before.st_size-size))
+            require(part, 'Original log may append, never truncate a read prefix')
+            chunks.append(part); size += len(part)
+        return b''.join(chunks)
+    finally: os.close(fd)
 
 
 def require(ok, reason):
@@ -104,7 +139,7 @@ def tool_control(directory):
 
 class NativeSampler:
     """One host observer; serial bounded samples, never sample unrelated processes."""
-    def __init__(self, directory, simulator, executable_sha, *, kernel_channel=None):
+    def __init__(self, directory, simulator, executable_sha, *, kernel_channel=None, original_log=None):
         require(UUID.fullmatch(simulator) is not None and re.fullmatch('[0-9a-f]{64}', executable_sha),
                 'Explicit owned device and exact product digest')
         require(not directory.exists(), 'Fresh native sample directory')
@@ -113,6 +148,7 @@ class NativeSampler:
         self.stop = threading.Event()
         self.rows, self.error, self.discoveries = [], None, 0
         self.kernel = kernel_channel
+        self.original_log, self.activation = original_log, None
         self.thread = threading.Thread(target=self._observe, name='parlor-owned-os-sampler')
         self.started_ms = time.monotonic() * 1000
         self.home = Path(os.environ['HOME']).resolve(strict=True)
@@ -162,6 +198,19 @@ class NativeSampler:
 
     def _observe(self):
         try:
+            # Xcode's cold startup previously exhausted discovery before any
+            # app existed. Keep the same prebuild helper asleep until the exact
+            # original log reaches its first Home waiter; no app/XCTest change.
+            require(self.original_log is not None, 'Exact existing original test log required')
+            while not self.stop.is_set():
+                marker = original_home_marker(read_live_log(self.original_log))
+                if marker is not None:
+                    self.activation = dict(**marker, observed_ms=time.monotonic()*1000,
+                                           observed_unix=time.time(), kernel_requests_before_activation=self.kernel.requests)
+                    require(self.kernel.requests == 0, 'No native discovery before original launch marker')
+                    self._checkpoint()
+                    break
+                self.stop.wait(DISCOVERY_CADENCE_SECONDS)
             while not self.stop.is_set():
                 found = self._discover()
                 if found and not self.stop.is_set():
@@ -183,6 +232,7 @@ class NativeSampler:
                    'producer_directory': str(self.directory),
                    'executable_sha256': self.executable_sha, 'started_ms': self.started_ms,
                    'discoveries': self.discoveries, 'samples': self.rows, 'error': self.error,
+                   'activation': self.activation,
                    'kernel_child': self.kernel.receipt() if self.kernel else None,
                    'sample_seconds': SAMPLE_SECONDS, 'interval_ms': INTERVAL_MS,
                    'sample_cadence_seconds': SAMPLE_CADENCE_SECONDS,
@@ -237,11 +287,11 @@ def execute_observed(capture, arguments, label, timeout, *, kernel_channel=None,
     require(log.name == 'test.log' and log.parent.name == 'compose', 'Original public pair only')
     products = json.loads(frozen_sources._read(log.parent/'product.json', 2 * 1024 * 1024))
     options = {'kernel_channel': kernel_channel} if kernel_channel is not None else {}
-    with NativeSampler(log.parent/'native-stacks', destinations[0], products['Parlor'], **options):
+    with NativeSampler(log.parent/'native-stacks', destinations[0], products['Parlor'], original_log=log, **options):
         return capture(arguments, label, timeout, **kwargs)
 
 
-def verify_receipt(directory, simulator, executable_sha, *, producer_directory=None, build_started_at=None):
+def verify_receipt(directory, simulator, executable_sha, *, producer_directory=None, build_started_at=None, original_log=None):
     """Read back every actual report; unchanged receipt cannot invent coverage."""
     receipt = json.loads(frozen_sources._read(directory/'samples.json', 2 * 1024 * 1024))
     producer_directory = producer_directory or directory
@@ -256,6 +306,18 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
             and (receipt['sample_cadence_seconds'], receipt['discovery_cadence_seconds']) == (5, 1)
             and 0 < receipt['discoveries'] <= MAX_DISCOVERIES
             and 0 < len(receipt['samples']) <= MAX_SAMPLES, 'Exact bounded real sampling parameters')
+    activation = receipt['activation']
+    raw_log = frozen_sources._read(original_log or directory.parent/'test.log', MAX_TEST_LOG)
+    require(type(activation) is dict and type(activation['log_bytes']) is int
+            and 0 < activation['log_bytes'] <= len(raw_log)
+            and original_home_marker(raw_log[:activation['log_bytes']]) ==
+                {k: activation[k] for k in ('kind','log_bytes','log_prefix_sha256','first_method_offset','marker_offset','marker_end')}
+            and activation['kernel_requests_before_activation'] == 0
+            and type(activation['observed_ms']) in (int,float) and math.isfinite(activation['observed_ms'])
+            and type(activation['observed_unix']) in (int,float) and math.isfinite(activation['observed_unix'])
+            and activation['observed_unix'] > 0
+            and receipt['started_ms'] <= activation['observed_ms'] <= receipt['started_ms']+900000,
+            'Actual unchanged first-launch log marker before any kernel discovery')
     actual = []
     kernel.verify(receipt['kernel_child'], simulator, receipt['discoveries'])
     if build_started_at is not None:
@@ -264,7 +326,7 @@ def verify_receipt(directory, simulator, executable_sha, *, producer_directory=N
         require(child['started_before_original_build'] is True
                 and 0 < child['started_unix'] <= child['ready_unix'] <= build_unix,
                 'Actual native readiness precedes original source-specific build intent')
-    previous = receipt['started_ms']
+    previous = activation['observed_ms']
     for index, row in enumerate(receipt['samples'], 1):
         path = directory/('sample-%03d.txt' % index)
         require(all(type(row[k]) in (int, float) and math.isfinite(row[k]) and row[k] >= 0
