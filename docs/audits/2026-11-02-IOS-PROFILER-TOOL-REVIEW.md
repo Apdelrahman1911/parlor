@@ -230,3 +230,31 @@ Pre-reserve owned binary output0600 before capture. Analyze offline without sudo
 unexpected file ownership/access fails rather than chmod/chown bypass. No opaque
 upload or application use before actual isolation/capability admission. Standard
 free runner availability, security requirements and physical4 reservation remain.
+
+## Report-write failure and opaque-output correction
+
+[41422535117](https://github.com/Apdelrahman1911/parlor/actions/runs/41422535117)
+completed **FAILURE**: seven actual Mac controls/zero skips. Existing sudo policy
+allows live sampling; native output reaches sampling complete/symbol processing,
+then **exit69 /3.477s**: report save to the reserved path fails with errno2. Exact
+filesystem/service cause is not established. Target1516 and launcher1517 reaped.
+No actual offline analysis or accepted native stack. Full reader rejects; frozen
+failure facts accepted. Artifact13130691843/959,010bytes/SHA256
+`d0d77d8eb5970b52d2f2ff3931a23e9d53e7c9c8594311b471f99a6eb555d9ba`.
+
+**Correction to the previous no-opaque-upload statement:** this tool's output-write
+failure falls back to stdout, including its opaque format, even with stdin closed.
+The fixture's1,375,170-byte record log therefore contains opaque output. No Parlor
+application/player data was involved; original artifact/custody is preserved.
+It is not private-state isolation or attachment qualification. Do not apply the
+old output adapter to the application.
+
+Use the installed, documented `-noFile` interface: the tool writes only its opaque
+stdout, captured by the owner to an exclusive0600 **`.opaque-output`**, outside
+artifact patterns. There is no root-owned output path, changed filesystem access,
+permission grant or fallback response. Offline `-i` reads this retained native
+format. Both CLI streams remain private on success/failure; public logs admit only
+observed public stage/error lines before the actual binary marker, not arbitrary
+output. Keep opaque size/hash/status metadata, original errors, bounded capture/
+analysis, exact target and all stack/custody gates. No unknown output is exposed
+or treated as successful evidence. Fresh stream-bound controls precede native use.

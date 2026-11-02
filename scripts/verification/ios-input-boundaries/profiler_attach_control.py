@@ -55,11 +55,13 @@ def checkpoint(directory,value):
     temp=directory/'receipt.writing';temp.write_text(json.dumps(value,indent=2));temp.replace(directory/'receipt.json')
 
 
-def command(directory,receipt,label,argv):
+def command(directory,receipt,label,argv,*,opaque=False):
     started=time.monotonic()
     row=dict(label=label,command=argv,started_unix=time.time(),status='STARTED')
     receipt['commands'].append(row);checkpoint(directory,receipt)
-    with (directory/(label+'.log')).open('xb') as output:
+    suffix='.opaque-output' if opaque else '.log'
+    fd=os.open(directory/(label+suffix),os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+    with os.fdopen(fd,'wb') as output:
         child=subprocess.Popen(argv,stdin=subprocess.DEVNULL,stdout=output,stderr=output,env=environment())
         row['owned_command_pid']=child.pid;checkpoint(directory,receipt)
         try:

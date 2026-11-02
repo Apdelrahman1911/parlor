@@ -106,3 +106,12 @@ class ProfilerAttachControls(unittest.TestCase):
             self.assertEqual(commands[-1],[c.PROFILER,'list','devices'])
             self.assertIn(['/usr/sbin/DevToolsSecurity','-status'],commands)
             self.assertNotIn('owned_target_pid',json.loads((out/'receipt.json').read_text()))
+
+    def test_opaque_command_output_is_private_exclusive_and_never_a_log_artifact(self):
+        with tempfile.TemporaryDirectory() as d:
+            out=Path(d).resolve();receipt={'commands':[]};child=Mock(pid=42);child.poll.return_value=0;child.wait.return_value=0
+            with patch.object(c.subprocess,'Popen',return_value=child):
+                c.command(out,receipt,'record',['/actual/tool'],opaque=True)
+            self.assertTrue((out/'record.opaque-output').is_file())
+            self.assertEqual((out/'record.opaque-output').stat().st_mode&0o777,0o600)
+            self.assertFalse((out/'record.log').exists())

@@ -26,10 +26,10 @@ EXPECTED = {
 PROFILER_ATTACH_CONTROL = 'ios-profiler-attach-control.yml'
 PROFILER_ATTACH_CONTROL_SHA256 = '8570cdc2fb53e691204d55992bc6b8ea6e0db1fdbd1c1eb8e2dc2587644fce70'
 PROFILER_ATTACH_CONTROL_COMPANIONS = {
-    'spindump_attach_control.py': '41cc3ca2bdf25a0a480aa7fc08f80016cfbb6d0e05b28203dddba6908a952e58',
-    'test_spindump_attach_control.py': 'd9f6718b4a7c5874c606f728ce1a04a645271672e36b9be6cc8c729e0cf0d7a0',
-    'profiler_attach_control.py': '6afc6bb31138554deb7ce39622c58e22052d11927598cee377fdd5e9d1a995d6',
-    'test_profiler_attach_control.py': 'b95dc6ad2a9c17cc4353216d632de3bebc3ead6a26064313b7827048c3f1616b',
+    'spindump_attach_control.py': '7f93c6a53244080d41b6016ef5ae4ebc3ea846b93b3828f6ae23e3e0cd041518',
+    'test_spindump_attach_control.py': 'c718105cee9632c1a0b0db88896cc452061e82a48eed41d0b014c6b03a3a2604',
+    'profiler_attach_control.py': '9804df8fb8ab17560276a066c74d8273d43b8de64325813f55cf073cc2f18149',
+    'test_profiler_attach_control.py': '4551e62a32a39105d41092ab5e51a198b41fe9f56074fd1e0ccefc8f3f4a6070',
 }
 
 PROFILER_TOOL_REVIEW = 'ios-profiler-tool-review.yml'

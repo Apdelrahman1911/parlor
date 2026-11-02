@@ -11,11 +11,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from profiler_attach_control import checkpoint, command, environment
+from profiler_attach_control import checkpoint, command as native_command, environment
 
 TOOL = '/usr/sbin/spindump'
 MAX_RAW = 16*1024*1024
 MAX_TEXT = 4*1024*1024
+PRIVATE_CAPTURE = 'record.opaque-output'
 
 
 def capture_command(pid, raw):
@@ -25,11 +26,37 @@ def capture_command(pid, raw):
     # Never prompt or preserve caller credentials. Native5s limit bounds the
     # privileged tool itself inside the unchanged8s launcher deadline.
     return ['/usr/bin/sudo','-n',TOOL,str(pid),'1','10','-onlyTarget','-noText',
-            '-noProcessingWhileSampling','-timelimit','5','-o',str(raw)]
+            '-noProcessingWhileSampling','-timelimit','5','-noFile']
 
 
 def analysis_command(raw, text):
     return [TOOL,'-i',str(raw),'-timeline','-noBinary','-o',str(text)]
+
+
+def public_log(raw):
+    # Actual41422535117 output-write error falls back to stdout INCLUDING the
+    # opaque format. Never upload raw CLI output, even on error. Keep only these
+    # observed public stage/error lines; everything unknown/binary stays private.
+    prefix=raw.split(b'Spindump binary format',1)[0]
+    lines=[]
+    for line in prefix.splitlines():
+        known=line.startswith((b'Sampling ',b'Use spindump -i ',b'Spindump failed to save report to ',
+                               b'Please enter a new output location ',b'spindump must be run as root '))
+        if known and len(line)<=1024 and all(32<=v<=126 or v==9 for v in line):lines.append(line)
+    return b'\n'.join(lines)+(b'\n' if lines else b'')
+
+
+def command(directory,receipt,label,argv):
+    try:native_command(directory,receipt,label,argv,opaque=True)
+    finally:
+        path=directory/(label+'.opaque-output')
+        raw=path.read_bytes() if path.exists() and path.stat().st_size<=MAX_RAW else b''
+        safe=public_log(raw)
+        fd=os.open(directory/(label+'.log'),os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+        with os.fdopen(fd,'wb') as output:output.write(safe)
+        receipt.setdefault('private_output',{})[label]=dict(bytes=path.stat().st_size if path.exists() else 0,
+            sha256=hashlib.sha256(raw).hexdigest() if raw else None,uploaded=False,bounded=len(raw)>0)
+        checkpoint(directory,receipt)
 
 
 def owned_file(path, maximum):
@@ -56,10 +83,7 @@ def control(directory):
                  apps_launched=0,accessibility_queries=0,all_processes=False,
                  attachment_independently_verified=False,application_root_cause=False,
                  shipping_qualified=False,physical_verified=False)
-    raw=directory/'owned.raw';text=directory/'report.txt'
-    # Reserve before target creation: an output allocation failure must never
-    # leave a busy target that cannot reach the capture's cleanup block.
-    fd=os.open(raw,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600);os.close(fd)
+    raw=directory/PRIVATE_CAPTURE;text=directory/'report.txt'
     target=subprocess.Popen(receipt['target_command'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL,env=environment())
     receipt['owned_target_pid']=target.pid;checkpoint(directory,receipt)

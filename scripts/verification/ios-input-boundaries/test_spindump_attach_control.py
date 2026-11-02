@@ -13,7 +13,7 @@ class SpindumpAttachControls(unittest.TestCase):
     def test_exact_target_only_binary_capture_and_offline_timeline_no_permission_bypass(self):
         raw=Path('/owned/control/owned.raw');text=raw.with_name('report.txt')
         self.assertEqual(c.capture_command(42,raw),['/usr/bin/sudo','-n',c.TOOL,'42','1','10','-onlyTarget',
-            '-noText','-noProcessingWhileSampling','-timelimit','5','-o',str(raw)])
+            '-noText','-noProcessingWhileSampling','-timelimit','5','-noFile'])
         self.assertEqual(c.analysis_command(raw,text),[c.TOOL,'-i',str(raw),'-timeline','-noBinary','-o',str(text)])
         for pid in (0,-1,True,'42'):
             with self.assertRaises(ValueError):c.capture_command(pid,raw)
@@ -59,22 +59,26 @@ class SpindumpAttachControls(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
             out=Path(d).resolve()/'control';child=Mock(pid=42);child.poll.return_value=-15
             def incomplete(directory,receipt,label,argv):
-                if label=='record':(directory/'owned.raw').write_bytes(b'opaque fixture')
+                if label=='record':(directory/c.PRIVATE_CAPTURE).write_bytes(b'opaque fixture')
                 else:(directory/'report.txt').write_bytes(b'no actual stacks')
             with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c,'command',side_effect=incomplete),self.assertRaises(ValueError):
                 c.control(out)
             value=json.loads((out/'receipt.json').read_text());self.assertFalse(value['raw_metadata']['uploaded'])
             self.assertFalse(value['attachment_independently_verified']);self.assertNotIn('result',value)
 
-    def test_live_capture_output_reserved_private_before_privileged_tool_not_permission_changes(self):
-        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
-            out=Path(d).resolve()/'control';child=Mock(pid=42);child.poll.return_value=-15
-            def failure(directory,receipt,label,argv):
-                p=directory/'owned.raw'
-                self.assertTrue(p.is_file());self.assertFalse(p.is_symlink())
-                self.assertEqual(p.stat().st_mode&0o777,0o600)
-                self.assertEqual(p.stat().st_size,0)
-                self.assertEqual(argv[:3],['/usr/bin/sudo','-n',c.TOOL])
-                raise ValueError('actual capture failure')
-            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c,'command',side_effect=failure),self.assertRaises(ValueError):
-                c.control(out)
+    def test_native_binary_fallback_and_unknown_lines_never_enter_public_artifact_log(self):
+        raw=b'Sampling yes [42] for 1 seconds\nSampling completed, processing symbols...\nSpindump binary format\nOPAQUE\n'
+        self.assertEqual(c.public_log(raw),b'Sampling yes [42] for 1 seconds\nSampling completed, processing symbols...\n')
+        self.assertEqual(c.public_log(b'Unknown secret\n\x00\xffbinary'),b'')
+
+    def test_failed_native_command_output_stays_private_and_original_error_is_not_waived(self):
+        with tempfile.TemporaryDirectory() as d:
+            out=Path(d).resolve();receipt={}
+            def failure(directory,receipt,label,argv,*,opaque):
+                self.assertTrue(opaque)
+                (directory/(label+'.opaque-output')).write_bytes(b'Sampling completed, processing symbols...\nSpindump binary format\nOPAQUE\n')
+                raise ValueError('actual command failure')
+            with patch.object(c,'native_command',side_effect=failure),self.assertRaisesRegex(ValueError,'actual command failure'):
+                c.command(out,receipt,'record',c.capture_command(42,out/c.PRIVATE_CAPTURE))
+            self.assertNotIn(b'OPAQUE',(out/'record.log').read_bytes())
+            self.assertFalse(receipt['private_output']['record']['uploaded'])
