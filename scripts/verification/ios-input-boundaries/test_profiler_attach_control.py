@@ -13,7 +13,7 @@ import profiler_attach_control as c
 class ProfilerAttachControls(unittest.TestCase):
     def test_exact_target_recording_and_offline_exports_never_all_processes_or_privacy_bypass(self):
         p=Path('/owned/control');self.assertEqual(c.record_command(42,p/'owned.trace'),[
-            '/usr/bin/xcrun','xctrace','record','--template','Time Profiler','--attach','42',
+            c.PROFILER,'record','--template','Time Profiler','--attach','42',
             '--time-limit','1s','--output','/owned/control/owned.trace'])
         for pid in (0,-1,True,'42'):
             with self.assertRaises(ValueError):c.record_command(pid,p)
@@ -49,6 +49,10 @@ class ProfilerAttachControls(unittest.TestCase):
             child=Mock(pid=42);child.poll.side_effect=[None,-15];child.wait.return_value=-15
             target=Path(d).resolve()/'control'
             def fail(directory,receipt,label,argv):
+                if label=='ready-path':
+                    (directory/'ready-path.log').write_bytes(c.PROFILER.encode()+b'\n');return
+                if label=='ready-help':
+                    (directory/'ready-help.log').write_bytes(b'--attach');return
                 self.assertEqual(label,'record');self.assertEqual(argv,c.record_command(42,target/'owned.trace'))
                 raise ValueError('actual recording failed')
             with patch.object(c.subprocess,'Popen',return_value=child) as spawn,patch.object(c,'command',side_effect=fail),self.assertRaises(ValueError):
@@ -66,3 +70,13 @@ class ProfilerAttachControls(unittest.TestCase):
             child.kill.assert_called_once();self.assertTrue(receipt['commands'][0]['owned_child_reaped'])
             self.assertEqual(receipt['commands'][0]['status'],'STARTED');self.assertEqual(receipt['commands'][0]['owned_command_pid'],43)
             self.assertLessEqual(child.wait.call_args_list[0].kwargs['timeout'],8)
+
+    def test_readiness_must_identify_exact_tool_before_any_busy_target_is_started(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'),patch.object(c.subprocess,'Popen') as target:
+            out=Path(d).resolve()/'control'
+            def foreign(directory,receipt,label,argv):
+                self.assertEqual(label,'ready-path');self.assertEqual(argv,['/usr/bin/xcrun','--find','xctrace'])
+                (directory/'ready-path.log').write_bytes(b'/different/tool\n')
+            with patch.object(c,'command',side_effect=foreign),self.assertRaisesRegex(ValueError,'exact installed'):
+                c.control(out)
+            target.assert_not_called();self.assertNotIn('owned_target_pid',json.loads((out/'receipt.json').read_text()))

@@ -84,3 +84,31 @@ schema or redirected/entity XML fails closed. Workflow success alone cannot
 certify target isolation, attach capability, overhead or Parlor behavior. Any
 permission prompt/failure remains a limitation, not bypassed. Admit actual tool
 samples/source/custody before applying this instrument to the original app.
+
+## First attachment attempt and pre-target readiness correction
+
+[41417312591](https://github.com/Apdelrahman1911/parlor/actions/runs/41417312591)
+completed **FAILURE**. Six actual macOS controls passed/zero skips. First owned
+`xcrun xctrace record` exceeded8s; empty log, no TOC/sample XML. Owned CLI1611 and
+target1610 were reaped. Full frozen reader rejects. API artifact13127978292/
+779bytes/SHA256
+`615cfab8dbd6b08b1cc4756a276a31f90f50a706e1f98702c670780f3a309c32`
+retains the actual failed receipt/empty log. No app/Simulator/XCTest executed.
+Empty output cannot identify internal startup, prompting, recording or processing.
+
+Accepted41416484173 measured cold tool resolution at3.912s and subsequent help
+at0.749s/record help0.209s. Resolve the exact installed Xcode26.3 tool and complete
+one documented help-readiness command **before** creating the busy target, then
+record/export using that admitted absolute path. No restart, alternate selector,
+sampler flag, extra sampling or longer deadline: readiness and recording commands
+retain8s. Actual ready/target/record clocks and command/PID/reaping are retained.
+Wrong tool or failed readiness prevents target creation. This removes measured
+resolution work/avoidable host CPU interference from active capture; its internal
+causal contribution remains unproven until fresh actual execution.
+
+On capture failure also retain bounded numeric owned-trace presence metadata
+(existence/count/size only), not opaque contents or a completeness claim. Seven
+portable safeguards include readiness-before-target rejection; all seven must
+execute on the fresh Mac. Target scope, actual stack frames and custody remain
+mandatory for independent attachment admission. No application correction,
+shipping/physical acceptance or Phase1 closure follows from this control alone.

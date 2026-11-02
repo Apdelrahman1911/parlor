@@ -13,6 +13,7 @@ import time
 import xml.etree.ElementTree as ET
 
 DEVELOPER = '/Applications/Xcode_26.3.app/Contents/Developer'
+PROFILER = DEVELOPER+'/usr/bin/xctrace'
 MAX_XML = 4*1024*1024
 XPATH = '/trace-toc/run[@number="1"]/data/table[@schema="time-profile"]'
 
@@ -24,12 +25,12 @@ def environment():
 
 def record_command(pid,trace):
     if type(pid) is not int or pid<=0:raise ValueError('Exact owned positive PID required')
-    return ['/usr/bin/xcrun','xctrace','record','--template','Time Profiler',
+    return [PROFILER,'record','--template','Time Profiler',
             '--attach',str(pid),'--time-limit','1s','--output',str(trace)]
 
 
 def export_command(trace,target,*,toc=False):
-    return ['/usr/bin/xcrun','xctrace','export','--input',str(trace),
+    return [PROFILER,'export','--input',str(trace),
             *(['--toc'] if toc else ['--xpath',XPATH]),'--output',str(target)]
 
 
@@ -71,9 +72,22 @@ def control(directory):
     receipt=dict(schema=1,developer_dir=DEVELOPER,target_command=['/usr/bin/yes'],commands=[],
                  apps_launched=0,accessibility_queries=0,all_processes=False,actual_target_samples_verified=False,
                  application_root_cause=False,shipping_qualified=False,physical_verified=False)
+    # Installed41416484173 observed3.912s cold xcrun resolution. Complete this
+    # exact read-only readiness BEFORE creating the busy target; no retry or
+    # extra sampling. Recording/export use the admitted absolute Xcode tool.
+    try:
+        command(directory,receipt,'ready-path',['/usr/bin/xcrun','--find','xctrace'])
+        if (directory/'ready-path.log').read_bytes()!=PROFILER.encode()+b'\n':
+            raise ValueError('Only the exact installed Xcode26.3 profiler path')
+        command(directory,receipt,'ready-help',[PROFILER,'help','record'])
+        if b'--attach' not in (directory/'ready-help.log').read_bytes():
+            raise ValueError('Actual selected tool readiness required before target creation')
+        receipt['ready_before_target']=True;checkpoint(directory,receipt)
+    except BaseException as error:
+        receipt['error']=type(error).__name__+': '+str(error);checkpoint(directory,receipt);raise
     target=subprocess.Popen(receipt['target_command'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL,env=environment())
-    receipt['owned_target_pid']=target.pid;checkpoint(directory,receipt)
+    receipt['owned_target_pid']=target.pid;receipt['owned_target_started_unix']=time.time();checkpoint(directory,receipt)
     trace=directory/'owned.trace'
     try:
         try:command(directory,receipt,'record',record_command(target.pid,trace))
@@ -94,7 +108,19 @@ def control(directory):
         receipt['result']='OWNED_HOST_PROFILER_EXPORT_COMPLETE_REQUIRES_INDEPENDENT_TARGET_ADMISSION'
     except BaseException as error:
         receipt['error']=type(error).__name__+': '+str(error);raise
-    finally:checkpoint(directory,receipt)
+    finally:
+        # Only numeric owned-output presence metadata, not opaque/unrelated
+        # profile contents. This is not trace completeness or stack evidence.
+        receipt['trace_presence']={'exists':trace.exists(),'entries':0,'regular_bytes':0,'bounded':True}
+        if trace.exists() and trace.is_dir() and not trace.is_symlink():
+            for entry in trace.rglob('*'):
+                receipt['trace_presence']['entries']+=1
+                if receipt['trace_presence']['entries']>512 or entry.is_symlink():
+                    receipt['trace_presence']['bounded']=False;break
+                if entry.is_file():receipt['trace_presence']['regular_bytes']+=entry.stat().st_size
+                if receipt['trace_presence']['regular_bytes']>64*1024*1024:
+                    receipt['trace_presence']['bounded']=False;break
+        checkpoint(directory,receipt)
 
 
 if __name__=='__main__':control(Path(sys.argv[1]))

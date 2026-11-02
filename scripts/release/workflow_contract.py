@@ -26,8 +26,8 @@ EXPECTED = {
 PROFILER_ATTACH_CONTROL = 'ios-profiler-attach-control.yml'
 PROFILER_ATTACH_CONTROL_SHA256 = '2e1b6baacba9ce4ecba0167a04a153841e4d63e32d2e4759c91ca77f3130a5f4'
 PROFILER_ATTACH_CONTROL_COMPANIONS = {
-    'profiler_attach_control.py': '690a63fe84d533cd0f9981065b45026e7dc06bc65322abdba31ca3cfd96b9e82',
-    'test_profiler_attach_control.py': '2eabff4e75406d20c2788424eb456b2259649effccefa1cbb0a6a21165c7efe9',
+    'profiler_attach_control.py': 'bbb0a12f76f90e0b92fc6c1367dd9800c2d0a27111c1f2d0bf89a12af2b0ef67',
+    'test_profiler_attach_control.py': '06bad1c12ea206008b8eab8a8699301f3dd15b30dd67124a61b236b1206eb5b0',
 }
 
 PROFILER_TOOL_REVIEW = 'ios-profiler-tool-review.yml'
