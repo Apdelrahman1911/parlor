@@ -46,3 +46,16 @@ insert return does not prove non-null Skiko input, callback/batch delivery or va
 closure. Failed41180128325/41354641122/41412185488 stay failed. Do not replay green
 work unchanged or patch speculatively. Phases2/3 follow genuinely resolved Phase1;
 physical Phase4 remains owner-reserved. No security/dependency/AGENTS/release waiver.
+
+## Terminal execution (supersedes preparation-time pending status)
+
+Run41502134475/source `5a0d35cfbe19dd559246ec09ca4dddd465c77991` completed with
+admitted diagnostic collection: **Arabic FAILED, English PASSED**, XCTest65.
+Nine actual Mac controls, zero skips, source/product/PID/commands/owned cleanup
+were independently admitted. Artifact13170523744 SHA256
+`f9b1d5967877903d20fc6af27b365cd501ff96352e711ab745382c026622da50`.
+Build743.298s; test command530.994s. Original Arabic typed-value assertion fails;
+80 root getter pairs in its failed window, no observed empty root and maximum
+getter duration about37µs. Editor attachment exists, but no monitored mutator;
+weak editor lifetime/original focus result were absent, so causality remains open.
+See `2026-11-02-IOS-FIRST-RESPONDER-BOUNDARY.md` for the new discriminant.

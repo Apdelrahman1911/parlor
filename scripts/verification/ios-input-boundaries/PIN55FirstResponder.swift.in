@@ -1,0 +1,100 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN55_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+
+/// Owned original first-responder calls only. No focus repair or proactive responder query.
+final class PIN55FirstResponderObservation {
+    private typealias Become = @convention(c) (AnyObject, Selector) -> Bool
+    private final class WeakEditor {
+        weak var object: AnyObject?
+        init(_ object: AnyObject) { self.object = object }
+    }
+    private let armed: () -> Bool
+    private let selector = NSSelectorFromString("becomeFirstResponder")
+    private var editors = [WeakEditor]()
+    private var target: AnyClass?
+    private var parent: AnyClass?
+    private var original: IMP?
+    private var replacement: IMP?
+    private var installedMs: Double?
+    private var attempted = false
+    private var installed = false
+    private var invalid = 0
+    private var overflow = 0
+    private var rows = [[Double]]()
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(4096)
+    }
+
+    private func type(_ pointer: UnsafeMutablePointer<CChar>?) -> String {
+        guard let pointer else { return "" }
+        defer { free(pointer) }
+        return String(cString: pointer)
+    }
+
+    func bindVerifiedEditor(_ object: AnyObject, target: AnyClass) {
+        guard Thread.isMainThread, armed(), object_getClass(object) === target else { return }
+        guard editors.count < 128 else { overflow = min(1_000_000, overflow + 1); return }
+        guard !editors.contains(where: { $0.object === object }) else { invalid = min(1_000_000, invalid + 1); return }
+        editors.append(WeakEditor(object))
+        if attempted {
+            if self.target !== target { invalid = min(1_000_000, invalid + 1) }
+            return
+        }
+        attempted = true
+        var count: UInt32 = 0
+        guard let list = class_copyMethodList(target, &count), count <= 256 else { return }
+        defer { free(list) }
+        guard !(0..<Int(count)).contains(where: { method_getName(list[$0]) == selector }),
+              let parent = class_getSuperclass(target),
+              let method = class_getInstanceMethod(target, selector),
+              let parentMethod = class_getInstanceMethod(parent, selector),
+              method_getNumberOfArguments(method) == 2,
+              type(method_copyReturnType(method)) == "B",
+              type(method_copyArgumentType(method, 0)) == "@",
+              type(method_copyArgumentType(method, 1)) == ":",
+              let encoding = method_getTypeEncoding(method),
+              unsafeBitCast(method_getImplementation(method), to: UInt.self) ==
+                unsafeBitCast(method_getImplementation(parentMethod), to: UInt.self) else { return }
+        let original = method_getImplementation(method)
+        let call = unsafeBitCast(original, to: Become.self), selector = self.selector
+        let block: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            self?.record(object, phase: 0)
+            let result = call(object, selector) // Same object/selector, once, synchronous; never force focus.
+            self?.record(object, phase: 1, result: result)
+            return result
+        }
+        let replacement = imp_implementationWithBlock(block)
+        guard class_addMethod(target, selector, replacement, encoding) else {
+            imp_removeBlock(replacement); return
+        }
+        self.target = target; self.parent = parent; self.original = original; self.replacement = replacement
+        installed = true; installedMs = ProcessInfo.processInfo.systemUptime * 1000
+    }
+
+    private func record(_ object: AnyObject, phase: Int, result: Bool = false) {
+        guard Thread.isMainThread, armed(), let index = editors.firstIndex(where: { $0.object === object }) else { return }
+        guard rows.count < 4096 else { overflow = min(1_000_000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(phase), Double(index + 1), result ? 1 : 0])
+    }
+
+    func freeze() -> [String: Any] {
+        precondition(Thread.isMainThread)
+        let parentUntouched = parent.flatMap { class_getInstanceMethod($0, selector) }.map {
+            original != nil && unsafeBitCast(method_getImplementation($0), to: UInt.self) == unsafeBitCast(original!, to: UInt.self)
+        } ?? false
+        let leafHookIntact = target.flatMap { class_getInstanceMethod($0, selector) }.map {
+            replacement != nil && unsafeBitCast(method_getImplementation($0), to: UInt.self) == unsafeBitCast(replacement!, to: UInt.self)
+        } ?? false
+        return ["schema": 55, "attempted": attempted, "installed": installed,
+                "installedMs": installedMs.map { $0 as Any } ?? NSNull(),
+                "parentUntouched": parentUntouched, "leafHookIntact": leafHookIntact,
+                "editorsAlive": editors.map { $0.object != nil }, "invalid": invalid, "overflow": overflow,
+                "rows": rows, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000]
+    }
+}
+#endif

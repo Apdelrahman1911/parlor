@@ -25,6 +25,12 @@ EXPECTED = {
 # Separate exact profile; original application/stack workflows stay unchanged.
 
 
+FIRST_RESPONDER_BOUNDARY = 'ios-first-responder-boundary.yml'
+FIRST_RESPONDER_BOUNDARY_SHA256 = '124a162a3e452f01ea4ebbf4020e8fc8582ce4155849dffd845f6d79c8f6df30'
+FIRST_RESPONDER_BOUNDARY_COMPANIONS = {'PIN55FirstResponder.swift.in': '4055c2046487655a512b9ed0e6a0bb2db940a31adec9dc1219cc50fcba29448a', 'pin55_first_responder.py': '601c690cb7eb0b30745530d895309572fa2052a81ec37198401bd16b82bf5c26', 'run_pin55.py': '17a7d7568a4da741cbb2c0e952f45f805e28c41063ae30b35ed2c5c229bff492', 'test_pin55_first_responder.py': '5d28d1f32ac1707a9658bcd27deb03403757f0fb4be1b7941f00800e50582f5b'}
+FIRST_RESPONDER_BOUNDARY_RECEIPT = 'docs/audits/2026-11-02-IOS-ORIGINAL-ROOT-FAILURE.json'
+FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256 = 'ad6e2a10e5cc6eee3f43982ce89bdbe2b5875a3b3923949f7a276899bdba8ecc'
+
 ORIGINAL_ROOT_LIFECYCLE = 'ios-original-root-lifecycle.yml'
 ORIGINAL_ROOT_LIFECYCLE_SHA256 = '7df236ce9d30a12efac3aec2bcfbbfc0d196dcc953421f35c9d73fb16f6b130b'
 ORIGINAL_ROOT_LIFECYCLE_COMPANIONS = {'pin54_original_root_pair.py': 'c1fd30dc75287856772d607052a0ec92096ec9f4a80a340a98229a69fbef6d0c', 'run_pin54.py': 'a8604ea2f0f01440f230518d2f43e7d57fe1cbd73fb5db5cdfb01345b01bd000', 'test_pin54_original_root_pair.py': 'e2e611ceac8bbcd0d13ae8ebe72d7bc3f2ddabd9b26586f6e5505abcf04adc4d'}
@@ -329,7 +335,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -557,6 +563,20 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_first_responder_boundary(text: str) -> None:
+    verify_common(FIRST_RESPONDER_BOUNDARY, text)
+    verify_original_root_lifecycle((WORKFLOWS / ORIGINAL_ROOT_LIFECYCLE).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != FIRST_RESPONDER_BOUNDARY_SHA256:
+        fail('First responder requires exact free original-call control/pair, unchanged guards and original failures')
+    for name, digest in FIRST_RESPONDER_BOUNDARY_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'First responder companion differs from reviewed source: {name}')
+    path = ROOT / FIRST_RESPONDER_BOUNDARY_RECEIPT
+    if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256:
+        fail('First responder requires the actual independently retained original typing failure')
 
 
 def verify_original_root_lifecycle(text: str) -> None:
@@ -2520,6 +2540,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if FIRST_RESPONDER_BOUNDARY in files:
+        verify_first_responder_boundary(files[FIRST_RESPONDER_BOUNDARY])
     if ORIGINAL_ROOT_LIFECYCLE in files:
         verify_original_root_lifecycle(files[ORIGINAL_ROOT_LIFECYCLE])
     if ROOT_LIFECYCLE in files:
