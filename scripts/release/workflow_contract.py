@@ -152,9 +152,9 @@ NATIVE_STACK_BOUNDARY_SHA256 = 'ac94f9151ea84471d8f989b73f58117e75256f9d7915b7ef
 NATIVE_STACK_BOUNDARY_COMPANIONS = {
     'pin49_kernel_channel.py': 'e0c8e43bfcfc496a784f6e334077e9cb1a1d210a947ba9096bb9f3e8d670354f',
     'pin49_process_paths.py': '07f307530af4048caa2858e1b17ab072df8c4f9d726db8941e11efd119035689',
-    'pin49_native_stacks.py': '63af905a9146069e09bb5aec897dce3cc267b55f7c3aa9435438001c8ebade02',
+    'pin49_native_stacks.py': '81f5695f19c91c9e496adbfdad075367188f4568283f5aa07973f879ff503de0',
     'run_pin49.py': 'a9ff4b3918a17c1bbc3a2d5b2c1b093753f12ad1ae397895defa98798133fa64',
-    'test_pin49_native_stacks.py': '0a643367a93209fbe6f7dffd83dafead5c058a0fc30323650d9ed70e0a40ced1',
+    'test_pin49_native_stacks.py': '5e0ff75ee2ea9530d546028f2f8aebc86c4e6606a118956ad97739ef41febc4b',
 }
 
 QUERY_PROPERTY_BOUNDARY = 'ios-query-property-boundary.yml'

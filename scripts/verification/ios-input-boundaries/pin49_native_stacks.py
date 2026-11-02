@@ -77,7 +77,11 @@ def environment():
 
 def sample_command(pid, target, seconds=SAMPLE_SECONDS):
     require(type(pid) is int and pid > 0 and seconds in (1, SAMPLE_SECONDS), 'Bounded positive owned PID')
-    return ['/usr/bin/sample', str(pid), str(seconds), str(INTERVAL_MS), '-mayDie', '-file', str(target)]
+    # Actual macOS15.8 help/man in41406518327: -mayDie reads symbols
+    # immediately. Omit that eager mode for the bounded live-process window;
+    # retain normal report processing,8s deadline and strict actual-stack/PID
+    # admission. Early app exit is still incomplete, never a waived report.
+    return ['/usr/bin/sample', str(pid), str(seconds), str(INTERVAL_MS), '-file', str(target)]
 
 
 def read_sample(path, pid):

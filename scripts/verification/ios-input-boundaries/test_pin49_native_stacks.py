@@ -83,7 +83,7 @@ class NativeStacksControls(unittest.TestCase):
         with patch.dict(os.environ, {'GITHUB_TOKEN': 'secret', 'DYLD_INSERT_LIBRARIES': 'hook', 'HOME': '/owned'}):
             self.assertNotIn('GITHUB_TOKEN', c.environment())
             self.assertNotIn('DYLD_INSERT_LIBRARIES', c.environment())
-        self.assertEqual(c.sample_command(23, Path('/owned/sample')), ['/usr/bin/sample', '23', '1', '10', '-mayDie', '-file', '/owned/sample'])
+        self.assertEqual(c.sample_command(23, Path('/owned/sample')), ['/usr/bin/sample', '23', '1', '10', '-file', '/owned/sample'])
         self.assertEqual((c.SAMPLE_CADENCE_SECONDS, c.DISCOVERY_CADENCE_SECONDS), (5, 1))
         for pid, seconds in ((False, 5), (0, 5), (-1, 5), (23, 30)):
             with self.assertRaises(ValueError): c.sample_command(pid, Path('/owned/sample'), seconds)
@@ -144,6 +144,14 @@ class NativeStacksControls(unittest.TestCase):
                     started_before_original_command=True, reply_timeout_seconds=3)
                 sampler._checkpoint()
                 self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64)['sampled_reports'], 1)
+                # Removing eager symbol lookup must not admit vanished-app
+                # annotations as a substitute for actual native stack reports.
+                sampler.rows[0].update(status='APPLICATION_EXITED_DURING_SAMPLE', exit=1)
+                sampler._checkpoint()
+                with self.assertRaisesRegex(ValueError, 'All actual native stacks retained'):
+                    c.verify_receipt(sampler.directory, SIM, 'a'*64)
+                sampler.rows[0].update(status='SAMPLED', exit=0)
+                sampler._checkpoint()
                 self.assertEqual(c.verify_receipt(sampler.directory, SIM, 'a'*64,
                     build_started_at='1970-01-01T00:00:03+00:00')['sampled_reports'], 1)
                 with self.assertRaises(ValueError):
