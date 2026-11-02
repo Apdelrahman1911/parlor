@@ -25,6 +25,10 @@ EXPECTED = {
 # Separate exact profile; original application/stack workflows stay unchanged.
 
 
+OWNED_TEXT_BOUNDARY = 'ios-owned-text-boundary.yml'
+OWNED_TEXT_BOUNDARY_SHA256 = '941435c410e39f621e557e69abc7e131b434bdd7465c1082bb98433d9a179a29'
+OWNED_TEXT_BOUNDARY_COMPANIONS = {'PIN51OwnedTextDelivery.swift.in': '519ea395c579b6e86f1ed333ff208be74b4c66fb52a1c3991db09653668dc846', 'PIN51OwnedTextObservation.swift.in': 'fba462c5290cc6bc294deebaa714fec6c7fb73de000a609514c838edee520e58', 'pin51_owned_text.py': '23b290052b18564faadb05c7eeae1e6fa5e32047d73dc2963d5ecbcb054f1dec', 'run_pin51.py': '4985e9e7647e2026697b31b6fc9dbeb1a5e8b1fdb89a25ecc4742c6560585ec6', 'test_pin51_owned_text.py': 'e0a772844dcf0af7dd190dae8c50f83ba384fc7b20bfa395e61efab2ab1baab4'}
+
 PROFILER_BOOTED_READINESS = 'ios-profiler-booted-readiness.yml'
 PROFILER_BOOTED_READINESS_SHA256 = '722e40e86f1e3d4083969774b7da80f1d15d7b42be8887757afbc9ecab2ea4e7'
 PROFILER_BOOTED_READINESS_COMPANIONS = {'profiler_booted_readiness.py': '903d927ec37cdb7ecf175716be922cb1aaeb334fbd0bf3820f95538931e5a1b0', 'test_profiler_booted_readiness.py': 'a7483d1e937ebecae44c2fdcae14d3e6b2bd70cfd8e6b497b69bc85f8841951c'}
@@ -309,7 +313,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -537,6 +541,17 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_owned_text_boundary(text: str) -> None:
+    verify_common(OWNED_TEXT_BOUNDARY, text)
+    verify_query_property_boundary((WORKFLOWS / QUERY_PROPERTY_BOUNDARY).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != OWNED_TEXT_BOUNDARY_SHA256:
+        fail('Owned text requires exact free native capability control, original guards and failed-only evidence')
+    for name, digest in OWNED_TEXT_BOUNDARY_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Owned text companion differs from reviewed source: {name}')
 
 
 def verify_profiler_booted_readiness(text: str) -> None:
@@ -2450,6 +2465,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if OWNED_TEXT_BOUNDARY in files:
+        verify_owned_text_boundary(files[OWNED_TEXT_BOUNDARY])
     if PROFILER_BOOTED_READINESS in files:
         verify_profiler_booted_readiness(files[PROFILER_BOOTED_READINESS])
     if APP_SPINDUMP_BOUNDARY in files:

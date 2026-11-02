@@ -1,0 +1,225 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN51_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+#if !PIN51_CONTROL
+import UIKit
+#endif
+
+/// Diagnostic copy only: owned editor methods, original arguments, one synchronous call.
+/// No text/range/event inspection, class-list enumeration, AX/getter hooks, input repair or new gesture.
+final class PIN51OwnedTextDelivery {
+    private static var owner: PIN51OwnedTextDelivery?
+    private let armed: () -> Bool
+    private weak var container: AnyObject?
+    private final class EditorToken {
+        weak var object: AnyObject?
+        init(_ object: AnyObject) { self.object = object }
+    }
+    private var editors: [EditorToken] = []
+    private var targetClass: AnyClass?
+    private var rows: [[Double]] = []
+    private var overflow = 0
+    private var installation = [0, 0, 0]
+    private var inheritedResponderUntouched = false
+    private var installed = false
+    private var attachments = 0
+    private var bindingAttempted = false
+    private var deliveryAttempted = false
+    private static let capacity = 4096
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(Self.capacity)
+    }
+
+    #if !PIN51_CONTROL
+    func bindInputContainer(_ view: UIView) -> Bool {
+        precondition(Thread.isMainThread)
+        guard let target = object_getClass(view), let parent = class_getSuperclass(target),
+              String(cString: class_getName(parent)) == "CMPScrollView" else { return false }
+        return bindVerifiedContainer(view, target: target)
+    }
+    #endif
+
+    fileprivate func bindVerifiedContainer(_ object: AnyObject, target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard !bindingAttempted else { return false }
+        bindingAttempted = true
+        container = object
+        let selector = NSSelectorFromString("didAddSubview:")
+        guard let parent = class_getSuperclass(target),
+              let method = class_getInstanceMethod(target, selector),
+              let parentMethod = class_getInstanceMethod(parent, selector),
+              Self.signature(method, returns: "v", arguments: ["@", ":", "@"]),
+              let encoding = method_getTypeEncoding(method),
+              unsafeBitCast(method_getImplementation(method), to: UInt.self) ==
+                unsafeBitCast(method_getImplementation(parentMethod), to: UInt.self) else { return false }
+        typealias Add = @convention(c) (AnyObject, Selector, AnyObject) -> Void
+        let original = unsafeBitCast(method_getImplementation(method), to: Add.self)
+        let block: @convention(block) (AnyObject, AnyObject) -> Void = { [weak self] object, child in
+            let selected = self?.attach(object, child: child) == true
+            original(object, selector, child)
+            if selected { self?.append(kind: 7, phase: 1) }
+        }
+        let replacement = imp_implementationWithBlock(block)
+        guard class_addMethod(target, selector, replacement, encoding) else {
+            imp_removeBlock(replacement); return false
+        }
+        installation[0] = 1
+        return true
+    }
+
+    private func attach(_ object: AnyObject, child: AnyObject) -> Bool {
+        guard Thread.isMainThread, armed(), container === object else { return false }
+        guard attachments < 128 else { overflow = min(1000000, overflow + 1); return false }
+        #if PIN51_CONTROL
+        guard controlEligible?(child) == true, let target = object_getClass(child) else { return false }
+        #else
+        guard let target = object_getClass(child), let parent = class_getSuperclass(target),
+              String(cString: class_getName(parent)) == "CMPEditMenuView",
+              let input = NSProtocolFromString("UITextInput"), class_conformsToProtocol(target, input) else { return false }
+        #endif
+        attachments += 1
+        editors.append(EditorToken(child)) // Weak previously owned instances only; retain stale-delivery boundary.
+        if !deliveryAttempted {
+            deliveryAttempted = true
+            installation[1] = 1
+            installation[2] = installVerifiedTarget(target) ? 1 : 0
+        }
+        if let expected = targetClass, expected !== target { installed = false }
+        append(kind: 7, phase: 0)
+        return true
+    }
+
+    private static func type(_ value: UnsafeMutablePointer<CChar>?) -> String {
+        guard let value else { return "" }
+        defer { free(value) }
+        return String(cString: value)
+    }
+
+    private static func signature(_ method: Method, returns: String, arguments: [String]) -> Bool {
+        guard method_getNumberOfArguments(method) == arguments.count,
+              type(method_copyReturnType(method)) == returns else { return false }
+        return arguments.enumerated().allSatisfy { index, expected in
+            type(method_copyArgumentType(method, UInt32(index))) == expected
+        }
+    }
+
+    fileprivate func installVerifiedTarget(_ target: AnyClass) -> Bool {
+        precondition(Thread.isMainThread)
+        guard Self.owner == nil, let parent = class_getSuperclass(target) else { return false }
+        let selectors = ["insertText:", "replaceRange:withText:", "setMarkedText:selectedRange:",
+                         "deleteBackward", "pressesBegan:withEvent:", "pressesEnded:withEvent:",
+                         "resignFirstResponder"].map(NSSelectorFromString)
+        let arguments = [["@", ":", "@"], ["@", ":", "@", "@"],
+                         ["@", ":", "@", "{_NSRange=QQ}"], ["@", ":"],
+                         ["@", ":", "@", "@"], ["@", ":", "@", "@"], ["@", ":"]]
+        let methods = selectors.compactMap { class_getInstanceMethod(target, $0) }
+        guard methods.count == selectors.count else { return false }
+        var count: UInt32 = 0
+        guard let owned = class_copyMethodList(target, &count), count <= 256 else { return false }
+        defer { free(owned) }
+        let become = NSSelectorFromString("becomeFirstResponder")
+        guard let inherited = class_getInstanceMethod(target, become),
+              let parentBecome = class_getInstanceMethod(parent, become),
+              !(0..<Int(count)).contains(where: { method_getName(owned[$0]) == become }),
+              unsafeBitCast(method_getImplementation(inherited), to: UInt.self) ==
+                unsafeBitCast(method_getImplementation(parentBecome), to: UInt.self) else { return false }
+        let parentIMP = method_getImplementation(parentBecome)
+        for index in methods.indices {
+            guard Self.signature(methods[index], returns: index == 6 ? "B" : "v", arguments: arguments[index]),
+                  method_getTypeEncoding(methods[index]) != nil,
+                  (0..<Int(count)).contains(where: { method_getName(owned[$0]) == selectors[index] }) else { return false }
+        }
+        typealias Insert = @convention(c) (AnyObject, Selector, AnyObject) -> Void
+        typealias Replace = @convention(c) (AnyObject, Selector, AnyObject, AnyObject) -> Void
+        typealias Marked = @convention(c) (AnyObject, Selector, AnyObject?, NSRange) -> Void
+        typealias Delete = @convention(c) (AnyObject, Selector) -> Void
+        typealias Responder = @convention(c) (AnyObject, Selector) -> Bool
+        typealias Presses = @convention(c) (AnyObject, Selector, AnyObject, AnyObject?) -> Void
+        let insert = unsafeBitCast(method_getImplementation(methods[0]), to: Insert.self)
+        let replace = unsafeBitCast(method_getImplementation(methods[1]), to: Replace.self)
+        let marked = unsafeBitCast(method_getImplementation(methods[2]), to: Marked.self)
+        let delete = unsafeBitCast(method_getImplementation(methods[3]), to: Delete.self)
+        let resign = unsafeBitCast(method_getImplementation(methods[6]), to: Responder.self)
+        let began = unsafeBitCast(method_getImplementation(methods[4]), to: Presses.self)
+        let ended = unsafeBitCast(method_getImplementation(methods[5]), to: Presses.self)
+        let insertBlock: @convention(block) (AnyObject, AnyObject) -> Void = { [weak self] object, text in
+            self?.record(object, kind: 1, phase: 0)
+            insert(object, selectors[0], text) // Same object argument; once, synchronously.
+            self?.record(object, kind: 1, phase: 1)
+        }
+        let replaceBlock: @convention(block) (AnyObject, AnyObject, AnyObject) -> Void = { [weak self] object, range, text in
+            self?.record(object, kind: 2, phase: 0)
+            replace(object, selectors[1], range, text)
+            self?.record(object, kind: 2, phase: 1)
+        }
+        let markedBlock: @convention(block) (AnyObject, AnyObject?, NSRange) -> Void = { [weak self] object, text, range in
+            self?.record(object, kind: 3, phase: 0)
+            marked(object, selectors[2], text, range)
+            self?.record(object, kind: 3, phase: 1)
+        }
+        let deleteBlock: @convention(block) (AnyObject) -> Void = { [weak self] object in
+            self?.record(object, kind: 4, phase: 0)
+            delete(object, selectors[3])
+            self?.record(object, kind: 4, phase: 1)
+        }
+        let resignBlock: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            self?.record(object, kind: 9, phase: 0)
+            let result = resign(object, selectors[6])
+            self?.record(object, kind: 9, phase: 1, flag: result)
+            return result
+        }
+        // The same pinned view also forwards UIKit hardware/synthetic UIPresses
+        // into Compose. Absence of insertText alone does not exclude this route.
+        let beganBlock: @convention(block) (AnyObject, AnyObject, AnyObject?) -> Void = { [weak self] object, presses, event in
+            self?.record(object, kind: 5, phase: 0)
+            began(object, selectors[4], presses, event)
+            self?.record(object, kind: 5, phase: 1)
+        }
+        let endedBlock: @convention(block) (AnyObject, AnyObject, AnyObject?) -> Void = { [weak self] object, presses, event in
+            self?.record(object, kind: 6, phase: 0)
+            ended(object, selectors[5], presses, event)
+            self?.record(object, kind: 6, phase: 1)
+        }
+        let replacements = [imp_implementationWithBlock(insertBlock), imp_implementationWithBlock(replaceBlock),
+                            imp_implementationWithBlock(markedBlock), imp_implementationWithBlock(deleteBlock),
+                            imp_implementationWithBlock(beganBlock), imp_implementationWithBlock(endedBlock),
+                            imp_implementationWithBlock(resignBlock)]
+        targetClass = target
+        Self.owner = self // No unhook during an original call. Parent method tables remain untouched.
+        for index in methods.indices { method_setImplementation(methods[index], replacements[index]) }
+        inheritedResponderUntouched = unsafeBitCast(method_getImplementation(
+            class_getInstanceMethod(target, become)!), to: UInt.self) == unsafeBitCast(parentIMP, to: UInt.self) &&
+            unsafeBitCast(method_getImplementation(parentBecome), to: UInt.self) == unsafeBitCast(parentIMP, to: UInt.self)
+        installed = inheritedResponderUntouched
+        return installed
+    }
+
+    private func record(_ object: AnyObject, kind: Int, phase: Int, flag: Bool = false) {
+        guard Thread.isMainThread, armed() else { return }
+        for index in editors.indices.reversed() where editors[index].object === object {
+            append(kind: kind, phase: phase, ordinal: index + 1, flag: flag)
+            return
+        }
+    }
+
+    private func append(kind: Int, phase: Int, ordinal: Int? = nil, flag: Bool = false) {
+        guard rows.count < Self.capacity else { overflow = min(1000000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(kind), Double(phase),
+                     Double(ordinal ?? attachments), flag ? 1 : 0])
+    }
+
+    func freeze() -> [String: Any] {
+        ["schema": 51, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+         "installed": installed, "installation": installation, "overflow": overflow,
+         "attachments": attachments, "rows": rows, "inheritedResponderUntouched": inheritedResponderUntouched]
+    }
+
+    #if PIN51_CONTROL
+    var controlEligible: ((AnyObject) -> Bool)?
+    #endif
+}
+#endif
