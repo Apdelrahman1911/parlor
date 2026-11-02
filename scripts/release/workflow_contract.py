@@ -23,6 +23,13 @@ EXPECTED = {
 }
 # Installed-tool facts only, after first1s Simulator sample exceeded8s.
 # Separate exact profile; original application/stack workflows stay unchanged.
+PROFILER_ATTACH_CONTROL = 'ios-profiler-attach-control.yml'
+PROFILER_ATTACH_CONTROL_SHA256 = '2e1b6baacba9ce4ecba0167a04a153841e4d63e32d2e4759c91ca77f3130a5f4'
+PROFILER_ATTACH_CONTROL_COMPANIONS = {
+    'profiler_attach_control.py': '690a63fe84d533cd0f9981065b45026e7dc06bc65322abdba31ca3cfd96b9e82',
+    'test_profiler_attach_control.py': '2eabff4e75406d20c2788424eb456b2259649effccefa1cbb0a6a21165c7efe9',
+}
+
 PROFILER_TOOL_REVIEW = 'ios-profiler-tool-review.yml'
 PROFILER_TOOL_REVIEW_SHA256 = 'b1044969f1b94e1d7fc377268b5124f26306988c8a5fd16e9519056d8e52d0ea'
 PROFILER_TOOL_REVIEW_COMPANIONS = {
@@ -290,7 +297,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW}
+    unexpected -= {SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -518,6 +525,16 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_profiler_attach_control(text: str) -> None:
+    verify_common(PROFILER_ATTACH_CONTROL, text)
+    if hashlib.sha256(text.encode()).hexdigest() != PROFILER_ATTACH_CONTROL_SHA256:
+        fail('Profiler tool review requires exact free, owned host-only recording/export scope')
+    for name, digest in PROFILER_ATTACH_CONTROL_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Profiler tool companion differs from reviewed source: {name}')
 
 
 def verify_profiler_tool_review(text: str) -> None:
@@ -2400,6 +2417,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if NATIVE_STACK_BOUNDARY in files:
         verify_native_stack_boundary(files[NATIVE_STACK_BOUNDARY])
+    if PROFILER_ATTACH_CONTROL in files:
+        verify_profiler_attach_control(files[PROFILER_ATTACH_CONTROL])
     if PROFILER_TOOL_REVIEW in files:
         verify_profiler_tool_review(files[PROFILER_TOOL_REVIEW])
     if SAMPLER_TOOL_REVIEW in files:

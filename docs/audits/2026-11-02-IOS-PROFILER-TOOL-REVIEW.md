@@ -55,3 +55,32 @@ corrective taps, dependency override, shipping merge or physical acceptance.
 
 #267/#276/Phase1 stay open. Phases2/3 follow genuinely qualified Phase1 correction;
 physical4 remains owner-reserved. This read-only branch is not a shipping PR.
+
+## Installed interface result and owned attachment control
+
+[41416484173](https://github.com/Apdelrahman1911/parlor/actions/runs/41416484173)
+completed **SUCCESS** on standard macos-15. Five source safeguards passed; all six
+native interface commands exited0. Independent source/job/API/output/exit/hash
+readback accepted once. Artifact13128365352/3,900bytes/SHA256
+`9821c3cd5fe58e449d1d7b2d59a82a48d62bdf0e726ae6a9239c113cddac2f90`.
+Actual help documents PID-specific Time Profiler recording and separate XML
+export; Time Profiler is installed. Zero recordings/app launches/AX queries or
+original tests executed. **Interfaces are not attachment qualification.**
+
+A separate five-minute standard-free host-only control now tests one exact owned
+`/usr/bin/yes` PID (output discarded), with documented `record --template 'Time
+Profiler' --attach <owned PID> --time-limit 1s --output <owned.trace>` and offline
+TOC/Time Profiler XML export. No application, Simulator, original test or private
+input is involved. No `--all-processes`, launch fallback, prompts suppression,
+privilege grant, extra thread, retry or deadline increase. Each CLI command keeps
+8s; owned tools are killed/reaped on failure. Retire the busy target immediately
+after recording, before offline export. Six portable ownership/cleanup/XML/scope
+safeguards and three workflow mutation guards precede actual execution.
+
+Retain original command exits/PIDs/clocks, logs and bounded plain XML. The opaque
+trace package is not uploaded; exported Time Profiler samples must independently
+identify **only** the owned target and actual stack frames. Empty/missing/wrong
+schema or redirected/entity XML fails closed. Workflow success alone cannot
+certify target isolation, attach capability, overhead or Parlor behavior. Any
+permission prompt/failure remains a limitation, not bypassed. Admit actual tool
+samples/source/custody before applying this instrument to the original app.
