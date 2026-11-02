@@ -112,3 +112,26 @@ portable safeguards include readiness-before-target rejection; all seven must
 execute on the fresh Mac. Target scope, actual stack frames and custody remain
 mandatory for independent attachment admission. No application correction,
 shipping/physical acceptance or Phase1 closure follows from this control alone.
+
+## Readiness result and failure-only bootstrap evidence
+
+[41417960991](https://github.com/Apdelrahman1911/parlor/actions/runs/41417960991)
+completed **FAILURE**: seven actual Mac safeguards passed/zero skips. Exact tool
+resolution3.775s and direct record-help0.640s preceded owned target1764 creation.
+Direct recording1765 still exceeded8s: empty log, **no trace package**, TOC or
+sample XML. CLI/target reaped. Full reader rejects. API artifact13128631559/
+2,414bytes/SHA256
+`e30070589a583c4904c34b6e03c53d83aa73397c34552657120d38b4012a28db`
+retains clocks, commands and actual zero trace-presence. Readiness removed measured
+resolution from capture but did not resolve startup; no internal cause proven.
+
+Before another bounded host-only capture, read selected Xcode first-launch status
+and `DevToolsSecurity -status` without changing either. On actual capture failure,
+retain unified logs for **only the exact owned recorder PID**, using its retained
+Popen identity and the default private-field redaction. No global/subsystem dump,
+`--private`, unrelated PID, permission change, longer recording, extra sampling or
+app/test replay. The original error and failed result remain; log-collection error
+cannot replace or waive it. An eighth portable guard rejects foreign/injected log
+selectors. Fresh actual metadata/error messages, rather than silent assumptions,
+must determine whether initialization, authorization or another boundary blocks
+the instrument. This remains tool diagnosis, never Parlor root-cause acceptance.

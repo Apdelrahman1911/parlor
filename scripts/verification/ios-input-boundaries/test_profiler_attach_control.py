@@ -49,6 +49,7 @@ class ProfilerAttachControls(unittest.TestCase):
             child=Mock(pid=42);child.poll.side_effect=[None,-15];child.wait.return_value=-15
             target=Path(d).resolve()/'control'
             def fail(directory,receipt,label,argv):
+                if label in ('developer-status','first-launch-status'):return
                 if label=='ready-path':
                     (directory/'ready-path.log').write_bytes(c.PROFILER.encode()+b'\n');return
                 if label=='ready-help':
@@ -80,3 +81,10 @@ class ProfilerAttachControls(unittest.TestCase):
             with patch.object(c,'command',side_effect=foreign),self.assertRaisesRegex(ValueError,'exact installed'):
                 c.control(out)
             target.assert_not_called();self.assertNotIn('owned_target_pid',json.loads((out/'receipt.json').read_text()))
+
+    def test_failure_log_is_exact_owned_recorder_pid_with_default_privacy_not_global_or_private_data(self):
+        self.assertEqual(c.startup_log_command(42),['/usr/bin/log','show','--style','compact',
+            '--last','1m','--info','--predicate','processID == 42'])
+        for pid in (0,-1,True,'42 OR true'):
+            with self.assertRaises(ValueError):c.startup_log_command(pid)
+        self.assertNotIn('--private',c.startup_log_command(42))

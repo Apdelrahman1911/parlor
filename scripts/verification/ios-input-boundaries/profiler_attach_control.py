@@ -34,6 +34,14 @@ def export_command(trace,target,*,toc=False):
             *(['--toc'] if toc else ['--xpath',XPATH]),'--output',str(target)]
 
 
+def startup_log_command(pid):
+    if type(pid) is not int or pid<=0:raise ValueError('Only the actual owned recorder PID')
+    # Default unified-log privacy remains enabled. No --private, other process
+    # predicate, global dump, argument/environment or player information query.
+    return ['/usr/bin/log','show','--style','compact','--last','1m','--info',
+            '--predicate','processID == '+str(pid)]
+
+
 def xml(path):
     if path.resolve()!=path.absolute() or not path.is_file() or path.is_symlink():
         raise ValueError('Owned unredirected XML export')
@@ -82,6 +90,8 @@ def control(directory):
         command(directory,receipt,'ready-help',[PROFILER,'help','record'])
         if b'--attach' not in (directory/'ready-help.log').read_bytes():
             raise ValueError('Actual selected tool readiness required before target creation')
+        command(directory,receipt,'developer-status',['/usr/sbin/DevToolsSecurity','-status'])
+        command(directory,receipt,'first-launch-status',[DEVELOPER+'/usr/bin/xcodebuild','-checkFirstLaunchStatus'])
         receipt['ready_before_target']=True;checkpoint(directory,receipt)
     except BaseException as error:
         receipt['error']=type(error).__name__+': '+str(error);checkpoint(directory,receipt);raise
@@ -107,7 +117,15 @@ def control(directory):
         receipt['export_sha256']=hashlib.sha256(raw).hexdigest();receipt['export_bytes']=len(raw)
         receipt['result']='OWNED_HOST_PROFILER_EXPORT_COMPLETE_REQUIRES_INDEPENDENT_TARGET_ADMISSION'
     except BaseException as error:
-        receipt['error']=type(error).__name__+': '+str(error);raise
+        receipt['error']=type(error).__name__+': '+str(error)
+        recorded=[row for row in receipt['commands'] if row['label']=='record']
+        if len(recorded)==1 and 'owned_command_pid' in recorded[0]:
+            try:
+                command(directory,receipt,'startup-log',startup_log_command(recorded[0]['owned_command_pid']))
+            except BaseException as log_error:
+                # Do not replace, waive or retry the original capture failure.
+                receipt['startup_log_error']=type(log_error).__name__+': '+str(log_error)
+        raise
     finally:
         # Only numeric owned-output presence metadata, not opaque/unrelated
         # profile contents. This is not trace completeness or stack evidence.
