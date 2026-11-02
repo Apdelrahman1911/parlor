@@ -26,6 +26,9 @@ EXPECTED = {
 
 
 FIRST_RESPONDER_BOUNDARY = 'ios-first-responder-boundary.yml'
+NATIVE_AX_RETURNS = 'ios-native-ax-returns.yml'
+NATIVE_AX_RETURNS_SHA256 = 'd32fb553b805a84723f8eb6de9c4f43beffffed07f464ff5f6fa8cbfb4b42577'
+NATIVE_AX_RETURNS_COMPANIONS = {'PIN58NativeAXReturns.swift.in': '04d055e8d7c2db99925997d587e5140ee81f1409cc1f39c4727e844246a3a4a2', 'pin58_native_ax_returns.py': 'd6102f4970f5c0482510cadaab478f597e5ced4729d6218f8301c13a26f88389', 'run_pin58.py': '28030838a46723dc2e8476eae00a237de908184458bff1a3cf64c86e0227c516', 'test_pin58_native_ax_returns.py': '693bab229298a0328689d0b23fc73e3e20b91985695bbd0e015b76a834e94166'}
 INPUT_INTERMITTENCY = 'ios-input-intermittency.yml'
 INPUT_INTERMITTENCY_SHA256 = 'cf7253d212498a1b8173d62b47db75e6c0e153531d54d3594d1d09f975a9be5c'
 INPUT_INTERMITTENCY_COMPANIONS = {'pin57_input_intermittency.py': '937cc803918e50394575bef1c60c989d02189be2777c68077c8b730702239b60', 'run_pin57.py': 'e2671b0a5e1a4c9cb5a31dc36dd0d64b503c8dcfdbdced2d5ac3ba87736d2d10', 'test_pin57_input_intermittency.py': '90de9b3da69c4b783ec660021b42050c29f58c1b3813af2d237d76ceb08aa8f7'}
@@ -345,7 +348,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {NATIVE_AX_RETURNS, INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -587,6 +590,16 @@ def verify_first_responder_boundary(text: str) -> None:
     path = ROOT / FIRST_RESPONDER_BOUNDARY_RECEIPT
     if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256:
         fail('First responder requires the actual independently retained original typing failure')
+
+
+def verify_native_ax_returns(text: str) -> None:
+    verify_common(NATIVE_AX_RETURNS, text)
+    if hashlib.sha256(text.encode()).hexdigest() != NATIVE_AX_RETURNS_SHA256:
+        fail("Native return discriminator must keep its exact free/read-only/no-retry policy")
+    for name, digest in NATIVE_AX_RETURNS_COMPANIONS.items():
+        path = ROOT / "scripts/verification/ios-input-boundaries" / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail("Native return discriminator differs from reviewed source: " + name)
 
 
 def verify_input_intermittency(text: str) -> None:
@@ -2580,6 +2593,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if FIRST_RESPONDER_BOUNDARY in files:
         verify_first_responder_boundary(files[FIRST_RESPONDER_BOUNDARY])
+    if NATIVE_AX_RETURNS in files:
+        verify_native_ax_returns(files[NATIVE_AX_RETURNS])
     if INPUT_INTERMITTENCY in files:
         verify_input_intermittency(files[INPUT_INTERMITTENCY])
     if DELIVERY_FOCUS_BOUNDARY in files:

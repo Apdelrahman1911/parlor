@@ -1,0 +1,158 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN58_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+#if !PIN58_CONTROL
+import UIKit
+#endif
+
+/// Copy-only public setup discriminator. No proactive AX query, value or input read.
+/// Existing label returns classify only six frozen public catalog prefixes; text is never retained.
+/// Records the ORIGINAL native traits/element returns, not XCTest's interpretation.
+final class PIN58NativeAXReturns {
+    private typealias Label = @convention(c) (AnyObject, Selector) -> AnyObject?
+    private typealias Traits = @convention(c) (AnyObject, Selector) -> UInt64
+    private typealias Element = @convention(c) (AnyObject, Selector) -> Bool
+    private final class WeakNode {
+        weak var object: AnyObject?
+        init(_ object: AnyObject) { self.object = object }
+    }
+#if PIN58_CONTROL
+    private let disabledBit: UInt64 = 1 << 8
+#else
+    private let disabledBit = UIAccessibilityTraits.notEnabled.rawValue
+#endif
+    private let armed: () -> Bool
+    private let lock = NSLock()
+    private var target: AnyClass?
+    private var nodes = [WeakNode]()
+    private var rows = [[Double]]()
+    private var next = 0
+    private var evicted = 0
+    private var rejected = 0
+    private var frozen = false
+    private let limit = 4096
+#if PIN58_CONTROL
+    var controlEligible: ((AnyClass) -> Bool)?
+#endif
+
+    init(armed: @escaping () -> Bool) {
+        self.armed = armed
+        rows.reserveCapacity(limit)
+    }
+
+    private func own(_ type: AnyClass, _ selector: Selector) -> Method? {
+        var count: UInt32 = 0
+        guard let list = class_copyMethodList(type, &count) else { return nil }
+        defer { free(list) }
+        guard count <= 256 else { return nil }
+        return (0..<Int(count)).map { list[$0] }.first { method_getName($0) == selector }
+    }
+
+    private func copiedType(_ pointer: UnsafeMutablePointer<CChar>?) -> String {
+        guard let pointer else { return "" }
+        defer { free(pointer) }
+        return String(cString: pointer)
+    }
+
+    private func signature(_ method: Method, returns: String) -> Bool {
+        method_getNumberOfArguments(method) == 2 &&
+        copiedType(method_copyReturnType(method)) == returns &&
+        copiedType(method_copyArgumentType(method, 0)) == "@" &&
+        copiedType(method_copyArgumentType(method, 1)) == ":"
+    }
+
+    func observeOriginalRootArray(_ value: AnyObject?) {
+        // Root setter's already supplied array; never call accessibilityElements ourselves.
+        guard Thread.isMainThread, armed(), target == nil, let array = value as? NSArray,
+              array.count == 1, let type = object_getClass(array[0] as AnyObject) else { return }
+#if PIN58_CONTROL
+        guard controlEligible?(type) == true else { return }
+#else
+        guard let parent = class_getSuperclass(type),
+              String(cString: class_getName(parent)) == "CMPAccessibilityElement" else { return }
+#endif
+        let traitsSelector = NSSelectorFromString("accessibilityTraits")
+        let elementSelector = NSSelectorFromString("isAccessibilityElement")
+        let labelSelector = NSSelectorFromString("accessibilityLabel")
+        guard let traitsMethod = own(type, traitsSelector), signature(traitsMethod, returns: "Q"),
+              let elementMethod = own(type, elementSelector), signature(elementMethod, returns: "B"),
+              let labelMethod = own(type, labelSelector), signature(labelMethod, returns: "@") else { return }
+        let originalTraits = unsafeBitCast(method_getImplementation(traitsMethod), to: Traits.self)
+        let originalElement = unsafeBitCast(method_getImplementation(elementMethod), to: Element.self)
+        let originalLabel = unsafeBitCast(method_getImplementation(labelMethod), to: Label.self)
+        let traitsBlock: @convention(block) (AnyObject) -> UInt64 = { [weak self] object in
+            self?.record(object, kind: 1, phase: 0, value: 0)
+            let result = originalTraits(object, traitsSelector)
+            self?.record(object, kind: 1, phase: 1, value: result & (self?.disabledBit ?? 0) != 0 ? 1 : 0)
+            return result
+        }
+        let elementBlock: @convention(block) (AnyObject) -> Bool = { [weak self] object in
+            self?.record(object, kind: 2, phase: 0, value: 0)
+            let result = originalElement(object, elementSelector)
+            self?.record(object, kind: 2, phase: 1, value: result ? 1 : 0)
+            return result
+        }
+        let labelBlock: @convention(block) (AnyObject) -> AnyObject? = { [weak self] object in
+            self?.record(object, kind: 3, phase: 0, value: 0)
+            let result = originalLabel(object, labelSelector)
+            self?.record(object, kind: 3, phase: 1, value: self?.publicCatalogKind(result) ?? 0)
+            return result
+        }
+        // Only three methods owned by this one verified semantic-element class.
+        // No superclass mutation, inherited override, new event or repair.
+        lock.lock(); target = type; lock.unlock()
+        method_setImplementation(traitsMethod, imp_implementationWithBlock(traitsBlock))
+        method_setImplementation(elementMethod, imp_implementationWithBlock(elementBlock))
+        method_setImplementation(labelMethod, imp_implementationWithBlock(labelBlock))
+    }
+
+    private func publicCatalogKind(_ result: AnyObject?) -> Int {
+        guard let text = result as? NSString, text.length <= 512 else { return 0 }
+        // Match ONLY these existing original localized public catalog controls.
+        if text.hasPrefix("Open Egyptian Dominoes") || text.hasPrefix("افتح الدومنة المصرية") { return 1 }
+        if text.hasPrefix("Open Ghamza") || text.hasPrefix("افتح غمزة") { return 2 }
+        if text.hasPrefix("Open Word Impostor") || text.hasPrefix("افتح لعبة الإمبوستر") { return 3 }
+        return 0
+    }
+
+    private func record(_ object: AnyObject, kind: Int, phase: Int, value: Int) {
+        // All-thread arrival retained. The lock NEVER surrounds original forwarding.
+        lock.lock(); defer { lock.unlock() }
+        guard !frozen, let actual = object_getClass(object), actual === target else { return }
+        let ordinal: Int
+        if let index = nodes.firstIndex(where: { $0.object === object }) {
+            ordinal = index + 1
+        } else {
+            guard nodes.count < 512 else { rejected = min(1_000_000, rejected + 1); return }
+            nodes.append(WeakNode(object)); ordinal = nodes.count
+        }
+        let row = [ProcessInfo.processInfo.systemUptime * 1000, Thread.isMainThread ? 1 : 0,
+                   Double(kind), Double(phase), Double(ordinal), Double(value)]
+        if rows.count < limit {
+            rows.append(row)
+        } else {
+            rows[next] = row; next = (next + 1) % limit
+            evicted = min(1_000_000, evicted + 1)
+        }
+    }
+
+#if PIN58_CONTROL
+    func controlRows() -> [[Double]] {
+        lock.lock(); defer { lock.unlock() }
+        return rows
+    }
+#endif
+
+    func freeze() -> [String: Any] {
+        lock.lock(); defer { lock.unlock() }
+        frozen = true
+        let ordered = next == 0 ? rows : Array(rows[next...]) + Array(rows[..<next])
+        return ["schema": 58, "installed": target != nil,
+                "capturedMs": ProcessInfo.processInfo.systemUptime * 1000,
+                "rows": ordered, "evicted": evicted, "rejected": rejected,
+                "nodesAlive": nodes.map { $0.object != nil },
+                "scope": "Original native NotEnabled and isAccessibilityElement returns with original public catalog prefix classification; weak ordinals, rolling window; no text retained, not full semantics, CPU, causality or qualification"]
+    }
+}
+#endif

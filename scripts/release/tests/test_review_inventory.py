@@ -14,6 +14,13 @@ import generate_review_inventory as review_inventory  # noqa: E402
 
 
 class ReviewInventoryTest(unittest.TestCase):
+    def test_original_native_return_discriminator_is_diagnostic_not_qualification(self) -> None:
+        path = ".github/workflows/ios-native-ax-returns.yml"
+        rows = list(csv.DictReader(io.StringIO(review_inventory.render_inventory([path], {}, {}))))
+        self.assertEqual(rows[0]["classification"], "ci-diagnostic-workflow")
+        self.assertIn("not application qualification", rows[0]["inferred_production_reachability"])
+        self.assertNotIn("protected-branch production verification", rows[0]["inferred_main_callers_or_consumers"])
+
     def test_passive_native_workflows_never_claim_application_qualification(self) -> None:
         for name in ('ios-failure-runloop.yml', 'ios-main-runloop-capability.yml', 'ios-passive-failure-samples.yml',
                      'ios-passive-retained-correction.yml', 'ios-query-property-boundary.yml', 'ios-native-stack-boundary.yml'):
