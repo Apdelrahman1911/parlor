@@ -16,6 +16,8 @@ import pin49_kernel_channel as channel
 
 SIM = '12345678-1234-1234-1234-123456789ABC'
 INSTALL = 'ABCDE123-1234-1234-1234-123456789ABC'
+METRICS = dict(enumerated=1, disappeared=0, name_queries=1, path_lookups=0,
+               collection_seconds=0.001, list_seconds=0.0001, name_seconds=0.0001, path_seconds=0.0)
 
 
 class NativeStacksControls(unittest.TestCase):
@@ -130,8 +132,9 @@ class NativeStacksControls(unittest.TestCase):
                 sampler.kernel = Mock()
                 sampler.kernel.receipt.return_value = dict(schema=1, pid=42,
                     ready=dict(kind='ready', schema=1, selector='PROC_UID_ONLY', simulator=SIM,
-                               own_process_seen=True, helper_pid=42), requests=1,
+                               own_process_seen=True, helper_pid=42, name_prefilter='Parlor', paths=[], **METRICS), requests=1,
                     startup_seconds=0.1, response_seconds=[0.1], exit=0, child_reaped=True,
+                    response_metrics=[METRICS], name_prefilter='Parlor',
                     started_unix=1.0, ready_unix=2.0, started_before_original_build=True,
                     started_before_original_command=True, reply_timeout_seconds=3)
                 sampler._checkpoint()
@@ -160,10 +163,16 @@ class NativeStacksControls(unittest.TestCase):
             buffer.value = raw
             return len(raw)
         proc.proc_listpids.side_effect = listpids
+        def name(pid, buffer, size):
+            buffer.value = b'Python' if pid == own else b'Parlor'
+            return len(buffer.value)
+        proc.proc_name.side_effect = name
         proc.proc_pidpath.side_effect = pidpath
         receipt = paths.collect(proc, SIM)
         self.assertTrue(receipt['own_process_seen'])
         self.assertEqual(receipt['paths'][0]['pid'], 123)
+        self.assertEqual((receipt['name_queries'], receipt['path_lookups']), (2, 1))
+        proc.proc_pidpath.assert_called_once()
         self.assertEqual(paths.collect(proc, INSTALL)['paths'], [])
         proc.proc_listpids.return_value = 4097*4; proc.proc_listpids.side_effect = None
         with self.assertRaises(ValueError): paths.collect(proc, SIM)
@@ -178,6 +187,58 @@ class NativeStacksControls(unittest.TestCase):
                     sampler.thread.join(timeout=1)
                 sampler.__exit__(None, None, None)
                 with self.assertRaises(ValueError): c.verify_receipt(sampler.directory, SIM, 'a'*64)
+
+    def test_name_filter_avoids_unrelated_paths_but_never_admits_spoofed_or_wrong_device_images(self):
+        import pin49_process_paths as paths
+        own = os.getpid(); proc = Mock()
+        def listpids(selector, uid, values, size):
+            values[0], values[1], values[2], values[3] = own, 123, 124, 125
+            return 16
+        def name(pid, buffer, size):
+            buffer.value = b'Python' if pid == own else b'runner-service' if pid == 123 else b'Parlor'
+            return len(buffer.value)
+        def path(pid, buffer, size):
+            self.assertIn(pid, (124, 125))
+            buffer.value = (b'/unrelated/Parlor' if pid == 124 else
+                ('/owned/Library/Developer/CoreSimulator/Devices/'+INSTALL+
+                 '/data/Containers/Bundle/Application/'+INSTALL+'/Parlor.app/Parlor').encode())
+            return len(buffer.value)
+        proc.proc_listpids.side_effect = listpids
+        proc.proc_name.side_effect = name; proc.proc_pidpath.side_effect = path
+        receipt = paths.collect(proc, SIM)
+        self.assertEqual(receipt['paths'], [])
+        self.assertEqual((receipt['name_queries'], receipt['path_lookups']), (4, 2))
+        self.assertEqual(proc.proc_pidpath.call_count, 2)
+        self.assertNotIn('runner-service', json.dumps(receipt))
+        channel.discovery_metrics(receipt)
+
+    def test_malformed_denied_names_and_short_native_paths_fail_closed_not_skip_or_retry(self):
+        import pin49_process_paths as paths
+        own = os.getpid(); proc = Mock()
+        def listpids(selector, uid, values, size):
+            values[0], values[1] = own, 123
+            return 8
+        proc.proc_listpids.side_effect = listpids
+        for count, raw in ((0, b''), (64, b'Parlor'), (5, b'Parlor')):
+            def name(pid, buffer, size):
+                buffer.value = b'Python' if pid == own else raw
+                return len(buffer.value) if pid == own else count
+            proc.proc_name.side_effect = name
+            with self.assertRaises(ValueError): paths.collect(proc, SIM)
+            proc.proc_pidpath.assert_not_called()
+        def name(pid, buffer, size):
+            buffer.value = b'Python' if pid == own else b'Parlor'
+            return len(buffer.value)
+        proc.proc_name.side_effect = name; proc.proc_pidpath.return_value = 0
+        with self.assertRaises(ValueError): paths.collect(proc, SIM)
+        proc.proc_pidpath.assert_called_once()
+
+    def test_collection_metrics_cannot_waive_deadline_or_fabricate_partial_counters(self):
+        valid = dict(name_prefilter='Parlor', paths=[], **METRICS)
+        for field, value in [('name_prefilter','Python'), ('name_queries',2), ('path_lookups',2),
+                             ('enumerated',4097), ('collection_seconds',3), ('path_seconds',float('nan')),
+                             ('name_seconds',0.1), ('disappeared',True)]:
+            with self.assertRaises(ValueError): channel.discovery_metrics(valid | {field:value})
 
     @unittest.skipUnless(sys.platform == 'darwin', 'Actual Apple OS sampler unavailable locally')
     def test_actual_os_tool_control_reaps_child_and_retains_real_stack_report(self):
@@ -210,7 +271,9 @@ class NativeStacksControls(unittest.TestCase):
 FAKE_CHILD = '''import json,os,sys,time
 sim,mode=sys.argv[1:]
 base=dict(schema=1,selector='PROC_UID_ONLY',simulator=sim,own_process_seen=True,
-          helper_pid=os.getpid(),enumerated=1,disappeared=0,paths=[])
+          helper_pid=os.getpid(),enumerated=1,disappeared=0,paths=[],name_prefilter='Parlor',
+          name_queries=1,path_lookups=0,collection_seconds=0.001,list_seconds=0.0001,
+          name_seconds=0.0001,path_seconds=0.0)
 print(json.dumps(dict(kind='ready',**base)),flush=True)
 for index,line in enumerate(sys.stdin,1):
  if mode=='timeout':time.sleep(10)

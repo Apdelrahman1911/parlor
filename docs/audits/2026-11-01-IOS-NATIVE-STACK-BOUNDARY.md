@@ -170,3 +170,36 @@ check. Fresh ordering/failed-start/actual-timestamp regressions join controls.
 The failed boundary is post-build observation/startup, not proven application
 input causality or proof of a specific internal scheduler/library stall. Sparse
 1s windows/5s cadence/8s OS budget and all original assertions stay unchanged.
+
+## Candidate-only path discovery
+
+[41368545332](https://github.com/Apdelrahman1911/parlor/actions/runs/41368545332)
+finished **FAILURE** at01:05:10UTC November2:29 actual Apple controls passed;
+original AR/EN methods/build/cleanup passed (exit0). Prebuild readiness122.8ms
+preceded the actual compiler command. Same owned helper returned119 complete
+bounded replies, then request120 exceeded3s during Simulator startup. **Zero
+stacks**, no app image reached; helper terminated/reaped (exit-15). API-bound
+artifact13109067657/2,902,275bytes/SHA256
+`d0f5e4a7358f572b86fd47d7e6a96df8461bafa1105ef5ea355fe4283d93478e`
+and frozen reader rejection retained. Separate original-only admission verifies
+all473 supporting/all1,214 original inputs/outcomes/cleanup without replay; it
+explicitly rejects stack/shipping qualification. No natural failure/causal fix.
+
+Every discovery previously called `proc_pidpath` for *all* current-UID runner
+processes. Filter using public `proc_name` BSD metadata first; resolve paths only
+for exact `Parlor` candidates. Apple's XNU public `libproc.c`/`libproc.h` confirms
+its32-byte name implementation and int/PID/buffer/uint32 ABI. A64-byte zeroed
+buffer and exact complete-result checks reject malformed/denied names. Names
+never confer ownership: existing exact installed device, Debug bundle and built
+executable digest checks are unchanged. Unrelated names/paths are not retained.
+
+Retain numeric name/path query counts and actual list/name/path/complete clocks
+from readiness and each admitted reply, alongside unchanged parent round-trip
+clocks. This separates native collection cost from outer observation delay in
+successful replies; timed-out replies remain failures, not inferred measurements.
+Preserve3s readiness/reply,8s sampler and10s original assertion budgets, same
+prebuild helper,1s windows/5s cadence and failure-only exports. Three new controls
+cover reduced path calls, spoofed/wrong-device candidates, malformed/denied native
+results and bounded metric rejection. Native measurement remains required;
+metadata-first discovery is a collector cost correction, **not a proven internal
+timeout cause or application input fix**. Phase1/#267/#276 remain unresolved.
