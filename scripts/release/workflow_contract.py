@@ -26,6 +26,11 @@ EXPECTED = {
 
 
 FIRST_RESPONDER_BOUNDARY = 'ios-first-responder-boundary.yml'
+INPUT_INTERMITTENCY = 'ios-input-intermittency.yml'
+INPUT_INTERMITTENCY_SHA256 = 'cf7253d212498a1b8173d62b47db75e6c0e153531d54d3594d1d09f975a9be5c'
+INPUT_INTERMITTENCY_COMPANIONS = {'pin57_input_intermittency.py': '937cc803918e50394575bef1c60c989d02189be2777c68077c8b730702239b60', 'run_pin57.py': 'e2671b0a5e1a4c9cb5a31dc36dd0d64b503c8dcfdbdced2d5ac3ba87736d2d10', 'test_pin57_input_intermittency.py': '90de9b3da69c4b783ec660021b42050c29f58c1b3813af2d237d76ceb08aa8f7'}
+INPUT_INTERMITTENCY_RECEIPT = 'docs/audits/2026-11-02-IOS-DELIVERY-FOCUS-CAPABILITY.json'
+INPUT_INTERMITTENCY_RECEIPT_SHA256 = '6ee0b15e862ce285e34e583d94dce1eae92fb637e3cf9769e85c1cf85e008007'
 DELIVERY_FOCUS_BOUNDARY = 'ios-delivery-focus-boundary.yml'
 DELIVERY_FOCUS_BOUNDARY_SHA256 = 'd3beb411d9ea3c6e649622601fd2becf9aca5fc6144d2a2e15ab9324442a125d'
 DELIVERY_FOCUS_BOUNDARY_COMPANIONS = {'PIN56DeliveryObservation.swift.in': '33a096cd2e94e7a6bd532bbb13601a89fbd648d88ca68a0514a769bb3c13d437', 'pin56_delivery_boundary.py': '54ec3e4ba47427da0af133642933feb549b0099923c92d03167bb8d7d86d0e31', 'run_pin56.py': '6cbd2c2880b77daa43bbd0d2deb39bd26a6845ff68dc6acb2d13117e1ed0fb01', 'test_pin56_delivery_boundary.py': 'c1c39794c9dd72008127110a67a99a91b194b3097bc08baed8875fb357e3ac44'}
@@ -340,7 +345,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -582,6 +587,20 @@ def verify_first_responder_boundary(text: str) -> None:
     path = ROOT / FIRST_RESPONDER_BOUNDARY_RECEIPT
     if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256:
         fail('First responder requires the actual independently retained original typing failure')
+
+
+def verify_input_intermittency(text: str) -> None:
+    verify_common(INPUT_INTERMITTENCY, text)
+    verify_delivery_focus_boundary((WORKFLOWS / DELIVERY_FOCUS_BOUNDARY).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != INPUT_INTERMITTENCY_SHA256:
+        fail('Intermittency requires ten fixed original samples on one standard free runner, no retries or changed assertions')
+    for name, digest in INPUT_INTERMITTENCY_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Input intermittency companion differs from reviewed source: {name}')
+    path = ROOT / INPUT_INTERMITTENCY_RECEIPT
+    if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != INPUT_INTERMITTENCY_RECEIPT_SHA256:
+        fail('Intermittency requires the independently admitted native adapter capability')
 
 
 def verify_delivery_focus_boundary(text: str) -> None:
@@ -2561,6 +2580,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if FIRST_RESPONDER_BOUNDARY in files:
         verify_first_responder_boundary(files[FIRST_RESPONDER_BOUNDARY])
+    if INPUT_INTERMITTENCY in files:
+        verify_input_intermittency(files[INPUT_INTERMITTENCY])
     if DELIVERY_FOCUS_BOUNDARY in files:
         verify_delivery_focus_boundary(files[DELIVERY_FOCUS_BOUNDARY])
     if ORIGINAL_ROOT_LIFECYCLE in files:
