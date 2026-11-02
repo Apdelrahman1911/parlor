@@ -26,6 +26,11 @@ EXPECTED = {
 
 
 FIRST_RESPONDER_BOUNDARY = 'ios-first-responder-boundary.yml'
+DELIVERY_FOCUS_BOUNDARY = 'ios-delivery-focus-boundary.yml'
+DELIVERY_FOCUS_BOUNDARY_SHA256 = 'd3beb411d9ea3c6e649622601fd2becf9aca5fc6144d2a2e15ab9324442a125d'
+DELIVERY_FOCUS_BOUNDARY_COMPANIONS = {'PIN56DeliveryObservation.swift.in': '33a096cd2e94e7a6bd532bbb13601a89fbd648d88ca68a0514a769bb3c13d437', 'pin56_delivery_boundary.py': '54ec3e4ba47427da0af133642933feb549b0099923c92d03167bb8d7d86d0e31', 'run_pin56.py': '6cbd2c2880b77daa43bbd0d2deb39bd26a6845ff68dc6acb2d13117e1ed0fb01', 'test_pin56_delivery_boundary.py': 'c1c39794c9dd72008127110a67a99a91b194b3097bc08baed8875fb357e3ac44'}
+DELIVERY_FOCUS_BOUNDARY_RECEIPT = 'docs/audits/2026-11-02-IOS-ORIGINAL-FIRST-RESPONDER-ACCEPTANCE.json'
+DELIVERY_FOCUS_BOUNDARY_RECEIPT_SHA256 = 'e122ca11e90b888cc4c6d701c4ae4d5b3b5abe342a0f64343cd5d306f33715a0'
 FIRST_RESPONDER_BOUNDARY_SHA256 = 'a246793bf73894f85ce24660308eac1b016bb4a4bb2dae0cc11688cb9d2559f7'
 FIRST_RESPONDER_BOUNDARY_COMPANIONS = {'PIN55FirstResponder.swift.in': 'e14cdeae1df88eeee2096b2ed4b2652187ee466a4f0fe4c9f8118fd4b62786f3', 'pin55_first_responder.py': 'fb141e226a3829daa45d9b7cdfbb66f86bce59277fca1bbb512685004e14e997', 'run_pin55.py': '17a7d7568a4da741cbb2c0e952f45f805e28c41063ae30b35ed2c5c229bff492', 'test_pin55_first_responder.py': '75bf5fd8b6d68b50d939565846479eea92cc1441ddf346efda91b3b45b47bd80'}
 FIRST_RESPONDER_BOUNDARY_RECEIPT = 'docs/audits/2026-11-02-IOS-ORIGINAL-ROOT-FAILURE.json'
@@ -335,7 +340,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -577,6 +582,20 @@ def verify_first_responder_boundary(text: str) -> None:
     path = ROOT / FIRST_RESPONDER_BOUNDARY_RECEIPT
     if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256:
         fail('First responder requires the actual independently retained original typing failure')
+
+
+def verify_delivery_focus_boundary(text: str) -> None:
+    verify_common(DELIVERY_FOCUS_BOUNDARY, text)
+    verify_first_responder_boundary((WORKFLOWS / FIRST_RESPONDER_BOUNDARY).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != DELIVERY_FOCUS_BOUNDARY_SHA256:
+        fail('Delivery/focus requires one exact free runner, unchanged original methods and failure-only owned state')
+    for name, digest in DELIVERY_FOCUS_BOUNDARY_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Delivery/focus companion differs from reviewed source: {name}')
+    path = ROOT / DELIVERY_FOCUS_BOUNDARY_RECEIPT
+    if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != DELIVERY_FOCUS_BOUNDARY_RECEIPT_SHA256:
+        fail('Delivery/focus requires the independently accepted actual original responder capability')
 
 
 def verify_original_root_lifecycle(text: str) -> None:
@@ -2542,6 +2561,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if FIRST_RESPONDER_BOUNDARY in files:
         verify_first_responder_boundary(files[FIRST_RESPONDER_BOUNDARY])
+    if DELIVERY_FOCUS_BOUNDARY in files:
+        verify_delivery_focus_boundary(files[DELIVERY_FOCUS_BOUNDARY])
     if ORIGINAL_ROOT_LIFECYCLE in files:
         verify_original_root_lifecycle(files[ORIGINAL_ROOT_LIFECYCLE])
     if ROOT_LIFECYCLE in files:

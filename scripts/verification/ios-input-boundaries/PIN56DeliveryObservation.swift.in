@@ -1,0 +1,98 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN56_CONTROL
+import Foundation
+import Darwin
+#if !PIN56_CONTROL
+import UIKit
+#endif
+
+/// Callback-only diagnostic copy. No extra hook, input query/repair or thread.
+/// Numeric calls from weak verified editors only; lock never surrounds original forwarding.
+final class PIN56DeliveryObservation {
+    private final class WeakEditor {
+        weak var object: AnyObject?
+        init(_ object: AnyObject) { self.object = object }
+    }
+    private let lock = NSLock()
+    private var editors = [WeakEditor]()
+    private var threadOrdinals = [UInt32: Int]() // Actual thread ports never exported.
+    private var rows = [[Double]]()
+    private var invalid = 0
+    private var overflow = 0
+    private var frozen = false
+
+    init() { rows.reserveCapacity(4096) }
+
+    func bindVerifiedEditor(_ object: AnyObject) {
+        precondition(Thread.isMainThread)
+        lock.lock(); defer { lock.unlock() }
+        guard !frozen else { return }
+        guard editors.count < 128 else { overflow = min(1_000_000, overflow + 1); return }
+        guard !editors.contains(where: { $0.object === object }) else {
+            invalid = min(1_000_000, invalid + 1); return
+        }
+        editors.append(WeakEditor(object))
+    }
+
+    func observeOriginalCall(_ object: AnyObject, kind: Int, phase: Int, result: Bool = false) {
+        lock.lock(); defer { lock.unlock() }
+        guard !frozen, let index = editors.firstIndex(where: { $0.object === object }) else { return }
+        guard (1...6).contains(kind) || kind == 8 || kind == 9,
+              phase == 0 || phase == 1,
+              !result || (phase == 1 && (kind == 8 || kind == 9)) else {
+            invalid = min(1_000_000, invalid + 1); return
+        }
+        guard rows.count < 4096 else { overflow = min(1_000_000, overflow + 1); return }
+        let thread = pthread_mach_thread_np(pthread_self())
+        if threadOrdinals[thread] == nil {
+            guard threadOrdinals.count < 64 else { overflow = min(1_000_000, overflow + 1); return }
+            threadOrdinals[thread] = threadOrdinals.count + 1
+        }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Thread.isMainThread ? 1 : 0,
+                     Double(threadOrdinals[thread]!), Double(kind), Double(phase), Double(index + 1), result ? 1 : 0])
+    }
+
+    func freeze() -> [String: Any] {
+        precondition(Thread.isMainThread)
+        lock.lock()
+        frozen = true
+        let capturedMs = ProcessInfo.processInfo.systemUptime * 1000
+        let alive = editors.map { $0.object != nil }
+        // Temporary strong references only AFTER the weak-liveness decision, at failure.
+        // Never stored/exported, and never inspected for text/range/delegate data.
+        let objects = editors.map { $0.object }
+        let capturedRows = rows, capturedThreads = threadOrdinals.count
+        let capturedInvalid = invalid, capturedOverflow = overflow
+        lock.unlock()
+        var current = [[String: Any]]()
+        #if !PIN56_CONTROL
+        MainActor.assumeIsolated {
+        for object in objects {
+            guard let view = object as? UIView else {
+                current.append(["available": false, "firstResponder": NSNull(), "ancestors": []]); continue
+            }
+            var chain = [[Int]](), ancestor: UIView? = view
+            var visited = Set<ObjectIdentifier>()
+            var truncated = false
+            while let node = ancestor {
+                guard chain.count < 12, visited.insert(ObjectIdentifier(node)).inserted else {
+                    truncated = true; break
+                }
+                chain.append([chain.count, node.isHidden ? 1 : 0, node.alpha <= 0 ? 1 : 0,
+                              node.alpha.isFinite ? 1 : 0, node.isUserInteractionEnabled ? 1 : 0,
+                              node.accessibilityElementsHidden ? 1 : 0, node.window != nil ? 1 : 0])
+                ancestor = node.superview
+            }
+            current.append(["available": true, "firstResponder": view.isFirstResponder,
+                            "ancestors": chain, "truncated": truncated])
+        }
+        }
+        #else
+        current = objects.map { _ in ["available": false, "firstResponder": NSNull(), "ancestors": []] }
+        #endif
+        return ["schema": 56, "capturedMs": capturedMs, "rows": capturedRows,
+                "threads": capturedThreads, "editorsAlive": alive, "current": current,
+                "invalid": capturedInvalid, "overflow": capturedOverflow,
+                "scope": "Original call thread and post-failure owned-view state; not pre-failure ownership or text"]
+    }
+}
+#endif
