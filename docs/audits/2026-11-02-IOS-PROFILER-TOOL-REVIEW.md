@@ -183,3 +183,28 @@ interface replay. Retain native manual/exit/tool hash under8s. Investigate wheth
 its documented interface can collect only an owned target and defer costly symbol
 processing. Actual availability, permissions, privacy isolation, stacks and app
 causality require separate evidence; a manual pass is not attachment admission.
+
+## Installed target-only interface and capability control
+
+[41420769370](https://github.com/Apdelrahman1911/parlor/actions/runs/41420769370)
+completed **SUCCESS** on standard macos-15: six actual source safeguards/zero
+skips, one installed `man spindump` read (exit0/0.166s), no sampler execution.
+Independent exact source/job/API/native manual readback accepted once. Artifact
+13130056453/4,227bytes/SHA256
+`4e8ac146f22a44a3cbcb3821376354ad580815839bb1dd4b2b1f9279c5f77c10`.
+
+The actual manual explicitly documents `-onlyTarget` as **only sample the target**
+(a bare PID alone merely sorts that process first), `-noText` binary-only output,
+`-noProcessingWhileSampling`, and separate `-i` offline analysis / `-timeline` /
+`-noBinary`. It does **not** document a no-symbolication switch; none is guessed.
+
+A fresh five-minute free host-only control records one exact owned `/usr/bin/yes`
+PID,1s/10ms, with those target-only binary options. Retire the target immediately
+after capture, then analyze the owned file offline. Capture and analysis each
+retain8s; no retry or extra sample. No sudo, permission grant, app/Simulator
+launch, inherited credentials or unrelated target. Permission/format/timeout
+failure remains failed and owned children reaped. Opaque binary never uploaded;
+only actual receipt/log/plain-text report is retained. Require exact target
+identity, native threads/stack frames, bounded unredirected output and independent
+custody admission before application use. This remains a capability investigation,
+not timing neutrality, app cause, shipping correction or physical verification.

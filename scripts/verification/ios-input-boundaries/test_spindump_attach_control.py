@@ -1,0 +1,67 @@
+"""Portable ownership/security controls, not actual Mac attachment evidence."""
+import json
+import os
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import Mock,patch
+
+import spindump_attach_control as c
+
+
+class SpindumpAttachControls(unittest.TestCase):
+    def test_exact_target_only_binary_capture_and_offline_timeline_no_permission_bypass(self):
+        raw=Path('/owned/control/owned.raw');text=raw.with_name('report.txt')
+        self.assertEqual(c.capture_command(42,raw),[c.TOOL,'42','1','10','-onlyTarget',
+            '-noText','-noProcessingWhileSampling','-o',str(raw)])
+        self.assertEqual(c.analysis_command(raw,text),[c.TOOL,'-i',str(raw),'-timeline','-noBinary','-o',str(text)])
+        for pid in (0,-1,True,'42'):
+            with self.assertRaises(ValueError):c.capture_command(pid,raw)
+        for flag in ('sudo','-proc','-notarget','-sampleWithoutTarget','-wait','-nothrottle'):
+            self.assertNotIn(flag,c.capture_command(42,raw))
+
+    def test_clean_environment_does_not_forward_credentials_or_injection(self):
+        with patch.dict(os.environ,GH_TOKEN='not-forwarded',DYLD_INSERT_LIBRARIES='not-forwarded'):
+            self.assertEqual(set(c.environment())-{'HOME','TMPDIR'},{'PATH','LC_ALL','DEVELOPER_DIR'})
+
+    def test_non_mac_or_existing_output_never_creates_target(self):
+        with patch.object(c.sys,'platform','linux'),patch.object(c.subprocess,'Popen') as target,self.assertRaises(RuntimeError):
+            c.control(Path('/unavailable'))
+        target.assert_not_called()
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'),patch.object(c.subprocess,'Popen') as target,self.assertRaises(ValueError):
+            c.control(Path(d).resolve())
+        target.assert_not_called()
+
+    def test_empty_redirected_oversized_and_other_process_report_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d).resolve()/'report.txt'
+            for raw in (b'',b'x'*(c.MAX_TEXT+1),b'Process: yes [43]\nThread 0x123\n1 frame [0x123]',
+                        b'Process: yes [42]\nNo samples',
+                        b'Process: yes [42]\nProcess: foreign [24]\nThread 0x123\n1 frame [0x123]'):
+                p.write_bytes(raw)
+                with self.assertRaises(ValueError):c.read_report(p,42)
+            p.write_bytes(b'Process: yes [42]\nThread 0x123\n1 frame [0x123]')
+            self.assertEqual(c.read_report(p,42)['bytes'],p.stat().st_size)
+            link=p.with_name('link');link.symlink_to(p)
+            with self.assertRaises(ValueError):c.read_report(link,42)
+
+    def test_failed_recording_reaps_busy_target_and_preserves_failure_without_offline_analysis(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
+            child=Mock(pid=42);child.poll.side_effect=[None,-15];child.wait.return_value=-15
+            out=Path(d).resolve()/'control'
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c,'command',side_effect=ValueError('actual permission or recording failure')) as command,self.assertRaises(ValueError):
+                c.control(out)
+            child.terminate.assert_called_once();self.assertEqual(command.call_count,1)
+            value=json.loads((out/'receipt.json').read_text());self.assertTrue(value['owned_target_reaped'])
+            self.assertIn('actual permission or recording failure',value['error']);self.assertNotIn('result',value)
+
+    def test_raw_capture_is_not_uploaded_or_substituted_for_actual_stack_report(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
+            out=Path(d).resolve()/'control';child=Mock(pid=42);child.poll.return_value=-15
+            def incomplete(directory,receipt,label,argv):
+                if label=='record':(directory/'owned.raw').write_bytes(b'opaque fixture')
+                else:(directory/'report.txt').write_bytes(b'no actual stacks')
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c,'command',side_effect=incomplete),self.assertRaises(ValueError):
+                c.control(out)
+            value=json.loads((out/'receipt.json').read_text());self.assertFalse(value['raw_metadata']['uploaded'])
+            self.assertFalse(value['attachment_independently_verified']);self.assertNotIn('result',value)

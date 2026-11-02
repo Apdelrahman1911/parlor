@@ -17,8 +17,9 @@ class ProfilerAttachWorkflowControls(unittest.TestCase):
         for before, after in (('macos-15', 'macos-15-large'), ('contents: read', 'contents: write'),
                               ('timeout-minutes: 5', 'timeout-minutes: 90'),
                               ('if: always()', 'if: success()'),
-                              ('test_profiler_attach_control.py', 'test_pin49_native_stacks.py'),
-                              ('profiler_attach_control.py', 'run_pin49.py')):
+                              ('test_spindump_attach_control.py', 'test_pin49_native_stacks.py'),
+                              ('spindump_attach_control.py', 'run_pin49.py'),
+                              ('/report.txt', '/owned.raw')):
             with self.subTest(after=after), self.assertRaises(RuntimeError):
                 c.verify_profiler_attach_control(text.replace(before, after))
 
