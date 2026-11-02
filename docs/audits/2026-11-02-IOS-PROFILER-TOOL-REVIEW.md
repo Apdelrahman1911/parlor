@@ -208,3 +208,25 @@ only actual receipt/log/plain-text report is retained. Require exact target
 identity, native threads/stack frames, bounded unredirected output and independent
 custody admission before application use. This remains a capability investigation,
 not timing neutrality, app cause, shipping correction or physical verification.
+
+## Actual native permission boundary and standard-runner correction
+
+[41421565623](https://github.com/Apdelrahman1911/parlor/actions/runs/41421565623)
+completed **FAILURE**: six actual Mac controls/zero skips; live sampler exits77
+in0.048s with **“spindump must be run as root when sampling the live system”**.
+Owned target1713 and launcher1714 reaped. No actual binary/stack/analysis produced.
+Full attachment reader rejects; frozen failed-tool fact admission accepts exact
+source/API/native error. Artifact13129742784/777bytes/SHA256
+`fe1130acb425e84b37ecd6ee76b1d11bacfe13c5c73d48bdf524f179e5b2b12c`.
+This is an observed tool permission requirement, not a Parlor failure.
+
+GitHub's official hosted-runner documentation states Linux/macOS standard VMs
+have passwordless sudo. Use that **existing** policy only for the exact Apple
+tool and owned PID, `sudo -n /usr/sbin/spindump … -onlyTarget`; never change policy,
+grant access, prompt, forward credentials or execute arbitrary root code. Add
+the installed tool's documented5s native `-timelimit` inside the existing8s child
+deadline. Missing/incomplete output still fails; no extended capture/analysis.
+Pre-reserve owned binary output0600 before capture. Analyze offline without sudo;
+unexpected file ownership/access fails rather than chmod/chown bypass. No opaque
+upload or application use before actual isolation/capability admission. Standard
+free runner availability, security requirements and physical4 reservation remain.

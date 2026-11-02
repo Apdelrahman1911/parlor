@@ -12,12 +12,12 @@ import spindump_attach_control as c
 class SpindumpAttachControls(unittest.TestCase):
     def test_exact_target_only_binary_capture_and_offline_timeline_no_permission_bypass(self):
         raw=Path('/owned/control/owned.raw');text=raw.with_name('report.txt')
-        self.assertEqual(c.capture_command(42,raw),[c.TOOL,'42','1','10','-onlyTarget',
-            '-noText','-noProcessingWhileSampling','-o',str(raw)])
+        self.assertEqual(c.capture_command(42,raw),['/usr/bin/sudo','-n',c.TOOL,'42','1','10','-onlyTarget',
+            '-noText','-noProcessingWhileSampling','-timelimit','5','-o',str(raw)])
         self.assertEqual(c.analysis_command(raw,text),[c.TOOL,'-i',str(raw),'-timeline','-noBinary','-o',str(text)])
         for pid in (0,-1,True,'42'):
             with self.assertRaises(ValueError):c.capture_command(pid,raw)
-        for flag in ('sudo','-proc','-notarget','-sampleWithoutTarget','-wait','-nothrottle'):
+        for flag in ('-E','-S','-proc','-notarget','-sampleWithoutTarget','-wait','-nothrottle'):
             self.assertNotIn(flag,c.capture_command(42,raw))
 
     def test_clean_environment_does_not_forward_credentials_or_injection(self):
@@ -65,3 +65,16 @@ class SpindumpAttachControls(unittest.TestCase):
                 c.control(out)
             value=json.loads((out/'receipt.json').read_text());self.assertFalse(value['raw_metadata']['uploaded'])
             self.assertFalse(value['attachment_independently_verified']);self.assertNotIn('result',value)
+
+    def test_live_capture_output_reserved_private_before_privileged_tool_not_permission_changes(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c.sys,'platform','darwin'):
+            out=Path(d).resolve()/'control';child=Mock(pid=42);child.poll.return_value=-15
+            def failure(directory,receipt,label,argv):
+                p=directory/'owned.raw'
+                self.assertTrue(p.is_file());self.assertFalse(p.is_symlink())
+                self.assertEqual(p.stat().st_mode&0o777,0o600)
+                self.assertEqual(p.stat().st_size,0)
+                self.assertEqual(argv[:3],['/usr/bin/sudo','-n',c.TOOL])
+                raise ValueError('actual capture failure')
+            with patch.object(c.subprocess,'Popen',return_value=child),patch.object(c,'command',side_effect=failure),self.assertRaises(ValueError):
+                c.control(out)

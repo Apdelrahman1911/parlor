@@ -1,9 +1,11 @@
 """Installed41420769370 interface: one owned host target, offline text analysis.
 
-No privileges, all-processes capture, app/Simulator launch or opaque upload.
+Only the runner's existing sudo policy for this exact target-only Apple tool.
+No permission/configuration change, app/Simulator launch or opaque upload.
 Actual permission/format failures stay failed; documentation is not capability.
 """
 import hashlib
+import os
 import re
 import subprocess
 import sys
@@ -18,8 +20,12 @@ MAX_TEXT = 4*1024*1024
 
 def capture_command(pid, raw):
     if type(pid) is not int or pid <= 0:raise ValueError('Exact owned positive PID required')
-    return [TOOL,str(pid),'1','10','-onlyTarget','-noText',
-            '-noProcessingWhileSampling','-o',str(raw)]
+    # Actual41421565623 exit77 requires root for live sampling. GitHub standard
+    # macOS runners document existing passwordless sudo; do not grant/alter it.
+    # Never prompt or preserve caller credentials. Native5s limit bounds the
+    # privileged tool itself inside the unchanged8s launcher deadline.
+    return ['/usr/bin/sudo','-n',TOOL,str(pid),'1','10','-onlyTarget','-noText',
+            '-noProcessingWhileSampling','-timelimit','5','-o',str(raw)]
 
 
 def analysis_command(raw, text):
@@ -50,10 +56,13 @@ def control(directory):
                  apps_launched=0,accessibility_queries=0,all_processes=False,
                  attachment_independently_verified=False,application_root_cause=False,
                  shipping_qualified=False,physical_verified=False)
+    raw=directory/'owned.raw';text=directory/'report.txt'
+    # Reserve before target creation: an output allocation failure must never
+    # leave a busy target that cannot reach the capture's cleanup block.
+    fd=os.open(raw,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600);os.close(fd)
     target=subprocess.Popen(receipt['target_command'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL,env=environment())
     receipt['owned_target_pid']=target.pid;checkpoint(directory,receipt)
-    raw=directory/'owned.raw';text=directory/'report.txt'
     try:
         try:command(directory,receipt,'record',capture_command(target.pid,raw))
         finally:
