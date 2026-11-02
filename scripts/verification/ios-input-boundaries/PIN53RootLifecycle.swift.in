@@ -1,0 +1,141 @@
+#if (DEBUG && targetEnvironment(simulator)) || PIN53_CONTROL
+import Foundation
+import ObjectiveC.runtime
+import Darwin
+
+/// Original getter/setter calls only. Never issue an accessibility query or read labels/values.
+final class PIN53RootLifecycle {
+    private typealias Get = @convention(c) (AnyObject, Selector) -> AnyObject?
+    private typealias Set = @convention(c) (AnyObject, Selector, AnyObject?) -> Void
+    private let getter = NSSelectorFromString("accessibilityElements")
+    private let setter = NSSelectorFromString("setAccessibilityElements:")
+    private let armed: () -> Bool
+    private weak var overlay: AnyObject?
+    private weak var root: AnyObject?
+    private var attemptedRoot = false
+    private var installation = [0, 0, 0]
+    private var overflow = 0
+    private var rows = [[Double]]()
+    private let limit = 4096
+#if PIN53_CONTROL
+    var controlEligible: ((AnyObject) -> Bool)?
+#endif
+
+    init(armed: @escaping () -> Bool) {
+        precondition(Thread.isMainThread)
+        self.armed = armed
+        rows.reserveCapacity(limit)
+    }
+
+    private func own(_ type: AnyClass, _ selector: Selector) -> Method? {
+        var count: UInt32 = 0
+        guard let list = class_copyMethodList(type, &count) else { return nil }
+        defer { free(list) }
+        guard count <= 256 else { return nil }
+        return (0..<Int(count)).map { list[$0] }.first { method_getName($0) == selector }
+    }
+
+    private func copiedType(_ pointer: UnsafeMutablePointer<CChar>?) -> String {
+        guard let pointer else { return "" }
+        defer { free(pointer) }
+        return String(cString: pointer)
+    }
+
+    private func signature(_ method: Method, returns: String, argumentCount: UInt32) -> Bool {
+        guard method_getNumberOfArguments(method) == argumentCount,
+              copiedType(method_copyReturnType(method)) == returns else { return false }
+        return (0..<Int(argumentCount)).allSatisfy { index in
+            copiedType(method_copyArgumentType(method, UInt32(index))) == (index == 1 ? ":" : "@")
+        }
+    }
+
+    private func present(_ value: AnyObject?) -> Int {
+        guard let array = value as? NSArray else { return 0 }
+        return array.count > 0 ? 1 : 0 // No element attributes, labels, ranges or values are read.
+    }
+
+    private func record(_ kind: Int, _ phase: Int, _ present: Int = 0) {
+        guard Thread.isMainThread, armed() else { return }
+        guard rows.count < limit else { overflow = min(1_000_000, overflow + 1); return }
+        rows.append([ProcessInfo.processInfo.systemUptime * 1000, Double(kind), Double(phase), Double(present)])
+    }
+
+    func bindVerifiedOverlay(_ object: AnyObject, target: AnyClass) -> Bool {
+        guard Thread.isMainThread, armed(), overlay == nil, let actual = object_getClass(object), actual === target,
+              own(target, getter) == nil,
+              let method = class_getInstanceMethod(target, getter), signature(method, returns: "@", argumentCount: 2),
+              let encoding = method_getTypeEncoding(method) else { return false }
+        let original = unsafeBitCast(method_getImplementation(method), to: Get.self)
+        let selector = getter
+        let block: @convention(block) (AnyObject) -> AnyObject? = { [weak self] object in
+            let observed = self?.overlay === object
+            if observed { self?.record(3, 0) }
+            let result = original(object, selector) // Original arguments/return once, synchronous.
+            if observed {
+                self?.bindReturnedRootOnce(result)
+                self?.record(3, 1, self?.present(result) ?? 0)
+            }
+            return result
+        }
+        let replacement = imp_implementationWithBlock(block)
+        guard class_addMethod(target, getter, replacement, encoding) else {
+            imp_removeBlock(replacement); return false
+        }
+        overlay = object; installation[0] = 1
+        return true
+    }
+
+    private func eligible(_ object: AnyObject) -> Bool {
+#if PIN53_CONTROL
+        return controlEligible?(object) == true
+#else
+        guard let type = object_getClass(object), let parent = class_getSuperclass(type),
+              String(cString: class_getName(parent)) == "CMPAccessibilityElement" else { return false }
+        // Source root owns this getter, unlike semantic nodes; never enumerate runtime classes.
+        return own(type, getter) != nil && own(type, NSSelectorFromString("accessibilityTraits")) == nil
+#endif
+    }
+
+    private func bindReturnedRootOnce(_ value: AnyObject?) {
+        guard Thread.isMainThread, armed(), !attemptedRoot, let array = value as? NSArray,
+              array.count <= 32 else { return }
+        let candidates = array.map { $0 as AnyObject }.filter { eligible($0) }
+        guard candidates.count == 1 else { return }
+        attemptedRoot = true
+        let object = candidates[0]
+        guard let target = object_getClass(object), let method = own(target, getter),
+              signature(method, returns: "@", argumentCount: 2), own(target, setter) == nil,
+              let parentSetter = class_getInstanceMethod(target, setter),
+              signature(parentSetter, returns: "v", argumentCount: 3),
+              let setterEncoding = method_getTypeEncoding(parentSetter) else { return }
+        let originalGet = unsafeBitCast(method_getImplementation(method), to: Get.self)
+        let originalSet = unsafeBitCast(method_getImplementation(parentSetter), to: Set.self)
+        let getSelector = getter, setSelector = setter
+        let getBlock: @convention(block) (AnyObject) -> AnyObject? = { [weak self] object in
+            let observed = self?.root === object
+            if observed { self?.record(1, 0) }
+            let result = originalGet(object, getSelector)
+            if observed { self?.record(1, 1, self?.present(result) ?? 0) }
+            return result
+        }
+        let setBlock: @convention(block) (AnyObject, AnyObject?) -> Void = { [weak self] object, value in
+            let observed = self?.root === object
+            if observed { self?.record(2, 0, self?.present(value) ?? 0) }
+            originalSet(object, setSelector, value)
+            if observed { self?.record(2, 1) }
+        }
+        let getReplacement = imp_implementationWithBlock(getBlock)
+        let setReplacement = imp_implementationWithBlock(setBlock)
+        guard class_addMethod(target, setter, setReplacement, setterEncoding) else {
+            imp_removeBlock(getReplacement); imp_removeBlock(setReplacement); return
+        }
+        root = object; installation[2] = 1
+        method_setImplementation(method, getReplacement); installation[1] = 1
+    }
+
+    func freeze() -> [String: Any] {
+        ["schema": 53, "installation": installation, "attemptedRoot": attemptedRoot,
+         "overflow": overflow, "overlayAlive": overlay != nil, "rootAlive": root != nil, "rows": rows, "capturedMs": ProcessInfo.processInfo.systemUptime * 1000]
+    }
+}
+#endif

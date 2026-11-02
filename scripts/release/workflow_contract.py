@@ -25,6 +25,10 @@ EXPECTED = {
 # Separate exact profile; original application/stack workflows stay unchanged.
 
 
+ROOT_LIFECYCLE = 'ios-root-lifecycle.yml'
+ROOT_LIFECYCLE_SHA256 = '9f93c159bf1be820e6ca4782f233dc35310d395f35a757425e58a057f1e1aa33'
+ROOT_LIFECYCLE_COMPANIONS = {'PIN53RootLifecycle.swift.in': '81f0eb1ef7d9fb07271d6f5948cdd92749f42665d33927cfda5bd07fd669843b', 'pin53_root_lifecycle.py': 'b44e87598e9554adb5527a137ba85bab0410b1626571d19dd86f7b5e53dc5186', 'run_pin53.py': '63af38883abcdcd3c5e8140eb4ac3913f6651798be3420de37e0de273673fa5a', 'test_pin53_root_lifecycle.py': 'ef1b5da885d4b3dbf6af4d8b8f700c48a0f8ea554972a0430c67b8793e87d9ab'}
+
 ORIGINAL_OWNED_TEXT = 'ios-original-owned-text.yml'
 ORIGINAL_OWNED_TEXT_SHA256 = 'd5a717db0f78b67cbf3d8f505cf84350642b1d20ec0d7f37d07f91accae5235c'
 ORIGINAL_OWNED_TEXT_COMPANIONS = {'pin52_owned_text_pair.py': '1e821f5f3301556a9827327d288d8be2f58275e57baa527a7251d39765762ada', 'run_pin52.py': 'f4015be3dd5dc10cc9093754e29e732f59245fdd68a84f25c915c835c6d1fe9c', 'test_pin52_owned_text_pair.py': '7b2f4684e10b3adf63af1daed71621bff30e4c7a4e07d4db4e92d78e52d37b81'}
@@ -319,7 +323,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -547,6 +551,17 @@ def verify_passive_failure_samples(text: str) -> None:
         path = ROOT / "scripts/verification/ios-input-boundaries" / name
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail(f"Passive sample companion differs from reviewed source: {name}")
+
+
+def verify_root_lifecycle(text: str) -> None:
+    verify_common(ROOT_LIFECYCLE, text)
+    verify_original_owned_text((WORKFLOWS / ORIGINAL_OWNED_TEXT).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != ROOT_LIFECYCLE_SHA256:
+        fail('Root lifecycle requires exact free isolated control, no proactive root queries or changed guards')
+    for name, digest in ROOT_LIFECYCLE_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail(f'Root lifecycle companion differs from reviewed source: {name}')
 
 
 def verify_original_owned_text(text: str) -> None:
@@ -2485,6 +2500,8 @@ def main() -> int:
         verify_original_touch_export_control(files[ORIGINAL_TOUCH_EXPORT_CONTROL])
     if PASSIVE_FAILURE_SAMPLES in files:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
+    if ROOT_LIFECYCLE in files:
+        verify_root_lifecycle(files[ROOT_LIFECYCLE])
     if ORIGINAL_OWNED_TEXT in files:
         verify_original_owned_text(files[ORIGINAL_OWNED_TEXT])
     if OWNED_TEXT_BOUNDARY in files:
