@@ -363,7 +363,7 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
+    unexpected = actual - EXPECTED - {RETAINED_KEYBOARD_REVIEW, PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
     unexpected -= {ORIGINAL_SUITE_INPUT, KEYBOARD_SESSIONS, NATIVE_AX_RETURNS, INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
@@ -2598,8 +2598,20 @@ def verify_public_testing(text: str) -> None:
 ORIGINAL_FULL_CONTEXT_WORKFLOW_SHA256 = '30a88f92da4a0de4bceab9eb3ea349dd599687f2fb2ad16f22e25556041ead3d'
 ORIGINAL_FULL_CONTEXT_COMPANIONS = {'scripts/verification/ios-input-boundaries/pin63_original_full_context.py': '478aa9ae124326e66e872e38614c0bd3a2059e6b78380e7bd6e56f7372372ef8', 'scripts/verification/ios-input-boundaries/run_pin63.py': 'e671b9c4ab90601031540f48e84a0ed387793b2bfe965af18524a182c33e1299', 'scripts/verification/ios-input-boundaries/test_pin63_original_full_context.py': '3ca10edd521f70d916652bd74fffb6bd68e0826c5724d71a5ee1eaca0d2cc0c3', 'scripts/verification/ios-input-boundaries/pin57_input_intermittency.py': '0a67ecdeb020441a9f20d3beb3643c3482f6c25b34b98d41884140f68aed6611', 'scripts/verification/ios-input-boundaries/run_pin03.py': 'd49fdb39e147f3ce96f038f3b65b6ff7986258028cde232e5108b450a2b0da52'}
 
+
+RETAINED_KEYBOARD_REVIEW = "ios-retained-keyboard-review.yml"
+RETAINED_KEYBOARD_CONTROLS = {'.github/workflows/ios-retained-keyboard-review.yml': '3a183f4f5094a092daa8d82e756285adf553a12fb3442c98bbe6c686ad1317e3', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': '3f64086e90b50a2254d03bb3ef096622644b985c84371b9b4c2a5650bab4ce6c', 'scripts/verification/ios-input-boundaries/test_retained_keyboard_review.py': '04f8cbe6ed6b933254b22f9036133d12d723b6ae3511df748174bb29f438e14c', 'scripts/verification/ios-input-boundaries/retained_keyboard_manifests.json': 'caf6dd5165760def9cace512407047264d721684120df668ab5d74c019fe7201'}
+
+def verify_retained_keyboard_review():
+    for name, digest in RETAINED_KEYBOARD_CONTROLS.items():
+        path = ROOT / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail("Retained keyboard reader differs from its exact reviewed no-replay/public-only source")
+
 def main() -> int:
     files = load_files()
+    if RETAINED_KEYBOARD_REVIEW in files:
+        verify_retained_keyboard_review()
     if hashlib.sha256(files["ios-original-full-context.yml"].encode()).hexdigest() != ORIGINAL_FULL_CONTEXT_WORKFLOW_SHA256:
         fail("Original full-context workflow differs from its exact reviewed consumer")
     for name, digest in ORIGINAL_FULL_CONTEXT_COMPANIONS.items():
