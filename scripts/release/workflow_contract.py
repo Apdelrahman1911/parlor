@@ -25,6 +25,10 @@ EXPECTED = {
 # Separate exact profile; original application/stack workflows stay unchanged.
 
 
+ORIGINAL_SUITE_INPUT = 'ios-original-suite-input.yml'
+ORIGINAL_SUITE_INPUT_SHA256 = '20f09ee6ad5802bba3d3df4c11f62a85fa07648fdf7e4d0508813632107d03e4'
+ORIGINAL_SUITE_INPUT_COMPANIONS = {'pin60_original_suite.py': 'ffed2ad7963ddfe97bf5f2ad85dd24b6a9f0c17adda77aa7483303e8ee90a0b4', 'run_pin60.py': 'b5a88f149ae6782c4c3fcbb2ab87c20cfe7232d5973d3bb5c7b23385971c692c', 'test_pin60_original_suite.py': 'e7e6f8ac8b2501acb3a94195169baa0c123f56de29ed359f469dcaa7315c6670'}
+
 KEYBOARD_SESSIONS = 'ios-keyboard-sessions.yml'
 KEYBOARD_SESSIONS_SHA256 = '2f2dd11ad35bda83753cd89c15a8eb47ed3c7c27a112fc7a86bcaae1efc82936'
 KEYBOARD_SESSIONS_COMPANIONS = {'pin59_keyboard_sessions.py': '17150af55e19314db4779e67660408bbf384dcd8bbe0cd1a77402cebfac8bba1', 'run_pin59.py': '437cb0053b29bcf83d320e427abb757ac1347261bc2db06f4427537515ba97d6', 'test_pin59_keyboard_sessions.py': 'f110228b91c755ac878352ef0bd055e51859bee3a89f90caf12b1a52605652f7'}
@@ -354,7 +358,7 @@ def load_files() -> dict[str, str]:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
     unexpected = actual - EXPECTED - {PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
-    unexpected -= {KEYBOARD_SESSIONS, NATIVE_AX_RETURNS, INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
+    unexpected -= {ORIGINAL_SUITE_INPUT, KEYBOARD_SESSIONS, NATIVE_AX_RETURNS, INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_bytes().decode("utf-8") for name in sorted(actual)}
@@ -596,6 +600,17 @@ def verify_first_responder_boundary(text: str) -> None:
     path = ROOT / FIRST_RESPONDER_BOUNDARY_RECEIPT
     if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != FIRST_RESPONDER_BOUNDARY_RECEIPT_SHA256:
         fail('First responder requires the actual independently retained original typing failure')
+
+
+def verify_original_suite_input(text: str) -> None:
+    verify_common(ORIGINAL_SUITE_INPUT, text)
+    verify_keyboard_sessions((WORKFLOWS / KEYBOARD_SESSIONS).read_text())
+    if hashlib.sha256(text.encode()).hexdigest() != ORIGINAL_SUITE_INPUT_SHA256:
+        fail('Original suite requires exact free/read-only source and23-method selection')
+    for name, digest in ORIGINAL_SUITE_INPUT_COMPANIONS.items():
+        path = ROOT / 'scripts/verification/ios-input-boundaries' / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail('Original suite selection differs from reviewed source: ' + name)
 
 
 def verify_keyboard_sessions(text: str) -> None:
@@ -2614,6 +2629,8 @@ def main() -> int:
         verify_passive_failure_samples(files[PASSIVE_FAILURE_SAMPLES])
     if FIRST_RESPONDER_BOUNDARY in files:
         verify_first_responder_boundary(files[FIRST_RESPONDER_BOUNDARY])
+    if ORIGINAL_SUITE_INPUT in files:
+        verify_original_suite_input(files[ORIGINAL_SUITE_INPUT])
     if KEYBOARD_SESSIONS in files:
         verify_keyboard_sessions(files[KEYBOARD_SESSIONS])
     if NATIVE_AX_RETURNS in files:
