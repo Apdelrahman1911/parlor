@@ -65,3 +65,15 @@ Only numeric/categorical facts and command custody are uploaded. No raw messages
 private input, broad logs, screenshots, app/Simulator execution or compiler work
 are published or performed. Native execution remains pending when this report
 is authored. This is not another replay of a passing diagnostic journey.
+
+## Native preflight compatibility correction
+
+[41701109207](https://github.com/Apdelrahman1911/parlor/actions/runs/41701109207)
+failed before decoding either original: Apple's system Python lacks
+`hashlib.file_digest` (introduced in 3.11) and rejects compact `+0000` in
+`datetime.fromisoformat`. The receipt upload also failed because preflight
+correctly prevented reader execution. No input or original artifact was modified.
+The reader now hashes in bounded 1 MiB chunks and normalizes an already validated
+UTC offset to `+00:00`. Two regressions preserve exact timestamps, bounded reads
+and compatibility with the system interpreter. Fresh native confirmation,
+not an unchanged retry, remains required.

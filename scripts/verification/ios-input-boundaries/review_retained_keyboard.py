@@ -49,6 +49,14 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def stream_sha(stream):
+    # Apple's /usr/bin/python3 is 3.9; avoid the Python 3.11 file_digest API.
+    digest = hashlib.sha256()
+    for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+        digest.update(chunk)
+    return digest.hexdigest()
+
+
 def validate_metadata(run, artifact, spec):
     require(run['id'] == spec['run'] and run['status'] == 'completed' and
             run['conclusion'] == spec['conclusion'] and run['run_attempt'] == 1 and
@@ -65,7 +73,7 @@ def validate_metadata(run, artifact, spec):
 def unpack(archive, destination, spec):
     require(archive.stat().st_size == spec['bytes'])
     with archive.open('rb') as stream:
-        require(hashlib.file_digest(stream, 'sha256').hexdigest() == spec['digest'])
+        require(stream_sha(stream) == spec['digest'])
     require(destination.is_dir() and not destination.is_symlink() and not any(destination.iterdir()))
     manifest = {}
     with zipfile.ZipFile(archive) as z:
@@ -101,7 +109,7 @@ def directory_manifest(root):
         require(path.stat().st_size <= 256 * 1024**2 and len(result) < 1000)
         with path.open('rb') as stream:
             result[str(path.relative_to(root))] = dict(
-                sha256=hashlib.file_digest(stream, 'sha256').hexdigest(), bytes=path.stat().st_size)
+                sha256=stream_sha(stream), bytes=path.stat().st_size)
     require(sum(r['bytes'] for r in result.values()) <= 512 * 1024**2)
     return result
 
@@ -109,7 +117,9 @@ def directory_manifest(root):
 def timestamp_us(value):
     require(isinstance(value, str) and re.fullmatch(
         r'2026-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:\+0000|\+00:00|Z)', value))
-    dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    # Normalize Apple's compact UTC offset for Python 3.9's stricter ISO parser.
+    normalized = value[:-5] + '+00:00' if value.endswith('+0000') else value.replace('Z', '+00:00')
+    dt = datetime.fromisoformat(normalized)
     require(dt.utcoffset().total_seconds() == 0)
     delta = dt - datetime(1970, 1, 1, tzinfo=timezone.utc)
     return (delta.days * 86400 + delta.seconds) * 1000000 + delta.microseconds

@@ -1,10 +1,12 @@
 import copy
 import json
+import io
 from pathlib import Path
 import stat
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 HERE = Path(__file__).resolve().parent
@@ -31,6 +33,32 @@ class RetainedKeyboardTests(unittest.TestCase):
     def test_native_utc_precision_is_exact_and_never_float_rounded(self):
         self.assertEqual(review.timestamp_us('2026-10-30 02:11:41.333998+0000'), 1793326301333998)
         self.assertEqual(review.timestamp_us('2026-10-30T02:11:41.333998Z'), 1793326301333998)
+
+    def test_stream_hash_uses_bounded_reads_without_python311_api(self):
+        raw = b'trace' * (1024 * 1024)
+        class BoundedStream(io.BytesIO):
+            def read(self, size=-1):
+                if size != 1024 * 1024:
+                    raise AssertionError('Unbounded archive read')
+                return super().read(size)
+        with patch.object(review.hashlib, 'file_digest', None, create=True):
+            self.assertEqual(review.stream_sha(BoundedStream(raw)), review.sha(raw))
+            self.assertEqual(review.stream_sha(BoundedStream(b'')), review.sha(b''))
+
+    def test_compact_native_offset_is_normalized_for_python39(self):
+        original = review.datetime
+        class LegacyIso:
+            def __new__(cls, *args, **kwargs):
+                return original(*args, **kwargs)
+            @staticmethod
+            def fromisoformat(value):
+                self.assertTrue(value.endswith('+00:00'))
+                return original.fromisoformat(value)
+        with patch.object(review, 'datetime', LegacyIso):
+            for timestamp in ('2026-10-30 02:11:41.333998+0000',
+                              '2026-10-30T02:11:41.333998+00:00',
+                              '2026-10-30T02:11:41.333998Z'):
+                self.assertEqual(review.timestamp_us(timestamp), 1793326301333998)
 
     def test_non_utc_unbounded_missing_or_invalid_time_rejects(self):
         for value in ['2026-10-30 02:11:41.333998+0100','2026-10-30 02:11:41.333998999+0000',
