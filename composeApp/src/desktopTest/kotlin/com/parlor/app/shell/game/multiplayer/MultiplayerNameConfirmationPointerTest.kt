@@ -39,6 +39,7 @@ import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
 import com.parlor.session.multidevice.ProcessMultiplayerState
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -138,6 +139,12 @@ class MultiplayerNameConfirmationPointerTest {
                 }
                 if (isHost) {
                     onNodeWithContentDescription(peer).assertDoesNotExist()
+                    // A fixture's instant failure must not replace Name with
+                    // Retry/Leave between the two injected pointer presses.
+                    waitUntil(timeoutMillis = 5_000) { owner.state.value is ProcessMultiplayerState.Opening }
+                    onNodeWithText(if (arabic) "جرّب تاني" else "Try again").assertDoesNotExist()
+                    runOnIdle { assertEquals(1, transport.hostCalls.get(), "${binding.definition.id}/$language/$repeat/$accessibility") }
+                    transport.finishOpening.complete(Unit)
                     waitUntil(timeoutMillis = 5_000) { owner.state.value is ProcessMultiplayerState.Failed }
                     runOnIdle { assertEquals(1, transport.hostCalls.get()) }
                 } else {
@@ -161,8 +168,10 @@ class MultiplayerNameConfirmationPointerTest {
 private class FailedConfirmationHost : RoomTransport {
     override val capability = TransportCapability(false, 1, 1024)
     val hostCalls = AtomicInteger()
+    val finishOpening = CompletableDeferred<Unit>()
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
         hostCalls.incrementAndGet()
+        finishOpening.await()
         return Result.Failure(NetError.NotConnected)
     }
     override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> =
