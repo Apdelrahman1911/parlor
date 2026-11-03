@@ -1,4 +1,40 @@
-# Project status — October 31, 2026
+# Project status — November 3, 2026
+
+## Current merged source and qualification
+
+PR311 normally protected-merged as `bda97cde2aaa923b0ecf1adf2e3316c05c059baf`,
+tree `25ecb66f1a147516785790f32bf548222a53209f`. Its fresh
+[PR41726503501](https://github.com/Apdelrahman1911/parlor/actions/runs/41726503501)
+independently passes all eight producers and the optimized Apple Release join:
+29 Swift/763 KMP Simulator/454 readiness methods without native/readiness
+skips, all1,976 Desktop methods (three established LAN skips), both736-method
+Android variants, and the unchanged37-row lint inventory and release gates.
+Complete PR receipt `c012804770c5da031a6faa077e59146ea871d43ba036dc4f0ec7de8007bb98c2`.
+
+**Distinct actual-main41737820087 is running, not yet qualified.** Its source,
+parents/tree and push identity are separately bound; a PR pass does not certify
+it. Earlier failed main364214/d821 workflows remain failed. No release.
+
+PR309 corrects the original nested XCTest query-interruption boundary; PR311
+fixes #182's reproduced post-Name retained-callback navigation bug and #310's
+missing live lint repository inputs. Original Host's HID cancellation and
+Arabic keyboard-service delay are distinct unresolved causes, not masked by
+those corrections. See the
+[input-boundary report](audits/2026-11-03-IOS-INPUT-FAILURE-BOUNDARIES.md).
+#267/#276 and Phase1 remain open; #182 physical accessibility stays pending.
+
+## Prepared next-phase fixes — not newer-source qualification
+
+PR296's existing authored-scalar policy/nine authored regressions and PR295's
+two Ghamza regressions/reports are reused byte-identically in a clean local
+integration with bda97cde. No reproduction of already accepted tests, publication
+or merge is inferred from this preparation. PR300's #299/#301 ownership union
+is also preserved and needs fresh current-source qualification. PR282 was
+already closed as superseded; PR295 closure waits for its qualified replacement.
+#293/#299/#301 and #258 remain open. Physical Phase4 is owner-reserved.
+
+## Preserved October31 checkpoints — not current-source certification
+
 
 ## Current verified main and pending Phase 2 integration
 
