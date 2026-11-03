@@ -358,6 +358,33 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
+    func testArabicDisplayNameAndAsciiRoomCodeThroughNativeInput() throws {
+        // Synthetic public input only; never submit a code or start transport.
+        let copy = KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        )
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(ar)", "-AppleLocale", "ar_EG"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        // Actual Arabic scalars go through typeText and the existing exact
+        // value/geometry/Done/reopen assertions, not a semantics replacement.
+        try verifyKeyboardCycle(app, actionPrefix: copy.continueToCode, input: "أحمد نور")
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        try verifyKeyboardCycle(app, actionPrefix: copy.findRoom, input: "AAAAAA")
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public input must not request network access")
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
     func testPostDoneNameAndRoomCodeEditsInEnglish() throws {
         try verifyPostDoneInputs(language: "en", locale: "en_US", copy: KeyboardCopy(
             openGame: "Open Whodunit and pick how you want to play.",
