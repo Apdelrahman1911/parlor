@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOWS = ROOT / ".github" / "workflows"
 EXPECTED = {
+    "ios-original-suite-185.yml",
     "production-verification.yml",
     "github-distribution.yml",
     "github-test-release.yml",
@@ -133,6 +134,8 @@ PUBLIC_CATALOG_REVIEW_COMPANIONS = {
     "review_public_catalog_commit.py": "97c3d176a3adf366156c6aa5bb12f246e6956e4def075e94e0c2f45aa627fe0e",
     "test_public_catalog_commit_review.py": "912943d70f5c0ecd9adec8f2257754ef17ac12ffe1f389f5283223dbad984d4a",
 }
+ORIGINAL_185_WORKFLOW_SHA256 = "c2bfb0bdaa1840c3860c3e2132c22354ffa2abbe658f81d57c4dc609798c022b"
+ORIGINAL_185_COMPANIONS = {'scripts/verification/ios-input-boundaries/pin61_original_185.py': '62848a9f1ba02b34645c1771cb262e6af400543a635cf2833021413feaab29f5', 'scripts/verification/ios-input-boundaries/run_pin61.py': 'efc2b47eebec0665571312a4c26ebed826ec6351aa996cb29609af0d6a9efcc2', 'scripts/verification/ios-input-boundaries/test_pin61_original_185.py': '55a9790481085edf2c65285ccea64dfd0fcfcc8992e4be0826760871ca27b665'}
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -2590,6 +2593,11 @@ def verify_public_testing(text: str) -> None:
 
 def main() -> int:
     files = load_files()
+    if hashlib.sha256(files["ios-original-suite-185.yml"].encode()).hexdigest() != ORIGINAL_185_WORKFLOW_SHA256:
+        fail("Original18.5 suite workflow differs from its reviewed exact consumer")
+    for name, digest in ORIGINAL_185_COMPANIONS.items():
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
+            fail("Original18.5 suite consumer source differs from its reviewed exact companion")
     verify_policy()
     verify_signing_scripts()
     verify_android_runtime_script()
