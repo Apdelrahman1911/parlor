@@ -358,6 +358,104 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
+    func testPostDoneNameAndRoomCodeEditsInEnglish() throws {
+        try verifyPostDoneInputs(language: "en", locale: "en_US", copy: KeyboardCopy(
+            openGame: "Open Whodunit and pick how you want to play.",
+            join: "Enter the host's room code to join their table.",
+            permission: "Continue and retry the real local-network operation.",
+            continueToCode: "Save your name and continue to enter a room code.",
+            findRoom: "Connect to the host using the entered room code."
+        ))
+    }
+
+    @MainActor
+    func testPostDoneNameAndRoomCodeEditsInArabic() throws {
+        try verifyPostDoneInputs(language: "ar", locale: "ar_EG", copy: KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        ))
+    }
+
+    @MainActor
+    private func verifyPostDoneInputs(language: String, locale: String, copy: KeyboardCopy) throws {
+        // New native edit coverage, not a replacement for the original typing
+        // and geometry journeys. Never submit a code or start a LAN operation.
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        verifyPostDoneField(app, actionPrefix: copy.continueToCode, isCode: false)
+        // Only this explicit Name Continue may advance to room-code entry.
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        verifyPostDoneField(app, actionPrefix: copy.findRoom, isCode: true)
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public edits must not request network access")
+    }
+
+    @MainActor
+    private func verifyPostDoneField(_ app: XCUIApplication, actionPrefix: String, isCode: Bool) {
+        let field = app.textViews.firstMatch
+        let action = setupButton(app, prefix: actionPrefix)
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.textViews.count, 1)
+        XCTAssertTrue(action.waitForExistence(timeout: 10))
+        XCTAssertFalse(action.isEnabled)
+        let initial = String(repeating: "A", count: isCode ? 4 : 5)
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let introduction = dismissKeyboardIntroduction(app)
+        field.typeText(initial)
+        assertTextValue(field, in: app, equals: initial, introduction: introduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        dismissPostDoneField(app, field: field, action: action, expected: initial)
+
+        // A tap can move the caret. Identical characters make these exact
+        // insert/delete expectations independent of its collapsed position;
+        // no arrow strings, forced selection, fallback, or repair input.
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let reopenedIntroduction = dismissKeyboardIntroduction(app)
+        field.typeText("AA")
+        let inserted = initial + "AA"
+        assertTextValue(field, in: app, equals: inserted, introduction: reopenedIntroduction)
+        XCTAssertTrue(action.isEnabled)
+        field.typeText(XCUIKeyboardKey.delete.rawValue)
+        let deleted = String(inserted.dropLast())
+        assertTextValue(field, in: app, equals: deleted, introduction: reopenedIntroduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        var expectedFinal = deleted
+        if isCode {
+            field.typeText("A")
+            expectedFinal += "A"
+            assertTextValue(field, in: app, equals: expectedFinal, introduction: reopenedIntroduction)
+            XCTAssertTrue(action.isEnabled)
+        }
+        dismissPostDoneField(app, field: field, action: action, expected: expectedFinal)
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
+    private func dismissPostDoneField(
+        _ app: XCUIApplication, field: XCUIElement, action: XCUIElement, expected: String
+    ) {
+        field.typeText("\n")
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed,
+                       "Done must dismiss the keyboard without submitting or changing the draft")
+        XCTAssertTrue(field.exists)
+        XCTAssertTrue(action.exists, "Done must retain the current public input screen")
+        assertTextValue(field, in: app, equals: expected)
+    }
+
+    @MainActor
     private func assertTextValue(
         _ field: XCUIElement,
         in app: XCUIApplication,
