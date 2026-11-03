@@ -162,6 +162,34 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun public_ios_reopened_inputs_require_exact_native_edits_without_transport_or_repair() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        listOf("English", "Arabic").forEach { language ->
+            assertContains(swift, "func testPostDoneNameAndRoomCodeEditsIn$language()")
+            assertContains(swift, "func testKeyboardInsetsOnNameAndRoomCodeIn$language()")
+        }
+        val helper = swift.substringAfter("private func verifyPostDoneInputs(")
+            .substringBefore("private func assertTextValue(")
+        val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        listOf(
+            "verifyPostDoneField(app, actionPrefix: copy.continueToCode, isCode: false)",
+            "verifyPostDoneField(app, actionPrefix: copy.findRoom, isCode: true)",
+            "let initial = String(repeating: \"A\", count: isCode ? 4 : 5)",
+            "field.typeText(initial)", "field.typeText(\"AA\")",
+            "field.typeText(XCUIKeyboardKey.delete.rawValue)", "field.typeText(\"A\")",
+            "equals: inserted", "equals: deleted", "equals: expectedFinal",
+            "XCTAssertEqual(action.isEnabled, !isCode)",
+            "!app.keyboards.firstMatch.exists", "XCTWaiter.wait(for: [dismissed], timeout: 10)",
+            "XCTAssertTrue(action.exists", "assertTextValue(field, in: app, equals: expected)",
+        ).forEach { assertContains(code, it) }
+        assertEquals(1, Regex(Regex.escape("try tapSetupButton(app, prefix: copy.continueToCode)")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("field.typeText(XCUIKeyboardKey.delete.rawValue)")).findAll(code).count())
+        listOf("prefix: copy.findRoom)", "action.tap()", "while ", "for _", "sleep(",
+            "performTextInput", "rightArrow", "leftArrow", "app.debugDescription",
+        ).forEach { assertFalse(it in code) }
+    }
+
+    @Test
     fun catalog_scroll_anchor_is_owned_above_navigation_entry_restoration() {
         val app = read("composeApp/src/commonMain/kotlin/com/parlor/app/App.kt")
         assertContains(app, "val homeScrollState = rememberHomeCatalogScrollState()")
