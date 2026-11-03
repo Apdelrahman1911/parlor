@@ -1,5 +1,27 @@
 # Project status — October 31, 2026
 
+## Current verified main and pending Phase 2 integration
+
+Verified `main` is `706e0ecb8766bb8de1671f64e2250c7a53b0bf9c` (PR305),
+[distinct automatic run41173438833](https://github.com/Apdelrahman1911/parlor/actions/runs/41173438833).
+All eight producers and the optimized Apple Release join were independently
+qualified, including23 Swift/763 KMP Simulator/450 readiness methods, zero
+native/readiness skips and source/artifact/owned-cleanup custody. Receipt SHA256:
+`01f642bfac254e408043319c0bf629695bbc3711a85d0649eac4539449134190`.
+This is not physical-device, strict lock-state or Store acceptance.
+
+PR296 has been reconciled with that exact main. Its existing authored-scalar
+policy and all nine authored/two Ghamza regressions remain byte-identical to
+`40ae511d`; no input workaround, dependencies or diagnostic implementation
+is imported. The old41135053853 iOS failures remain failed. New integrated-source
+local/native/protected and distinct-main qualification remain pending.
+#293 is partly resolved by PR294; only authored-text follow-up remains here.
+#267/#276 root causes and #258 security evidence remain unresolved. PR300 and
+#299/#301 require their own current-main qualification. Phase4 real-device
+acceptance is reserved for the owner's separate campaign; no Store release.
+
+## Prior checkpoint retained below — not newer-source certification
+
 ## Current independently qualified main
 
 Latest independently accepted application checkpoint is main
