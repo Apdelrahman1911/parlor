@@ -1,4 +1,7 @@
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -425,6 +428,53 @@ val verifyApplicationIdentities by tasks.registering {
             inputs.properties.getValue("githubTestHasSigningConfig") == false
         ) {
             "GitHub testing must retain release hardening and never inherit publisher/Debug signing."
+        }
+    }
+}
+
+// Repository metadata is an actual input to the pinned lint detector, not a
+// warning waiver. Fetch live official indexes once before analysis so its short
+// network-cache fallback cannot silently erase an accepted update advisory.
+val releaseLintRepositoryInputs = layout.buildDirectory.dir("lint-repository-inputs")
+val prepareReleaseLintRepositoryInputs by tasks.registering(Exec::class) {
+    group = "verification"
+    description = "Validates live Google Maven indexes before release lint."
+    val root = rootProject.layout.projectDirectory
+    inputs.files(root.file("scripts/ci/android_lint_repository.py"), root.file("gradle/libs.versions.toml"), root.file("gradle.properties"))
+    outputs.dir(releaseLintRepositoryInputs)
+    outputs.upToDateWhen { false }
+    commandLine("python3", root.file("scripts/ci/android_lint_repository.py").asFile, root.asFile)
+}
+
+tasks.withType<com.android.build.gradle.internal.lint.AndroidLintAnalysisTask>().configureEach {
+    if (name == "lintAnalyzeRelease") {
+        dependsOn(prepareReleaseLintRepositoryInputs)
+        inputs.files(releaseLintRepositoryInputs).withPathSensitivity(PathSensitivity.RELATIVE)
+        val preparedIndexes = releaseLintRepositoryInputs.map { it.asFile }
+        doFirst {
+            check(lintTool.versionKey.get() == "32.1.1") { "Re-review pinned lint repository-cache API" }
+            // Use AGP's version marker/initialization; do not forge one or rewrite
+            // a report. Lint consumes precisely these newly fetched live bytes.
+            val cache = lintTool.lintCacheDirectory.get().asFile.toPath()
+            var ancestor: Path? = cache
+            while (ancestor != null) {
+                check(!Files.isSymbolicLink(ancestor)) { "Symlinked lint cache directory" }
+                ancestor = ancestor.parent
+            }
+            lintTool.initializeLintCacheDir()
+            val target = cache.resolve("maven.google")
+            val sources = preparedIndexes.get().toPath()
+            for (relative in listOf("master-index.xml", "androidx/navigation3/group-index.xml")) {
+                val destination = target.resolve(relative)
+                check(!Files.isSymbolicLink(destination)) { "Symlinked lint cache index" }
+                var parent: Path? = destination.parent
+                while (parent != cache) {
+                    check(parent != null && !Files.isSymbolicLink(parent)) { "Symlinked lint cache index directory" }
+                    parent = parent.parent
+                }
+                Files.createDirectories(destination.parent)
+                Files.copy(sources.resolve(relative), destination, StandardCopyOption.REPLACE_EXISTING)
+            }
         }
     }
 }

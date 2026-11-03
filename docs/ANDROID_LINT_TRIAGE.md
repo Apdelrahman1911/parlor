@@ -206,3 +206,28 @@ A successful forced run must execute `lintRelease` and
 `productionCheck` depend on the verifier. The generated evidence is
 `composeApp/build/reports/lint-results-release.xml` plus its HTML companion.
 CI uploads those reports even on failure.
+
+### Live repository metadata is an analysis input (#310)
+
+Actual main `d821bf8c` produced 36 findings in run `41706055331`, whereas
+its same-tree PR run `41696223592` produced the reviewed 37. Only the
+Navigation3 runtime update advisory disappeared. Pinned lint 32.1.1 queries
+Google Maven with a short network-cache timeout; absent group data can be
+memoized. The failed producer did not retain that cache, so the precise
+network exception is not established.
+
+`prepareReleaseLintRepositoryInputs` fetches the live official master and
+Navigation3 group indexes once, validates their bounds/encoding/coordinates
+and the reviewed stable update, and registers their bytes as release-analysis
+inputs. AGP initializes its own version-checked, task-owned cache before
+those exact bytes are copied into it. A failed fetch or invalid index fails
+closed; no historical index, fabricated warning, dependency override, optional
+warning list or detector suppression is used. All 37 required inventory rows
+and source-location checks remain unchanged.
+
+CI retains `composeApp/build/reports/lint-repository-inputs-*.json` separately
+from the untouched lint XML. Each receipt identifies official URLs, byte
+counts and hashes; it certifies metadata preparation, **not** lint or whole
+workflow qualification. Re-review the cache API and validation when upgrading
+AGP, lint or Navigation3. Source-specific PR and resulting-main verification
+remain necessary; a Linux lint pass does not certify iOS interaction behavior.
