@@ -263,21 +263,23 @@ final class IOSAppLaunchUITests: XCTestCase {
 
     @MainActor
     private func tapSettledControl(_ control: XCUIElement) throws {
-        // Public setup only. Full snapshot() also faults in value, placeholder,
-        // identifier and window attributes that frame settlement never uses.
-        // Read only existence, one complete CGRect and enabled state. These
-        // are sequential observations, not an atomic accessibility snapshot;
-        // absence/disabled state breaks adjacency and native hittability is
-        // still required immediately before admitting the single ordinary tap.
-        // Keep the same exact-frame comparison and original ten-second budget.
+        // One resolved public snapshot supplies frame and enabled together.
+        // Separate XCUIElement property reads each re-evaluate the remote query;
+        // an interrupted resolution can return false rather than native disabled
+        // state (original failure41180128325). Missing/error samples still break
+        // adjacency. Keep exact frames, native hittability, the ten-second
+        // deadline and the single ordinary tap; never admit stale cached state.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let exists = control.exists
-            let frame = exists ? control.frame : nil
-            let enabled = exists && control.isEnabled
+            let sample = PublicControlSample(read: {
+                let snapshot = try control.snapshot()
+                return (snapshot.frame, snapshot.isEnabled)
+            })
+            let frame = sample.frame
+            let enabled = sample.enabled
             let stable = frames.observe(frame: frame, enabled: enabled)
             let hittable = stable ? control.isHittable : nil
             if stable && hittable != true { frames.reset() }
@@ -287,7 +289,8 @@ final class IOSAppLaunchUITests: XCTestCase {
                 samples.append("at=\(sampleStarted - started), " +
                     "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
                     "frame=\(String(describing: frame)), enabled=\(enabled), " +
-                    "stable=\(stable), hittable=\(String(describing: hittable))")
+                    "stable=\(stable), hittable=\(String(describing: hittable)), " +
+                    "snapshotErrorCode=\(String(describing: sample.errorCode))")
             }
             return stable && hittable == true
         }, object: nil)
@@ -614,6 +617,27 @@ final class PublicTextValueTests: XCTestCase {
 
 // Test-only frame state. Losing the control, enabled state or hittability must
 // break adjacency; a matching frame before an interruption cannot admit a tap.
+// A failed snapshot is unknown, never an enabled observation. Do not retain
+// XCUIElementSnapshot, labels, values, hierarchies or error descriptions here.
+private struct PublicControlSample {
+    let frame: CGRect?
+    let enabled: Bool
+    let errorCode: Int?
+
+    init(read: () throws -> (frame: CGRect, enabled: Bool)) {
+        do {
+            let resolved = try read()
+            frame = resolved.frame
+            enabled = resolved.enabled
+            errorCode = nil
+        } catch {
+            frame = nil
+            enabled = false
+            errorCode = (error as NSError).code
+        }
+    }
+}
+
 private struct PublicControlFrames {
     private var previous: CGRect?
 
@@ -636,6 +660,42 @@ private struct PublicControlFrames {
 
 final class PublicControlFramesTests: XCTestCase {
     private let resting = CGRect(x: 24, y: 279, width: 354, height: 101)
+
+    func testSampleResolvesFrameAndEnabledOnceFromTheSameGeneration() {
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            return (self.resting, reads == 1)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertTrue(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
+
+    func testSnapshotErrorBreaksAdjacencyAndCannotReuseLastEnabledFrame() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            throw NSError(domain: "PublicControlSampleTest", code: 1001)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertNil(sample.frame)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertEqual(sample.errorCode, 1001)
+        XCTAssertFalse(frames.observe(frame: sample.frame, enabled: sample.enabled))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testDisabledSnapshotIsNotConfusedWithResolutionFailure() {
+        let sample = PublicControlSample(read: { (self.resting, false) })
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
 
     func testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes() {
         var frames = PublicControlFrames()

@@ -202,7 +202,10 @@ def current_verification_artifact_paths(job: str) -> list[str]:
     """Keep all current/dynamically added module reports and external custody."""
     prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
     reports = ["**/build/reports/tests/", "**/build/test-results/**/*.xml"]
-    custody = [prefix + "-ownership.json", prefix + "-stop-*.json"]
+    custody = [prefix + "-ownership.json"]
+    if job == "desktop-android":
+        custody.append(prefix + "-hosted-disk.json")
+    custody.append(prefix + "-stop-*.json")
     if job == "desktop-android":
         paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + reports + custody + [
             "**/build/reports/androidTests/managedDevice/",
@@ -352,8 +355,30 @@ def verify_windows_checkout(text: str) -> None:
         fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
 
 
+HOSTED_CAPACITY_SCRIPT_SHA256 = 'ca33cfec1152c335729f57ce0e39f4d20a0e904ba2085a69f3786b95691d9331'
+
+
+def verify_hosted_linux_capacity(job: str) -> None:
+    name = "Reclaim unused standard Linux runner toolchains"
+    expected = ("        if: " + FULL_VERIFICATION_SCOPE + "\n"
+                "        run: python3 -B scripts/ci/hosted_linux_capacity.py")
+    if validation_step(job, name).strip("\n") != expected:
+        fail("Linux capacity verification scope must retain the exact full-only fixed-root program")
+    if not (job.index("- name: Set up JDK 21\n") < job.index("- name: " + name + "\n") <
+            job.index("- name: Restore reviewed Gradle dependencies\n")):
+        fail("Unused toolchains must be reclaimed before dependency restore, never during a build")
+    source = ROOT / 'scripts/ci/hosted_linux_capacity.py'
+    if source.is_symlink() or not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != HOSTED_CAPACITY_SCRIPT_SHA256:
+        fail("Hosted capacity cleanup differs from reviewed fixed-root source")
+    upload = validation_step(job, "Upload verification reports, mappings, and unsigned AAB")
+    receipt = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-hosted-disk.json"
+    if upload.count(receipt) != 1:
+        fail("Real capacity measurements must be retained in the existing verification upload")
+
+
 def verify_linux_process_probe(job: str) -> None:
     """Closed probe/managed-cleanup paths; full qualification keeps its complete gates."""
+    verify_hosted_linux_capacity(job)
     full = ("Install pinned Android SDK packages", "Record exact source and require a clean checkout",
             "Run common, desktop, Android, static-analysis, and release gates",
             "Run release Android managed-device smoke tests", "Inspect unsigned Android release artifact and merged manifest")
@@ -365,7 +390,7 @@ def verify_linux_process_probe(job: str) -> None:
              "Upload Linux process-probe cleanup receipt")
     admission = "Validate Android cleanup source and controls"
     prerequisite = "Install Linux process-probe emulator package"
-    expected = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
+    expected = ["Check out source", "Set up JDK 21", "Reclaim unused standard Linux runner toolchains", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
                 full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
     if (re.findall(r"(?m)^      - name: (.*)$", job) != expected + ["Save dependencies from trusted main only"] or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
