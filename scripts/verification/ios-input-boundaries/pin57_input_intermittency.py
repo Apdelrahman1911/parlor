@@ -98,6 +98,24 @@ def failed_method_exports(result,destination,outcomes):
         for i,c in enumerate(sorted(k for k,v in outcomes.items() if v=='Failed'),1)]
 
 
+def verify_commands(state, row):
+    for stage, code, budget in (('build',0,2700),('tests',row['test_exit'],TEST_TIMEOUT_SECONDS),('gradle-stop',0,120)):
+        calls = [c for c in state['commands'] if c['label'] == 'compose-'+stage]
+        require(len(calls) == 1 and calls[0]['exit_code'] == code and calls[0]['timeout_seconds'] == budget,
+                'One actual command per original bounded stage')
+        if stage != 'tests': continue
+        argv = calls[0]['command']
+        require([a for a in argv if a.startswith('-only-testing:')] == ['-only-testing:iosAppUITests/'+case.removesuffix('()') for case in CASES] and
+                argv.count('test-without-building') == argv.count('/usr/bin/xcodebuild') == 1 and '-quiet' not in argv and
+                not any(a.startswith(('-skip-testing','-retry-tests','-test-iterations','-run-tests-until-failure')) for a in argv),
+                'All ten fixed samples, no retry/skip')
+        for flag,value in (('-project','iosApp/iosApp.xcodeproj'),('-scheme','iosApp'),('-configuration','Debug'),
+            ('-sdk','iphonesimulator'),('-destination','platform=iOS Simulator,id='+row['simulator']),
+            ('-parallel-testing-enabled','NO'),('-maximum-concurrent-test-simulator-destinations','1')):
+            require(argv.count(flag) == 1 and argv[argv.index(flag)+1] == value, 'Exact owned Debug command flags')
+    require(state['build_profile']['test_timeout_seconds'] == TEST_TIMEOUT_SECONDS, 'Aggregate five-pair process cap; original assertion deadlines unchanged')
+
+
 def accept_native_export(out, state):
     require_capability()
     require((state['source'],state['source_tree'],state['profile'],state['runtime'],state['device'],state['xcode'],state['sdk'],state['debug_bundle']) ==
@@ -139,21 +157,7 @@ def accept_native_export(out, state):
     require(cleanup['gradle_exit'] == 0 and cleanup['workers_before']['result'] == cleanup['workers_after']['result'] ==
             cleanup['simulator']['result'] == 'PASS' and cleanup['simulator']['udid'] == row['simulator'], 'Owned cleanup')
     require(all(c['status'] == 'EXITED' and c['direct_child_reaped'] and not c.get('signals') for c in state['commands']), 'Reaped children')
-    for stage, code, budget in (('build',0,2700),('tests',row['test_exit'],TEST_TIMEOUT_SECONDS),('gradle-stop',0,120)):
-        calls = [c for c in state['commands'] if c['label'] == 'compose-'+stage]
-        require(len(calls) == 1 and calls[0]['exit_code'] == code and calls[0]['timeout_seconds'] == budget,
-                'One actual command per original bounded stage')
-        if stage != 'tests': continue
-        argv = calls[0]['command']
-        require([a for a in argv if a.startswith('-only-testing:')] == ['-only-testing:iosAppUITests/'+case.removesuffix('()') for case in CASES] and
-                argv.count('test-without-building') == argv.count('/usr/bin/xcodebuild') == 1 and '-quiet' not in argv and
-                not any(a.startswith(('-skip-testing','-retry-tests','-test-iterations','-run-tests-until-failure')) for a in argv),
-                'All ten fixed samples, no retry/skip')
-        for flag,value in (('-project','iosApp/iosApp.xcodeproj'),('-scheme','iosApp'),('-configuration','Debug'),
-            ('-sdk','iphonesimulator'),('-destination','platform=iOS Simulator,id='+row['simulator']),
-            ('-parallel-testing-enabled','NO'),('-maximum-concurrent-test-simulator-destinations','1')):
-            require(argv.count(flag) == 1 and argv[argv.index(flag)+1] == value, 'Exact owned Debug command flags')
-    require(state['build_profile']['test_timeout_seconds'] == TEST_TIMEOUT_SECONDS, 'Aggregate five-pair process cap; original assertion deadlines unchanged')
+    verify_commands(state, row)
     starts = re.findall(rb"Test Case '-\[iosAppUITests\.([A-Za-z0-9_]+) ([A-Za-z0-9_]+)\]' started\.",frozen_sources._read(d/'test.log',4194304))
     require(tuple(c.decode()+'/'+m.decode()+'()' for c,m in starts) == CASES, 'All ten fixed original wrapper cases once in declared AR/EN order')
     receipt = dict(root_capability_run=41497962566,original_focus_capability_run=41515928915,delivery_capability_run=41520882626,prerequisite_failure_run=41502134475,root_queries_added=False,methods=row['methods'],failed_sample_tokens=owners,native=reports,application_root_cause=False,

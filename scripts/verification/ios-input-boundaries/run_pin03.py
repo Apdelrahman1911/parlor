@@ -381,7 +381,9 @@ def completed_exit_code(result):
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False, public_scroll_samples=False, native_only_export=False, native_only_samples=False, original_input_only=False, owned_leaf_export=False, paired_owned_leaf=False, original_runtime=False, original_runtime_context=False, failure_runloop=False, original_build_resources=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False, public_scroll_samples=False, native_only_export=False, native_only_samples=False, original_input_only=False, owned_leaf_export=False, paired_owned_leaf=False, original_runtime=False, original_runtime_context=False, failure_runloop=False, original_build_resources=False, original_full_context=False):
+    if original_full_context and (not failure_runloop or original_build_resources):
+        raise ValueError("Original full context requires only the explicitly bound existing native adapter")
     if original_build_resources and not failure_runloop:
         raise ValueError('Original resources require the explicitly bound existing native adapter')
     # The separate PIN07 entry point can select ONE known failed-export control.
@@ -523,6 +525,13 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         if control.__name__ != 'pin62_original_build_resources':
             raise ValueError('Only the exact original-resource consumer may select this context')
         control.require_capability()
+    if original_full_context:
+        if control.__name__ != 'pin63_original_full_context':
+            raise ValueError('Only the exact full-context consumer may select this execution')
+        control.require_capability()
+    # Execution modifiers do not select the older root/motion collectors.
+    combined_context = combined_execution or original_full_context
+    prelude_context = aggregate_context or original_full_context
     resource_context = original_resources or original_build_resources
     renderer = control.renderer_for_profile(args.profile, args.source, args.runtime, args.device) if control else \
         renderer_for_profile(args.profile, args.source, args.runtime, args.device)
@@ -569,19 +578,19 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     if control:
         state['scope'] = control.SCOPE
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
-    environment = control.build_environment(os.environ, registry, jtmp) if resource_context or combined_execution else \
+    environment = control.build_environment(os.environ, registry, jtmp) if resource_context or combined_context else \
         diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
         gradle_parallel=False, kotlin_compiler='in-process', xcode_jobs=1,
         verbose_build=True, boot_after_build=True, build_timeout_seconds=2700,
         test_timeout_seconds=900, scope='Uniform copy-only resource profile; '
         'not a shipping build change, timeout extension or device benchmark')
-    if resource_context or combined_execution:
+    if resource_context or combined_context:
         state['build_profile'].update(gradle_heap_bytes=6 * 1024**3, gradle_workers='original-default',
             gradle_parallel=True, xcode_jobs='original-default', boot_after_build=False,
             scope=control.SCOPE)
-    if combined_execution:
-        state['build_profile'].update(combined_xcode=True, combined_timeout_seconds=3600,
+    if combined_context:
+        state['build_profile'].update(combined_xcode=True, combined_timeout_seconds=control.COMBINED_TIMEOUT_SECONDS if original_full_context else 3600,
             product_manifest_stage='after-combined-command')
     def checkpoint():
         partial = out / 'state.writing'
@@ -595,6 +604,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
         signal.signal(sig, commands.interrupted)
     backend = Backend(commands, args.runtime, args.device)
     task = {key: os.environ[key] for key in ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_JOB')}
+    if original_full_context:
+        state['producer_output'] = str(out)
+        state['task'] = task
     def command(argv, label, timeout=120, log=None, env=None):
         actual_env = env or environment
         if log:
@@ -608,7 +620,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             raise RuntimeError('Investigation command did not finish')
         return row['exit_code'], stdout
     previous = manifest
-    if aggregate_context:
+    if prelude_context:
         # Restore the omitted workload using the ORIGINAL sources before adding
         # observers. Never execute instrumented KMP tests or replay for caching.
         verify_inputs(copy, manifest)
@@ -634,18 +646,18 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     '-destination', 'platform=iOS Simulator,id=' + simulator_id,
                     '-derivedDataPath', str(out / 'derived'), '-parallel-testing-enabled', 'NO',
                     '-maximum-concurrent-test-simulator-destinations', '1']
-            if resource_context or combined_execution:
+            if resource_context or combined_context:
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Original booted-build Simulator unavailable')
                 row['kernel_resources'] = {'before-build': control.observe_resources(command, dest, 'before-build')}
             result = dest / 'tests.xcresult'
-            if combined_execution:
+            if combined_context:
                 # A distinct causal profile uses the original single Xcode build/test
                 # process. No first build, post-link pause, or second test invocation.
                 base += ['-destination-timeout', '120']
                 code, _ = command(selected_test_command(base, result),
-                    arm + '-build-and-tests', 3600, dest / 'test.log',
+                    arm + '-build-and-tests', control.COMBINED_TIMEOUT_SECONDS if original_full_context else 3600, dest / 'test.log',
                     environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
                 row.update(combined_exit=code, test_exit=code,
                     result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED',
@@ -681,11 +693,11 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
             # Keep the explicitly owned device shut down during linkage; Xcode
             # can build for that available destination without competing for RAM.
-            if not (resource_context or combined_execution):
+            if not (resource_context or combined_context):
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Owned Simulator boot failed')
-            if not combined_execution:
+            if not combined_context:
                 code, _ = command(selected_test_command(base, result),
                                   arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf or failure_runloop else 900, dest / 'test.log',
                                   environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
@@ -706,7 +718,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                                             json.loads((dest / 'tests.json').read_bytes()), simulator_id, code)
             if arm != 'original' and code == 0:
                 record_successful_attachment_selection(row)
-            if combined_execution:
+            if combined_context:
                 # All23 actual executed native outcomes establish that compilation
                 # succeeded. This is NOT a fabricated standalone build exit receipt.
                 row['build_exit'] = 0
