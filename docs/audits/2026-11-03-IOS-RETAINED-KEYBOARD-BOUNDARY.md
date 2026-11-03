@@ -85,3 +85,13 @@ closed receipt is retained and all three command children are reaped. Explicit
 help alone now accepts0/64 plus the complete required usage vocabulary; actual
 export and decode commands must still exit0. A regression rejects decode commands,
 other exits, missing flags and unreaped/timed-out commands.
+
+[41703781140](https://github.com/Apdelrahman1911/parlor/actions/runs/41703781140)
+passes all17 local/native preflight tests, then rejects the installed abbreviated
+usage because it does not list every requested flag. No archive was read.
+The reader now records usage hash and flag-presence booleans instead of treating
+short help as a complete capability enumeration. Valid command-specific usage
+is still required; unchanged actual export/decode commands must exit0 and
+produce the exact source-bound event counts and archive hashes. Both original
+run/artifact metadata and retained ZIP bounds were independently checked locally
+before publishing this correction; no original app replay is requested.

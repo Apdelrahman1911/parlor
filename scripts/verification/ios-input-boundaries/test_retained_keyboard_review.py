@@ -60,17 +60,21 @@ class RetainedKeyboardTests(unittest.TestCase):
                               '2026-10-30T02:11:41.333998Z'):
                 self.assertEqual(review.timestamp_us(timestamp), 1793326301333998)
 
-    def test_apple_usage_exit_is_admitted_only_for_exact_log_help_with_all_flags(self):
+    def test_apple_usage_is_observed_but_actual_decode_is_the_capability_gate(self):
         row = dict(command=['/usr/bin/log', 'help', 'show'], status='EXITED',
                    direct_child_reaped=True, exit_code=64)
-        helptext = b'--archive --start --end --predicate --style --timezone'
+        helptext = b'usage: log show --archive --start --end --predicate --style --timezone'
         review.validate_log_help(row, b'', helptext)
         review.validate_log_help(dict(row, exit_code=0), helptext, b'')
         for change in (dict(command=['/usr/bin/log', 'show']), dict(exit_code=1),
                        dict(status='TIMED_OUT'), dict(direct_child_reaped=False)):
             with self.assertRaises(ValueError):
                 review.validate_log_help(dict(row, **change), b'', helptext)
-        for text in (b'', b'usage: log', helptext.replace(b'--timezone', b'')):
+        observed = review.validate_log_help(row, b'', b'usage: log show --predicate --style')
+        self.assertFalse(observed['options']['--timezone'])
+        self.assertTrue(observed['options']['--predicate'])
+        self.assertEqual(observed['sha256'], review.sha(b'usage: log show --predicate --style'))
+        for text in (b'', b'usage: log', helptext.replace(b'--predicate', b'')):
             with self.assertRaises(ValueError):review.validate_log_help(row, text, b'')
 
     def test_non_utc_unbounded_missing_or_invalid_time_rejects(self):

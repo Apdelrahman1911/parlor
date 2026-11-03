@@ -185,8 +185,12 @@ def validate_log_help(row, stdout, stderr):
             row['status'] == 'EXITED' and row['direct_child_reaped'] and
             row['exit_code'] in (0, 64))
     helptext = (stdout + stderr).decode()
-    require(all(token in helptext for token in
-                ('--archive', '--start', '--end', '--predicate', '--style', '--timezone')))
+    # The installed short usage is not a complete capability listing. The
+    # actual fixed-argument decode below (exit 0 + exact rows) is authoritative.
+    require('log show' in helptext and '--predicate' in helptext and '--style' in helptext)
+    return dict(sha256=sha(stdout + stderr),
+                options={token: token in helptext for token in
+                         ('--archive', '--start', '--end', '--predicate', '--style', '--timezone')})
 
 
 def main():
@@ -218,7 +222,7 @@ def main():
         helptext = run(['/usr/bin/xcrun', 'xcresulttool', 'help', 'export', 'diagnostics'], 'diagnostics-help').decode()
         require(all(token in helptext for token in ('--path', '--output-path')))
         row, stdout, stderr = commands.capture(['/usr/bin/log', 'help', 'show'], 'log-show-help', 60, root=ROOT)
-        validate_log_help(row, stdout, stderr)
+        receipt['installed_log_usage'] = validate_log_help(row, stdout, stderr)
         expected = json.loads(Path(__file__).with_name('retained_keyboard_manifests.json').read_text())
         for spec in SPECS:
             base = f'repos/{REPO}/actions/'

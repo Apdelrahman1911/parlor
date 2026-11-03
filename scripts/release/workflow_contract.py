@@ -2600,7 +2600,7 @@ ORIGINAL_FULL_CONTEXT_COMPANIONS = {'scripts/verification/ios-input-boundaries/p
 
 
 RETAINED_KEYBOARD_REVIEW = "ios-retained-keyboard-review.yml"
-RETAINED_KEYBOARD_CONTROLS = {'.github/workflows/ios-retained-keyboard-review.yml': '3a183f4f5094a092daa8d82e756285adf553a12fb3442c98bbe6c686ad1317e3', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': '3511d7155e0606010215031b3a204b0c6f7e9deacdf9656a7d377514f62c35b5', 'scripts/verification/ios-input-boundaries/test_retained_keyboard_review.py': '655057157aa8583d5c4206982c0ad56d32735eb9d2dcc88b5e7013c85b7b91e5', 'scripts/verification/ios-input-boundaries/retained_keyboard_manifests.json': 'caf6dd5165760def9cace512407047264d721684120df668ab5d74c019fe7201'}
+RETAINED_KEYBOARD_CONTROLS = {'.github/workflows/ios-retained-keyboard-review.yml': '3a183f4f5094a092daa8d82e756285adf553a12fb3442c98bbe6c686ad1317e3', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': '2ed195a98dc332187f75378d510666f27456867f1408ff7735b1c7fa385f605a', 'scripts/verification/ios-input-boundaries/test_retained_keyboard_review.py': 'f96c2ad030659303cc9daa0eb49decd4522d1ffea2be892ba96c5a2da921ff10', 'scripts/verification/ios-input-boundaries/retained_keyboard_manifests.json': 'caf6dd5165760def9cace512407047264d721684120df668ab5d74c019fe7201'}
 
 def verify_retained_keyboard_review():
     for name, digest in RETAINED_KEYBOARD_CONTROLS.items():
