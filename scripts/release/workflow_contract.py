@@ -363,7 +363,7 @@ def load_files() -> dict[str, str]:
     missing = EXPECTED - actual
     if missing:
         fail(f"Missing required release workflows: {', '.join(sorted(missing))}")
-    unexpected = actual - EXPECTED - {RETAINED_KEYBOARD_REVIEW, PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
+    unexpected = actual - EXPECTED - {RETAINED_HOST_REVIEW, RETAINED_KEYBOARD_REVIEW, PUBLIC_TEXT_REVIEW, PUBLIC_BACK_REVIEW, PUBLIC_CATALOG_REVIEW,
                                      SETTLED_FAILURE_REVIEW, PUBLIC_SETUP_PAIR_REVIEW, PUBLIC_SETUP_BOUNDARIES, SYNTHETIC_FAILURE_EXPORT, CURRENT_INPUT_BOUNDARIES, NATIVE_ACCESSIBILITY_CAPABILITY, NATIVE_BOUNDARY_OBSERVATIONS, NATIVE_ROOT_CAPABILITY, NATIVE_ROOT_OBSERVATIONS, PUBLIC_FAILURE_COVERAGE_CONTROL, PUBLIC_SESSION_STRESS, CATALOG_INPUT_BOUNDARY, OVERSCROLL_GETTER_BOUNDARY, ORIGINAL_TOUCH_DELIVERY, ORIGINAL_TOUCH_EXPORT_CONTROL, ORIGINAL_TOUCH_COHORT, PUBLIC_SCROLL_EXPORT, PUBLIC_SCROLL_NATURAL, PUBLIC_SCROLL_ORDER_CORRECTION, PUBLIC_SCROLL_SAMPLES, NATIVE_ONLY_EXPORT, NATIVE_ONLY_SAMPLES, ORIGINAL_INPUT_ONLY, OWNED_LEAF_EXPORT, OWNED_LEAF_PAIR, ORIGINAL_RUNTIME_LEAF, ORIGINAL_RUNTIME_CONTEXT, MAIN_RUNLOOP_CAPABILITY, FAILURE_RUNLOOP, PASSIVE_FAILURE_SAMPLES, PASSIVE_RETAINED_CORRECTION, QUERY_PROPERTY_BOUNDARY, NATIVE_STACK_BOUNDARY}
     unexpected -= {ORIGINAL_SUITE_INPUT, KEYBOARD_SESSIONS, NATIVE_AX_RETURNS, INPUT_INTERMITTENCY, DELIVERY_FOCUS_BOUNDARY, FIRST_RESPONDER_BOUNDARY, ORIGINAL_ROOT_LIFECYCLE, ROOT_LIFECYCLE, ORIGINAL_OWNED_TEXT, OWNED_TEXT_BOUNDARY, SAMPLER_TOOL_REVIEW, PROFILER_TOOL_REVIEW, PROFILER_ATTACH_CONTROL, APP_SPINDUMP_BOUNDARY, PROFILER_BOOTED_READINESS}
     if unexpected:
@@ -2600,7 +2600,7 @@ ORIGINAL_FULL_CONTEXT_COMPANIONS = {'scripts/verification/ios-input-boundaries/p
 
 
 RETAINED_KEYBOARD_REVIEW = "ios-retained-keyboard-review.yml"
-RETAINED_KEYBOARD_CONTROLS = {'.github/workflows/ios-retained-keyboard-review.yml': '3a183f4f5094a092daa8d82e756285adf553a12fb3442c98bbe6c686ad1317e3', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': '2ed195a98dc332187f75378d510666f27456867f1408ff7735b1c7fa385f605a', 'scripts/verification/ios-input-boundaries/test_retained_keyboard_review.py': 'f96c2ad030659303cc9daa0eb49decd4522d1ffea2be892ba96c5a2da921ff10', 'scripts/verification/ios-input-boundaries/retained_keyboard_manifests.json': 'caf6dd5165760def9cace512407047264d721684120df668ab5d74c019fe7201'}
+RETAINED_KEYBOARD_CONTROLS = {'.github/workflows/ios-retained-keyboard-review.yml': '3a183f4f5094a092daa8d82e756285adf553a12fb3442c98bbe6c686ad1317e3', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': 'e564489cc48baccf7c7c2f2380cd53dd40edf43961f95f09adc37dc358af10be', 'scripts/verification/ios-input-boundaries/test_retained_keyboard_review.py': 'f96c2ad030659303cc9daa0eb49decd4522d1ffea2be892ba96c5a2da921ff10', 'scripts/verification/ios-input-boundaries/retained_keyboard_manifests.json': 'caf6dd5165760def9cace512407047264d721684120df668ab5d74c019fe7201'}
 
 def verify_retained_keyboard_review():
     for name, digest in RETAINED_KEYBOARD_CONTROLS.items():
@@ -2608,8 +2608,20 @@ def verify_retained_keyboard_review():
         if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             fail("Retained keyboard reader differs from its exact reviewed no-replay/public-only source")
 
+
+RETAINED_HOST_REVIEW = "ios-retained-host-review.yml"
+RETAINED_HOST_CONTROLS = {'.github/workflows/ios-retained-host-review.yml': 'a79ecb9bd093ba5061955f6c7a1307aaa14068041519b7561139b143d1979855', 'scripts/verification/ios-input-boundaries/review_retained_host.py': 'a92bd331c5360b3a52d5ffbe6717d8999b8619347802c32ed6df50b27b7fb247', 'scripts/verification/ios-input-boundaries/test_retained_host_review.py': 'bca71ed17b9ac90c22c57d6fdef478de05a656d2bf6a065b430cd7da10a03ce8', 'scripts/verification/ios-input-boundaries/retained_host_manifest.json': 'cea7be8874aa0626d9921a5a8d6e551ef0686bec62e7d8b7c93353ff6dfa741b', 'scripts/verification/ios-input-boundaries/review_retained_keyboard.py': 'e564489cc48baccf7c7c2f2380cd53dd40edf43961f95f09adc37dc358af10be', 'scripts/ci/native_process_probe.py': 'f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681'}
+
+def verify_retained_host_review():
+    for name, digest in RETAINED_HOST_CONTROLS.items():
+        path = ROOT / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail("Retained Host reader differs from its exact reviewed no-replay/public-only source")
+
 def main() -> int:
     files = load_files()
+    if RETAINED_HOST_REVIEW in files:
+        verify_retained_host_review()
     if RETAINED_KEYBOARD_REVIEW in files:
         verify_retained_keyboard_review()
     if hashlib.sha256(files["ios-original-full-context.yml"].encode()).hexdigest() != ORIGINAL_FULL_CONTEXT_WORKFLOW_SHA256:

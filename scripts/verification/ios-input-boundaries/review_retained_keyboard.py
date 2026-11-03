@@ -193,12 +193,12 @@ def validate_log_help(row, stdout, stderr):
                          ('--archive', '--start', '--end', '--predicate', '--style', '--timezone')})
 
 
-def main():
+def main(*, branch=BRANCH, specs=SPECS, manifest_path=None, reducer=reduce_rows, selector=predicate):
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     require(platform.system() == 'Darwin' and os.environ.get('GITHUB_REPOSITORY') == REPO and
-            os.environ.get('GITHUB_REF') == BRANCH and os.environ.get('GITHUB_EVENT_NAME') == 'push' and
+            os.environ.get('GITHUB_REF') == branch and os.environ.get('GITHUB_EVENT_NAME') == 'push' and
             os.environ.get('GITHUB_RUN_ATTEMPT') == '1')
     out = args.output
     require(out.is_absolute() and not out.exists())
@@ -223,8 +223,8 @@ def main():
         require(all(token in helptext for token in ('--path', '--output-path')))
         row, stdout, stderr = commands.capture(['/usr/bin/log', 'help', 'show'], 'log-show-help', 60, root=ROOT)
         receipt['installed_log_usage'] = validate_log_help(row, stdout, stderr)
-        expected = json.loads(Path(__file__).with_name('retained_keyboard_manifests.json').read_text())
-        for spec in SPECS:
+        expected = json.loads((manifest_path or Path(__file__).with_name('retained_keyboard_manifests.json')).read_text())
+        for spec in specs:
             base = f'repos/{REPO}/actions/'
             original = json.loads(run(['gh', 'api', base+'runs/'+str(spec['run'])], 'run-'+str(spec['run']), auth=True))
             artifact = json.loads(run(['gh', 'api', base+'artifacts/'+str(spec['artifact'])], 'artifact-'+str(spec['run']), auth=True))
@@ -247,8 +247,8 @@ def main():
             require(observed == expected[str(spec['run'])])
             raw = run(['/usr/bin/log', 'show', '--archive', str(matches[0]), '--start', spec['start'],
                        '--end', spec['end'], '--timezone', 'UTC', '--info', '--debug', '--style', 'json',
-                       '--predicate', predicate(spec)], 'decode-'+str(spec['run']), 90)
-            reduced = reduce_rows(raw, spec)
+                       '--predicate', selector(spec)], 'decode-'+str(spec['run']), 90)
+            reduced = reducer(raw, spec)
             require(all(sha((inputs/name).read_bytes()) == digest for name,digest in manifest.items()))
             receipt['captures'].append(dict(run=spec['run'], artifact=spec['artifact'],
                 original_head=spec['head'], archive_sha256=spec['digest'], archive_bytes=spec['bytes'],
