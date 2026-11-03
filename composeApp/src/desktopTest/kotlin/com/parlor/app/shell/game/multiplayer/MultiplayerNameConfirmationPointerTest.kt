@@ -50,6 +50,7 @@ import org.koin.compose.KoinApplication
 import org.koin.dsl.module
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /** Shared raw-pointer route boundary only, not UIKit or original Host-failure causality. */
 @OptIn(ExperimentalTestApi::class)
@@ -141,7 +142,11 @@ class MultiplayerNameConfirmationPointerTest {
                     onNodeWithContentDescription(peer).assertDoesNotExist()
                     // A fixture's instant failure must not replace Name with
                     // Retry/Leave between the two injected pointer presses.
-                    waitUntil(timeoutMillis = 5_000) { owner.state.value is ProcessMultiplayerState.Opening }
+                    // Opening is published before the owner's background job
+                    // calls the transport. Observe that callback's explicit
+                    // checkpoint, not an unrelated UI-idle/state publication.
+                    waitUntil(timeoutMillis = 5_000) { transport.hostStarted.isCompleted }
+                    runOnIdle { assertTrue(owner.state.value is ProcessMultiplayerState.Opening) }
                     onNodeWithText(if (arabic) "جرّب تاني" else "Try again").assertDoesNotExist()
                     runOnIdle { assertEquals(1, transport.hostCalls.get(), "${binding.definition.id}/$language/$repeat/$accessibility") }
                     transport.finishOpening.complete(Unit)
@@ -168,9 +173,11 @@ class MultiplayerNameConfirmationPointerTest {
 private class FailedConfirmationHost : RoomTransport {
     override val capability = TransportCapability(false, 1, 1024)
     val hostCalls = AtomicInteger()
+    val hostStarted = CompletableDeferred<Unit>()
     val finishOpening = CompletableDeferred<Unit>()
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
         hostCalls.incrementAndGet()
+        hostStarted.complete(Unit)
         finishOpening.await()
         return Result.Failure(NetError.NotConnected)
     }

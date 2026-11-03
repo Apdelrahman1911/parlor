@@ -72,3 +72,36 @@ Host/Permission failures, or prove the native typing boundary in #276. Those
 issues remain open. Fresh affected source-specific checks, hosted PR checks,
 normal merge and resulting-main verification remain required. Physical-device
 acceptance stays reserved for the owner's separate campaign.
+
+## Acquisition observation is not state publication
+
+The corrected-source [41722411951 Windows producer](https://github.com/Apdelrahman1911/parlor/actions/runs/41722411951/job/126218362329)
+failed three Host methods at the new pre-release one-call assertion: expected1,
+observed0 (first English Dominoes case). Its source is `bd129475`, executed merge
+`5a4f483b`; original ZIP SHA256
+`00546437065c82dd1e80e4ff34f22a7973642e15eaa44fb95b50a4a5e212b8cb`.
+
+`startOpeningLocked` publishes `Opening` **before** launching the process-scope
+job that invokes the transport. UI idleness and that state therefore cannot
+establish callback entry on an independent executor. This is a confirmed
+regression-fixture synchronization defect, not an additional shipping input
+failure or evidence about UIKit's original Host event.
+
+The fake transport now completes an explicit start checkpoint immediately
+**after** incrementing its call counter. The existing five-second observer
+waits for this checkpoint, then still requires Opening, no Retry, and exactly
+one call before releasing the fake result. Failed and final one-call assertions
+remain. No additional waiter budget, retry, action, shipping delay or transport
+change is introduced; all four published method identities remain unchanged.
+
+A local-only JDK21/wrapper/strict deterministic owner control pauses the real
+owner's background scheduler: Opening is already observable while callback
+count is0. The old one-call assertion fails exactly with expected1/observed0;
+the paired checkpoint control advances that scheduler and passes Opening/one
+call, explicit failure release, and Failed/one call. Its source, expected
+negative result, positive result and XML are retained in
+`.git/agent-custody/overhaul-2026-11-03/name-confirmation-acquisition-handshake/`.
+The initial control's missing required host seed failed before this boundary
+and is retained separately, not presented as root-cause evidence. This is a
+software boundary control, not reproduction of Windows scheduling or native
+input. It is not added to shipping source sets.
