@@ -381,7 +381,9 @@ def completed_exit_code(result):
 
 
 def main(*, synthetic=False, current=False, accessibility=False, native_boundary=False,
-         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False, public_scroll_samples=False, native_only_export=False, native_only_samples=False, original_input_only=False, owned_leaf_export=False, paired_owned_leaf=False, original_runtime=False, original_runtime_context=False, failure_runloop=False):
+         root_capability=False, root_boundary=False, public_boundary=False, original_cohort=False, original_resources=False, combined_execution=False, aggregate_context=False, observer_comparison=False, root_idle=False, settled_idle=False, public_motion=False, motion_control=False, frame_boundary=False, text_boundary=False, text_export_control=False, native_input_delivery=False, native_input_export_control=False, attached_input_delivery=False, original_input_lifecycle=False, equivalent_query=False, public_session_stress=False, catalog_input_boundary=False, overscroll_getter=False, original_touch_delivery=False, original_touch_export_control=False, original_touch_cohort=False, public_scroll_export=False, public_scroll_natural=False, public_scroll_samples=False, native_only_export=False, native_only_samples=False, original_input_only=False, owned_leaf_export=False, paired_owned_leaf=False, original_runtime=False, original_runtime_context=False, failure_runloop=False, original_build_resources=False):
+    if original_build_resources and not failure_runloop:
+        raise ValueError('Original resources require the explicitly bound existing native adapter')
     # The separate PIN07 entry point can select ONE known failed-export control.
     # Ordinary profiles, methods and success criteria are unchanged.
     if sum((synthetic, current, accessibility, native_boundary, root_capability, root_boundary, public_boundary, original_cohort, original_resources, combined_execution, aggregate_context, observer_comparison, root_idle, settled_idle, public_motion, motion_control, frame_boundary, text_boundary, text_export_control, native_input_delivery, native_input_export_control, attached_input_delivery, original_input_lifecycle, equivalent_query, public_session_stress, catalog_input_boundary, overscroll_getter, original_touch_delivery, original_touch_export_control, original_touch_cohort, public_scroll_export, public_scroll_natural, public_scroll_samples, native_only_export, native_only_samples, original_input_only, owned_leaf_export, paired_owned_leaf, original_runtime, original_runtime_context, failure_runloop)) > 1:
@@ -517,6 +519,11 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     args = parser.parse_args()
     if failure_runloop:
         control = control.select_profile(args.profile)
+    if original_build_resources:
+        if control.__name__ != 'pin62_original_build_resources':
+            raise ValueError('Only the exact original-resource consumer may select this context')
+        control.require_capability()
+    resource_context = original_resources or original_build_resources
     renderer = control.renderer_for_profile(args.profile, args.source, args.runtime, args.device) if control else \
         renderer_for_profile(args.profile, args.source, args.runtime, args.device)
     selected_test_command = control.test_command if control else test_command
@@ -562,14 +569,14 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
     if control:
         state['scope'] = control.SCOPE
     registry = out / 'registry'; registry.mkdir(); jtmp = out / 'jvm-tmp'; jtmp.mkdir()
-    environment = control.build_environment(os.environ, registry, jtmp) if original_resources or combined_execution else \
+    environment = control.build_environment(os.environ, registry, jtmp) if resource_context or combined_execution else \
         diagnostic_environment(os.environ, registry, jtmp)
     state['build_profile'] = dict(gradle_heap_bytes=3 * 1024**3, gradle_workers=1,
         gradle_parallel=False, kotlin_compiler='in-process', xcode_jobs=1,
         verbose_build=True, boot_after_build=True, build_timeout_seconds=2700,
         test_timeout_seconds=900, scope='Uniform copy-only resource profile; '
         'not a shipping build change, timeout extension or device benchmark')
-    if original_resources or combined_execution:
+    if resource_context or combined_execution:
         state['build_profile'].update(gradle_heap_bytes=6 * 1024**3, gradle_workers='original-default',
             gradle_parallel=True, xcode_jobs='original-default', boot_after_build=False,
             scope=control.SCOPE)
@@ -627,7 +634,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     '-destination', 'platform=iOS Simulator,id=' + simulator_id,
                     '-derivedDataPath', str(out / 'derived'), '-parallel-testing-enabled', 'NO',
                     '-maximum-concurrent-test-simulator-destinations', '1']
-            if original_resources or combined_execution:
+            if resource_context or combined_execution:
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Original booted-build Simulator unavailable')
@@ -649,9 +656,9 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                     row['result'] = 'COMBINED_COMMAND_FAILED'
                     break
             else:
-                selected_build = control.build_command(base) if original_resources else build_command(base)
+                selected_build = control.build_command(base) if resource_context else build_command(base)
                 code, _ = command(selected_build, arm + '-build', 2700, dest / 'build.log')
-                if original_resources:
+                if resource_context:
                     row['kernel_resources']['after-build'] = control.observe_resources(command, dest, 'after-build')
                 row['build_exit'] = code
                 verify_inputs(copy, inputs)
@@ -674,7 +681,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
             row['product_manifest_sha256'] = sha((dest / 'product.json').read_bytes())
             # Keep the explicitly owned device shut down during linkage; Xcode
             # can build for that available destination without competing for RAM.
-            if not (original_resources or combined_execution):
+            if not (resource_context or combined_execution):
                 for operation in (('boot', simulator_id), ('bootstatus', simulator_id, '-b')):
                     if backend.run(*operation)[0]:
                         raise RuntimeError('Owned Simulator boot failed')
@@ -683,7 +690,7 @@ def main(*, synthetic=False, current=False, accessibility=False, native_boundary
                                   arm + '-tests', control.TEST_TIMEOUT_SECONDS if public_session_stress or catalog_input_boundary or overscroll_getter or original_touch_delivery or original_touch_export_control or public_scroll_samples or native_only_samples or original_input_only or paired_owned_leaf or failure_runloop else 900, dest / 'test.log',
                                   environment | {'TEST_RUNNER_PARLOR_PIN02_BUNDLE': bundle})
                 row.update(test_exit=code, result='JOURNEYS_PASSED' if code == 0 else 'JOURNEYS_FAILED')
-            if original_resources:
+            if resource_context:
                 row['kernel_resources']['after-tests'] = control.observe_resources(command, dest, 'after-tests')
             verify_inputs(copy, inputs)
             if any(not (apps[0] / p).is_file() or (apps[0] / p).is_symlink() or
