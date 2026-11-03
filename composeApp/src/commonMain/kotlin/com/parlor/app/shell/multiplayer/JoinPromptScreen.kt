@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.join_steps_title
 import com.parlor.app.resources.join_steps_network
@@ -85,6 +86,10 @@ fun JoinPromptScreen(
                         onValueChange = { input -> code = RoomInputPolicy.normalizeRoomCode(input) },
                         label = stringResource(Res.string.join_code_field),
                         capitalization = KeyboardCapitalization.Characters,
+                        // Room codes are opaque ASCII identifiers, not words.
+                        // Do not let a language keyboard correct a valid code.
+                        keyboardType = KeyboardType.Ascii,
+                        autoCorrectEnabled = false,
                         textStyle = ParlorTheme.typography.timerMedium.copy(
                             textAlign = TextAlign.Center,
                         ),

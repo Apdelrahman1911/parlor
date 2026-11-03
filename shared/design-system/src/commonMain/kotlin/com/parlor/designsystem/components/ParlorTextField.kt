@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
@@ -32,6 +33,8 @@ fun ParlorTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     textStyle: TextStyle = ParlorTheme.typography.bodyLarge,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    autoCorrectEnabled: Boolean? = null,
 ) {
     val colors = ParlorTheme.colors
     OutlinedTextField(
@@ -44,6 +47,8 @@ fun ParlorTextField(
         keyboardOptions = KeyboardOptions(
             capitalization = capitalization,
             imeAction = imeAction,
+            keyboardType = keyboardType,
+            autoCorrectEnabled = autoCorrectEnabled,
         ),
         keyboardActions = keyboardActions,
         colors = OutlinedTextFieldDefaults.colors(
