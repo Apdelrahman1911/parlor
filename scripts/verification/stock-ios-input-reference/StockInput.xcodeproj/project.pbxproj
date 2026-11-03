@@ -1,0 +1,30 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1; classes = {}; objectVersion = 56;
+ objects = {
+  A00000000000000000000001 = {isa = PBXProject; attributes = {LastUpgradeCheck = 2630; TargetAttributes = {A00000000000000000000010 = {CreatedOnToolsVersion = 26.3;}; A00000000000000000000020 = {CreatedOnToolsVersion = 26.3; TestTargetID = A00000000000000000000010;};};}; buildConfigurationList = A00000000000000000000030; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; knownRegions = (en, ar, Base); mainGroup = A00000000000000000000002; productRefGroup = A00000000000000000000003; projectDirPath = ""; projectRoot = ""; targets = (A00000000000000000000010, A00000000000000000000020);};
+  A00000000000000000000002 = {isa = PBXGroup; children = (A00000000000000000000004, A00000000000000000000005, A0000000000000000000000A, A00000000000000000000003); sourceTree = "<group>";};
+  A00000000000000000000003 = {isa = PBXGroup; children = (A00000000000000000000006, A00000000000000000000007); name = Products; sourceTree = "<group>";};
+  A00000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockApp.swift; sourceTree = "<group>";};
+  A00000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockInputUITests.swift; sourceTree = "<group>";};
+  A00000000000000000000006 = {isa = PBXFileReference; explicitFileType = wrapper.application; path = StockInput.app; sourceTree = BUILT_PRODUCTS_DIR;};
+  A00000000000000000000007 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = StockInputUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR;};
+  A00000000000000000000008 = {isa = PBXBuildFile; fileRef = A00000000000000000000004;};
+  A00000000000000000000009 = {isa = PBXBuildFile; fileRef = A00000000000000000000005;};
+  A0000000000000000000000A = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ../../../config/parlor-version.xcconfig; sourceTree = "<group>";};
+  A00000000000000000000010 = {isa = PBXNativeTarget; buildConfigurationList = A00000000000000000000031; buildPhases = (A00000000000000000000011, A00000000000000000000012); buildRules = (); dependencies = (); name = StockInput; productName = StockInput; productReference = A00000000000000000000006; productType = "com.apple.product-type.application";};
+  A00000000000000000000011 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000008); runOnlyForDeploymentPostprocessing = 0;};
+  A00000000000000000000012 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
+  A00000000000000000000020 = {isa = PBXNativeTarget; buildConfigurationList = A00000000000000000000032; buildPhases = (A00000000000000000000021, A00000000000000000000022); buildRules = (); dependencies = (A00000000000000000000023); name = StockInputUITests; productName = StockInputUITests; productReference = A00000000000000000000007; productType = "com.apple.product-type.bundle.ui-testing";};
+  A00000000000000000000021 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000009); runOnlyForDeploymentPostprocessing = 0;};
+  A00000000000000000000022 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
+  A00000000000000000000023 = {isa = PBXTargetDependency; target = A00000000000000000000010; targetProxy = A00000000000000000000024;};
+  A00000000000000000000024 = {isa = PBXContainerItemProxy; containerPortal = A00000000000000000000001; proxyType = 1; remoteGlobalIDString = A00000000000000000000010; remoteInfo = StockInput;};
+  A00000000000000000000030 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000040); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug;};
+  A00000000000000000000031 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000041); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug;};
+  A00000000000000000000032 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000042); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug;};
+  A00000000000000000000040 = {isa = XCBuildConfiguration; name = Debug; baseConfigurationReference = A0000000000000000000000A; buildSettings = {MARKETING_VERSION = "$(PARLOR_VERSION_NAME)"; CURRENT_PROJECT_VERSION = "$(PARLOR_BUILD_NUMBER)"; SDKROOT = iphonesimulator; SUPPORTED_PLATFORMS = iphonesimulator; IPHONEOS_DEPLOYMENT_TARGET = 16.0; SWIFT_VERSION = 5.0; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; CODE_SIGNING_ALLOWED = NO; TARGETED_DEVICE_FAMILY = 1;};};
+  A00000000000000000000041 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = org.parlor.reference.stockinput.debug; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_FILE = StockInfo.plist; INFOPLIST_KEY_UILaunchScreen_Generation = YES; INFOPLIST_KEY_CFBundleDisplayName = "Stock Input Reference"; INFOPLIST_KEY_LSRequiresIPhoneOS = YES; INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";};};
+  A00000000000000000000042 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = org.parlor.reference.stockinput.uitests.debug; GENERATE_INFOPLIST_FILE = YES; TEST_TARGET_NAME = StockInput; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";};};
+ }; rootObject = A00000000000000000000001;
+}

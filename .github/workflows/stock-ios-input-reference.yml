@@ -1,0 +1,42 @@
+name: Stock UIKit input reference (not qualification)
+
+on:
+  push:
+    branches: [test/stock-ios-typing-reference-2026-11-03]
+
+concurrency:
+  group: stock-input-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  stock-reference:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Check out exact standalone reference
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Execute four serial first and post-Done EN/AR stock UITextView cases
+        shell: bash
+        run: bash scripts/verification/stock-ios-input-reference/run.sh
+      - name: Retain real XCTest assertions screenshots source and owned cleanup
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: stock-input-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/*.txt
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/*.sha256
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/*.exit
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/*.log
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/*.json
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/tests.xcresult
+            ${{ runner.temp }}/stock-input-${{ github.run_id }}-${{ github.run_attempt }}/attachments
