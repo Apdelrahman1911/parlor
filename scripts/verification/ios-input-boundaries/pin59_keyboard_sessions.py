@@ -1,8 +1,8 @@
 """Exercise original keyboard sessions before the fixed public setup samples.
 
-Reuse the exact PIN58 native adapter. Register the two additional original
-keyboard launches with its existing failure owner. No new input, probe, query,
-repair, or assertion deadline.
+Reuse the exact PIN58 native adapter and its existing once-only failure request.
+Request capture after a failed waiter returns, before the original screenshot
+can evict its observations. No new input, probe, query, repair, or deadline.
 """
 from contextlib import contextmanager
 import hashlib
@@ -31,6 +31,35 @@ NEXT_ANCHOR = '    @MainActor\n    private func setupButton('
 ORIGINAL_LAUNCH = '        app.launch()\n        defer { app.terminate() }'
 OWNED_LAUNCH = ('        PIN56Configure(app)\n        pin11PublicApp = app\n        app.launch()\n'
                 '        defer {\n            pin11PublicApp = nil\n            app.terminate()\n        }')
+FAILURE_BRANCH = '        if result != .completed {\n'
+EARLY_CAPTURE = ('            if let app = pin11PublicApp {\n'
+                 '                pin11PublicApp = nil\n'
+                 '                pin11CapturePublicFailureOnce(app)\n'
+                 '            }\n')
+CAPTURE_REGIONS = (
+    ('    @MainActor\n    private func tapSettledControl(',
+     '    @MainActor\n    private func verifyKeyboardCycle('),
+    ('    @MainActor\n    private func assertTextValue(',
+     '    @MainActor\n    private func fullKeyboardTop('),
+)
+
+
+def failure_capture_before_screenshot(driver, *, restore=False):
+    """Move the existing failure request, not application/test observation timing."""
+    for start, end in CAPTURE_REGIONS:
+        require(driver.count(start) == driver.count(end) == 1, 'Exact original failed-waiter helper boundaries')
+        prefix, region = driver.split(start)
+        body, suffix = region.split(end)
+        old, new = ((FAILURE_BRANCH + EARLY_CAPTURE, FAILURE_BRANCH) if restore else
+                    (FAILURE_BRANCH, FAILURE_BRANCH + EARLY_CAPTURE))
+        require(body.count(old) == 1 and body.count('let result = XCTWaiter.wait(') == 1,
+                'Exactly one existing waiter and failure-only capture site')
+        require(body.index('let result = XCTWaiter.wait(') < body.index(old) < body.index('XCTAttachment(screenshot:'),
+                'Capture only after the waiter returns and before the original screenshot')
+        if not restore:
+            require(EARLY_CAPTURE not in body, 'No duplicate failure request insertion')
+        driver = prefix + start + body.replace(old, new, 1) + end + suffix
+    return driver
 
 
 def keyboard_launch_owner(driver, *, restore=False):
@@ -61,7 +90,7 @@ def renderer_for_profile(profile, source, os, device):
     def render(sources, digests, *, arm):
         plan = previous(sources, digests, arm=arm)
         driver = native.prior.pin02_capture.DRIVER
-        plan[driver] = keyboard_launch_owner(plan[driver])
+        plan[driver] = failure_capture_before_screenshot(keyboard_launch_owner(plan[driver]))
         return plan
     return render
 

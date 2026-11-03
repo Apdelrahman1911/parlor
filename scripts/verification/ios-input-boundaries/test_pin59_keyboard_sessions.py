@@ -48,7 +48,8 @@ class KeyboardSessionTests(unittest.TestCase):
         new, old = plan(), seed.plan()
         driver = p.native.prior.pin02_capture.DRIVER
         self.assertEqual({name for name in new if new[name] != old[name]}, {driver})
-        self.assertEqual(p.keyboard_launch_owner(new[driver], restore=True), old[driver])
+        restored = p.failure_capture_before_screenshot(new[driver], restore=True)
+        self.assertEqual(p.keyboard_launch_owner(restored, restore=True), old[driver])
         self.assertEqual(new[driver].count('PIN56Configure(app)'), old[driver].count('PIN56Configure(app)') + 1)
         with self.assertRaises(ValueError):
             p.keyboard_launch_owner(new[driver])
@@ -62,6 +63,25 @@ class KeyboardSessionTests(unittest.TestCase):
         p.require_capability()
         with self.assertRaises(ValueError):
             p.renderer_for_profile('wrong', p.SOURCE, p.RUNTIME, p.DEVICE)
+
+    def test_failure_capture_is_once_after_waiter_before_original_screenshots(self):
+        driver = p.native.prior.pin02_capture.DRIVER
+        original = p.keyboard_launch_owner(seed.plan()[driver])
+        captured = p.failure_capture_before_screenshot(original)
+        self.assertEqual(captured, plan()[driver])
+        self.assertEqual(p.failure_capture_before_screenshot(captured, restore=True), original)
+        self.assertEqual(captured.count(p.EARLY_CAPTURE), 2)
+        with self.assertRaises(ValueError):
+            p.failure_capture_before_screenshot(captured)
+        with self.assertRaises(ValueError):
+            p.failure_capture_before_screenshot(original, restore=True)
+        for start, end in p.CAPTURE_REGIONS:
+            body = captured.split(start)[1].split(end)[0]
+            self.assertLess(body.index('let result = XCTWaiter.wait('), body.index(p.EARLY_CAPTURE))
+            self.assertLess(body.index(p.EARLY_CAPTURE), body.index('XCTAttachment(screenshot:'))
+            # The exact uninstrumented helper is recoverable; no tap, query,
+            # deadline, screenshot or assertion is repaired or removed.
+            self.assertEqual(body.replace(p.EARLY_CAPTURE, '', 1), original.split(start)[1].split(end)[0])
 
     def test_exact_original_keyboard_methods_then_ten_samples_once_no_repair_or_retry(self):
         command = p.test_command(['/usr/bin/xcodebuild', '-quiet'], Path('/fixture/result.xcresult'))
