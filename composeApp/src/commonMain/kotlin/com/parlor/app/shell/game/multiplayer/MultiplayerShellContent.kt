@@ -67,11 +67,21 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> MultiplayerShellCont
         ShellStep.HostPermission -> P2pPermissionRoute(gate, { step = ShellStep.HostName }, onExit)
         ShellStep.JoinPermission -> P2pPermissionRoute(gate, { step = ShellStep.JoinName }, onExit)
         ShellStep.ResumePermission -> P2pPermissionRoute(gate, { step = ShellStep.Resume }, onExit)
-        ShellStep.HostName, ShellStep.JoinName -> NameInputScreen(
-            isHost = step == ShellStep.HostName, initial = name,
-            onConfirm = { name = it; step = if (step == ShellStep.HostName) ShellStep.Host else ShellStep.JoinCode },
-            onBack = onExit, modifier = modifier,
-        )
+        ShellStep.HostName, ShellStep.JoinName -> {
+            val nameStep = step
+            NameInputScreen(
+                isHost = nameStep == ShellStep.HostName, initial = name,
+                onConfirm = {
+                    // A queued activation can retain this callback after the first
+                    // confirmation. Admit it only in the phase that created it.
+                    if (step == nameStep) {
+                        name = it
+                        step = if (nameStep == ShellStep.HostName) ShellStep.Host else ShellStep.JoinCode
+                    }
+                },
+                onBack = onExit, modifier = modifier,
+            )
+        }
         ShellStep.JoinCode -> JoinPromptScreen(onConfirm = { code = it; step = ShellStep.Peer }, onCancel = onExit, modifier = modifier)
         ShellStep.Host -> if (name.isBlank()) InvalidGameRouteFallback(onExit) else
             HostedGameLobby(spec, transport, name, onExit, settings, activeBack, modifier)

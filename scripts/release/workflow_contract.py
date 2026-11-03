@@ -211,6 +211,7 @@ def current_verification_artifact_paths(job: str) -> list[str]:
             "**/build/reports/androidTests/managedDevice/",
             "**/build/outputs/androidTest-results/managedDevice/",
             "**/build/reports/lint-results-*",
+            "composeApp/build/reports/lint-repository-inputs-*.json",
             "composeApp/build/outputs/mapping/release/",
             "composeApp/build/outputs/bundle/release/*.aab",
         ]
