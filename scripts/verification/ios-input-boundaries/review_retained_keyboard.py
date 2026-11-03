@@ -178,6 +178,17 @@ def predicate(spec):
             '(subsystem CONTAINS "com.apple.TextInput.kbd")')
 
 
+def validate_log_help(row, stdout, stderr):
+    # Apple log's explicit help reports EX_USAGE (64) and writes to stderr.
+    # Only this read-only usage command admits 64; every decode still requires 0.
+    require(row['command'] == ['/usr/bin/log', 'help', 'show'] and
+            row['status'] == 'EXITED' and row['direct_child_reaped'] and
+            row['exit_code'] in (0, 64))
+    helptext = (stdout + stderr).decode()
+    require(all(token in helptext for token in
+                ('--archive', '--start', '--end', '--predicate', '--style', '--timezone')))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
@@ -206,8 +217,8 @@ def main():
         require(xcode == 'Xcode 26.3\nBuild version 17C529\n')
         helptext = run(['/usr/bin/xcrun', 'xcresulttool', 'help', 'export', 'diagnostics'], 'diagnostics-help').decode()
         require(all(token in helptext for token in ('--path', '--output-path')))
-        helptext = run(['/usr/bin/log', 'help', 'show'], 'log-show-help').decode()
-        require(all(token in helptext for token in ('--archive', '--start', '--end', '--predicate', '--style', '--timezone')))
+        row, stdout, stderr = commands.capture(['/usr/bin/log', 'help', 'show'], 'log-show-help', 60, root=ROOT)
+        validate_log_help(row, stdout, stderr)
         expected = json.loads(Path(__file__).with_name('retained_keyboard_manifests.json').read_text())
         for spec in SPECS:
             base = f'repos/{REPO}/actions/'

@@ -77,3 +77,11 @@ The reader now hashes in bounded 1 MiB chunks and normalizes an already validate
 UTC offset to `+00:00`. Two regressions preserve exact timestamps, bounded reads
 and compatibility with the system interpreter. Fresh native confirmation,
 not an unchanged retry, remains required.
+
+The corrected-source [41703399589](https://github.com/Apdelrahman1911/parlor/actions/runs/41703399589)
+passes all16 preflight tests; toolchain and `xcresulttool` help succeed. It rejects
+Apple `log help show`'s EX_USAGE64/stderr response before archive intake. Its
+closed receipt is retained and all three command children are reaped. Explicit
+help alone now accepts0/64 plus the complete required usage vocabulary; actual
+export and decode commands must still exit0. A regression rejects decode commands,
+other exits, missing flags and unreaped/timed-out commands.
