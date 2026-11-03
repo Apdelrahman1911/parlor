@@ -28,8 +28,8 @@ def fixture():
         if name == 'host': stats += '\n    soft cancel: 1,'
         add(second, 'touchstats ' + sender + '-<main>' + stats, 50)
     for micros in (15, 40):
-        add(review.COHORTS['host'][0], 'Sending UIEvent type: 0; subtype: 0; to window: <UIWindow: ABC>; '
-            'contextId: 0xFFFFFFFF' + review.WINDOW, micros, review.APP, 'EventDispatch', 'com.apple.UIKit')
+        add(review.COHORTS['host'][0], 'Sending UIEvent type: 0; subtype: 0; to window: <UIWindow: 0xabc>; '
+            'contextId: 0x' + review.WINDOW, micros, review.APP, 'EventDispatch', 'com.apple.UIKit')
     return rows
 
 
@@ -61,6 +61,15 @@ class RetainedHostTests(unittest.TestCase):
             if 'soft cancel: 1' in row['eventMessage']:
                 row['eventMessage'] = row['eventMessage'].replace('soft cancel: 1', 'soft cancel: 0')
         with self.assertRaises(ValueError): self.reduce(rows)
+
+    def test_offline_sign_extension_and_non_native_pointer_rendering_are_rejected(self):
+        for token, replacement in (('0x' + review.WINDOW, '0xFFFFFFFF' + review.WINDOW),
+                                   ('<UIWindow: 0xabc>', '<UIWindow: ABC>')):
+            rows = fixture()
+            for row in rows:
+                if row['processID'] == review.APP:
+                    row['eventMessage'] = row['eventMessage'].replace(token, replacement)
+            with self.subTest(token=token), self.assertRaises(ValueError): self.reduce(rows)
 
     def test_wrong_sender_window_process_or_duplicate_statistics_rejects(self):
         for modify in ('sender', 'window', 'pid', 'duplicate'):

@@ -93,8 +93,11 @@ def reduce_rows(raw, _spec):
                 APP, 'com.apple.UIKit', 'EventDispatch'):
             continue
         message = row.get('eventMessage', '')
-        if re.fullmatch(r'Sending UIEvent type: 0; subtype: 0; to window: <UIWindow: [0-9A-F]+>; '
-                       r'contextId: 0xFFFFFFFF' + WINDOW, message):
+        # Native printf uses %p (0x-prefixed pointer) and a four-byte %X
+        # context. The offline parser had omitted %p's prefix and sign-extended
+        # this 32-bit context; that rendering must not define native admission.
+        if re.fullmatch(r'Sending UIEvent type: 0; subtype: 0; to window: <UIWindow: 0x[0-9a-f]+>; '
+                       r'contextId: 0x' + WINDOW, message):
             time = evidence.timestamp_us(row['timestamp'])
             if evidence.timestamp_us('2026-10-30T22:34:04Z') <= time < evidence.timestamp_us('2026-10-30T22:34:05Z'):
                 deliveries.append(time)
