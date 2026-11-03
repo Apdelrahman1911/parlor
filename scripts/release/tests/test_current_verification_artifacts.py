@@ -147,6 +147,8 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
             for job in UPLOADS:
                 binding = f"parlor-verification-123-1-{job}"
                 receipts = [binding + suffix for suffix in ("-ownership.json", "-stop-desktop.json")]
+                if job == "desktop-android":
+                    receipts += [binding + "-hosted-disk.json"]
                 if job.startswith("ios"):
                     receipts += [binding + "-apple-aggregate-ownership.json"]
                 if job == "ios":
