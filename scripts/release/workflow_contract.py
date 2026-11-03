@@ -20,10 +20,12 @@ EXPECTED = {
     "testing-external-promotion.yml",
     "production-promotion.yml",
     "ios-input-investigation.yml",
+    "ios-public-input-regressions.yml",
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
 INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+PUBLIC_INPUT_REGRESSIONS_SHA256 = "e7ad939e39982e7fda962edb9cbd8afbb18ff9724fd524c51ef6f0dcf2c40c46"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -85,6 +87,12 @@ def load_files() -> dict[str, str]:
     if unexpected:
         fail(f"Unreviewed workflow files are forbidden: {', '.join(sorted(unexpected))}")
     return {name: (WORKFLOWS / name).read_text(encoding="utf-8") for name in EXPECTED}
+
+
+def verify_public_input_regressions(text: str) -> None:
+    """Closed, exact reviewed two-case scope; never widen required verification."""
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != PUBLIC_INPUT_REGRESSIONS_SHA256:
+        fail("Public input regression workflow differs from its reviewed source")
 
 
 def verify_action_pins(name: str, text: str) -> None:
@@ -1800,6 +1808,7 @@ def main() -> int:
         verify_common(name, text)
     verify_validation(files["production-verification.yml"])
     verify_input_investigation(files["ios-input-investigation.yml"])
+    verify_public_input_regressions(files["ios-public-input-regressions.yml"])
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)

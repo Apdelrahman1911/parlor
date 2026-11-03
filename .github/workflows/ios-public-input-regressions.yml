@@ -1,0 +1,159 @@
+name: iOS public input regressions (focused, not qualification)
+
+on:
+  push:
+    branches: [test/name-input-ui-state-2026-11-02]
+
+concurrency:
+  group: public-input-edits-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    name: Actual Parlor English and Arabic post-Done edits
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+    steps:
+      - name: Check out exact reviewed application and new regressions
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Restore reviewed dependencies without caching new products
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Claim unchanged checkout and original Apple UI resource ownership
+        id: apple_ui_prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == arm64 ]]
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]]
+          [[ "$(xcodebuild -version)" == $'Xcode 26.3\nBuild version 17C529' ]]
+          [[ "$(xcrun --sdk iphonesimulator --show-sdk-version)" == 26.2 ]]
+          [[ "$(shasum -a 256 AGENTS.md | cut -d ' ' -f1)" == d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b ]]
+          /usr/bin/python3 -B -m scripts.ci.verification_hygiene prepare
+          /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
+      - name: Execute only the two new native exact-edit cases without retries
+        id: apple_ui_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD 'HEAD^{tree}' > build/ci-evidence/source.txt
+          xcodebuild -version > build/ci-evidence/xcode.txt
+          xcrun --sdk iphonesimulator --show-sdk-version > build/ci-evidence/sdk.txt
+          # Reuse the existing journal-first owner. Reorder, never omit, the
+          # actual inventory so this study cannot fall back to another runtime.
+          /usr/bin/python3 -B - <<'PY' > build/ci-evidence/owned-simulator.txt
+          from scripts.ci import apple_verification_hygiene as apple
+          from scripts.ci import owned_ci_simulator as simulator
+          from scripts.ci import verification_hygiene as common
+          class ExactBackend(simulator.SimctlBackend):
+              def inventory(self):
+                  value = super().inventory()
+                  runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
+                  device = 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'
+                  entries = simulator.devices(value)
+                  def template(p):
+                      return (p.get('deviceTypeIdentifier') == device and p.get('isAvailable') is True
+                              and str(p.get('name', '')).startswith('iPhone'))
+                  if not any(p['runtime'] == runtime and template(p) for p in entries):
+                      raise RuntimeError('Exact iPhone17Pro/iOS26.2 is unavailable; no fallback')
+                  groups = value['devices']
+                  groups[runtime] = sorted(groups[runtime], key=lambda p: not template(p))
+                  value['devices'] = {runtime: groups[runtime], **{k: v for k, v in groups.items() if k != runtime}}
+                  return value
+          root, prefix, task = common.context()
+          owned = apple.cycle_prefix(prefix, 'apple-ui')
+          claim = apple.validate_claim(root, owned, task, 'apple-ui', apple.configuration(root))
+          udid = simulator.create(owned, claim, ExactBackend())
+          plan = simulator.read_record(simulator.paths(owned)[0])
+          if (plan['runtime'], plan['device_type']) != ('com.apple.CoreSimulator.SimRuntime.iOS-26-2',
+                                                       'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'):
+              raise RuntimeError('Journaled simulator selection differs from the reviewed runtime/device')
+          print(udid)
+          PY
+          udid="$(cat build/ci-evidence/owned-simulator.txt)"
+          args=(-project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug
+            -sdk iphonesimulator -destination "platform=iOS Simulator,id=$udid"
+            -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1
+            -destination-timeout 120 -derivedDataPath build/xcode-derived-data
+            -resultBundlePath build/ci-evidence/ios-input-edits.xcresult
+            -only-testing:iosAppUITests/IOSAppLaunchUITests/testPostDoneNameAndRoomCodeEditsInEnglish
+            -only-testing:iosAppUITests/IOSAppLaunchUITests/testPostDoneNameAndRoomCodeEditsInArabic)
+          printf '%q ' xcodebuild "${args[@]}" test > build/ci-evidence/test-command.txt
+          printf '\n' >> build/ci-evidence/test-command.txt
+          # The existing Xcode shell phase uses JDK21/the wrapper/strict
+          # verification. No shipping source, field, event or assertion changes.
+          set +e
+          xcodebuild "${args[@]}" test 2>&1 | tee build/ci-evidence/test.log
+          status=("${PIPESTATUS[@]}")
+          set -e
+          printf '%s\n' "${status[0]}" > build/ci-evidence/test.exit
+          git diff --exit-code
+          if [[ "${status[0]}" != 0 ]]; then exit "${status[0]}"; fi
+          [[ "${status[1]}" == 0 ]]
+      - name: Retain actual native results separately from the test outcome
+        if: always() && steps.apple_ui_run.outcome != 'skipped'
+        shell: bash
+        run: |
+          set -euo pipefail
+          result=build/ci-evidence/ios-input-edits.xcresult
+          xcrun xcresulttool get test-results summary --path "$result" > build/ci-evidence/summary.json
+          xcrun xcresulttool get test-results tests --path "$result" > build/ci-evidence/tests.json
+          xcrun xcresulttool export attachments --path "$result" --output-path build/ci-evidence/attachments
+          /usr/bin/python3 -B - <<'PY' > build/ci-evidence/products.sha256
+          import hashlib, os, stat
+          from pathlib import Path
+          root = Path('build/xcode-derived-data/Build/Products').resolve(strict=True)
+          for path in sorted(root.rglob('*')):
+              mode = path.lstat().st_mode
+              name = path.relative_to(root).as_posix()
+              if stat.S_ISLNK(mode):
+                  path.resolve(strict=True).relative_to(root)
+                  digest = hashlib.sha256(os.fsencode(os.readlink(path))).hexdigest()
+                  print(digest, 'symlink', name)
+              elif stat.S_ISREG(mode):
+                  digest = hashlib.sha256()
+                  with path.open('rb') as stream:
+                      for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                          digest.update(chunk)
+                  print(digest.hexdigest(), 'file', name)
+              elif not stat.S_ISDIR(mode):
+                  raise ValueError('Nonregular generated product')
+          PY
+      - name: Stop Gradle and retire only the owned Apple UI resources
+        id: apple_ui_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+      - name: Preserve source-specific results and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: parlor-public-input-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            build/ci-evidence/
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-*.json
