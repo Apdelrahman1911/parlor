@@ -17,11 +17,23 @@ import unittest
 from unittest.mock import patch
 
 import pin02_capture as captures
+import frozen_sources
+import pin04_original_host as original
+import review_frozen_result as review
 
-ROOT = Path(__file__).resolve().parents[3]
 TOKEN = 'A541C4A1-1E33-4E19-9B7C-1A1B7F110132'
 SIMULATOR = 'B541C4A1-1E33-4E19-9B7C-1A1B7F110132'
 BUNDLE = 'com.parlor.app.debug'
+
+
+def control_sources():
+    # Software/Apple compiler controls use the reviewed full-file fixtures,
+    # not the changing application driver. Native execution still archives its
+    # explicitly selected actual source; the four-owner renderer stays strict.
+    return {path: frozen_sources.load(
+        review.SOURCE if path == captures.DRIVER else original.FROZEN_SOURCE,
+        path, review.DRIVER_SHA256 if path == captures.DRIVER else original.FROZEN_INPUTS[path],
+    ).decode() for path in captures.MODIFIED}
 
 
 def fixture():
@@ -41,11 +53,28 @@ def decode(value):
 
 
 class CopyControls(unittest.TestCase):
+    def test_control_sources_are_hash_bound_and_do_not_read_live_application_files(self):
+        with patch.object(Path, 'read_text', side_effect=AssertionError('Live source read')):
+            sources = control_sources()
+        self.assertEqual(set(sources), set(captures.MODIFIED))
+        for path, text in sources.items():
+            digest = review.DRIVER_SHA256 if path == captures.DRIVER else original.FROZEN_INPUTS[path]
+            self.assertEqual(hashlib.sha256(text.encode()).hexdigest(), digest)
+
+    def test_additional_launch_owner_is_rejected_not_silently_admitted(self):
+        sources, _ = self.actual()
+        changed = sources | {captures.DRIVER: sources[captures.DRIVER] +
+                             '\n        let app = XCUIApplication()\n'}
+        digests = {path: hashlib.sha256(text.encode()).hexdigest() for path, text in changed.items()}
+        with self.assertRaisesRegex(ValueError, 'four launch owners'):
+            captures.render(changed, digests)
+        self.assertEqual(control_sources(), sources)
+
     def test_typecheck_command_includes_swift_overlay_and_rejects_compiler_failure(self):
         # Command construction only, with explicit mock SDK/compiler. This does
         # not turn an Apple-only native control into a Linux compile claim.
         method = inspect.unwrap(AppleCompileControls.test_exporter_and_actual_copied_xctest_driver_typecheck_with_simulator_sdk)
-        sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
+        sources = control_sources()
         digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
         expected = captures.render(sources, digests)[captures.DRIVER]
         def compiler(command, **options):
@@ -67,7 +96,7 @@ class CopyControls(unittest.TestCase):
                     method(AppleCompileControls())
 
     def actual(self):
-        sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
+        sources = control_sources()
         digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
         return sources, digests
 
@@ -221,7 +250,7 @@ class AppleCompileControls(unittest.TestCase):
             root = Path(temporary).resolve()
             environment = {**os.environ, 'TMPDIR': str(root)}
             exporter = root / 'Capture.swift'; exporter.write_text((captures.HERE / 'PIN02Capture.swift.in').read_text())
-            sources = {p: (ROOT / p).read_text() for p in captures.MODIFIED}
+            sources = control_sources()
             digests = {p: hashlib.sha256(v.encode()).hexdigest() for p, v in sources.items()}
             driver = root / 'Driver.swift'; driver.write_text(captures.render(sources, digests)[captures.DRIVER])
             sdk = subprocess.check_output(['/usr/bin/xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'],

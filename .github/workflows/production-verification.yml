@@ -90,6 +90,10 @@ jobs:
           java-version: "21"
           check-latest: false
 
+      - name: Reclaim unused standard Linux runner toolchains
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        run: python3 -B scripts/ci/hosted_linux_capacity.py
+
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: dependency_cache
@@ -234,10 +238,12 @@ jobs:
             **/build/reports/tests/
             **/build/test-results/**/*.xml
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-hosted-disk.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
             **/build/reports/androidTests/managedDevice/
             **/build/outputs/androidTest-results/managedDevice/
             **/build/reports/lint-results-*
+            composeApp/build/reports/lint-repository-inputs-*.json
             composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
             !remediation-runs/**

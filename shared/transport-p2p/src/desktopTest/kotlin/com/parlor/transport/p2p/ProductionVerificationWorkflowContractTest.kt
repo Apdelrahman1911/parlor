@@ -48,12 +48,12 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun public_ios_settlement_uses_minimal_adjacent_frames_and_never_taps_after_failure() {
+    fun public_ios_settlement_uses_one_coherent_snapshot_and_never_taps_after_failure() {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val helper = swift.substringAfter("private func tapSettledControl(")
             .substringBefore("private func verifyKeyboardCycle(")
         val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
-        listOf("control.exists", "control.frame", "control.isEnabled").forEach { attribute ->
+        listOf("control.snapshot()", "snapshot.frame", "snapshot.isEnabled").forEach { attribute ->
             assertEquals(1, Regex(Regex.escape(attribute)).findAll(code).count())
         }
         assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
@@ -61,9 +61,12 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
         assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
-            "let exists = control.exists",
-            "let frame = exists ? control.frame : nil",
-            "let enabled = exists && control.isEnabled",
+            "let sample = PublicControlSample(read: {",
+            "let snapshot = try control.snapshot()",
+            "return (snapshot.frame, snapshot.isEnabled)",
+            "let frame = sample.frame",
+            "let enabled = sample.enabled",
+            "snapshotErrorCode=",
             "let stable = frames.observe(frame: frame, enabled: enabled)",
             "let hittable = stable ? control.isHittable : nil",
             "if stable && hittable != true { frames.reset() }",
@@ -75,9 +78,15 @@ class ProductionVerificationWorkflowContractTest {
             "screenshot.lifetime = .keepAlways",
         ).forEach { assertContains(code, it) }
         assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
-        listOf(".snapshot()", ".label", ".value", ".placeholderValue", ".identifier",
+        listOf("control.exists", "control.frame", "control.isEnabled", ".label", ".value", ".placeholderValue", ".identifier",
             ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
             "press(forDuration", "swipe").forEach { assertFalse(it in code) }
+        val sampleState = swift.substringAfter("private struct PublicControlSample {")
+            .substringBefore("private struct PublicControlFrames")
+        assertEquals(1, Regex(Regex.escape("try read()")).findAll(sampleState).count())
+        listOf("frame = resolved.frame", "enabled = resolved.enabled", "errorCode = nil",
+            "catch {", "frame = nil", "enabled = false", "errorCode = (error as NSError).code",
+        ).forEach { assertContains(sampleState, it) }
         val frameState = swift.substringAfter("private struct PublicControlFrames {")
             .substringBefore("final class PublicControlFramesTests")
         listOf("reset()", "return false", "previous = frame", "return previous == frame",
@@ -86,6 +95,9 @@ class ProductionVerificationWorkflowContractTest {
             "frame.size.width > 0", "frame.size.height > 0", "allSatisfy({ $0.isFinite })",
         ).forEach { assertContains(frameState, it) }
         listOf(
+            "testSampleResolvesFrameAndEnabledOnceFromTheSameGeneration",
+            "testSnapshotErrorBreaksAdjacencyAndCannotReuseLastEnabledFrame",
+            "testDisabledSnapshotIsNotConfusedWithResolutionFailure",
             "testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes",
             "testMotionIsNotRoundedIntoASettledFrame",
             "testMissingControlBreaksFrameAdjacency",
@@ -159,6 +171,34 @@ class ProductionVerificationWorkflowContractTest {
             "testMissingOrNonStringValueNeverMatchesEvenAnEmptyExpectation",
             "testWhitespaceCaseAndArabicCharactersAreNotRewritten",
         ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_reopened_inputs_require_exact_native_edits_without_transport_or_repair() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        listOf("English", "Arabic").forEach { language ->
+            assertContains(swift, "func testPostDoneNameAndRoomCodeEditsIn$language()")
+            assertContains(swift, "func testKeyboardInsetsOnNameAndRoomCodeIn$language()")
+        }
+        val helper = swift.substringAfter("private func verifyPostDoneInputs(")
+            .substringBefore("private func assertTextValue(")
+        val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        listOf(
+            "verifyPostDoneField(app, actionPrefix: copy.continueToCode, isCode: false)",
+            "verifyPostDoneField(app, actionPrefix: copy.findRoom, isCode: true)",
+            "let initial = String(repeating: \"A\", count: isCode ? 4 : 5)",
+            "field.typeText(initial)", "field.typeText(\"AA\")",
+            "field.typeText(XCUIKeyboardKey.delete.rawValue)", "field.typeText(\"A\")",
+            "equals: inserted", "equals: deleted", "equals: expectedFinal",
+            "XCTAssertEqual(action.isEnabled, !isCode)",
+            "!app.keyboards.firstMatch.exists", "XCTWaiter.wait(for: [dismissed], timeout: 10)",
+            "XCTAssertTrue(action.exists", "assertTextValue(field, in: app, equals: expected)",
+        ).forEach { assertContains(code, it) }
+        assertEquals(1, Regex(Regex.escape("try tapSetupButton(app, prefix: copy.continueToCode)")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("field.typeText(XCUIKeyboardKey.delete.rawValue)")).findAll(code).count())
+        listOf("prefix: copy.findRoom)", "action.tap()", "while ", "for _", "sleep(",
+            "performTextInput", "rightArrow", "leftArrow", "app.debugDescription",
+        ).forEach { assertFalse(it in code) }
     }
 
     @Test

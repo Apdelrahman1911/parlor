@@ -130,6 +130,7 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
             "composeApp/build/outputs/androidTest-results/managedDevice/release/TEST-Device.xml",
             "composeApp/build/outputs/mapping/release/mapping.txt",
             "composeApp/build/outputs/bundle/release/Parlor.aab",
+            "composeApp/build/reports/lint-repository-inputs-123.json",
             "build/ci-evidence/ios-ui-tests.xcresult/Info.plist",
             "build/ci-evidence/ios-readiness-control-tests.log",
             "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/Contents/Info.plist",
@@ -147,6 +148,8 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
             for job in UPLOADS:
                 binding = f"parlor-verification-123-1-{job}"
                 receipts = [binding + suffix for suffix in ("-ownership.json", "-stop-desktop.json")]
+                if job == "desktop-android":
+                    receipts += [binding + "-hosted-disk.json"]
                 if job.startswith("ios"):
                     receipts += [binding + "-apple-aggregate-ownership.json"]
                 if job == "ios":
@@ -176,12 +179,12 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
                         self.assertIn(root / reports[2], selected)
                         self.assertIn(root / reports[3], selected)
                     if job == "desktop-android":
-                        self.assertTrue(all(root / name in selected for name in reports[:10]))
+                        self.assertTrue(all(root / name in selected for name in reports[:11]))
                     if job.startswith("ios"):
-                        self.assertIn(root / reports[10], selected)
+                        self.assertIn(root / reports[11], selected)
                     if job == "ios-release-simulator":
                         self.assertIn(root / reports[4], selected)
-                        self.assertIn(root / reports[12], selected)
+                        self.assertIn(root / reports[13], selected)
                     self.assertFalse(any(p.is_relative_to(root / "remediation-runs") or p.is_relative_to(root / "docs/archives") for p in selected))
 
     def test_diagnostics_cannot_acquire_normal_collection_policy(self) -> None:

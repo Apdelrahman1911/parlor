@@ -39,6 +39,23 @@ class AndroidReleaseLintContractTest {
     }
 
     @Test
+    fun live_repository_indexes_are_lint_inputs_not_synthetic_warning_waivers() {
+        val appBuild = read("composeApp/build.gradle.kts")
+        val preparation = read("scripts/ci/android_lint_repository.py")
+        assertContains(appBuild, "dependsOn(prepareReleaseLintRepositoryInputs)")
+        assertContains(appBuild, "inputs.files(releaseLintRepositoryInputs).withPathSensitivity(PathSensitivity.RELATIVE)")
+        assertContains(appBuild, "outputs.upToDateWhen { false }")
+        assertContains(appBuild, "lintTool.versionKey.get() == \"32.1.1\"")
+        assertContains(appBuild, "lintTool.initializeLintCacheDir()")
+        assertContains(appBuild, "Files.copy(sources.resolve(relative), destination, StandardCopyOption.REPLACE_EXISTING)")
+        assertContains(preparation, "https://dl.google.com/dl/android/maven2/")
+        assertContains(preparation, "PASS_LIVE_REPOSITORY_INPUTS_NOT_LINT_QUALIFICATION")
+        assertFalse(preparation.contains("lint-results-release"))
+        assertContains(read(".github/workflows/production-verification.yml"), "composeApp/build/reports/lint-repository-inputs-*.json")
+        assertContains(read("shared/transport-p2p/build.gradle.kts"), "rootProject.file(\"scripts/ci/android_lint_repository.py\")")
+    }
+
+    @Test
     fun kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced() {
         val catalog = read("gradle/libs.versions.toml")
         val properties = read("gradle.properties")

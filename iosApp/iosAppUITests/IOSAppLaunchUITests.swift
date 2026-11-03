@@ -263,21 +263,23 @@ final class IOSAppLaunchUITests: XCTestCase {
 
     @MainActor
     private func tapSettledControl(_ control: XCUIElement) throws {
-        // Public setup only. Full snapshot() also faults in value, placeholder,
-        // identifier and window attributes that frame settlement never uses.
-        // Read only existence, one complete CGRect and enabled state. These
-        // are sequential observations, not an atomic accessibility snapshot;
-        // absence/disabled state breaks adjacency and native hittability is
-        // still required immediately before admitting the single ordinary tap.
-        // Keep the same exact-frame comparison and original ten-second budget.
+        // One resolved public snapshot supplies frame and enabled together.
+        // Separate XCUIElement property reads each re-evaluate the remote query;
+        // an interrupted resolution can return false rather than native disabled
+        // state (original failure41180128325). Missing/error samples still break
+        // adjacency. Keep exact frames, native hittability, the ten-second
+        // deadline and the single ordinary tap; never admit stale cached state.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let exists = control.exists
-            let frame = exists ? control.frame : nil
-            let enabled = exists && control.isEnabled
+            let sample = PublicControlSample(read: {
+                let snapshot = try control.snapshot()
+                return (snapshot.frame, snapshot.isEnabled)
+            })
+            let frame = sample.frame
+            let enabled = sample.enabled
             let stable = frames.observe(frame: frame, enabled: enabled)
             let hittable = stable ? control.isHittable : nil
             if stable && hittable != true { frames.reset() }
@@ -287,7 +289,8 @@ final class IOSAppLaunchUITests: XCTestCase {
                 samples.append("at=\(sampleStarted - started), " +
                     "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
                     "frame=\(String(describing: frame)), enabled=\(enabled), " +
-                    "stable=\(stable), hittable=\(String(describing: hittable))")
+                    "stable=\(stable), hittable=\(String(describing: hittable)), " +
+                    "snapshotErrorCode=\(String(describing: sample.errorCode))")
             }
             return stable && hittable == true
         }, object: nil)
@@ -355,6 +358,131 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 10), .completed,
                            "Done must hide the keyboard and restore the un-inset layout")
         }
+    }
+
+    @MainActor
+    func testArabicDisplayNameAndAsciiRoomCodeThroughNativeInput() throws {
+        // Synthetic public input only; never submit a code or start transport.
+        let copy = KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        )
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(ar)", "-AppleLocale", "ar_EG"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        // Actual Arabic scalars go through typeText and the existing exact
+        // value/geometry/Done/reopen assertions, not a semantics replacement.
+        try verifyKeyboardCycle(app, actionPrefix: copy.continueToCode, input: "أحمد نور")
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        try verifyKeyboardCycle(app, actionPrefix: copy.findRoom, input: "AAAAAA")
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public input must not request network access")
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
+    func testPostDoneNameAndRoomCodeEditsInEnglish() throws {
+        try verifyPostDoneInputs(language: "en", locale: "en_US", copy: KeyboardCopy(
+            openGame: "Open Whodunit and pick how you want to play.",
+            join: "Enter the host's room code to join their table.",
+            permission: "Continue and retry the real local-network operation.",
+            continueToCode: "Save your name and continue to enter a room code.",
+            findRoom: "Connect to the host using the entered room code."
+        ))
+    }
+
+    @MainActor
+    func testPostDoneNameAndRoomCodeEditsInArabic() throws {
+        try verifyPostDoneInputs(language: "ar", locale: "ar_EG", copy: KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        ))
+    }
+
+    @MainActor
+    private func verifyPostDoneInputs(language: String, locale: String, copy: KeyboardCopy) throws {
+        // New native edit coverage, not a replacement for the original typing
+        // and geometry journeys. Never submit a code or start a LAN operation.
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        verifyPostDoneField(app, actionPrefix: copy.continueToCode, isCode: false)
+        // Only this explicit Name Continue may advance to room-code entry.
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        verifyPostDoneField(app, actionPrefix: copy.findRoom, isCode: true)
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public edits must not request network access")
+    }
+
+    @MainActor
+    private func verifyPostDoneField(_ app: XCUIApplication, actionPrefix: String, isCode: Bool) {
+        let field = app.textViews.firstMatch
+        let action = setupButton(app, prefix: actionPrefix)
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.textViews.count, 1)
+        XCTAssertTrue(action.waitForExistence(timeout: 10))
+        XCTAssertFalse(action.isEnabled)
+        let initial = String(repeating: "A", count: isCode ? 4 : 5)
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let introduction = dismissKeyboardIntroduction(app)
+        field.typeText(initial)
+        assertTextValue(field, in: app, equals: initial, introduction: introduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        dismissPostDoneField(app, field: field, action: action, expected: initial)
+
+        // A tap can move the caret. Identical characters make these exact
+        // insert/delete expectations independent of its collapsed position;
+        // no arrow strings, forced selection, fallback, or repair input.
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let reopenedIntroduction = dismissKeyboardIntroduction(app)
+        field.typeText("AA")
+        let inserted = initial + "AA"
+        assertTextValue(field, in: app, equals: inserted, introduction: reopenedIntroduction)
+        XCTAssertTrue(action.isEnabled)
+        field.typeText(XCUIKeyboardKey.delete.rawValue)
+        let deleted = String(inserted.dropLast())
+        assertTextValue(field, in: app, equals: deleted, introduction: reopenedIntroduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        var expectedFinal = deleted
+        if isCode {
+            field.typeText("A")
+            expectedFinal += "A"
+            assertTextValue(field, in: app, equals: expectedFinal, introduction: reopenedIntroduction)
+            XCTAssertTrue(action.isEnabled)
+        }
+        dismissPostDoneField(app, field: field, action: action, expected: expectedFinal)
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
+    private func dismissPostDoneField(
+        _ app: XCUIApplication, field: XCUIElement, action: XCUIElement, expected: String
+    ) {
+        field.typeText("\n")
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed,
+                       "Done must dismiss the keyboard without submitting or changing the draft")
+        XCTAssertTrue(field.exists)
+        XCTAssertTrue(action.exists, "Done must retain the current public input screen")
+        assertTextValue(field, in: app, equals: expected)
     }
 
     @MainActor
@@ -489,6 +617,27 @@ final class PublicTextValueTests: XCTestCase {
 
 // Test-only frame state. Losing the control, enabled state or hittability must
 // break adjacency; a matching frame before an interruption cannot admit a tap.
+// A failed snapshot is unknown, never an enabled observation. Do not retain
+// XCUIElementSnapshot, labels, values, hierarchies or error descriptions here.
+private struct PublicControlSample {
+    let frame: CGRect?
+    let enabled: Bool
+    let errorCode: Int?
+
+    init(read: () throws -> (frame: CGRect, enabled: Bool)) {
+        do {
+            let resolved = try read()
+            frame = resolved.frame
+            enabled = resolved.enabled
+            errorCode = nil
+        } catch {
+            frame = nil
+            enabled = false
+            errorCode = (error as NSError).code
+        }
+    }
+}
+
 private struct PublicControlFrames {
     private var previous: CGRect?
 
@@ -511,6 +660,42 @@ private struct PublicControlFrames {
 
 final class PublicControlFramesTests: XCTestCase {
     private let resting = CGRect(x: 24, y: 279, width: 354, height: 101)
+
+    func testSampleResolvesFrameAndEnabledOnceFromTheSameGeneration() {
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            return (self.resting, reads == 1)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertTrue(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
+
+    func testSnapshotErrorBreaksAdjacencyAndCannotReuseLastEnabledFrame() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            throw NSError(domain: "PublicControlSampleTest", code: 1001)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertNil(sample.frame)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertEqual(sample.errorCode, 1001)
+        XCTAssertFalse(frames.observe(frame: sample.frame, enabled: sample.enabled))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testDisabledSnapshotIsNotConfusedWithResolutionFailure() {
+        let sample = PublicControlSample(read: { (self.resting, false) })
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
 
     func testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes() {
         var frames = PublicControlFrames()
