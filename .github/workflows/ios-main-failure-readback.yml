@@ -1,0 +1,52 @@
+name: Retained main iOS failure readback (not qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-main-failure-readback-2026-11-03]
+
+concurrency:
+  group: retained-main-failure-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    # Standard free public runner; no app build, Simulator or test replay.
+    runs-on: macos-15
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Check out reviewed reader and original source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact read-only workflow and public intake controls
+        run: |
+          /usr/bin/python3 -B scripts/release/workflow_contract.py
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_main_failure.py -v
+      - name: Decode retained failed main without application execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_main_failure.py \
+            --output "$RUNNER_TEMP/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Retain only validated public images and source-bound receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: main-failure-readback-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}/receipt.json
+            ${{ runner.temp }}/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}/extracted-inputs.json
+            ${{ runner.temp }}/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}/summary.json
+            ${{ runner.temp }}/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}/tests.json
+            ${{ runner.temp }}/parlor-main-readback-${{ github.run_id }}-${{ github.run_attempt }}/public-settlement-*.png

@@ -20,10 +20,12 @@ EXPECTED = {
     "testing-external-promotion.yml",
     "production-promotion.yml",
     "ios-input-investigation.yml",
+    "ios-main-failure-readback.yml",
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
 INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+MAIN_FAILURE_READBACK_SHA256 = "38f21368299ad7905c5937ffa4877a69483566b9b3d8723fe88e5530226ba821"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -1800,6 +1802,8 @@ def main() -> int:
         verify_common(name, text)
     verify_validation(files["production-verification.yml"])
     verify_input_investigation(files["ios-input-investigation.yml"])
+    if hashlib.sha256(files["ios-main-failure-readback.yml"].encode()).hexdigest() != MAIN_FAILURE_READBACK_SHA256:
+        fail("Retained main failure reader differs from the reviewed read-only workflow")
     for name in STORE_WORKFLOWS:
         verify_store_workflow(name, files[name])
     verify_store_serialization(files)
