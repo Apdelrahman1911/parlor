@@ -14,6 +14,8 @@ import re
 import struct
 import subprocess
 import sys
+import tempfile
+import plistlib
 import time
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -202,21 +204,22 @@ def script_children(backend, parent, since, deadline):
 
 
 def profile_command(out, argv, *, deadline):
-    """File-backed streams cannot wait on an orphaned sudo child's pipe EOF.
+    """File-backed streams cannot wait on a descendant's pipe EOF.
 
-    Cancel only our direct sudo monitor with TERM first so its existing signal
-    forwarding can retire its own tool. Never signal the service/sampled PID.
+    Cancel only our direct sample caller with TERM first. Never signal the
+    service/sampled PID or a process group.
     Direct reaping alone is not a claim about privileged descendant termination.
     """
-    # Keep the native 8s limit and allow 1s for TERM/reaping inside the query's
+    # Capture one second with the lighter public sample tool; retain an 8s
+    # caller ceiling and allow 1s for TERM/reaping inside the query's
     # original deadline. Do not start a capture that cannot fit that budget.
-    timeout = min(12, deadline - time.monotonic() - 1.25)
-    if timeout < 8:
-        save(out, "spindump", dict(argv=argv, status="NOT_STARTED_INSUFFICIENT_QUERY_BUDGET",
+    timeout = min(8, deadline - time.monotonic() - 1.25)
+    if timeout < 2:
+        save(out, "query-sample", dict(argv=argv, status="NOT_STARTED_INSUFFICIENT_QUERY_BUDGET",
              exit_code=None, original_deadline_seconds=20, sampled_pid_signalled=False))
         return None
     started, code, outcome = time.time(), None, "INCOMPLETE"
-    with (out / "spindump.stdout").open("xb") as stdout, (out / "spindump.stderr").open("xb") as stderr:
+    with (out / "query-sample.stdout").open("xb") as stdout, (out / "query-sample.stderr").open("xb") as stderr:
         child = subprocess.Popen(argv, stdout=stdout, stderr=stderr)
         try:
             code = child.wait(timeout=timeout)
@@ -228,9 +231,12 @@ def profile_command(out, argv, *, deadline):
                 child.wait(timeout=max(0, min(1, deadline - time.monotonic())))
             except subprocess.TimeoutExpired:
                 child.kill()
-                child.wait()
+                try:
+                    child.wait(timeout=max(0, min(1, deadline - time.monotonic())))
+                except subprocess.TimeoutExpired:
+                    outcome = "TIMED_OUT_DIRECT_REAP_INCOMPLETE"
         finally:
-            save(out, "spindump", dict(argv=argv, exit_code=code, status=outcome,
+            save(out, "query-sample", dict(argv=argv, exit_code=code, status=outcome,
                  start_epoch=started, end_epoch=time.time(), caller_pid=child.pid,
                  caller_timeout_seconds=timeout, original_deadline_seconds=20,
                  direct_child_reaped=child.poll() is not None,
@@ -240,105 +246,115 @@ def profile_command(out, argv, *, deadline):
 
 def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state, trusted_tools):
     started, deadline, capture = time.time(), time.monotonic() + 20, None
-    child = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    original = backend._basic(child.pid)
-    stdout, stderr, code, status = b"", b"", None, "INCOMPLETE"
-    try:
-        while True:
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                child.kill()
-                stdout, stderr = child.communicate()
-                status = "TIMED_OUT"
-                break
-            try:
-                stdout, stderr = child.communicate(timeout=min(0.25, remaining))
-                code, status = child.returncode, "EXITED"
-                break
-            except subprocess.TimeoutExpired:
-                pass
-            if capture_state["attempted"] or time.time() - started < 5:
-                continue
-            candidates = []
-            # A stalled managerpid cannot supply a Simulator parent. Profile
-            # only our attested direct dispatcher, never guess a keyboard PID.
-            if parent is not None:
-                for pid in backend._pids():
-                    info = backend._basic(pid)
-                    if not own_child(info, parent, started - 0.1) or bytes(info.comm) != b"launchctl":
-                        continue
-                    try:
-                        path = backend._path(pid)
-                    except RuntimeError:
-                        if backend._basic(pid) is None:
-                            continue
-                        raise
-                    if basic_key(backend._basic(pid)) == basic_key(info):
-                        candidates.append((info, path))
-            direct_info = backend._basic(child.pid)
-            if direct_info is None:
-                continue  # Exited during selection; collect its actual result.
-            try:
-                direct_path = backend._path(child.pid)
-            except RuntimeError:
-                if backend._basic(child.pid) is None:
-                    continue
-                raise
-            recognized = is_direct_dispatcher(direct_info, original, direct_path, trusted_tools, os.getpid())
-            script = False
-            direct_args = []
-            if not recognized:
+    with tempfile.TemporaryFile() as stdout_file, tempfile.TemporaryFile() as stderr_file:
+        child = subprocess.Popen(argv, stdout=stdout_file, stderr=stderr_file)
+        original = backend._basic(child.pid)
+        stdout, stderr, code, status = b"", b"", None, "INCOMPLETE"
+        try:
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    status = "TIMED_OUT"
+                    break
                 try:
-                    direct_args = native_args(backend, child.pid)
+                    child.wait(timeout=min(0.25, remaining))
+                    code, status = child.returncode, "EXITED"
+                    break
+                except subprocess.TimeoutExpired:
+                    pass
+                if capture_state["attempted"] or time.time() - started < 5:
+                    continue
+                candidates = []
+                # A stalled managerpid cannot supply a Simulator parent. Profile
+                # only our attested direct dispatcher, never guess a keyboard PID.
+                if parent is not None:
+                    for pid in backend._pids():
+                        info = backend._basic(pid)
+                        if not own_child(info, parent, started - 0.1) or bytes(info.comm) != b"launchctl":
+                            continue
+                        try:
+                            path = backend._path(pid)
+                        except RuntimeError:
+                            if backend._basic(pid) is None:
+                                continue
+                            raise
+                        if basic_key(backend._basic(pid)) == basic_key(info):
+                            candidates.append((info, path))
+                direct_info = backend._basic(child.pid)
+                if direct_info is None:
+                    continue  # Exited during selection; collect its actual result.
+                try:
+                    direct_path = backend._path(child.pid)
                 except RuntimeError:
                     if backend._basic(child.pid) is None:
                         continue
                     raise
-                script = is_declared_script(direct_info, original, direct_path, direct_args, argv, trusted_tools, os.getpid())
-                recognized = script
-            if basic_key(backend._basic(child.pid)) != basic_key(direct_info):
-                continue  # No grant from an observation spanning exit/exec.
-            save(out, "dispatcher-check", dict(pid=child.pid, native_executable=direct_path,
-                 declared_script=script,
-                 original_identity=basic_key(original)[:-1] if original is not None else None,
-                 current_identity=basic_key(direct_info)[:-1] if direct_info is not None else None,
-                 trusted_executables=trusted_tools, recognized=recognized))
-            if not recognized:
-                raise RuntimeError("Unrecognized direct native query dispatcher; recorded identity is not a profile grant")
-            direct = (direct_info, direct_path)
-            if script:
-                children = script_children(backend, direct_info, started - 0.1, deadline)
+                recognized = is_direct_dispatcher(direct_info, original, direct_path, trusted_tools, os.getpid())
+                script = False
+                direct_args = []
+                if not recognized:
+                    try:
+                        direct_args = native_args(backend, child.pid)
+                    except RuntimeError:
+                        if backend._basic(child.pid) is None:
+                            continue
+                        raise
+                    script = is_declared_script(direct_info, original, direct_path, direct_args, argv, trusted_tools, os.getpid())
+                    recognized = script
                 if basic_key(backend._basic(child.pid)) != basic_key(direct_info):
-                    continue  # Collect exited query; never sample a stale PID.
-                (target, path), scope = select_script_query_child(children, direct, argv, trusted_tools)
-            elif parent is None:
-                (target, path), scope = direct, "direct-query-dispatcher-not-keyboard"
-            else:
-                (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
-            save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
-                 start=[target.start_sec,target.start_usec], executable=path, scope=scope,
-                 observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
-            sample = ["/usr/bin/sudo", "-n", "/usr/sbin/spindump", str(target.pid), "1", "10",
-                      "-onlyTarget", "-noText", "-noProcessingWhileSampling", "-timelimit", "8",
-                      "-o", str(out / "query.raw.spindump")]
-            capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
-            sample_code = profile_command(out, sample, deadline=deadline)
-            later = backend._basic(target.pid)
-            capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
-                           after_start=None if later is None else [later.start_sec,later.start_usec],
-                           causal_fix=False, original_deadline_seconds=20)
-    finally:
-        if child.poll() is None:
-            child.kill()
-            stdout, stderr = child.communicate()
-        (out / (label + ".stderr")).write_bytes(stderr)
-        if label == "managerpid":
-            (out / (label + ".stdout")).write_bytes(stdout)
-        save(out, label, dict(argv=argv, status=status, exit_code=code,
-             start_epoch=started, end_epoch=time.time(), stdout_sha256=hashlib.sha256(stdout).hexdigest(),
-             direct_child_reaped=True, capture=capture, service_activation=False))
-    return code, stdout
-
+                    continue  # No grant from an observation spanning exit/exec.
+                dispatcher_check = dict(pid=child.pid, native_executable=direct_path,
+                     declared_script=script,
+                     original_identity=basic_key(original)[:-1] if original is not None else None,
+                     current_identity=basic_key(direct_info)[:-1] if direct_info is not None else None,
+                     trusted_executables=trusted_tools, recognized=recognized)
+                if not recognized:
+                    save(out, "dispatcher-check", dispatcher_check)
+                    raise RuntimeError("Unrecognized direct native query dispatcher; recorded identity is not a profile grant")
+                direct = (direct_info, direct_path)
+                if script:
+                    children = script_children(backend, direct_info, started - 0.1, deadline)
+                    if basic_key(backend._basic(child.pid)) != basic_key(direct_info):
+                        continue  # Collect exited query; never sample a stale PID.
+                    (target, path), scope = select_script_query_child(children, direct, argv, trusted_tools)
+                elif parent is None:
+                    (target, path), scope = direct, "direct-query-dispatcher-not-keyboard"
+                else:
+                    (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
+                save(out, "dispatcher-check", dispatcher_check)
+                save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
+                     start=[target.start_sec,target.start_usec], executable=path, scope=scope,
+                     observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
+                sample = ["/usr/bin/sample", str(target.pid), "1", "10", "-mayDie",
+                          "-file", str(out / "query.sample.txt")]
+                capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
+                sample_code = profile_command(out, sample, deadline=deadline)
+                later = backend._basic(target.pid)
+                capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
+                               after_start=None if later is None else [later.start_sec,later.start_usec],
+                               causal_fix=False, original_deadline_seconds=20)
+        finally:
+            if child.poll() is None:
+                child.kill()
+            try:
+                child.wait(timeout=1)
+            except subprocess.TimeoutExpired:
+                pass  # Retain an incomplete direct reap; never block on pipe EOF.
+            # pread does not alter a writer's shared offset and never waits for EOF.
+            stdout = os.pread(stdout_file.fileno(), 1024 * 1024 + 1, 0)
+            stderr = os.pread(stderr_file.fileno(), 1024 * 1024 + 1, 0)
+            oversized = len(stdout) > 1024 * 1024 or len(stderr) > 1024 * 1024
+            if oversized:
+                stdout, stderr, status = b"", b"", "INCOMPLETE_OVERSIZED_OUTPUT"
+            (out / (label + ".stderr")).write_bytes(stderr)
+            if label == "managerpid":
+                (out / (label + ".stdout")).write_bytes(stdout)
+            save(out, label, dict(argv=argv, status=status, exit_code=code,
+                 start_epoch=started, end_epoch=time.time(), stdout_sha256=hashlib.sha256(stdout).hexdigest(),
+                 direct_child_reaped=child.poll() is not None, capture=capture, service_activation=False,
+                 stream_transport="PRIVATE_TEMPORARY_FILES_NOT_PIPE_EOF", cleanup_wait_limit_seconds=1,
+                 descendant_termination="NOT_INDEPENDENTLY_VERIFIED"))
+        return code, stdout
 
 def main():
     root, prefix, task = common.context()
@@ -366,6 +382,20 @@ def main():
         if code != 0:
             raise RuntimeError("Owned simulator boot failed")
     trusted_tools = attested_dispatchers(out)
+    # Public installed metadata only; the stub invokes -runFirstLaunch on a
+    # version mismatch. Do not run that mutating operation or infer a mismatch.
+    metadata = Path(trusted_tools[2]).parents[1] / "Info.plist"
+    if not 0 < metadata.stat().st_size <= 128 * 1024:
+        raise RuntimeError("Installed CoreSimulator metadata exceeds its bound")
+    version = plistlib.loads(metadata.read_bytes()).get("CFBundleVersion")
+    if not isinstance(version, str) or not re.fullmatch(r"[0-9]{1,4}(?:\.[0-9]{1,3}){0,3}", version):
+        raise RuntimeError("Installed CoreSimulator version is not a bounded public version")
+    save(out, "installed-coresimulator-version", dict(path=str(metadata),
+         expected_by_observed_stub="1051.17.8", observed=version,
+         matches_observed_stub=version == "1051.17.8", explicit_first_launch_command_executed=False,
+         prior_shim_branch_execution="NOT_OBSERVED"))
+    if version != "1051.17.8":
+        raise RuntimeError("CoreSimulator differs from the observed SDK shim; no further mutating shim invocation")
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
     code, raw = observe_print(out, ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl", "managerpid"],
                               backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)
@@ -390,6 +420,8 @@ def main():
         raise RuntimeError("Native service print timed out; service existence and app causality remain unknown")
     if code != 0:
         raise RuntimeError("Native service print exited unsuccessfully; no alternate domain or service activation")
+    if basic_key(backend._basic(parent.pid)) != parent_key:
+        raise RuntimeError("Owned Simulator manager generation changed during service observation")
     fields = service_fields(raw)
     save(out, "service-fields-before", fields)
     save(out, "result", dict(result="NATIVE_PRINT_RETURNED_NOT_APP_QUALIFICATION", fields=fields,

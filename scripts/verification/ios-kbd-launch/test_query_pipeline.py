@@ -49,15 +49,15 @@ class QueryPipelineControls(unittest.TestCase):
     def test_profiler_streams_are_files_and_timeout_terminates_only_owned_caller(self):
         with TemporaryDirectory() as temp:
             out=Path(temp);caller=SimpleNamespace(pid=99)
-            caller.wait=unittest.mock.Mock(side_effect=[p.subprocess.TimeoutExpired('profile',12),-15])
+            caller.wait=unittest.mock.Mock(side_effect=[p.subprocess.TimeoutExpired('profile',8),-15])
             caller.terminate=unittest.mock.Mock();caller.kill=unittest.mock.Mock();caller.poll=lambda:-15
             with patch.object(p.subprocess,'Popen',return_value=caller) as launched:
-                self.assertIsNone(p.profile_command(out,['sudo','exact-tool','100'],deadline=p.time.monotonic()+30))
+                self.assertIsNone(p.profile_command(out,['sample','exact-tool','100'],deadline=p.time.monotonic()+30))
                 _,kw=launched.call_args
                 self.assertNotEqual(kw['stdout'],p.subprocess.PIPE);self.assertNotEqual(kw['stderr'],p.subprocess.PIPE)
             caller.terminate.assert_called_once_with();caller.kill.assert_not_called()
-            self.assertEqual(caller.wait.call_args_list,[unittest.mock.call(timeout=12),unittest.mock.call(timeout=1)])
-            record=json.loads((out/'spindump.json').read_text())
+            self.assertEqual(caller.wait.call_args_list,[unittest.mock.call(timeout=8),unittest.mock.call(timeout=1)])
+            record=json.loads((out/'query-sample.json').read_text())
             self.assertEqual(record['status'],'TIMED_OUT');self.assertIsNone(record['exit_code'])
             self.assertEqual(record['caller_pid'],99);self.assertFalse(record['sampled_pid_signalled'])
             self.assertEqual(record['descendant_termination'],'NOT_INDEPENDENTLY_VERIFIED')
@@ -67,25 +67,38 @@ class QueryPipelineControls(unittest.TestCase):
             out=Path(temp);caller=SimpleNamespace(pid=99,wait=unittest.mock.Mock(return_value=0),
                  terminate=unittest.mock.Mock(),kill=unittest.mock.Mock(),poll=lambda:0)
             with patch.object(p.subprocess,'Popen',return_value=caller):
-                self.assertEqual(p.profile_command(out,['sudo','exact-tool','100'],deadline=p.time.monotonic()+30),0)
+                self.assertEqual(p.profile_command(out,['sample','exact-tool','100'],deadline=p.time.monotonic()+30),0)
             caller.terminate.assert_not_called();caller.kill.assert_not_called()
-            self.assertEqual(json.loads((out/'spindump.json').read_text())['status'],'EXITED')
+            self.assertEqual(json.loads((out/'query-sample.json').read_text())['status'],'EXITED')
 
     def test_insufficient_query_budget_never_starts_profiler(self):
         with TemporaryDirectory() as temp, patch.object(p.time,'monotonic',return_value=100), \
              patch.object(p.subprocess,'Popen') as launched:
             out=Path(temp)
-            self.assertIsNone(p.profile_command(out,['exact-tool'],deadline=109))
+            self.assertIsNone(p.profile_command(out,['exact-tool'],deadline=103))
             launched.assert_not_called()
-            self.assertEqual(json.loads((out/'spindump.json').read_text())['status'],
+            self.assertEqual(json.loads((out/'query-sample.json').read_text())['status'],
                              'NOT_STARTED_INSUFFICIENT_QUERY_BUDGET')
 
     def test_profiler_budget_is_shortened_not_query_deadline_extended(self):
         with TemporaryDirectory() as temp, patch.object(p.time,'monotonic',return_value=100):
             out=Path(temp);caller=SimpleNamespace(pid=99,wait=unittest.mock.Mock(return_value=0),poll=lambda:0)
             with patch.object(p.subprocess,'Popen',return_value=caller):
-                self.assertEqual(p.profile_command(out,['exact-tool'],deadline=110),0)
-            caller.wait.assert_called_once_with(timeout=8.75)
+                self.assertEqual(p.profile_command(out,['exact-tool'],deadline=107),0)
+            caller.wait.assert_called_once_with(timeout=5.75)
+
+    def test_failed_direct_reap_is_retained_without_an_unbounded_wait(self):
+        with TemporaryDirectory() as temp, patch.object(p.time,'monotonic',return_value=100):
+            caller=SimpleNamespace(pid=99,wait=unittest.mock.Mock(side_effect=p.subprocess.TimeoutExpired('sample',1)),
+                terminate=unittest.mock.Mock(),kill=unittest.mock.Mock(),poll=lambda:None)
+            out=Path(temp)
+            with patch.object(p.subprocess,'Popen',return_value=caller):
+                self.assertIsNone(p.profile_command(out,['sample','exact-tool','100'],deadline=120))
+            self.assertEqual(caller.wait.call_args_list,[unittest.mock.call(timeout=8),
+                             unittest.mock.call(timeout=1),unittest.mock.call(timeout=1)])
+            record=json.loads((out/'query-sample.json').read_text())
+            self.assertEqual(record['status'],'TIMED_OUT_DIRECT_REAP_INCOMPLETE')
+            self.assertFalse(record['direct_child_reaped'])
 
     def test_script_child_exit_is_skipped_but_live_argv_failure_is_not(self):
         parent=info();child=info(pid=101,ppid=100,start_sec=1001)

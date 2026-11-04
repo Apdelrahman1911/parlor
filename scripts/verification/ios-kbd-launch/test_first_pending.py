@@ -19,15 +19,19 @@ class FirstPendingControls(unittest.TestCase):
     def execute(self, *, finish_at=None, state=None):
         clock = SimpleNamespace(now=1000.0)
         child = SimpleNamespace(pid=123, returncode=None, killed=False)
-        def communicate(timeout=None):
-            if timeout is None:
-                return b'', b''
+        def wait(timeout=None):
+            if child.killed:
+                return -9
+            if child.returncode is not None:
+                return child.returncode
             clock.now += timeout
             if finish_at is not None and clock.now >= 1000 + finish_at:
                 child.returncode = 0
-                return b'2565\n', b''
+                child.stdout.write(b'2565\n')
+                child.stdout.flush()
+                return 0
             raise p.subprocess.TimeoutExpired(['owned-query'], timeout)
-        child.communicate = communicate
+        child.wait = wait
         child.kill = lambda: setattr(child, 'killed', True)
         child.poll = lambda: -9 if child.killed else child.returncode
         info = SimpleNamespace(pid=123, uid=os.getuid(), ppid=os.getpid(),
@@ -39,11 +43,16 @@ class FirstPendingControls(unittest.TestCase):
             backend = SimpleNamespace(_basic=lambda pid: info, _path=lambda pid: str(tool),
                                       _pids=lambda: self.fail('No Simulator parent: process scan forbidden'))
             state = {'attempted': False} if state is None else state
+            def launch(argv, **streams):
+                self.assertNotEqual(streams['stdout'], p.subprocess.PIPE)
+                self.assertNotEqual(streams['stderr'], p.subprocess.PIPE)
+                child.stdout = streams['stdout']
+                return child
             with patch.object(p.Path, 'resolve', return_value=tool), \
                  patch.dict(os.environ, {'DEVELOPER_DIR': '/pinned'}), \
                  patch.object(p.time, 'time', side_effect=lambda: clock.now), \
                  patch.object(p.time, 'monotonic', side_effect=lambda: clock.now), \
-                 patch.object(p.subprocess, 'Popen', return_value=child) as opened, \
+                 patch.object(p.subprocess, 'Popen', side_effect=launch) as opened, \
                  patch.object(p, 'profile_command', return_value=0) as sampled:
                 code, _ = p.observe_print(out, ['owned-query'], backend, None, None,
                                          label='managerpid', capture_state=state, trusted_tools=(str(tool),))
@@ -60,6 +69,8 @@ class FirstPendingControls(unittest.TestCase):
         self.assertEqual((profiles, opens), (1, 1))
         self.assertTrue(state['attempted'])
         self.assertTrue(record['direct_child_reaped'])
+        self.assertEqual(record['stream_transport'], 'PRIVATE_TEMPORARY_FILES_NOT_PIPE_EOF')
+        self.assertEqual(record['cleanup_wait_limit_seconds'], 1)
         self.assertEqual(target['scope'], 'direct-query-dispatcher-not-keyboard')
         self.assertEqual(target['query_argv'], ['owned-query'])
         self.assertEqual(target['original_deadline_seconds'], 20)
