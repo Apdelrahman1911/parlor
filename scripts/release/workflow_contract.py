@@ -356,7 +356,7 @@ def verify_windows_checkout(text: str) -> None:
         fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
 
 
-HOSTED_CAPACITY_SCRIPT_SHA256 = 'ca33cfec1152c335729f57ce0e39f4d20a0e904ba2085a69f3786b95691d9331'
+HOSTED_CAPACITY_SCRIPT_SHA256 = 'ae73036a1e587ceebef5e5bca35d1839d5032829b665c09f6e5175dcf2fd5169'
 
 
 def verify_hosted_linux_capacity(job: str) -> None:
