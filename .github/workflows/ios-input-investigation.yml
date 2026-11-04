@@ -81,10 +81,12 @@ jobs:
             date -u
             uname -a
             java -version
-            "${ANDROID_HOME}/emulator/emulator" -version
-            "${ANDROID_HOME}/emulator/emulator" -help-gpu
             cat "${ANDROID_HOME}/emulator/source.properties"
             cat "${ANDROID_HOME}/system-images/android-34/google_apis/x86_64/source.properties"
+            # Select the same headless engine as the managed-device invocation.
+            # A GUI tool query can fail on free images without libpulse/Qt.
+            "${ANDROID_HOME}/emulator/emulator" -no-window -version
+            "${ANDROID_HOME}/emulator/emulator" -no-window -help-gpu
             df -B1 "$HOME" "$RUNNER_TEMP" "$GITHUB_WORKSPACE"
             free -b
           } 2>&1 | tee build/ci-evidence/api34-startup/toolchain-and-resources.log
@@ -114,7 +116,7 @@ jobs:
           root.mkdir(parents=True, exist_ok=True)
           rows = []
           # Do not export userdata, snapshots, credentials, or arbitrary emulator files.
-          for parent in [Path.home()/'.android/avd', Path.home()/'.android/avd/gradle-managed']:
+          for parent in [Path.home()/'.android/avd', Path.home()/'.android/avd/gradle-managed', Path.home()/'.gradle/avd']:
               for name in ['dev34_google_apis_x86_64_Pixel_2.ini', 'dev34_google_apis_x86_64_Pixel_2.avd/config.ini']:
                   p = parent/name
                   if p.is_file() and not p.is_symlink() and p.stat().st_size <= 1024*1024:
