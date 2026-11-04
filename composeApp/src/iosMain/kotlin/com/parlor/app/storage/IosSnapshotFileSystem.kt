@@ -102,6 +102,7 @@ internal class IosSnapshotFileSystem(
             ) {
                 throw IllegalStateException("Couldn't create protected snapshot directory")
             }
+            repairCompleteSnapshotProtection(fileManager, directory)
             backupExcluder(NSURL.fileURLWithPath(directory, isDirectory = true))
             directory
         }
@@ -176,6 +177,9 @@ internal class IosSnapshotFileSystem(
         val path = filePath(name)
         if (!fileManager.fileExistsAtPath(path)) return migrateLegacy(name)
 
+        // Older builds can leave plaintext here. Protect the existing item
+        // before its bounded migration read; never silently accept weak metadata.
+        repairCompleteSnapshotProtection(fileManager, path)
         val protectedBytes = readBytes(path, MAX_PROTECTED_SNAPSHOT_BYTES)
         return when {
             protectedBytes.hasMagic() -> {
@@ -361,6 +365,8 @@ internal class IosSnapshotFileSystem(
 
     private fun writeProtected(name: String, protectedBytes: ByteArray) {
         val path = filePath(name)
+        // Revalidate even when basePath was initialized by an earlier operation.
+        requireCompleteSnapshotProtection(fileManager, basePath)
         val data = protectedBytes.toNSData()
         memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
@@ -370,6 +376,7 @@ internal class IosSnapshotFileSystem(
                 throw IllegalStateException("Couldn't atomically write protected snapshot")
             }
         }
+        requireCompleteSnapshotProtection(fileManager, path)
         backupExcluder(NSURL.fileURLWithPath(path))
     }
 
