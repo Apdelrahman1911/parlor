@@ -8,6 +8,7 @@ import ctypes
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import re
 import struct
@@ -135,7 +136,7 @@ def attested_dispatchers(out):
     """
     native = str(Path(CORE_SIMCTL).resolve(strict=True))
     code, _ = query(out, "verify-native-dispatcher", ["/usr/bin/codesign", "--verify", "--strict",
-                    "-R", "anchor apple", native], 10)
+                    "-R", "=anchor apple", native], 10)
     if code != 0:
         raise RuntimeError("Observed native simctl did not pass Apple signature verification; no profile grant")
     tools = tuple(str(Path(tool).resolve(strict=True)) for tool in (
@@ -239,6 +240,8 @@ def main():
     out = ROOT / "build/ci-evidence/kbd-launch"
     out.mkdir(parents=True, exist_ok=False)
     save(out, "source", dict(source=apple.source(ROOT), task=task, simulator=device["udid"],
+         runner_label=os.environ["PARLOR_NATIVE_RUNNER_LABEL"], macos=platform.mac_ver()[0],
+         architecture=platform.machine(),
          runtime=plan["runtime"], device_type=plan["device_type"], app_built=False,
          input_executed=False, application_qualified=False, physical_verified=False))
     udid, boot_time = device["udid"], time.time()

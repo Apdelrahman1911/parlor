@@ -28,7 +28,7 @@ class ForwardedDispatcherControls(unittest.TestCase):
                 allowed = p.attested_dispatchers(out)
             self.assertEqual(allowed, tuple(map(str, tools)))
             verified.assert_called_once_with(out, 'verify-native-dispatcher',
-                ['/usr/bin/codesign', '--verify', '--strict', '-R', 'anchor apple', str(tools[2])], 10)
+                ['/usr/bin/codesign', '--verify', '--strict', '-R', '=anchor apple', str(tools[2])], 10)
             record = json.loads((out / 'trusted-dispatcher-tools.json').read_text())
             self.assertEqual(record['native_signature_requirement'], 'anchor apple')
             self.assertEqual(record['matching'], 'samefile')
