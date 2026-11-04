@@ -22,13 +22,26 @@ class InitializationControls(unittest.TestCase):
             with patch.object(p, 'SDK_STUB_SHA256', hashlib.sha256(stub.read_bytes()).hexdigest()), \
                  patch.dict(os.environ, {'DEVELOPER_DIR': '/pinned/Xcode'}), \
                  patch.object(p, 'query', return_value=(0, b'')) as queried:
-                self.assertEqual(p.initialized_native_query_tool(out, tools), tools[2])
+                self.assertEqual(p.initialized_native_query_tool(out, tools, '1051.55'), tools[2])
             queried.assert_called_once_with(out, 'xcode-first-launch-status',
                 ['/pinned/Xcode/usr/bin/xcodebuild', '-checkFirstLaunchStatus'], 20)
             grant = json.loads((out / 'native-query-grant.json').read_text())
             self.assertFalse(grant['version_equality_required'])
             self.assertFalse(grant['mutating_first_launch_command_executed'])
             self.assertEqual(grant['executable'], tools[2])
+
+    def test_matching_sdk_version_uses_declared_direct_exec_without_unnecessary_status_command(self):
+        with TemporaryDirectory() as temp:
+            out = Path(temp); stub = out / 'selected-stub'; stub.write_bytes(b'unit fixture')
+            tools = ('xcrun', str(stub), '/exact/attested/native')
+            with patch.object(p, 'SDK_STUB_SHA256', hashlib.sha256(stub.read_bytes()).hexdigest()), \
+                 patch.object(p, 'query') as queried:
+                self.assertEqual(p.initialized_native_query_tool(out, tools, '1051.17.8'), tools[2])
+            queried.assert_not_called()
+            grant = json.loads((out / 'native-query-grant.json').read_text())
+            self.assertIsNone(grant['initialization_exit_code'])
+            self.assertEqual(grant['strategy'], 'matching-version-direct-exec-declared-by-sdk-shim')
+            self.assertFalse(grant['mutating_first_launch_command_executed'])
 
     def test_failed_or_timed_out_initialization_never_grants_a_native_query_or_repairs(self):
         for code in (None, 1, 3):
@@ -37,8 +50,8 @@ class InitializationControls(unittest.TestCase):
                 with patch.object(p, 'SDK_STUB_SHA256', hashlib.sha256(stub.read_bytes()).hexdigest()), \
                      patch.dict(os.environ, {'DEVELOPER_DIR': '/pinned/Xcode'}), \
                      patch.object(p, 'query', return_value=(code, b'')) as queried:
-                    with self.assertRaisesRegex(RuntimeError, 'not initialized'):
-                        p.initialized_native_query_tool(out, ('xcrun', str(stub), '/exact/native'))
+                    with self.assertRaisesRegex(RuntimeError, 'UNKNOWN' if code is None else 'not initialized'):
+                        p.initialized_native_query_tool(out, ('xcrun', str(stub), '/exact/native'), '1051.55')
                 self.assertEqual(queried.call_count, 1)
                 self.assertFalse((out / 'native-query-grant.json').exists())
 
@@ -47,7 +60,7 @@ class InitializationControls(unittest.TestCase):
             out = Path(temp); stub = out / 'selected-stub'; stub.write_bytes(b'other fixture')
             with patch.object(p, 'query') as queried:
                 with self.assertRaisesRegex(RuntimeError, 'shim changed'):
-                    p.initialized_native_query_tool(out, ('xcrun', str(stub), '/exact/native'))
+                    p.initialized_native_query_tool(out, ('xcrun', str(stub), '/exact/native'), '1051.55')
             queried.assert_not_called()
             self.assertFalse((out / 'native-query-grant.json').exists())
 

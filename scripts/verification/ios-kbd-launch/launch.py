@@ -156,18 +156,25 @@ def attested_dispatchers(out):
     return tools
 
 
-def initialized_native_query_tool(out, tools):
+def initialized_native_query_tool(out, tools, observed_version):
     # The actual hash-pinned SDK shim always execs this forwarder after its
     # first-launch check, even if installed CoreSimulator is newer. Equality
     # is not established as an Apple compatibility requirement.
     if hashlib.sha256(Path(tools[1]).read_bytes()).hexdigest() != SDK_STUB_SHA256:
         raise RuntimeError("Selected SDK shim changed; no direct query grant")
-    code, _ = query(out, "xcode-first-launch-status", [
-        os.environ["DEVELOPER_DIR"] + "/usr/bin/xcodebuild", "-checkFirstLaunchStatus"], 20)
-    if code != 0:
-        raise RuntimeError("Selected Xcode is not initialized; no native query or automatic repair")
+    code = None
+    strategy = "matching-version-direct-exec-declared-by-sdk-shim"
+    if observed_version != "1051.17.8":
+        strategy = "explicit-selected-xcode-initialization-readback"
+        code, _ = query(out, "xcode-first-launch-status", [
+            os.environ["DEVELOPER_DIR"] + "/usr/bin/xcodebuild", "-checkFirstLaunchStatus"], 20)
+        if code is None:
+            raise RuntimeError("Selected Xcode initialization status is UNKNOWN after timeout; no automatic repair")
+        if code != 0:
+            raise RuntimeError("Selected Xcode is not initialized; no native query or automatic repair")
     save(out, "native-query-grant", dict(executable=tools[2],
          selected_sdk_stub_sha256=SDK_STUB_SHA256, initialization_exit_code=code,
+         observed_core_version=observed_version, strategy=strategy,
          provenance="exact forwarder in observed SDK shim plus prior Apple signature verification",
          version_equality_required=False, mutating_first_launch_command_executed=False))
     return tools[2]
@@ -412,7 +419,7 @@ def main():
          expected_by_observed_stub="1051.17.8", observed=version,
          matches_observed_stub=version == "1051.17.8", explicit_first_launch_command_executed=False,
          prior_shim_branch_execution="NOT_OBSERVED"))
-    native_query_tool = initialized_native_query_tool(out, trusted_tools)
+    native_query_tool = initialized_native_query_tool(out, trusted_tools, version)
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
     code, raw = observe_print(out, [native_query_tool, "spawn", udid, "launchctl", "managerpid"],
                               backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)
