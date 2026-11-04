@@ -125,11 +125,12 @@ def is_direct_dispatcher(info, original, path, trusted_tools, python_pid):
         return False
 
 
-def observe_print(out, argv, backend, parent, runtime_root):
+def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state):
     trusted_tools = tuple(str(Path(tool).resolve(strict=True)) for tool in (
         "/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl"))
-    save(out, "trusted-dispatcher-tools", dict(executables=trusted_tools,
-         matching="samefile", toolchain=os.environ["DEVELOPER_DIR"]))
+    if not (out / "trusted-dispatcher-tools.json").exists():
+        save(out, "trusted-dispatcher-tools", dict(executables=trusted_tools,
+             matching="samefile", toolchain=os.environ["DEVELOPER_DIR"]))
     started, deadline, capture = time.time(), time.monotonic() + 20, None
     child = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     original = backend._basic(child.pid)
@@ -148,21 +149,24 @@ def observe_print(out, argv, backend, parent, runtime_root):
                 break
             except subprocess.TimeoutExpired:
                 pass
-            if capture is not None or time.time() - started < 5:
+            if capture_state["attempted"] or time.time() - started < 5:
                 continue
             candidates = []
-            for pid in backend._pids():
-                info = backend._basic(pid)
-                if not own_child(info, parent, started - 0.1) or bytes(info.comm) != b"launchctl":
-                    continue
-                try:
-                    path = backend._path(pid)
-                except RuntimeError:
-                    if backend._basic(pid) is None:
+            # A stalled managerpid cannot supply a Simulator parent. Profile
+            # only our attested direct dispatcher, never guess a keyboard PID.
+            if parent is not None:
+                for pid in backend._pids():
+                    info = backend._basic(pid)
+                    if not own_child(info, parent, started - 0.1) or bytes(info.comm) != b"launchctl":
                         continue
-                    raise
-                if basic_key(backend._basic(pid)) == basic_key(info):
-                    candidates.append((info, path))
+                    try:
+                        path = backend._path(pid)
+                    except RuntimeError:
+                        if backend._basic(pid) is None:
+                            continue
+                        raise
+                    if basic_key(backend._basic(pid)) == basic_key(info):
+                        candidates.append((info, path))
             direct_info = backend._basic(child.pid)
             direct_path = backend._path(child.pid)
             recognized = is_direct_dispatcher(direct_info, original, direct_path, trusted_tools, os.getpid())
@@ -173,13 +177,17 @@ def observe_print(out, argv, backend, parent, runtime_root):
             if not recognized:
                 raise RuntimeError("Unrecognized direct native query dispatcher; recorded identity is not a profile grant")
             direct = (direct_info, direct_path)
-            (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
+            if parent is None:
+                (target, path), scope = direct, "direct-query-dispatcher-not-keyboard"
+            else:
+                (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
             save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
                  start=[target.start_sec,target.start_usec], executable=path, scope=scope,
                  observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
             sample = ["/usr/bin/sudo", "-n", "/usr/sbin/spindump", str(target.pid), "1", "10",
                       "-onlyTarget", "-noText", "-noProcessingWhileSampling", "-timelimit", "8",
                       "-o", str(out / "query.raw.spindump")]
+            capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
             sample_code, _ = query(out, "spindump", sample, 12)
             later = backend._basic(target.pid)
             capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
@@ -189,8 +197,10 @@ def observe_print(out, argv, backend, parent, runtime_root):
         if child.poll() is None:
             child.kill()
             stdout, stderr = child.communicate()
-        (out / "service-before.stderr").write_bytes(stderr)
-        save(out, "service-before", dict(argv=argv, status=status, exit_code=code,
+        (out / (label + ".stderr")).write_bytes(stderr)
+        if label == "managerpid":
+            (out / (label + ".stdout")).write_bytes(stdout)
+        save(out, label, dict(argv=argv, status=status, exit_code=code,
              start_epoch=started, end_epoch=time.time(), stdout_sha256=hashlib.sha256(stdout).hexdigest(),
              direct_child_reaped=True, capture=capture, service_activation=False))
     return code, stdout
@@ -219,10 +229,13 @@ def main():
         code, _ = query(out, label, ["/usr/bin/xcrun", "simctl", *args], 180)
         if code != 0:
             raise RuntimeError("Owned simulator boot failed")
-    code, raw = query(out, "managerpid", ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl", "managerpid"])
+    backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
+    code, raw = observe_print(out, ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl", "managerpid"],
+                              backend, None, None, label="managerpid", capture_state=capture_state)
+    if code is None:
+        raise RuntimeError("Native managerpid timed out; no keyboard/service identity or app causality established")
     if code != 0 or not re.fullmatch(rb"[1-9][0-9]*", raw.strip()):
-        raise RuntimeError("Exact Simulator manager PID unavailable")
-    backend = DarwinWorkerBackend()
+        raise RuntimeError("Native managerpid exited without a valid exact Simulator PID")
     parent = backend._basic(int(raw))
     path = backend._path(int(raw))
     if (parent is None or parent.uid != os.getuid() or parent.start_sec < int(boot_time) - 1 or
@@ -234,7 +247,8 @@ def main():
     control = ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl"]
     # Run the exact observed failing read once, unchanged20s platform deadline.
     # Do not equate a timeout with a missing service or issue a kickstart.
-    code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent)
+    code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent,
+                              capture_state=capture_state)
     if code is None:
         raise RuntimeError("Native service print timed out; service existence and app causality remain unknown")
     if code != 0:

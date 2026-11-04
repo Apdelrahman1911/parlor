@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_dispatcher.py -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_first_pending.py -v
           test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
           mkdir -p build/ci-evidence
           xcodebuild -version | tee build/ci-evidence/xcode-version.txt
@@ -70,7 +70,7 @@ jobs:
           claim = apple.validate_claim(root, owned, task, 'apple-ui', apple.configuration(root))
           print(sim.create(owned, claim, OriginalRuntime()))
           PY
-      - name: Observe the actual timed-out native print once without changing its deadline
+      - name: Observe the first actual pending native query once without changing its deadline
         id: run
         run: /usr/bin/python3 -B scripts/verification/ios-kbd-launch/launch.py
       - name: Retire only owned UI workers and simulator, preserving failed results
