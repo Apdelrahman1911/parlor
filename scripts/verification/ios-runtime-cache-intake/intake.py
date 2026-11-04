@@ -12,7 +12,7 @@ import time
 
 
 DEVELOPER = '/Applications/Xcode_26.3.app/Contents/Developer'
-AGENTS_SHA = 'd9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6d7a5c4c7dfbc02b'
+AGENTS_SHA = 'd9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b'
 COMMANDS = {
     'xcode': ['xcrun', 'xcodebuild', '-version'],
     'simctl-path': ['xcrun', '--find', 'simctl'],

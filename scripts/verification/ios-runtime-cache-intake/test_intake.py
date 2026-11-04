@@ -1,5 +1,8 @@
 """Portable intake controls only; no Apple command or application execution."""
 from pathlib import Path
+import hashlib
+import re
+import subprocess
 from tempfile import TemporaryDirectory
 import unittest
 
@@ -7,6 +10,15 @@ import intake
 
 
 class IntakeTest(unittest.TestCase):
+    def test_agents_digest_is_complete_sha256_not_a_transcription_fragment(self):
+        self.assertIsNotNone(re.fullmatch(r'[0-9a-f]{64}', intake.AGENTS_SHA))
+
+    def test_agents_digest_binds_actual_unchanged_file_and_git_blob(self):
+        root = Path(intake.__file__).resolve().parents[3]
+        committed = subprocess.check_output(['git', 'show', 'HEAD:AGENTS.md'], cwd=root)
+        self.assertEqual(hashlib.sha256(committed).hexdigest(), intake.AGENTS_SHA)
+        self.assertEqual((root / 'AGENTS.md').read_bytes(), committed)
+
     def test_usage_exit_is_not_accepted_without_actual_matching_native_usage(self):
         for code in [0, 64]:
             intake.require_cache_usage(code, 'Usage: simctl runtime dyld_shared_cache <operation>')
