@@ -27,6 +27,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class IosStorageSafetyTest {
@@ -115,6 +116,34 @@ class IosStorageSafetyTest {
             }
             assertContentEquals(plaintext, readBoundedSnapshotBytes(legacyPath, plaintext.size))
             assertTrue(fileManager.fileExistsAtPath(protectedPath))
+        } finally {
+            fileManager.removeItemAtPath(protectedPath, error = null)
+            fileManager.removeItemAtPath(legacyPath, error = null)
+        }
+    }
+
+    @Test
+    fun explicitDiscardRemovesBothCopiesWithoutInitializingProtection() {
+        val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
+        val protectedPath = protectedSnapshotPath(name)
+        val legacyPath = legacySnapshotPath(name)
+        val bytes = byteArrayOf(4, 5, 6)
+        var protectionAttempts = 0
+        try {
+            writeBytes(protectedPath, bytes)
+            writeBytes(legacyPath, bytes)
+            val filesystem = IosSnapshotFileSystem(
+                backupExcluder = {
+                    protectionAttempts++
+                    error("Discard must not initialize directory protection")
+                },
+            )
+
+            runBlocking { filesystem.delete(name) }
+
+            assertFalse(fileManager.fileExistsAtPath(protectedPath))
+            assertFalse(fileManager.fileExistsAtPath(legacyPath))
+            assertEquals(0, protectionAttempts)
         } finally {
             fileManager.removeItemAtPath(protectedPath, error = null)
             fileManager.removeItemAtPath(legacyPath, error = null)

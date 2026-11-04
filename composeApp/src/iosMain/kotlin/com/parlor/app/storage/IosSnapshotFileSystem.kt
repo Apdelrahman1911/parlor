@@ -73,7 +73,8 @@ internal class IosSnapshotFileSystem(
     private val backupExcluder: (NSURL) -> Unit = ::excludeSnapshotFromBackup,
 ) : SnapshotFileSystem {
 
-    private val basePath: String by lazy {
+    /** Resolve the location without creating or qualifying the snapshots directory. */
+    private val snapshotDirectoryPath: String by lazy {
         memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
             error.value = null
@@ -86,7 +87,14 @@ internal class IosSnapshotFileSystem(
             ) ?: throw IllegalStateException("Application Support directory unavailable")
             val rootPath = root.path
                 ?: throw IllegalStateException("Application Support directory has no path")
-            val directory = "$rootPath/Parlor/snapshots"
+            "$rootPath/Parlor/snapshots"
+        }
+    }
+
+    private val basePath: String by lazy {
+        memScoped {
+            val directory = snapshotDirectoryPath
+            val error = alloc<ObjCObjectVar<NSError?>>()
             val protectionKey = NSFileProtectionKey
                 ?: throw IllegalStateException("iOS file-protection key unavailable")
             val completeProtection = NSFileProtectionComplete
@@ -144,7 +152,9 @@ internal class IosSnapshotFileSystem(
     override suspend fun delete(name: String) {
         withContext(dispatcher) {
             requireSafeSnapshotFileName(name)
-            val path = filePath(name)
+            // Discard neither reads secrets nor installs new data. Do not make
+            // removal depend on the protection that prevented Retry/Load.
+            val path = "$snapshotDirectoryPath/$name"
             deletePathIfPresent(path)
             deleteLegacy(name)
         }
