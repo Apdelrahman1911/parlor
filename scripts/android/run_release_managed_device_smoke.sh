@@ -48,6 +48,7 @@ keytool -genkeypair \
 cd "$repo_root"
 gradle_command=(./gradlew productionAndroidRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=release \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
@@ -74,6 +75,7 @@ fi
 # without changing the optimized Release app or dropping its smoke tests.
 navigation_command=(./gradlew productionAndroidNavigationRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=debug \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
