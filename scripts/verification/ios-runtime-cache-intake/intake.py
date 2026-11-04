@@ -19,20 +19,18 @@ COMMANDS = {
     'runtime-help': ['xcrun', 'simctl', 'help', 'runtime'],
     'runtime-images': ['xcrun', 'simctl', 'runtime', 'list', '--json'],
     'available-runtimes': ['xcrun', 'simctl', 'list', 'runtimes', '--json'],
-    # No action is requested: inspect the native subcommand usage only.
-    'cache-help': ['xcrun', 'simctl', 'runtime', 'dyld_shared_cache'],
-    'cache-print': ['xcrun', 'simctl', 'runtime', 'dyld_shared_cache', 'print'],
 }
 
 
-def cache_print_advertised(help_text: str) -> bool:
-    """Do not guess a selector or execute a mutating cache operation."""
-    return bool(re.search(r'^\s*print\s+(?:Print|Display|Show)\b', help_text, re.MULTILINE))
+def cache_operations(help_text: str) -> list[str]:
+    """Inspect successful top-level usage, never invoke a guessed selector.
 
-
-def require_cache_usage(code: int, text: str) -> None:
-    if code not in {0, 64} or 'dyld_shared_cache' not in text or not text.strip():
-        raise ValueError('Missing or unrelated native cache usage')
+    Xcode 26.3's bare dyld_shared_cache returns runtime usage with exit 117.
+    Its advertised update/remove operations cannot provide read-only state.
+    """
+    if 'Usage: simctl runtime <operation> <arguments>' not in help_text:
+        raise ValueError('Missing or unrelated native runtime usage')
+    return re.findall(r'^\s*dyld_shared_cache ([a-z_]+)\b', help_text, re.MULTILINE)
 
 
 def require_toolchain(version: str, simctl_path: str) -> None:
@@ -66,7 +64,9 @@ def main() -> None:
     target.mkdir(mode=0o700)
     receipt = dict(status='INCOMPLETE', head=head, tree=tree,
                    run=os.environ['GITHUB_RUN_ID'], attempt=os.environ['GITHUB_RUN_ATTEMPT'],
-                   commands=[], application_executed=False, cache_modified=False,
+                   commands=[], application_executed=False,
+                   explicit_cache_mutation_requested=False,
+                   background_cache_effects_measured=False,
                    limitation='A current runner inventory cannot establish historical startup causality.')
 
     def save() -> None:
@@ -74,7 +74,7 @@ def main() -> None:
         temporary.write_text(json.dumps(receipt, indent=2) + '\n')
         temporary.replace(target / 'receipt.json')
 
-    def query(label: str, *, usage: bool = False) -> str:
+    def query(label: str) -> str:
         args = COMMANDS[label]
         started = time.monotonic()
         stdout, stderr = target / (label + '.stdout'), target / (label + '.stderr')
@@ -88,9 +88,7 @@ def main() -> None:
                    stderr_sha256=hashlib.sha256(stderr.read_bytes()).hexdigest())
         receipt['commands'].append(row)
         save()
-        # Apple's no-action help may return EX_USAGE. This is recorded usage,
-        # not a successful test or accepted cache operation.
-        if completed.returncode not in ({0, 64} if usage else {0}):
+        if completed.returncode != 0:
             raise RuntimeError('Native query failed: ' + label)
         return stdout.read_text() + '\n' + stderr.read_text()
 
@@ -99,16 +97,14 @@ def main() -> None:
         version = query('xcode')
         path = query('simctl-path')
         require_toolchain(version, path)
-        query('runtime-help')
+        help_text = query('runtime-help')
+        receipt['advertised_cache_operations'] = cache_operations(help_text)
         json.loads(query('runtime-images'))
         json.loads(query('available-runtimes'))
-        help_text = query('cache-help', usage=True)
-        require_cache_usage(receipt['commands'][-1]['exit_code'], help_text)
-        receipt['cache_print_advertised'] = cache_print_advertised(help_text)
-        if receipt['cache_print_advertised']:
-            query('cache-print')
-        else:
-            receipt['remaining_boundary'] = 'Native usage did not advertise the closed read-only print selector'
+        receipt['remaining_boundary'] = (
+            'Runtime image inventory is not cache validity. No cache operation is requested; '
+            'advertised_cache_operations records the native usage, not an executed cache query.'
+        )
         receipt['status'] = 'COLLECTED_READ_ONLY_NOT_RUNTIME_QUALIFICATION'
     except Exception as error:
         receipt.update(status='FAILED_INTAKE', error=type(error).__name__ + ': ' + str(error))

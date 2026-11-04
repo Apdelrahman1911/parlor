@@ -24,11 +24,11 @@ jobs:
           persist-credentials: false
       - name: Portable read-only selector and ownership controls
         run: /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-runtime-cache-intake -v
-      - name: Read actual pinned-Xcode usage and installed runtime caches
+      - name: Read pinned-Xcode usage and installed runtime images (not cache validity)
         env:
           PARLOR_CACHE_INTAKE_OUTPUT: ${{ runner.temp }}/${{ env.PARLOR_CACHE_INTAKE_NAME }}
         run: /usr/bin/python3 -B scripts/verification/ios-runtime-cache-intake/intake.py
-      - name: Preserve read-only native outcomes without app or cache mutation
+      - name: Preserve native outcomes without app execution or requested cache mutation
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

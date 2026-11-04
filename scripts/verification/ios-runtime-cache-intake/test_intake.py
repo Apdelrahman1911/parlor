@@ -19,19 +19,23 @@ class IntakeTest(unittest.TestCase):
         self.assertEqual(hashlib.sha256(committed).hexdigest(), intake.AGENTS_SHA)
         self.assertEqual((root / 'AGENTS.md').read_bytes(), committed)
 
-    def test_usage_exit_is_not_accepted_without_actual_matching_native_usage(self):
-        for code in [0, 64]:
-            intake.require_cache_usage(code, 'Usage: simctl runtime dyld_shared_cache <operation>')
-        for code, text in [(1, 'dyld_shared_cache'), (64, ''), (64, 'Usage: another tool')]:
-            with self.subTest(code=code, text=text), self.assertRaises(ValueError):
-                intake.require_cache_usage(code, text)
+    def test_captured_xcode263_usage_advertises_only_mutating_cache_operations(self):
+        # Exact relevant lines from run41880824238 runtime-help.stderr.
+        # The failed bare helper returned the same usage, with exit117.
+        usage = ('Usage: simctl runtime <operation> <arguments>\n'
+                 '\tdyld_shared_cache update (<runtime> || --all) [--force]\n'
+                 '\tdyld_shared_cache remove (<runtime> || --all)\n')
+        self.assertEqual(intake.cache_operations(usage), ['update', 'remove'])
+        self.assertNotIn('cache-help', intake.COMMANDS)
+        self.assertNotIn('cache-print', intake.COMMANDS)
 
-    def test_only_native_advertised_read_only_print_is_selected(self):
-        self.assertTrue(intake.cache_print_advertised('  print    Print cache information.\n'))
-        for text in ['update Update caches', 'printable Print caches',
-                     'Example: print Print caches', 'print Update caches', '', 'list List caches']:
-            with self.subTest(text=text):
-                self.assertFalse(intake.cache_print_advertised(text))
+    def test_unrelated_or_example_usage_cannot_advertise_a_cache_operation(self):
+        for text in ['', 'Usage: another tool', 'dyld_shared_cache print']:
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                intake.cache_operations(text)
+        usage = ('Usage: simctl runtime <operation> <arguments>\n'
+                 'Example: dyld_shared_cache print\nprint Print cache information\n')
+        self.assertEqual(intake.cache_operations(usage), [])
 
     def test_toolchain_requires_exact_version_build_and_tool_path(self):
         path = intake.DEVELOPER + '/usr/bin/simctl'
@@ -54,7 +58,7 @@ class IntakeTest(unittest.TestCase):
                     intake.output_path(str(invalid), str(root))
 
     def test_no_update_force_boot_launch_or_test_commands_exist(self):
-        self.assertEqual(len(intake.COMMANDS), 7)
+        self.assertEqual(len(intake.COMMANDS), 5)
         for args in intake.COMMANDS.values():
             self.assertFalse(set(args) & {'update', '--force', '--all', 'boot', 'spawn', 'launch', 'test'})
 
