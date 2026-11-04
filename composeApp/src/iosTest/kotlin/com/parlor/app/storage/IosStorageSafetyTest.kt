@@ -18,7 +18,10 @@ import platform.Foundation.NSData
 import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
+import platform.Foundation.NSNumber
 import platform.Foundation.NSTemporaryDirectory
+import platform.Foundation.NSURL
+import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUUID
 import platform.Foundation.NSUserDomainMask
 import platform.Foundation.create
@@ -27,6 +30,8 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class IosStorageSafetyTest {
@@ -76,6 +81,73 @@ class IosStorageSafetyTest {
     }
 
     @Test
+    fun currentDirectoryBackupExclusionFailurePrecedesProtectionAndDoesNotReadSecrets() {
+        val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
+        val path = protectedSnapshotPath(name)
+        val directory = path.substringBeforeLast('/')
+        val original = "PARSNAP".encodeToByteArray() + byteArrayOf(0, 16)
+        val failure = IllegalStateException("synthetic current backup-exclusion failure")
+        var exclusionAttempts = 0
+        var keyReads = 0
+        try {
+            writeBytes(path, original)
+            val filesystem = IosSnapshotFileSystem(
+                snapshotKeyReader = { keyReads++; null },
+                backupExcluder = { url ->
+                    if (url.path == directory) {
+                        exclusionAttempts++
+                        throw failure
+                    }
+                    excludeSnapshotFromBackup(url)
+                },
+            )
+            assertSame(failure, assertFailsWith<IllegalStateException> {
+                runBlocking { filesystem.read(name) }
+            })
+            assertEquals(1, exclusionAttempts)
+            assertEquals(0, keyReads)
+            assertContentEquals(original, readBoundedSnapshotBytes(path, original.size))
+            runBlocking { filesystem.delete(name) }
+            assertFalse(fileManager.fileExistsAtPath(path))
+            assertEquals(1, exclusionAttempts, "Discard must not retry failed exclusion")
+        } finally {
+            fileManager.removeItemAtPath(path, error = null)
+        }
+    }
+
+    @Test
+    fun rejectedCurrentReadStillExcludesItsDirectoryAndPreservesItsLastCopy() {
+        val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
+        val path = protectedSnapshotPath(name)
+        val directory = path.substringBeforeLast('/')
+        val original = "PARSNAP".encodeToByteArray() + byteArrayOf(0, 16)
+        var exclusionAttempts = 0
+        var keyReads = 0
+        try {
+            writeBytes(path, original)
+            val filesystem = IosSnapshotFileSystem(
+                snapshotKeyReader = { keyReads++; null },
+                backupExcluder = { url ->
+                    if (url.path == directory) exclusionAttempts++
+                    excludeSnapshotFromBackup(url)
+                },
+            )
+            assertFailsWith<SnapshotProtectionException> {
+                runBlocking { filesystem.read(name) }
+            }
+            assertEquals(1, exclusionAttempts)
+            val key = requireNotNull(NSURLIsExcludedFromBackupKey)
+            val values = requireNotNull(NSURL.fileURLWithPath(directory).resourceValuesForKeys(listOf(key), null))
+            assertTrue(requireNotNull(values[key] as? NSNumber).boolValue)
+            assertEquals(0, keyReads)
+            assertContentEquals(original, readBoundedSnapshotBytes(path, original.size))
+            assertTrue(fileManager.fileExistsAtPath(path))
+        } finally {
+            fileManager.removeItemAtPath(path, error = null)
+        }
+    }
+
+    @Test
     fun unreadableProtectedSnapshotPreservesMatchingLegacyPlaintext() {
         val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
         val protectedPath = protectedSnapshotPath(name)
@@ -115,6 +187,34 @@ class IosStorageSafetyTest {
             }
             assertContentEquals(plaintext, readBoundedSnapshotBytes(legacyPath, plaintext.size))
             assertTrue(fileManager.fileExistsAtPath(protectedPath))
+        } finally {
+            fileManager.removeItemAtPath(protectedPath, error = null)
+            fileManager.removeItemAtPath(legacyPath, error = null)
+        }
+    }
+
+    @Test
+    fun explicitDiscardRemovesBothCopiesWithoutInitializingProtection() {
+        val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
+        val protectedPath = protectedSnapshotPath(name)
+        val legacyPath = legacySnapshotPath(name)
+        val bytes = byteArrayOf(4, 5, 6)
+        var protectionAttempts = 0
+        try {
+            writeBytes(protectedPath, bytes)
+            writeBytes(legacyPath, bytes)
+            val filesystem = IosSnapshotFileSystem(
+                backupExcluder = {
+                    protectionAttempts++
+                    error("Discard must not initialize directory protection")
+                },
+            )
+
+            runBlocking { filesystem.delete(name) }
+
+            assertFalse(fileManager.fileExistsAtPath(protectedPath))
+            assertFalse(fileManager.fileExistsAtPath(legacyPath))
+            assertEquals(0, protectionAttempts)
         } finally {
             fileManager.removeItemAtPath(protectedPath, error = null)
             fileManager.removeItemAtPath(legacyPath, error = null)
