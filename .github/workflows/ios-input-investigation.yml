@@ -1,127 +1,160 @@
-name: iOS input investigation (not production qualification)
+name: iOS protection native negative tests (not protection qualification)
 
 on:
-  push:
-    branches: [diagnostic/ios-input-probe-2026-10-29, diagnostic/xcode-worker-inventory-2026-10-29, diagnostic/ios-xcresult-review-2026-10-29, diagnostic/ios-original-host-runtime-2026-10-29, fix/input-diagnostic-integration-2026-10-29]
   workflow_dispatch:
-    inputs:
-      source:
-        description: Exact original source commit, not the diagnostic harness commit
-        required: true
-        default: 841a0b0623b508eae103f79ba7b4e5773e6a8b4d
-      runtime:
-        description: Explicit installed runtime; never infer it from the SDK
-        required: true
-        default: com.apple.CoreSimulator.SimRuntime.iOS-18-5
-      device:
-        description: Explicit installed iPhone type
-        required: true
-        default: com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro
-      profile:
-        description: Catalog investigation, or exact original #267 Host source/runtime/device (no fallback)
-        type: choice
-        options: [catalog, original-host]
-        default: catalog
-
-concurrency:
-  group: parlor-ios-input-investigation-${{ github.ref }}
-  cancel-in-progress: false
 
 permissions:
   contents: read
 
+concurrency:
+  group: parlor-protection-native-negative-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
 jobs:
   ios:
-    name: Original / Compose / native diagnostic arms
-    # Standard public-repository runner only. No larger/self-hosted runner,
-    # artifact cache writes, signing credentials or production-check substitution.
+    name: Execute four new candidate native negative regressions
     runs-on: macos-15
-    timeout-minutes: ${{ github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && 14 || github.ref == 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29' && 10 || 190 }}
-    permissions:
-      contents: read
-      actions: read
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
-      PARLOR_INPUT_OUTPUT: parlor-pin03-${{ github.run_id }}-${{ github.run_attempt }}
-      PARLOR_INPUT_SOURCE: ${{ inputs.source || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && '9d4f369d2b1581f5c157b67cce3ff0fada49effa') || '841a0b0623b508eae103f79ba7b4e5773e6a8b4d' }}
-      PARLOR_INPUT_RUNTIME: ${{ inputs.runtime || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'com.apple.CoreSimulator.SimRuntime.iOS-26-2') || 'com.apple.CoreSimulator.SimRuntime.iOS-18-5' }}
-      PARLOR_INPUT_DEVICE: ${{ inputs.device || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro') || 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro' }}
-      PARLOR_INPUT_PROFILE: ${{ inputs.profile || (github.ref == 'refs/heads/diagnostic/ios-original-host-runtime-2026-10-29' && 'original-host') || 'catalog' }}
+    timeout-minutes: 55
     steps:
-      - name: Check out reviewed harness and original source history
+      - name: Check out frozen unqualified protection candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: 1df4273bd9edeec3c8537892faf5b4b66871bdce
           fetch-depth: 0
           persist-credentials: false
       - name: Set up JDK 21
-        if: github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
       - name: Restore reviewed dependencies without saving diagnostic state
-        if: github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/.gradle/caches/modules-2
             ~/.gradle/wrapper/dists
           key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
-      - name: Check source-copy, privacy, exact-result and native SDK controls
+      - name: Claim fresh output ownership
+        id: ownership
+        run: python3 -B -m scripts.ci.verification_hygiene prepare
+      - name: Record exact candidate and toolchain
         shell: bash
         run: |
-          /usr/bin/python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
-          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -v
-      - name: Execute one attempt per declared diagnostic arm
-        if: github.ref != 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29' && github.ref != 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 1df4273bd9edeec3c8537892faf5b4b66871bdce
+          test -z "$(git status --porcelain)"
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD HEAD^{tree} | tee build/ci-evidence/source.txt
+          git ls-tree -r HEAD > build/ci-evidence/source-tree.txt
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = 'Xcode 26.3'
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = 'Build version 17C529'
+          xcrun --sdk iphonesimulator --show-sdk-version > build/ci-evidence/sdk-version.txt
+          shasum -a 256 AGENTS.md > build/ci-evidence/agents.sha256
+          test "$(cut -d' ' -f1 build/ci-evidence/agents.sha256)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
+      - name: Claim owned native compilation cycle
+        id: aggregate_prepare
+        run: python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
+      - name: Link candidate native test executable
+        id: aggregate_run
         shell: bash
         run: |
-          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/run_pin03.py \
-            --source "$PARLOR_INPUT_SOURCE" --runtime "$PARLOR_INPUT_RUNTIME" \
-            --device "$PARLOR_INPUT_DEVICE" --profile "$PARLOR_INPUT_PROFILE" \
-            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
-      - name: Read installed Xcode component paths without launching an application
-        if: github.ref == 'refs/heads/diagnostic/xcode-worker-inventory-2026-10-29'
-        shell: bash
-        run: |
-          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/xcode_worker_inventory.py \
-            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
-      - name: Decode one frozen failed xcresult without executing the application
-        if: github.ref == 'refs/heads/diagnostic/ios-xcresult-review-2026-10-29'
-        shell: bash
+          set -euo pipefail
+          ./gradlew :composeApp:linkDebugTestIosSimulatorArm64 \
+            --dependency-verification=strict --no-daemon --max-workers=2 \
+            --stacktrace --console=plain | tee build/ci-evidence/native-link.log
+      - name: Stop compilation workers
+        id: aggregate_finish
+        if: always()
         env:
-          GH_TOKEN: ${{ github.token }}
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.aggregate_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.aggregate_run.outcome }}
+        run: python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
+      - name: Claim isolated native test cycle
+        id: ui_prepare
+        run: python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
+      - name: Execute only four new native regressions on a fresh owned simulator
+        id: ui_run
+        shell: bash
         run: |
-          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/review_frozen_result.py \
-            --output "$RUNNER_TEMP/$PARLOR_INPUT_OUTPUT"
-      - name: Retain original failures, source/product manifests and owned cleanup
+          set -euo pipefail
+          simulator_udid="$(python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)"
+          export PARLOR_NEGATIVE_SIMULATOR="$simulator_udid"
+          cat > build/ci-evidence/owned-native-test.init.gradle <<'GRADLE'
+          gradle.projectsEvaluated {
+              if (gradle.rootProject.name != 'parlor') return
+              def app = gradle.rootProject.project(':composeApp')
+              app.tasks.named('iosSimulatorArm64Test').configure {
+                  device.set(System.getenv('PARLOR_NEGATIVE_SIMULATOR'))
+                  doFirst { println('Owned native negative simulator: ' + device.get()) }
+              }
+          }
+          GRADLE
+          ./gradlew :composeApp:iosSimulatorArm64Test \
+            --tests 'com.parlor.app.storage.IosCompleteSnapshotProtectionTest.*' \
+            --tests 'com.parlor.app.storage.IosStorageSafetyTest.explicitDiscardRemovesBothCopiesWithoutInitializingProtection' \
+            --init-script build/ci-evidence/owned-native-test.init.gradle \
+            --dependency-verification=strict --no-daemon --max-workers=2 \
+            --stacktrace --console=plain | tee build/ci-evidence/native-negative-tests.log
+          # No positive metadata, general functional, physical lock, or full gate claim.
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, xml.etree.ElementTree as ET
+          expected = {
+              ('com.parlor.app.storage.IosCompleteSnapshotProtectionTest', 'aMissingFileCannotBeQualifiedByMissingMetadata'),
+              ('com.parlor.app.storage.IosCompleteSnapshotProtectionTest', 'aRejectedProtectionSetterCannotCreateOrQualifyAMissingItem'),
+              ('com.parlor.app.storage.IosCompleteSnapshotProtectionTest', 'anUnprotectedFileCannotBeQualifiedByASuccessfulWrite'),
+              ('com.parlor.app.storage.IosStorageSafetyTest', 'explicitDiscardRemovesBothCopiesWithoutInitializingProtection'),
+          }
+          expected = {(cls, name + '[iosSimulatorArm64]') for cls, name in expected}
+          cases = [t for p in Path('composeApp/build/test-results/iosSimulatorArm64Test').glob('TEST-*.xml') for t in ET.parse(p).getroot().iter('testcase')]
+          assert len(cases) == 4 and {(t.get('classname'), t.get('name')) for t in cases} == expected
+          assert all(not any(t.find(tag) is not None for tag in ('skipped', 'failure', 'error')) for t in cases)
+          with Path('build/ci-evidence/focused-result.json').open('x') as out:
+              json.dump(dict(result='PASS_FOUR_NATIVE_NEGATIVE_TESTS_ONLY', methods=sorted(expected), strict_complete_qualified=False, physical_verified=False, main_qualified=False), out, indent=2)
+          PY
+      - name: Retire owned native test workers and simulator
+        id: ui_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.ui_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.ui_run.outcome }}
+        run: python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+      - name: Retain actual source, executable, outcomes and custody
+        id: evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: ios-input-investigation-${{ github.run_id }}-${{ github.run_attempt }}
-          if-no-files-found: warn
+          name: ios-protection-native-negative-${{ github.run_id }}-${{ github.run_attempt }}
           retention-days: 14
+          if-no-files-found: error
           path: |
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/state.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/xcode-worker-inventory.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/receipt.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/*-help.txt
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original-summary.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/extracted-inputs.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/test-details.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/activities.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/settlement-lines.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/public-settlement-*.png
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.json
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/*.log
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/tests.xcresult
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/original/attachments
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/compose/attachments
-            ${{ runner.temp }}/${{ env.PARLOR_INPUT_OUTPUT }}/native/attachments
+            build/ci-evidence/
+            composeApp/build/test-results/iosSimulatorArm64Test/
+            composeApp/build/bin/iosSimulatorArm64/debugTest/
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-ios*.json
+      - name: Clean only attested uploaded outputs
+        id: cleanup
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.ownership.outcome }}
+          PARLOR_APPLE_CYCLE_OUTCOMES: >-
+            {"apple-aggregate":{"prepare":"${{ steps.aggregate_prepare.outcome }}","run":"${{ steps.aggregate_run.outcome }}","finish":"${{ steps.aggregate_finish.outcome }}"},
+             "apple-ui":{"prepare":"${{ steps.ui_prepare.outcome }}","run":"${{ steps.ui_run.outcome }}","finish":"${{ steps.ui_finish.outcome }}"}}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.evidence.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.evidence.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+        run: python3 -B -m scripts.ci.verification_hygiene cleanup
+      - name: Retain cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-protection-native-negative-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-ios-cleanup.json
