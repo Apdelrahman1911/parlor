@@ -73,7 +73,8 @@ internal class IosSnapshotFileSystem(
     private val backupExcluder: (NSURL) -> Unit = ::excludeSnapshotFromBackup,
 ) : SnapshotFileSystem {
 
-    private val basePath: String by lazy {
+    /** Resolve the location without creating or qualifying the snapshots directory. */
+    private val snapshotDirectoryPath: String by lazy {
         memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
             error.value = null
@@ -86,7 +87,14 @@ internal class IosSnapshotFileSystem(
             ) ?: throw IllegalStateException("Application Support directory unavailable")
             val rootPath = root.path
                 ?: throw IllegalStateException("Application Support directory has no path")
-            val directory = "$rootPath/Parlor/snapshots"
+            "$rootPath/Parlor/snapshots"
+        }
+    }
+
+    private val basePath: String by lazy {
+        memScoped {
+            val directory = snapshotDirectoryPath
+            val error = alloc<ObjCObjectVar<NSError?>>()
             val protectionKey = NSFileProtectionKey
                 ?: throw IllegalStateException("iOS file-protection key unavailable")
             val completeProtection = NSFileProtectionComplete
@@ -102,6 +110,7 @@ internal class IosSnapshotFileSystem(
             ) {
                 throw IllegalStateException("Couldn't create protected snapshot directory")
             }
+            repairCompleteSnapshotProtection(fileManager, directory)
             backupExcluder(NSURL.fileURLWithPath(directory, isDirectory = true))
             directory
         }
@@ -143,7 +152,9 @@ internal class IosSnapshotFileSystem(
     override suspend fun delete(name: String) {
         withContext(dispatcher) {
             requireSafeSnapshotFileName(name)
-            val path = filePath(name)
+            // Discard neither reads secrets nor installs new data. Do not make
+            // removal depend on the protection that prevented Retry/Load.
+            val path = "$snapshotDirectoryPath/$name"
             deletePathIfPresent(path)
             deleteLegacy(name)
         }
@@ -176,6 +187,9 @@ internal class IosSnapshotFileSystem(
         val path = filePath(name)
         if (!fileManager.fileExistsAtPath(path)) return migrateLegacy(name)
 
+        // Older builds can leave plaintext here. Protect the existing item
+        // before its bounded migration read; never silently accept weak metadata.
+        repairCompleteSnapshotProtection(fileManager, path)
         val protectedBytes = readBytes(path, MAX_PROTECTED_SNAPSHOT_BYTES)
         return when {
             protectedBytes.hasMagic() -> {
@@ -208,6 +222,9 @@ internal class IosSnapshotFileSystem(
     private fun migrateLegacy(name: String): ByteArray? {
         val legacyPath = "$legacyBasePath/$name"
         if (!fileManager.fileExistsAtPath(legacyPath)) return null
+        // Backup exclusion is not Data Protection. Existing Documents plaintext
+        // must also satisfy Complete before its bounded migration read.
+        repairCompleteSnapshotProtection(fileManager, legacyPath)
         val plaintext = readBytes(legacyPath, MAX_PLAINTEXT_SNAPSHOT_BYTES)
         if (!plaintext.looksLikeLegacyJson()) throw SnapshotProtectionException()
         writeProtected(name, encrypt(name, plaintext))
@@ -361,6 +378,8 @@ internal class IosSnapshotFileSystem(
 
     private fun writeProtected(name: String, protectedBytes: ByteArray) {
         val path = filePath(name)
+        // Revalidate even when basePath was initialized by an earlier operation.
+        requireCompleteSnapshotProtection(fileManager, basePath)
         val data = protectedBytes.toNSData()
         memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
@@ -370,6 +389,7 @@ internal class IosSnapshotFileSystem(
                 throw IllegalStateException("Couldn't atomically write protected snapshot")
             }
         }
+        requireCompleteSnapshotProtection(fileManager, path)
         backupExcluder(NSURL.fileURLWithPath(path))
     }
 
