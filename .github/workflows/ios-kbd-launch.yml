@@ -1,0 +1,92 @@
+name: iOS keyboard service startup (not application qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-kbd-launch-2026-11-04]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parlor-kbd-launch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Validate controls, unchanged app source and pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -v
+          test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
+          mkdir -p build/ci-evidence
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = 'Xcode 26.3'
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = 'Build version 17C529'
+          java -version 2>build/ci-evidence/java-version.txt
+          grep -q 'version "21\.' build/ci-evidence/java-version.txt
+          git rev-parse HEAD HEAD^{tree} > build/ci-evidence/source.txt
+          git ls-tree -r HEAD > build/ci-evidence/source-tree.txt
+      - name: Claim apple-ui native ownership
+        id: prepare
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
+      - name: Create exact fresh owned original-runtime simulator
+        run: |
+          /usr/bin/python3 -B - <<'PY'
+          from scripts.ci import apple_verification_hygiene as apple, verification_hygiene as common, owned_ci_simulator as sim
+          class OriginalRuntime(sim.SimctlBackend):
+              def inventory(self):
+                  value = super().inventory()
+                  runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
+                  kind = 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'
+                  groups = value['devices']
+                  matches = [d for d in groups.get(runtime, []) if d.get('isAvailable') is True and d.get('deviceTypeIdentifier') == kind]
+                  if not matches:
+                      raise RuntimeError('Exact iOS26.2/iPhone17Pro unavailable; no fallback')
+                  ordered = sorted(groups[runtime], key=lambda d: not (d.get('isAvailable') is True and d.get('deviceTypeIdentifier') == kind))
+                  return {**value, 'devices': {runtime: ordered, **{k:v for k,v in groups.items() if k != runtime}}}
+          root, prefix, task = common.context()
+          owned = apple.cycle_prefix(prefix, 'apple-ui')
+          claim = apple.validate_claim(root, owned, task, 'apple-ui', apple.configuration(root))
+          print(sim.create(owned, claim, OriginalRuntime()))
+          PY
+      - name: Launch only the actual owned Simulator keyboard service and target pre-exec delay
+        id: run
+        run: /usr/bin/python3 -B scripts/verification/ios-kbd-launch/launch.py
+      - name: Retire only owned UI workers and simulator, preserving failed results
+        id: finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.run.outcome }}
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+      - name: Preserve exact native outcome, original tests and ownership
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-kbd-launch-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/ci-evidence/
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-ios*.json
