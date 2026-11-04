@@ -44,9 +44,10 @@ class MafiaDefinition(
         MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS
 
     override fun createInitialState(config: SessionConfig): MafiaState {
-        MafiaSessionRules.requireValidConfig(config)
-        val preset = MafiaSettingsPresets.forPlayerCount(config.players.size)
-        val roster = config.players.map { p ->
+        val players = config.players.toList()
+        MafiaSessionRules.requireValidConfig(config.copy(players = players))
+        val preset = MafiaSettingsPresets.forPlayerCount(players.size)
+        val roster = players.map { p ->
             PublicPlayerSlot(playerId = p.id, displayName = p.displayName, seat = p.seat)
         }
         return MafiaState(
@@ -61,7 +62,7 @@ class MafiaDefinition(
                 randomSeed = config.randomSeed,
             ),
             phase = MafiaPhase.Setup,
-            players = config.players,
+            players = players,
         )
     }
 
