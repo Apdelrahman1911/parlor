@@ -57,29 +57,11 @@ jobs:
           xcrun --sdk iphonesimulator --show-sdk-version > build/ci-evidence/sdk-version.txt
           shasum -a 256 AGENTS.md > build/ci-evidence/agents.sha256
           test "$(cut -d' ' -f1 build/ci-evidence/agents.sha256)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
-      - name: Claim owned native compilation cycle
-        id: aggregate_prepare
-        run: python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
-      - name: Link current Debug app framework
-        id: aggregate_run
-        shell: bash
-        run: |
-          set -euo pipefail
-          ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 \
-            --dependency-verification=strict --no-daemon --max-workers=2 \
-            --stacktrace --console=plain | tee build/ci-evidence/native-link.log
-      - name: Stop compilation workers
-        id: aggregate_finish
-        if: always()
-        env:
-          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.aggregate_prepare.outcome }}
-          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.aggregate_run.outcome }}
-        run: python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
       - name: Claim isolated native test cycle
         id: ui_prepare
         run: python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
-      - name: Execute original two failed inset methods, capture frames only on failure
-        id: ui_run
+      - name: Create the owned required Simulator before expensive compilation
+        id: create_sim
         shell: bash
         run: |
           set -euo pipefail
@@ -106,6 +88,32 @@ jobs:
           print(udid)
           PYCREATE
           )"
+          printf 'udid=%s\n' "$simulator_udid" >> "$GITHUB_OUTPUT"
+      - name: Claim owned native compilation cycle
+        id: aggregate_prepare
+        run: python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
+      - name: Link current Debug app framework
+        id: aggregate_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 \
+            --dependency-verification=strict --no-daemon --max-workers=2 \
+            --stacktrace --console=plain | tee build/ci-evidence/native-link.log
+      - name: Stop compilation workers
+        id: aggregate_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.aggregate_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.aggregate_run.outcome }}
+        run: python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
+      - name: Execute original two failed inset methods, capture frames only on failure
+        id: ui_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          simulator_udid="${{ steps.create_sim.outputs.udid }}"
+          test -n "$simulator_udid"
           test ! -e build/ci-evidence/ios-ui-tests.xcresult
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp \
             -configuration Debug -sdk iphonesimulator \
