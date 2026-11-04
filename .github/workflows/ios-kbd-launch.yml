@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_query_target.py -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_dispatcher.py -v
           test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
           mkdir -p build/ci-evidence
           xcodebuild -version | tee build/ci-evidence/xcode-version.txt

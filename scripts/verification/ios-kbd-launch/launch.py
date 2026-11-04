@@ -109,7 +109,27 @@ def select_query_target(children, direct, parent, since, runtime_root):
     return direct, "direct-query-dispatcher-not-keyboard"
 
 
+def is_direct_dispatcher(info, original, path, trusted_tools, python_pid):
+    """Attest an exact child/executable, allowing xcrun's exec and symlinks.
+
+    proc_pidpath may return the canonical executable rather than the path xcrun
+    selected. Match file identity, never a basename, prefix or arbitrary path.
+    """
+    if (info is None or original is None or
+            basic_key(info)[:-1] != basic_key(original)[:-1] or
+            info.ppid != python_pid):
+        return False
+    try:
+        return any(os.path.samefile(path, tool) for tool in trusted_tools)
+    except OSError:
+        return False
+
+
 def observe_print(out, argv, backend, parent, runtime_root):
+    trusted_tools = tuple(str(Path(tool).resolve(strict=True)) for tool in (
+        "/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl"))
+    save(out, "trusted-dispatcher-tools", dict(executables=trusted_tools,
+         matching="samefile", toolchain=os.environ["DEVELOPER_DIR"]))
     started, deadline, capture = time.time(), time.monotonic() + 20, None
     child = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     original = backend._basic(child.pid)
@@ -144,12 +164,14 @@ def observe_print(out, argv, backend, parent, runtime_root):
                 if basic_key(backend._basic(pid)) == basic_key(info):
                     candidates.append((info, path))
             direct_info = backend._basic(child.pid)
-            if basic_key(direct_info) is None or basic_key(original) is None or basic_key(direct_info)[:-1] != basic_key(original)[:-1]:
-                raise RuntimeError("Direct native query dispatcher changed generation")
             direct_path = backend._path(child.pid)
-            allowed = {"/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl"}
-            if direct_path not in allowed or direct_info.ppid != os.getpid():
-                raise RuntimeError("Unrecognized direct native query dispatcher")
+            recognized = is_direct_dispatcher(direct_info, original, direct_path, trusted_tools, os.getpid())
+            save(out, "dispatcher-check", dict(pid=child.pid, native_executable=direct_path,
+                 original_identity=basic_key(original)[:-1] if original is not None else None,
+                 current_identity=basic_key(direct_info)[:-1] if direct_info is not None else None,
+                 trusted_executables=trusted_tools, recognized=recognized))
+            if not recognized:
+                raise RuntimeError("Unrecognized direct native query dispatcher; recorded identity is not a profile grant")
             direct = (direct_info, direct_path)
             (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
             save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
