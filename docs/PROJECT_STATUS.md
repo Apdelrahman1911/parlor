@@ -1,4 +1,4 @@
-# Project status — November 3, 2026
+# Project status — November 4, 2026
 
 ## Current merged source and qualification
 
@@ -11,9 +11,16 @@ skips, all1,976 Desktop methods (three established LAN skips), both736-method
 Android variants, and the unchanged37-row lint inventory and release gates.
 Complete PR receipt `c012804770c5da031a6faa077e59146ea871d43ba036dc4f0ec7de8007bb98c2`.
 
-**Distinct actual-main41737820087 is running, not yet qualified.** Its source,
-parents/tree and push identity are separately bound; a PR pass does not certify
-it. Earlier failed main364214/d821 workflows remain failed. No release.
+[Distinct actual-main41737820087](https://github.com/Apdelrahman1911/parlor/actions/runs/41737820087)
+is terminal **SUCCESS**, independently qualified at the exact merge/tree above.
+All eight producer receipts and the optimized Release join match source,
+artifact and owned-cleanup custody. Complete actual-main receipt SHA256:
+`a90f3a88c6da443cfa9b2fffab883126996f6cb93a5062f78d7513b3e492163e`.
+Scoped CI #308/#310 are closed: pre-build reclamation measured11,529,482,240
+bytes (10.74GiB), and fresh official repository inputs retain all37 lint rows.
+This is not peak disk usage, a speed benchmark, original input causality or
+physical-device/Store acceptance. Earlier failed main364214/d821 runs remain
+failed; PR qualification was not substituted for this distinct push. No release.
 
 PR309 corrects the original nested XCTest query-interruption boundary; PR311
 fixes #182's reproduced post-Name retained-callback navigation bug and #310's
@@ -27,9 +34,22 @@ those corrections. See the
 
 PR296's existing authored-scalar policy/nine authored regressions and PR295's
 two Ghamza regressions/reports are reused byte-identically in a clean local
-integration with bda97cde. No reproduction of already accepted tests, publication
-or merge is inferred from this preparation. PR300's #299/#301 ownership union
-is also preserved and needs fresh current-source qualification. PR282 was
+integration with bda97cde. Exact local610c8213/tree421057ed passes fresh strict
+`productionCheck allTests`:1,987 Desktop methods (three established LAN skips),
+747 Android per unit-test variant,120 GitHub-test methods,795 release controls
+(one exact local procfs skip), Detekt/type-aware analysis,37-row lint,optimized
+R8,unsigned AAB,shell and inventory gates. Receipt SHA256:
+`ad10f767f814f0e2400baca6a4b6d175ce2f839a21d586453a0d4a5e3daceead`.
+Documentation updates invalidate declared transport contracts, not this
+unchanged authored-policy bytecode; affected checks remain required on final
+source. No newer hosted/native, publication or merge is inferred.
+PR300's #299/#301 ownership union is also preserved. At fbbf3075/tree5515a709,
+fresh complete affected Desktop suites pass306 Mafia/384 Whodunit/176 session
+methods, baseline identities plus seven common regressions,zero skips/failures.
+Scoped receipt SHA256:
+`306b31dae6e83b18d99e7d82b08446db4f0ab3361d3a561e4cc6ce3145645802`.
+Its two Desktop-only pointer methods and full hosted/native/current-main
+qualification are not certified by that scoped command. PR282 was
 already closed as superseded; PR295 closure waits for its qualified replacement.
 #293/#299/#301 and #258 remain open. Physical Phase4 is owner-reserved.
 

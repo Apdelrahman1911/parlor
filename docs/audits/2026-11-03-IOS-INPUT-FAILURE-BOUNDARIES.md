@@ -30,7 +30,15 @@ skips. Complete receipt SHA256
 `c012804770c5da031a6faa077e59146ea871d43ba036dc4f0ec7de8007bb98c2`.
 Protected PR311 merged as `bda97cde2aaa923b0ecf1adf2e3316c05c059baf`,
 qualified tree `25ecb66f1a147516785790f32bf548222a53209f`.
-Its distinct actual-main41737820087 is not certified by that PR receipt.
+[Distinct actual-main41737820087](https://github.com/Apdelrahman1911/parlor/actions/runs/41737820087)
+subsequently reaches terminal SUCCESS with independently intaken eight
+producers and the optimized Release join at that exact source/tree.
+Complete actual-main receipt SHA256
+`a90f3a88c6da443cfa9b2fffab883126996f6cb93a5062f78d7513b3e492163e`.
+Its29 Swift/763 KMP Simulator/454 readiness passes have no native/readiness
+skips. This fresh acceptance closes scoped CI #308/#310, **not the original
+Host/typing failures or Phase1**; it does not prove adapter neutrality or
+physical-device keyboard/VoiceOver acceptance.
 
 ## Original Host: confirmed native HID cancellation
 
