@@ -18,7 +18,9 @@ class HostedCapacityTests(unittest.TestCase):
         self.assertEqual(tuple(map(str,c.TOOL_ROOTS)),('/usr/share/dotnet','/usr/local/.ghcup','/usr/local/swift','/opt/hostedtoolcache/CodeQL',
                                                      '/opt/hostedtoolcache/go','/opt/hostedtoolcache/Ruby',
                                                      '/opt/google/chrome','/opt/microsoft/msedge',
-                                                     '/usr/local/share/chromium','/usr/local/lib/node_modules'))
+                                                     '/usr/local/share/chromium','/usr/local/lib/node_modules',
+                                                     '/usr/local/aws-cli','/usr/local/aws-sam-cli',
+                                                     '/usr/lib/google-cloud-sdk','/opt/az'))
         self.assertEqual(c.MIN_FREE_BYTES,26*1024**3)
         self.assertEqual(c.runner_task(ENV),{k:ENV[k] for k in c.TASK_KEYS})
 
@@ -38,6 +40,20 @@ class HostedCapacityTests(unittest.TestCase):
             self.assertFalse(any(root==Path(p) or root.is_relative_to(p) for p in protected))
         # GitHub actions run using the runner's own bundled Node, not these npm tools.
         self.assertNotIn(Path('/opt/hostedtoolcache/node'),c.TOOL_ROOTS)
+
+    def test_cloud_cleanup_is_install_root_only_not_shared_runtime_or_command_directories(self):
+        clouds=tuple(map(Path,('/usr/local/aws-cli','/usr/local/aws-sam-cli',
+                               '/usr/lib/google-cloud-sdk','/opt/az')))
+        self.assertEqual(c.TOOL_ROOTS[-4:],clouds)
+        # Never remove shared parent trees, system Python, command symlinks,
+        # cloud credentials, or the runner's bundled Node/actions.
+        protected=('/usr/lib','/usr/local','/opt','/usr/bin','/usr/local/bin',
+                   '/usr/lib/python3','/opt/hostedtoolcache/Python',
+                   '/home/runner/.aws','/home/runner/.config/gcloud',
+                   '/home/runner/.azure','/home/runner/runners')
+        for root in clouds:
+            self.assertFalse(any(root==Path(p) or Path(p).is_relative_to(root)
+                                 for p in protected))
 
     def test_nonhosted_other_platform_repository_or_task_never_admitted(self):
         for key in ('GITHUB_ACTIONS','RUNNER_ENVIRONMENT','RUNNER_OS','RUNNER_ARCH','ImageOS','GITHUB_REPOSITORY','GITHUB_JOB'):

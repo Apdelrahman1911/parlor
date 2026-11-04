@@ -14,7 +14,10 @@ import subprocess
 TOOL_ROOTS = tuple(Path(p) for p in (
     '/usr/share/dotnet', '/usr/local/.ghcup', '/usr/local/swift', '/opt/hostedtoolcache/CodeQL',
     '/opt/hostedtoolcache/go', '/opt/hostedtoolcache/Ruby', '/opt/google/chrome',
-    '/opt/microsoft/msedge', '/usr/local/share/chromium', '/usr/local/lib/node_modules'))
+    '/opt/microsoft/msedge', '/usr/local/share/chromium', '/usr/local/lib/node_modules',
+    '/usr/local/aws-cli', '/usr/local/aws-sam-cli', '/usr/lib/google-cloud-sdk', '/opt/az'))
+# The cloud CLIs bundle their own runtimes; Parlor does not invoke them.
+# Their fixed install roots are separate from system Python and action runtimes.
 # Actual ~72GiB hosted-image failure: a 22.29GiB pre-restore reserve left
 # 6,239.3MB when API34 needed 7,372.8MB after API35 and Debug compilation.
 # Budget both required AVDs plus build/cache restore and prospective headroom.
