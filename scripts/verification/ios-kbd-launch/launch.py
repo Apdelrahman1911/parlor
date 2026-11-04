@@ -1,8 +1,8 @@
-"""One owned Simulator keyboard-service launch, not an app/input qualification.
+"""One observed native service-print wait, not an app/input qualification.
 
 The previous live log predicate produced no events. Select the actual service
 using native BSD identity + bounded argv, not an assumed log-stream contract.
-Never restart an already running service, signal its PID, or warm up a test.
+Never activate a service, signal its PID, extend the20s query, or warm up a test.
 """
 import ctypes
 import hashlib
@@ -97,6 +97,83 @@ def native_args(backend, pid):
     return argv_only(buf.raw[:size.value])
 
 
+def select_query_target(children, direct, parent, since, runtime_root):
+    matches = [(info, path) for info, path in children if own_child(info, parent, since) and
+               Path(path) in (runtime_root / "bin/launchctl", runtime_root / "usr/bin/launchctl")]
+    if len(matches) > 1:
+        raise RuntimeError("Ambiguous native print command child; no profile grant")
+    if matches:
+        return matches[0], "owned-simulator-launchctl"
+    if direct is None or direct[0].uid != parent.uid or direct[0].start_sec < int(since) - 1:
+        raise RuntimeError("Direct query dispatcher lifetime unavailable")
+    return direct, "direct-query-dispatcher-not-keyboard"
+
+
+def observe_print(out, argv, backend, parent, runtime_root):
+    started, deadline, capture = time.time(), time.monotonic() + 20, None
+    child = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    original = backend._basic(child.pid)
+    stdout, stderr, code, status = b"", b"", None, "INCOMPLETE"
+    try:
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                child.kill()
+                stdout, stderr = child.communicate()
+                status = "TIMED_OUT"
+                break
+            try:
+                stdout, stderr = child.communicate(timeout=min(0.25, remaining))
+                code, status = child.returncode, "EXITED"
+                break
+            except subprocess.TimeoutExpired:
+                pass
+            if capture is not None or time.time() - started < 5:
+                continue
+            candidates = []
+            for pid in backend._pids():
+                info = backend._basic(pid)
+                if not own_child(info, parent, started - 0.1) or bytes(info.comm) != b"launchctl":
+                    continue
+                try:
+                    path = backend._path(pid)
+                except RuntimeError:
+                    if backend._basic(pid) is None:
+                        continue
+                    raise
+                if basic_key(backend._basic(pid)) == basic_key(info):
+                    candidates.append((info, path))
+            direct_info = backend._basic(child.pid)
+            if basic_key(direct_info) is None or basic_key(original) is None or basic_key(direct_info)[:-1] != basic_key(original)[:-1]:
+                raise RuntimeError("Direct native query dispatcher changed generation")
+            direct_path = backend._path(child.pid)
+            allowed = {"/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl"}
+            if direct_path not in allowed or direct_info.ppid != os.getpid():
+                raise RuntimeError("Unrecognized direct native query dispatcher")
+            direct = (direct_info, direct_path)
+            (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
+            save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
+                 start=[target.start_sec,target.start_usec], executable=path, scope=scope,
+                 observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
+            sample = ["/usr/bin/sudo", "-n", "/usr/sbin/spindump", str(target.pid), "1", "10",
+                      "-onlyTarget", "-noText", "-noProcessingWhileSampling", "-timelimit", "8",
+                      "-o", str(out / "query.raw.spindump")]
+            sample_code, _ = query(out, "spindump", sample, 12)
+            later = backend._basic(target.pid)
+            capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
+                           after_start=None if later is None else [later.start_sec,later.start_usec],
+                           causal_fix=False, original_deadline_seconds=20)
+    finally:
+        if child.poll() is None:
+            child.kill()
+            stdout, stderr = child.communicate()
+        (out / "service-before.stderr").write_bytes(stderr)
+        save(out, "service-before", dict(argv=argv, status=status, exit_code=code,
+             start_epoch=started, end_epoch=time.time(), stdout_sha256=hashlib.sha256(stdout).hexdigest(),
+             direct_child_reaped=True, capture=capture, service_activation=False))
+    return code, stdout
+
+
 def main():
     root, prefix, task = common.context()
     if root != ROOT or task["GITHUB_JOB"] != "ios" or common.git(ROOT, "status", "--porcelain").strip():
@@ -133,86 +210,18 @@ def main():
     save(out, "parent", dict(pid=parent.pid, uid=parent.uid, start=[parent.start_sec,parent.start_usec], path=path))
     target = f"user/{os.getuid()}/{LABEL}"
     control = ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl"]
-    code, raw = query(out, "service-before", [*control, "print", target], retain=False)
+    # Run the exact observed failing read once, unchanged20s platform deadline.
+    # Do not equate a timeout with a missing service or issue a kickstart.
+    code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent)
+    if code is None:
+        raise RuntimeError("Native service print timed out; service existence and app causality remain unknown")
     if code != 0:
-        raise RuntimeError("Actual keyboard service not available; no guessed alternate domain")
+        raise RuntimeError("Native service print exited unsuccessfully; no alternate domain or service activation")
     fields = service_fields(raw)
     save(out, "service-fields-before", fields)
-    if "pid" in fields:
-        save(out, "result", dict(result="ALREADY_RUNNING_NOT_RESTARTED", app_qualified=False, stack=None))
-        return 0
-    if Path(fields.get("program", "")).name != "kbd":
-        raise RuntimeError("Printed service does not identify the keyboard program")
-    start, seen, capture = time.time(), set(), None
-    with (out / "kickstart.stdout").open("xb") as stdout, (out / "kickstart.stderr").open("xb") as stderr:
-        # Documented service-only activation on this fresh isolated profile.
-        # No -k restart, unrelated service, app launch or input warmup.
-        kick = subprocess.Popen([*control, "kickstart", target], stdout=stdout, stderr=stderr)
-        try:
-            deadline = time.monotonic() + 35
-            while time.monotonic() < deadline:
-                if basic_key(backend._basic(parent.pid)) != parent_key:
-                    raise RuntimeError("Native owned manager generation changed")
-                for pid in backend._pids():
-                    info = backend._basic(pid)
-                    if not own_child(info, parent, start - 0.1):
-                        continue
-                    try:
-                        executable = backend._path(pid)
-                    except RuntimeError:
-                        if backend._basic(pid) is None:
-                            continue
-                        raise
-                    if Path(executable).name != "xpcproxy_sim":
-                        continue
-                    try:
-                        args = native_args(backend, pid)
-                    except (RuntimeError, ValueError):
-                        if backend._basic(pid) is None:
-                            continue
-                        raise
-                    if basic_key(backend._basic(pid)) != basic_key(info):
-                        continue
-                    if len(args) < 2 or args[1] != LABEL.encode():
-                        continue
-                    seen.add(pid)
-                    if len(seen) > 8:
-                        raise RuntimeError("Keyboard generation ceiling exceeded")
-                    age = time.time() - (info.start_sec + info.start_usec / 1_000_000)
-                    if age < 5 or capture is not None:
-                        continue
-                    save(out, "target-before", dict(pid=pid, uid=info.uid, parent=info.ppid,
-                         start=[info.start_sec, info.start_usec], executable=executable,
-                         argv_label=LABEL, age_seconds=age, observed_epoch=time.time()))
-                    sample = ["/usr/bin/sudo", "-n", "/usr/sbin/spindump", str(pid), "1", "10",
-                              "-onlyTarget", "-noText", "-noProcessingWhileSampling", "-timelimit", "8",
-                              "-o", str(out / "proxy.raw.spindump")]
-                    code, _ = query(out, "spindump", sample, 12)
-                    later = backend._basic(pid)
-                    capture = dict(pid=pid, exit_code=code, after_start=None if later is None else [later.start_sec,later.start_usec],
-                                   after_executable=None if later is None else backend._path(pid), causal_fix=False)
-                if kick.poll() is not None and time.time() - start >= 15:
-                    break
-                time.sleep(0.25)
-        finally:
-            if kick.poll() is None:
-                kick.terminate()
-                try:
-                    kick.wait(timeout=10)
-                except subprocess.TimeoutExpired:
-                    kick.kill();kick.wait()
-            save(out, "activation", dict(argv=[*control,"kickstart",target], exit_code=kick.returncode,
-                 start_epoch=start, end_epoch=time.time(), direct_child_reaped=True,
-                 keyboard_proxies=sorted(seen), capture=capture))
-    code, raw = query(out, "service-after", [*control,"print",target], retain=False)
-    if code != 0:
-        raise RuntimeError("Native final service state unavailable")
-    fields = service_fields(raw)
-    save(out, "service-fields-after", fields)
-    good_stack = capture is not None and capture["exit_code"] == 0 and (out/"proxy.raw.spindump").is_file()
-    save(out, "result", dict(result="SERVICE_ONLY_STACK_NOT_APP_CAUSALITY" if good_stack else "NO_ACCEPTED_STACK_SERVICE_ONLY",
-         stack=capture, app_qualified=False, physical_verified=False, neutrality_verified=False))
-    return 0 if kick.returncode == 0 and "pid" in fields and (capture is None or good_stack) else 1
+    save(out, "result", dict(result="NATIVE_PRINT_RETURNED_NOT_APP_QUALIFICATION", fields=fields,
+         app_qualified=False, physical_verified=False, neutrality_verified=False, service_activation=False))
+    return 0
 
 
 if __name__ == "__main__":
