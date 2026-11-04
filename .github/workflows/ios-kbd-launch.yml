@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-26]
+        runner: [macos-15]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 10
     env:
@@ -45,6 +45,7 @@ jobs:
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_query_pipeline.py -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_first_pending.py -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_forwarded_dispatcher.py -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_initialization.py -v
           test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
           mkdir -p build/ci-evidence
           MANWIDTH=120 /usr/bin/man codesign | /usr/bin/col -b > build/ci-evidence/codesign-man.txt

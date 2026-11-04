@@ -26,6 +26,7 @@ from scripts.ci.darwin_worker_identity import DarwinWorkerBackend
 LABEL = "com.apple.TextInput.kbd"
 # Exact forwarded executable observed in41901582085, not a prefix/name guess.
 CORE_SIMCTL = "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl"
+SDK_STUB_SHA256 = "8e4ed565409890f1fd518099f98bb6ccac7419605574d802ac7356fd34f63a5b"
 
 
 def argv_only(raw):
@@ -150,9 +151,26 @@ def attested_dispatchers(out):
     stub = Path(tools[1]).read_bytes()
     # Only this exact observed public SDK stub may be exported, never arbitrary
     # executable/source or process-environment content.
-    if hashlib.sha256(stub).hexdigest() == "8e4ed565409890f1fd518099f98bb6ccac7419605574d802ac7356fd34f63a5b":
+    if hashlib.sha256(stub).hexdigest() == SDK_STUB_SHA256:
         (out / "observed-simctl-stub.sh").write_bytes(stub)
     return tools
+
+
+def initialized_native_query_tool(out, tools):
+    # The actual hash-pinned SDK shim always execs this forwarder after its
+    # first-launch check, even if installed CoreSimulator is newer. Equality
+    # is not established as an Apple compatibility requirement.
+    if hashlib.sha256(Path(tools[1]).read_bytes()).hexdigest() != SDK_STUB_SHA256:
+        raise RuntimeError("Selected SDK shim changed; no direct query grant")
+    code, _ = query(out, "xcode-first-launch-status", [
+        os.environ["DEVELOPER_DIR"] + "/usr/bin/xcodebuild", "-checkFirstLaunchStatus"], 20)
+    if code != 0:
+        raise RuntimeError("Selected Xcode is not initialized; no native query or automatic repair")
+    save(out, "native-query-grant", dict(executable=tools[2],
+         selected_sdk_stub_sha256=SDK_STUB_SHA256, initialization_exit_code=code,
+         provenance="exact forwarder in observed SDK shim plus prior Apple signature verification",
+         version_equality_required=False, mutating_first_launch_command_executed=False))
+    return tools[2]
 
 
 def is_declared_script(info, original, path, args, argv, tools, python_pid):
@@ -394,10 +412,9 @@ def main():
          expected_by_observed_stub="1051.17.8", observed=version,
          matches_observed_stub=version == "1051.17.8", explicit_first_launch_command_executed=False,
          prior_shim_branch_execution="NOT_OBSERVED"))
-    if version != "1051.17.8":
-        raise RuntimeError("CoreSimulator differs from the observed SDK shim; no further mutating shim invocation")
+    native_query_tool = initialized_native_query_tool(out, trusted_tools)
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
-    code, raw = observe_print(out, ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl", "managerpid"],
+    code, raw = observe_print(out, [native_query_tool, "spawn", udid, "launchctl", "managerpid"],
                               backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)
     if code is None:
         raise RuntimeError("Native managerpid timed out; no keyboard/service identity or app causality established")
@@ -411,7 +428,7 @@ def main():
     parent_key = basic_key(parent)
     save(out, "parent", dict(pid=parent.pid, uid=parent.uid, start=[parent.start_sec,parent.start_usec], path=path))
     target = f"user/{os.getuid()}/{LABEL}"
-    control = ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl"]
+    control = [native_query_tool, "spawn", udid, "launchctl"]
     # Run the exact observed failing read once, unchanged20s platform deadline.
     # Do not equate a timeout with a missing service or issue a kickstart.
     code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent,
