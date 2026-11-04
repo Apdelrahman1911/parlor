@@ -26,7 +26,7 @@ class PrivateProfilerControls(unittest.TestCase):
 
     def test_live_caller_streams_and_binary_fallback_never_enter_artifact_directory(self):
         with TemporaryDirectory() as d:
-            out = Path(d)/'public'; out.mkdir()
+            out = Path(d).resolve()/'public'; out.mkdir()
             child = SimpleNamespace(pid=99, wait=lambda timeout: 0, poll=lambda: 0)
             def launch(argv, **streams):
                 for stream in streams.values():
@@ -43,6 +43,28 @@ class PrivateProfilerControls(unittest.TestCase):
             for f in out.iterdir():
                 self.assertNotIn(b'SYNTHETIC_PRIVATE_', f.read_bytes())
             self.assertEqual((out/'query-profiler.log').read_bytes(), b'Sampling simctl [42] for 1 seconds\n')
+            launcher.profile_command.private_capture = None
+
+    def test_owned_temporary_root_alias_is_canonicalized_without_weakening_report_guard(self):
+        with TemporaryDirectory() as d:
+            root = Path(d).resolve()
+            real = root/'real'; real.mkdir()
+            alias = root/'alias'; alias.symlink_to(real, target_is_directory=True)
+            out = root/'public'; out.mkdir()
+            child = SimpleNamespace(pid=99, wait=lambda timeout: 0, poll=lambda: 0)
+            def launch(argv, **streams):
+                streams['stdout'].write(b'opaque fixture')
+                streams['stdout'].flush()
+                return child
+            with patch.dict(launcher.os.environ, RUNNER_TEMP=str(alias)), patch.object(launcher.subprocess, 'Popen', side_effect=launch):
+                launcher.profile_command(out, p.capture_command(42, None), deadline=launcher.time.monotonic()+20)
+            private = launcher.profile_command.private_capture
+            self.assertEqual(private.parent, real)
+            self.assertEqual(private, private.resolve())
+            report = private/'record.opaque-output'
+            self.assertEqual(p.owned_file(report, p.MAX_RAW), b'opaque fixture')
+            link = private/'redirected'; link.symlink_to(report)
+            with self.assertRaises(ValueError): p.owned_file(link, p.MAX_RAW)
             launcher.profile_command.private_capture = None
 
     def fixture(self):
@@ -69,8 +91,8 @@ class PrivateProfilerControls(unittest.TestCase):
 
     def test_raw_and_analysis_output_remain_private_while_only_safe_report_is_exported(self):
         with TemporaryDirectory() as d:
-            private = Path(d)/'private'; private.mkdir()
-            out = Path(d)/'public'; out.mkdir()
+            private = Path(d).resolve()/'private'; private.mkdir()
+            out = Path(d).resolve()/'public'; out.mkdir()
             (private/'record.opaque-output').write_bytes(b'opaque private metadata')
             child = SimpleNamespace(wait=lambda timeout: 0, poll=lambda: 0)
             def launch(argv, **streams):
@@ -88,8 +110,8 @@ class PrivateProfilerControls(unittest.TestCase):
 
     def test_native_decoder_failure_cannot_publish_a_report(self):
         with TemporaryDirectory() as d:
-            private = Path(d)/'private'; private.mkdir()
-            out = Path(d)/'public'; out.mkdir()
+            private = Path(d).resolve()/'private'; private.mkdir()
+            out = Path(d).resolve()/'public'; out.mkdir()
             (private/'record.opaque-output').write_bytes(b'private metadata')
             child = SimpleNamespace(wait=lambda timeout: 69, poll=lambda: 69)
             with patch.object(p.subprocess, 'Popen', return_value=child):
@@ -98,8 +120,8 @@ class PrivateProfilerControls(unittest.TestCase):
 
     def test_missing_or_redirected_native_report_is_rejected(self):
         with TemporaryDirectory() as d:
-            f = Path(d)/'text'; f.write_bytes(self.fixture())
-            link = Path(d)/'link'; link.symlink_to(f)
+            f = Path(d).resolve()/'text'; f.write_bytes(self.fixture())
+            link = Path(d).resolve()/'link'; link.symlink_to(f)
             with self.assertRaises(ValueError): p.owned_file(link, p.MAX_TEXT)
             with self.assertRaises(ValueError): p.owned_file(f, 1)
 

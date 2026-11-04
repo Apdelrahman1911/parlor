@@ -248,7 +248,7 @@ def profile_command(out, argv, *, deadline):
         return None
     started, code, outcome = time.time(), None, "INCOMPLETE"
     profile_command.private_capture = None
-    private = Path(tempfile.mkdtemp(prefix="parlor-native-private-", dir=os.environ.get("RUNNER_TEMP")))
+    private = Path(tempfile.mkdtemp(prefix="parlor-native-private-", dir=os.environ.get("RUNNER_TEMP"))).resolve(strict=True)
     # The known-working -noFile mode writes opaque system metadata to stdout.
     # Never put either unfiltered stream inside the uploaded evidence tree.
     with (private / "record.opaque-output").open("x+b") as stdout, (private / "record.stderr").open("x+b") as stderr:
