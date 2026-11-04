@@ -20,8 +20,10 @@ import time
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).parent))
 from scripts.ci import apple_verification_hygiene as apple, verification_hygiene as common, owned_ci_simulator as sim
 from scripts.ci.darwin_worker_identity import DarwinWorkerBackend
+import private_profiler
 
 LABEL = "com.apple.TextInput.kbd"
 # Exact forwarded executable observed in41901582085, not a prefix/name guess.
@@ -231,20 +233,25 @@ def script_children(backend, parent, since, deadline):
 def profile_command(out, argv, *, deadline):
     """File-backed streams cannot wait on a descendant's pipe EOF.
 
-    Cancel only our direct sample caller with TERM first. Never signal the
+    Cancel only our direct profiler caller with TERM first. Never signal the
     service/sampled PID or a process group.
     Direct reaping alone is not a claim about privileged descendant termination.
     """
-    # Capture one second with the lighter public sample tool; retain an 8s
-    # caller ceiling and allow 1s for TERM/reaping inside the query's
+    # Capture one second with the independently admitted target-only spindump;
+    # its native5s time limit fits within the retained8s caller ceiling.
+    # Allow1s for TERM/reaping inside the query's
     # original deadline. Do not start a capture that cannot fit that budget.
     timeout = min(8, deadline - time.monotonic() - 1.25)
-    if timeout < 2:
+    if timeout < 5.5:
         save(out, "query-sample", dict(argv=argv, status="NOT_STARTED_INSUFFICIENT_QUERY_BUDGET",
              exit_code=None, original_deadline_seconds=20, sampled_pid_signalled=False))
         return None
     started, code, outcome = time.time(), None, "INCOMPLETE"
-    with (out / "query-sample.stdout").open("xb") as stdout, (out / "query-sample.stderr").open("xb") as stderr:
+    profile_command.private_capture = None
+    private = Path(tempfile.mkdtemp(prefix="parlor-native-private-", dir=os.environ.get("RUNNER_TEMP")))
+    # The known-working -noFile mode writes opaque system metadata to stdout.
+    # Never put either unfiltered stream inside the uploaded evidence tree.
+    with (private / "record.opaque-output").open("x+b") as stdout, (private / "record.stderr").open("x+b") as stderr:
         child = subprocess.Popen(argv, stdout=stdout, stderr=stderr)
         try:
             code = child.wait(timeout=timeout)
@@ -261,6 +268,23 @@ def profile_command(out, argv, *, deadline):
                 except subprocess.TimeoutExpired:
                     outcome = "TIMED_OUT_DIRECT_REAP_INCOMPLETE"
         finally:
+            stdout.flush()
+            raw = os.pread(stdout.fileno(), private_profiler.MAX_RAW + 1, 0)
+            error = os.pread(stderr.fileno(), private_profiler.MAX_TEXT + 1, 0)
+            bounded = 0 < len(raw) <= private_profiler.MAX_RAW
+            safe = private_profiler.public_log(raw) if bounded else b""
+            if len(error) <= private_profiler.MAX_TEXT:
+                safe += private_profiler.public_log(error)
+            (out / "query-profiler.log").write_bytes(safe)
+            save(out, "query-private-capture", dict(
+                observed_file_bytes=(private / "record.opaque-output").stat().st_size,
+                captured_prefix_bytes=len(raw),
+                captured_prefix_sha256=hashlib.sha256(raw).hexdigest() if bounded else None,
+                bounded=bounded, raw_metadata_uploaded=False, unfiltered_stderr_uploaded=False,
+                native_mode="REUSED_41423553336_PRIVATE_STDOUT_NOFILE",
+                independent_reference="c064c2bfa7db8f63207908d287a2de0d6389e197"))
+            # Internal-only locator, never serialized or published.
+            profile_command.private_capture = private if code == 0 and bounded else None
             save(out, "query-sample", dict(argv=argv, exit_code=code, status=outcome,
                  start_epoch=started, end_epoch=time.time(), caller_pid=child.pid,
                  caller_timeout_seconds=timeout, original_deadline_seconds=20,
@@ -346,12 +370,13 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
                     (target, path), scope = direct, "direct-query-dispatcher-not-keyboard"
                 else:
                     (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
+                if basic_key(backend._basic(target.pid)) != basic_key(target):
+                    continue  # Never grant capture from a stale selected lifetime.
                 save(out, "dispatcher-check", dispatcher_check)
                 save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
                      start=[target.start_sec,target.start_usec], executable=path, scope=scope,
                      observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
-                sample = ["/usr/bin/sample", str(target.pid), "1", "10", "-mayDie",
-                          "-file", str(out / "query.sample.txt")]
+                sample = private_profiler.capture_command(target.pid, None)
                 capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
                 sample_code = profile_command(out, sample, deadline=deadline)
                 later = backend._basic(target.pid)
@@ -379,6 +404,16 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
                  direct_child_reaped=child.poll() is not None, capture=capture, service_activation=False,
                  stream_transport="PRIVATE_TEMPORARY_FILES_NOT_PIPE_EOF", cleanup_wait_limit_seconds=1,
                  descendant_termination="NOT_INDEPENDENTLY_VERIFIED"))
+            private = getattr(profile_command, "private_capture", None)
+            if isinstance(private, Path) and capture is not None:
+                try:
+                    decoded = private_profiler.decode(private, out, target.pid, path)
+                    save(out, "query-native-frames", decoded)
+                except (OSError, ValueError, subprocess.TimeoutExpired):
+                    save(out, "query-native-frames", dict(result="OFFLINE_DECODE_REJECTED",
+                         raw_metadata_uploaded=False, original_input_causality=False))
+                finally:
+                    profile_command.private_capture = None
         return code, stdout
 
 def main():

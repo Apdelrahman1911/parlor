@@ -46,12 +46,17 @@ jobs:
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_first_pending.py -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_forwarded_dispatcher.py -v
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_initialization.py -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-kbd-launch -p test_private_profiler.py -v
           test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
           mkdir -p build/ci-evidence
           MANWIDTH=120 /usr/bin/man codesign | /usr/bin/col -b > build/ci-evidence/codesign-man.txt
           MANWIDTH=120 /usr/bin/man sample | /usr/bin/col -b > build/ci-evidence/sample-man.txt
           grep -q -- '-mayDie' build/ci-evidence/sample-man.txt
           grep -q -- '-file' build/ci-evidence/sample-man.txt
+          MANWIDTH=120 /usr/bin/man spindump | /usr/bin/col -b > build/ci-evidence/spindump-man.txt
+          grep -q -- '-noFile' build/ci-evidence/spindump-man.txt
+          grep -q -- '-onlyTarget' build/ci-evidence/spindump-man.txt
+          grep -q -- '-noText' build/ci-evidence/spindump-man.txt
           xcodebuild -version | tee build/ci-evidence/xcode-version.txt
           test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = 'Xcode 26.3'
           test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = 'Build version 17C529'
