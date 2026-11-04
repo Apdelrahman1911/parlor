@@ -59,9 +59,30 @@ privacy and application implementation are unchanged.
 
 ## Verification and remaining boundaries
 
-Candidate native compilation, fresh affected iOS26.2 journeys, protected PR
-checks and distinct resulting-main qualification remain **pending**. This report
-is not a successful-fix certificate.
+Fresh corrected-source [41805623717](https://github.com/Apdelrahman1911/parlor/actions/runs/41805623717)
+is terminal **SUCCESS** at frozen `a5f0f0278f2be6381bd74f7304d1fd9dda0b3e0f`,
+tree `53dda15f7f6c8b613ad5df56c6914aba72ebbc8a`. All **15 actual native
+methods pass**, zero failures/skips: original EN/AR Name/code inset journeys,
+actual Arabic display-name/ASCII-code input, Last Light's six fields, and all
+eleven geometry/surface regressions. Every measured Name/code cycle reports
+**16pt**, with the original input/equality/Done/reopen assertions unchanged.
+
+Independent admission binds source/tree, exact method identities and positive
+durations, Xcode26.3/17C529, fresh owned iOS26.2/iPhone17Pro, actual Debug app
+Mach-O/identity/checksums, original xcresult and both owned native cleanup
+cycles. Receipt SHA256
+`df8b1e6be727512804e7c9a33e7e286cd7f389fd3c829ad5ce6959f32c707061`.
+Evidence13311471229 SHA256
+`cd0223cbc2f474f4086b9c3acbcd2362ac9db8ecd0a072517854c3fc04987e03`;
+cleanup13310992362 SHA256
+`16c99ea6507a5040cf7a8868f38d1a856ca47fcf56aad27e9111aef4823cda7b`.
+
+The local strict transport suite passes388 methods (three established LAN
+skips); plain and explicit Desktop type-aware Detekt pass. Documentation-only
+updates retain the tested Swift blob, but invalidate declared document contracts
+and require final-source affected checks. Complete protected PR checks and
+distinct resulting-main qualification remain **pending**; scoped native success
+is not substituted for those gates or whole Phase1 acceptance.
 
 The first narrow run41798329166 fails earlier at a90s `simctl list devices`
 timeout: zero native methods, no create intent. Its correction moves the same

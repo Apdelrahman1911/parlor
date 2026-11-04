@@ -14,9 +14,13 @@ required architectures, Release optimizations, strict verification and custody
 are preserved. PR296/PR300 fixes are reused and protected-merged; scoped
 #293/#299/#301/#312/#313 are closed. Skills playbook PR13 is already published.
 
-Phase1 remains open: current-source iOS26.2 fails three keyboard predicates,
-not initial typing; the native surface/AX-key-plane mismatch is confirmed and
-an evidence-based observer correction is being qualified. See the
+Phase1 remains open: the iOS26.2 surface/AX-key-plane and invalid-frame observer
+correction now passes all15 fresh scoped native methods, including EN/AR
+typing/Done/reopen, Last Light and eleven regressions, zero native skips.
+[41805623717](https://github.com/Apdelrahman1911/parlor/actions/runs/41805623717)
+independently binds frozen a5f0f027 source, actual Debug app and owned cleanup;
+all measured public Name/code gaps are16pt. Protected PR/full-check and distinct
+resulting-main acceptance remain pending. See the
 [keyboard geometry report](audits/2026-11-04-IOS-KEYBOARD-GEOMETRY.md).
 Original #267/#276 HID/service-startup causality remains unresolved.
 Phase3/#258 is open: original six strict Complete checks remain failed; four
