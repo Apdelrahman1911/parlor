@@ -44,7 +44,7 @@ class FirstPendingControls(unittest.TestCase):
                  patch.object(p.time, 'time', side_effect=lambda: clock.now), \
                  patch.object(p.time, 'monotonic', side_effect=lambda: clock.now), \
                  patch.object(p.subprocess, 'Popen', return_value=child) as opened, \
-                 patch.object(p, 'query', return_value=(0, b'')) as sampled:
+                 patch.object(p, 'profile_command', return_value=0) as sampled:
                 code, _ = p.observe_print(out, ['owned-query'], backend, None, None,
                                          label='managerpid', capture_state=state, trusted_tools=(str(tool),))
             import json

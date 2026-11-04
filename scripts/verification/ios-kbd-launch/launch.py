@@ -145,7 +145,97 @@ def attested_dispatchers(out):
          toolchain=os.environ["DEVELOPER_DIR"], native_signature_requirement="anchor apple",
          files=[dict(path=tool, bytes=Path(tool).stat().st_size,
                      sha256=hashlib.sha256(Path(tool).read_bytes()).hexdigest()) for tool in tools]))
+    stub = Path(tools[1]).read_bytes()
+    # Only this exact observed public SDK stub may be exported, never arbitrary
+    # executable/source or process-environment content.
+    if hashlib.sha256(stub).hexdigest() == "8e4ed565409890f1fd518099f98bb6ccac7419605574d802ac7356fd34f63a5b":
+        (out / "observed-simctl-stub.sh").write_bytes(stub)
     return tools
+
+
+def is_declared_script(info, original, path, args, argv, tools, python_pid):
+    if not is_direct_dispatcher(info, original, path, ("/bin/bash", "/bin/sh"), python_pid):
+        return False
+    expected = [os.fsencode(path), os.fsencode(tools[1]), *(os.fsencode(arg) for arg in argv[2:])]
+    return args == expected
+
+
+def select_script_query_child(children, direct, argv, tools):
+    """Only a fresh immediate child executing the exact declared native query."""
+    parent, _ = direct
+    since = parent.start_sec + parent.start_usec / 1_000_000
+    matches = []
+    for info, path, child_args in children:
+        try:
+            same_native = os.path.samefile(path, tools[2])
+        except OSError:
+            same_native = False
+        if (own_child(info, parent, since) and same_native and
+                child_args and child_args[0] in [os.fsencode(tool) for tool in tools[1:]] and
+                child_args[1:] == [os.fsencode(arg) for arg in argv[2:]]):
+            matches.append((info, path))
+    if len(matches) > 1:
+        raise RuntimeError("Ambiguous declared native query children; no profile grant")
+    if matches:
+        return matches[0], "owned-native-query-child-not-keyboard"
+    return direct, "owned-query-script-interpreter-not-keyboard"
+
+
+def script_children(backend, parent, since, deadline):
+    children = []
+    for pid in backend._pids():
+        if time.monotonic() >= deadline:
+            break
+        info = backend._basic(pid)
+        if not own_child(info, parent, since):
+            continue
+        try:
+            path = backend._path(pid)
+            args = native_args(backend, pid)
+        except RuntimeError:
+            if backend._basic(pid) is None:
+                continue  # A proved exit is not a permission or argv failure.
+            raise
+        if basic_key(backend._basic(pid)) == basic_key(info):
+            children.append((info, path, args))
+    return children
+
+
+def profile_command(out, argv, *, deadline):
+    """File-backed streams cannot wait on an orphaned sudo child's pipe EOF.
+
+    Cancel only our direct sudo monitor with TERM first so its existing signal
+    forwarding can retire its own tool. Never signal the service/sampled PID.
+    Direct reaping alone is not a claim about privileged descendant termination.
+    """
+    # Keep the native 8s limit and allow 1s for TERM/reaping inside the query's
+    # original deadline. Do not start a capture that cannot fit that budget.
+    timeout = min(12, deadline - time.monotonic() - 1.25)
+    if timeout < 8:
+        save(out, "spindump", dict(argv=argv, status="NOT_STARTED_INSUFFICIENT_QUERY_BUDGET",
+             exit_code=None, original_deadline_seconds=20, sampled_pid_signalled=False))
+        return None
+    started, code, outcome = time.time(), None, "INCOMPLETE"
+    with (out / "spindump.stdout").open("xb") as stdout, (out / "spindump.stderr").open("xb") as stderr:
+        child = subprocess.Popen(argv, stdout=stdout, stderr=stderr)
+        try:
+            code = child.wait(timeout=timeout)
+            outcome = "EXITED"
+        except subprocess.TimeoutExpired:
+            outcome = "TIMED_OUT"
+            child.terminate()
+            try:
+                child.wait(timeout=max(0, min(1, deadline - time.monotonic())))
+            except subprocess.TimeoutExpired:
+                child.kill()
+                child.wait()
+        finally:
+            save(out, "spindump", dict(argv=argv, exit_code=code, status=outcome,
+                 start_epoch=started, end_epoch=time.time(), caller_pid=child.pid,
+                 caller_timeout_seconds=timeout, original_deadline_seconds=20,
+                 direct_child_reaped=child.poll() is not None,
+                 descendant_termination="NOT_INDEPENDENTLY_VERIFIED", sampled_pid_signalled=False))
+    return code
 
 
 def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state, trusted_tools):
@@ -186,16 +276,42 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
                     if basic_key(backend._basic(pid)) == basic_key(info):
                         candidates.append((info, path))
             direct_info = backend._basic(child.pid)
-            direct_path = backend._path(child.pid)
+            if direct_info is None:
+                continue  # Exited during selection; collect its actual result.
+            try:
+                direct_path = backend._path(child.pid)
+            except RuntimeError:
+                if backend._basic(child.pid) is None:
+                    continue
+                raise
             recognized = is_direct_dispatcher(direct_info, original, direct_path, trusted_tools, os.getpid())
+            script = False
+            direct_args = []
+            if not recognized:
+                try:
+                    direct_args = native_args(backend, child.pid)
+                except RuntimeError:
+                    if backend._basic(child.pid) is None:
+                        continue
+                    raise
+                script = is_declared_script(direct_info, original, direct_path, direct_args, argv, trusted_tools, os.getpid())
+                recognized = script
+            if basic_key(backend._basic(child.pid)) != basic_key(direct_info):
+                continue  # No grant from an observation spanning exit/exec.
             save(out, "dispatcher-check", dict(pid=child.pid, native_executable=direct_path,
+                 declared_script=script,
                  original_identity=basic_key(original)[:-1] if original is not None else None,
                  current_identity=basic_key(direct_info)[:-1] if direct_info is not None else None,
                  trusted_executables=trusted_tools, recognized=recognized))
             if not recognized:
                 raise RuntimeError("Unrecognized direct native query dispatcher; recorded identity is not a profile grant")
             direct = (direct_info, direct_path)
-            if parent is None:
+            if script:
+                children = script_children(backend, direct_info, started - 0.1, deadline)
+                if basic_key(backend._basic(child.pid)) != basic_key(direct_info):
+                    continue  # Collect exited query; never sample a stale PID.
+                (target, path), scope = select_script_query_child(children, direct, argv, trusted_tools)
+            elif parent is None:
                 (target, path), scope = direct, "direct-query-dispatcher-not-keyboard"
             else:
                 (target, path), scope = select_query_target(candidates, direct, parent, started - 0.1, runtime_root)
@@ -206,7 +322,7 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
                       "-onlyTarget", "-noText", "-noProcessingWhileSampling", "-timelimit", "8",
                       "-o", str(out / "query.raw.spindump")]
             capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
-            sample_code, _ = query(out, "spindump", sample, 12)
+            sample_code = profile_command(out, sample, deadline=deadline)
             later = backend._basic(target.pid)
             capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
                            after_start=None if later is None else [later.start_sec,later.start_usec],
