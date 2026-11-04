@@ -2,7 +2,7 @@
 """Free unused preinstalled toolchains on the standard, ephemeral Linux CI runner.
 
 Never touches Android, Java, Kotlin/Gradle caches, checkout outputs, or evidence.
-Four fixed roots only; no caller-controlled deletion paths or background sampler.
+Fixed unused-tool roots only; no caller-controlled deletion paths or background sampler.
 """
 import json
 import os
@@ -12,8 +12,14 @@ import stat
 import subprocess
 
 TOOL_ROOTS = tuple(Path(p) for p in (
-    '/usr/share/dotnet', '/usr/local/.ghcup', '/usr/local/swift', '/opt/hostedtoolcache/CodeQL'))
-MIN_FREE_BYTES = 20 * 1024**3
+    '/usr/share/dotnet', '/usr/local/.ghcup', '/usr/local/swift', '/opt/hostedtoolcache/CodeQL',
+    '/opt/hostedtoolcache/go', '/opt/hostedtoolcache/Ruby', '/opt/google/chrome',
+    '/opt/microsoft/msedge', '/usr/local/share/chromium', '/usr/local/lib/node_modules'))
+# Actual ~72GiB hosted-image failure: a 22.29GiB pre-restore reserve left
+# 6,239.3MB when API34 needed 7,372.8MB after API35 and Debug compilation.
+# Budget both required AVDs plus build/cache restore and prospective headroom.
+# This is a fail-closed reserve, not a measured peak or a guarantee for new images.
+MIN_FREE_BYTES = 26 * 1024**3
 TASK_KEYS = ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_JOB')
 
 
