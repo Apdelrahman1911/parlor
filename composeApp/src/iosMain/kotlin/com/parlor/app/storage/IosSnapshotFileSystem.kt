@@ -222,6 +222,9 @@ internal class IosSnapshotFileSystem(
     private fun migrateLegacy(name: String): ByteArray? {
         val legacyPath = "$legacyBasePath/$name"
         if (!fileManager.fileExistsAtPath(legacyPath)) return null
+        // Backup exclusion is not Data Protection. Existing Documents plaintext
+        // must also satisfy Complete before its bounded migration read.
+        repairCompleteSnapshotProtection(fileManager, legacyPath)
         val plaintext = readBytes(legacyPath, MAX_PLAINTEXT_SNAPSHOT_BYTES)
         if (!plaintext.looksLikeLegacyJson()) throw SnapshotProtectionException()
         writeProtected(name, encrypt(name, plaintext))
