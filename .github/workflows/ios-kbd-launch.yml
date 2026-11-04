@@ -16,7 +16,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-15]
+        # Standard/free public-repository Intel host, not a paid larger runner.
+        # Native-only alternative-host control; production CI stays unchanged.
+        runner: [macos-15-intel]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 10
     env:
