@@ -108,6 +108,36 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun public_ios_keyboard_geometry_rejects_invalid_frames_before_hittability() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val cycle = swift.substringAfter("private func verifyKeyboardCycle(")
+            .substringBefore("func testArabicDisplayNameAndAsciiRoomCodeThroughNativeInput")
+        listOf("readPublicKeyboardGeometry(app, actionPrefix: actionPrefix)",
+            "frames.observe(sample, hittable: { field.isHittable })",
+            "XCTWaiter.wait(for: [settled], timeout: 10)",
+            "XCTAssertGreaterThanOrEqual(gap, 0)", "XCTAssertLessThanOrEqual(gap, 32)",
+        ).forEach { assertContains(cycle, it) }
+        val capture = swift.substringAfter("private func readPublicKeyboardGeometry(")
+            .substringBefore("// Test-only exact comparison.")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(capture).count())
+        listOf("fieldFrames.count == 1", "actionFrames.count == 1", "keyFrames.count == 1",
+            "count <= 2048", "depth <= 32", "node.label.hasPrefix(actionPrefix)",
+        ).forEach { assertContains(capture, it) }
+        listOf("print(", ".value", ".debugDescription", "sleep(", ".tap()", ".typeText(").forEach {
+            assertFalse(it in capture)
+        }
+        val frames = swift.substringAfter("private struct PublicKeyboardFrames {")
+            .substringBefore("final class PublicKeyboardGeometryTests")
+        assertTrue(frames.indexOf("sample.isValid") < frames.indexOf("hittable()"))
+        assertTrue(frames.indexOf("guard stable") < frames.indexOf("hittable()"))
+        listOf("testInfiniteEmptyAndNegativeFramesNeverRequestAHitPoint",
+            "testThirtyThreePointAndKeyboardSizedGapsRemainFailures",
+            "testActualIos26AsciiBackgroundIsIncludedWithoutAnOffset",
+            "testWholeWindowAndUnrelatedRowsCannotHideExcessiveSpacing",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
     fun public_ios_exact_value_observer_handles_only_the_identified_late_keyboard_tutorial() {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val observer = swift.substringAfter("private func assertTextValue(")

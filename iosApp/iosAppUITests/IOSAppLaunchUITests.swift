@@ -329,17 +329,26 @@ final class IOSAppLaunchUITests: XCTestCase {
             let introduction = dismissKeyboardIntroduction(app)
             if cycle == 0 { field.typeText(input) }
             assertTextValue(field, in: app, equals: input, introduction: introduction)
-            let keyboardTop = fullKeyboardTop(app, keyboard: keyboard)
+            var frames = PublicKeyboardFrames()
+            var sample: PublicKeyboardGeometry?
+            var snapshotErrorCode: Int?
             let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                let gap = keyboardTop - action.frame.maxY
-                return keyboard.exists && keyboard.frame.height > 100 && field.isHittable
-                    && field.frame.minY >= 0
-                    && field.frame.maxY <= action.frame.minY && gap >= 0 && gap <= 32
+                do {
+                    sample = try self.readPublicKeyboardGeometry(app, actionPrefix: actionPrefix)
+                    snapshotErrorCode = nil
+                } catch {
+                    sample = nil
+                    snapshotErrorCode = (error as NSError).code
+                }
+                // Resolve geometry once per generation. No hit-point query for
+                // missing, invalid, moving, obscured or excessively spaced input.
+                return frames.observe(sample, hittable: { field.isHittable })
             }, object: nil)
             let result = XCTWaiter.wait(for: [settled], timeout: 10)
-            let gap = keyboardTop - action.frame.maxY
-            print("Keyboard geometry: gap=\(gap), inputBottom=\(field.frame.maxY), " +
-                  "actionTop=\(action.frame.minY), keyboardTop=\(keyboardTop)")
+            let gap = sample?.gap ?? .nan
+            print("Keyboard geometry: gap=\(gap), inputBottom=\(sample?.field.maxY ?? .nan), " +
+                  "actionTop=\(sample?.action.minY ?? .nan), keyboardTop=\(sample?.keyboardTop ?? .nan), " +
+                  "snapshotErrorCode=\(String(describing: snapshotErrorCode))")
             let screenshot = XCTAttachment(screenshot: app.screenshot())
             screenshot.name = "Public setup keyboard cycle \(cycle)"
             screenshot.lifetime = .keepAlways
@@ -567,17 +576,42 @@ final class IOSAppLaunchUITests: XCTestCase {
     @MainActor
     private func fullKeyboardTop(_ app: XCUIApplication, keyboard: XCUIElement) -> CGFloat {
         let keys = keyboard.frame
-        // XCUI's Keyboard frame excludes the native prediction row. Include
-        // its full-width sibling touching the keys, using geometry rather than
-        // reading prediction text or relying on an English accessibility label.
-        let frames: [CGRect] = app.otherElements.allElementsBoundByIndex.map { $0.frame }
-        let adjacentRows: [CGRect] = frames.filter { frame in
-            let aligned = abs(frame.minX - keys.minX) <= 1 && abs(frame.width - keys.width) <= 1
-            let touching = abs(frame.maxY - keys.minY) <= 1
-            let accessoryHeight = frame.height > 0 && frame.height < keys.height / 2
-            return aligned && touching && accessoryHeight
+        let surrounding = app.otherElements.allElementsBoundByIndex.map { $0.frame }
+        return PublicKeyboardSurface.top(keys: keys, surrounding: surrounding) ?? .nan
+    }
+
+    @MainActor
+    private func readPublicKeyboardGeometry(
+        _ app: XCUIApplication, actionPrefix: String
+    ) throws -> PublicKeyboardGeometry? {
+        // Only called on public Name/JoinCode setup, never private gameplay.
+        // Snapshot objects/labels are not retained in the geometry state or logs.
+        let root = try app.snapshot()
+        var pending: [(any XCUIElementSnapshot, Int)] = [(root, 0)]
+        var fieldFrames: [CGRect] = []
+        var actionFrames: [CGRect] = []
+        var keyFrames: [CGRect] = []
+        var surrounding: [CGRect] = []
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            switch node.elementType {
+            case .textView: fieldFrames.append(node.frame)
+            case .button:
+                if node.label.hasPrefix(actionPrefix) { actionFrames.append(node.frame) }
+            case .keyboard: keyFrames.append(node.frame)
+            case .other: surrounding.append(node.frame)
+            default: break
+            }
+            for child in node.children { pending.append((child, depth + 1)) }
         }
-        return adjacentRows.map { $0.minY }.min() ?? keys.minY
+        guard fieldFrames.count == 1, actionFrames.count == 1, keyFrames.count == 1,
+              let top = PublicKeyboardSurface.top(keys: keyFrames[0], surrounding: surrounding) else {
+            return nil
+        }
+        return PublicKeyboardGeometry(field: fieldFrames[0], action: actionFrames[0],
+                                      keys: keyFrames[0], keyboardTop: top)
     }
 }
 
@@ -834,5 +868,189 @@ final class KeyboardIntroductionDismissalTests: XCTestCase {
                                              applicationFrame: application, hittable: true))
             XCTAssertFalse(dismissal.hasDismissed)
         }
+    }
+}
+
+// Geometry-only state for public setup. A transient AX sentinel must never
+// reach XCTest's hit-point calculation; unknown/moving samples cannot settle.
+private struct PublicKeyboardGeometry: Equatable {
+    let field: CGRect
+    let action: CGRect
+    let keys: CGRect
+    let keyboardTop: CGFloat
+
+    var gap: CGFloat { keyboardTop - action.maxY }
+
+    var isValid: Bool {
+        let frames = [field, action, keys]
+        guard frames.allSatisfy({ frame in
+            !frame.isNull && !frame.isInfinite && !frame.isEmpty
+                && frame.size.width > 0 && frame.size.height > 0
+                && [frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+                    frame.maxX, frame.maxY].allSatisfy({ $0.isFinite })
+        }) else { return false }
+        return keys.height > 100 && keyboardTop.isFinite
+            && keyboardTop >= 0 && keyboardTop <= keys.minY
+            && field.minY >= 0 && field.maxY <= action.minY
+            && gap >= 0 && gap <= 32
+    }
+}
+
+private struct PublicKeyboardFrames {
+    private var previous: PublicKeyboardGeometry?
+
+    mutating func observe(_ sample: PublicKeyboardGeometry?, hittable: () -> Bool) -> Bool {
+        guard let sample, sample.isValid else {
+            previous = nil
+            return false
+        }
+        let stable = previous == sample
+        previous = sample
+        guard stable else { return false }
+        guard hittable() else {
+            previous = nil
+            return false
+        }
+        return true
+    }
+}
+
+final class PublicKeyboardGeometryTests: XCTestCase {
+    private func sample(field: CGRect = CGRect(x: 24, y: 270, width: 354, height: 44),
+                        action: CGRect = CGRect(x: 24, y: 498, width: 354, height: 52),
+                        keys: CGRect = CGRect(x: 0, y: 583, width: 402, height: 233),
+                        top: CGFloat = 566) -> PublicKeyboardGeometry {
+        PublicKeyboardGeometry(field: field, action: action, keys: keys, keyboardTop: top)
+    }
+
+    func testHittabilityIsQueriedOnlyAfterTwoExactValidSamples() {
+        var frames = PublicKeyboardFrames()
+        var reads = 0
+        let hit = { reads += 1; return true }
+        XCTAssertFalse(frames.observe(sample(), hittable: hit))
+        XCTAssertEqual(reads, 0)
+        XCTAssertTrue(frames.observe(sample(), hittable: hit))
+        XCTAssertEqual(reads, 1)
+    }
+
+    func testInfiniteEmptyAndNegativeFramesNeverRequestAHitPoint() {
+        let invalid: [CGRect] = [.zero, .null, .infinite,
+            CGRect(x: CGFloat.infinity, y: CGFloat.infinity, width: 0, height: 0),
+            CGRect(x: CGFloat.nan, y: 270, width: 354, height: 44),
+            CGRect(x: 24, y: 270, width: -354, height: 44)]
+        for field in invalid {
+            var frames = PublicKeyboardFrames()
+            for _ in 0..<2 {
+                XCTAssertFalse(frames.observe(sample(field: field), hittable: {
+                    XCTFail("Invalid geometry must not query native hittability")
+                    return true
+                }))
+            }
+        }
+    }
+
+    func testMissingOrInvalidSampleBreaksAdjacency() {
+        for invalid in [nil, sample(field: .null)] {
+            var frames = PublicKeyboardFrames()
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertFalse(frames.observe(invalid, hittable: { true }))
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertTrue(frames.observe(sample(), hittable: { true }))
+        }
+    }
+
+    func testThirtyThreePointAndKeyboardSizedGapsRemainFailures() {
+        XCTAssertEqual(sample(top: 583).gap, 33)
+        XCTAssertFalse(sample(top: 583).isValid)
+        XCTAssertFalse(sample(action: CGRect(x: 24, y: 198, width: 354, height: 52)).isValid)
+        XCTAssertFalse(sample(top: 549).isValid)
+        XCTAssertTrue(sample(top: 550).isValid)
+        XCTAssertTrue(sample(top: 582).isValid)
+    }
+
+    func testFieldOutsideTheVisibleAreaOrBelowTheActionCannotSettle() {
+        XCTAssertFalse(sample(field: CGRect(x: 24, y: -1, width: 354, height: 44)).isValid)
+        XCTAssertFalse(sample(field: CGRect(x: 24, y: 480, width: 354, height: 44)).isValid)
+        XCTAssertFalse(sample(keys: CGRect(x: 0, y: 583, width: 402, height: 100)).isValid)
+        XCTAssertFalse(sample(top: CGFloat.nan).isValid)
+        XCTAssertFalse(sample(top: CGFloat.infinity).isValid)
+    }
+
+    func testSubpointFieldActionAndKeyboardMotionDoesNotSettle() {
+        for moved in [sample(field: sample().field.offsetBy(dx: 0, dy: 0.001)),
+                      sample(action: sample().action.offsetBy(dx: 0, dy: 0.001)),
+                      sample(keys: sample().keys.offsetBy(dx: 0, dy: 0.001)),
+                      sample(top: 566.001)] {
+            var frames = PublicKeyboardFrames()
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertFalse(frames.observe(moved, hittable: { true }))
+            XCTAssertTrue(frames.observe(moved, hittable: { true }))
+        }
+    }
+
+    func testNonhittableFieldRequiresTwoFreshSamples() {
+        var frames = PublicKeyboardFrames()
+        XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+        XCTAssertFalse(frames.observe(sample(), hittable: { false }))
+        XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+        XCTAssertTrue(frames.observe(sample(), hittable: { true }))
+    }
+}
+
+// AX's Keyboard describes keys, not necessarily the native keyboard surface.
+// iOS26.2 exposes full-width background siblings above an ASCII key plane;
+// prediction rows may instead touch its top. Never use a device-specific offset.
+private enum PublicKeyboardSurface {
+    static func top(keys: CGRect, surrounding: [CGRect]) -> CGFloat? {
+        guard usable(keys) else { return nil }
+        let tops = surrounding.filter { frame in
+            guard usable(frame), abs(frame.minX - keys.minX) <= 1,
+                  abs(frame.width - keys.width) <= 1 else { return false }
+            let predictionRow = abs(frame.maxY - keys.minY) <= 1
+                && frame.height < keys.height / 2
+            // Bound to keyboard-sized surfaces, not the containing app/window.
+            let enclosingSurface = frame.contains(keys) && frame.minY < keys.minY
+                && frame.height < keys.height * 2
+            return predictionRow || enclosingSurface
+        }.map { $0.minY }
+        return tops.min() ?? keys.minY
+    }
+
+    private static func usable(_ frame: CGRect) -> Bool {
+        !frame.isNull && !frame.isInfinite && !frame.isEmpty
+            && frame.size.width > 0 && frame.size.height > 0
+            && [frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+                frame.maxX, frame.maxY].allSatisfy({ $0.isFinite })
+    }
+}
+
+final class PublicKeyboardSurfaceTests: XCTestCase {
+    private let keys = CGRect(x: 0, y: 583, width: 402, height: 233)
+
+    func testActualIos26AsciiBackgroundIsIncludedWithoutAnOffset() {
+        let backgrounds = [CGRect(x: 0, y: 566, width: 402, height: 308),
+                           CGRect(x: 0, y: 583, width: 402, height: 291)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds), 566)
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds)! - 550, 16)
+    }
+
+    func testPredictionRowAndBackgroundUseTheFullVisibleSurface() {
+        let backgrounds = [CGRect(x: 0, y: 566, width: 402, height: 308),
+                           CGRect(x: 0, y: 539, width: 402, height: 44)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds), 539)
+    }
+
+    func testWholeWindowAndUnrelatedRowsCannotHideExcessiveSpacing() {
+        let unrelated = [CGRect(x: 0, y: 0, width: 402, height: 874),
+                         CGRect(x: 0, y: 442, width: 402, height: 48),
+                         CGRect(x: 24, y: 566, width: 354, height: 308)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: unrelated), 583)
+    }
+
+    func testInvalidFramesDoNotManufactureAKeyboardBoundary() {
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .null, surrounding: []))
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .infinite, surrounding: []))
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .zero, surrounding: []))
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: [.null, .infinite, .zero]), 583)
     }
 }

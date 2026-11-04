@@ -1,5 +1,35 @@
 # Project status — November 4, 2026
 
+## Latest independently verified checkpoint
+
+Main `42efb22ac930447ab841ea1e0a385f50be49fa01`, tree
+`77d873600193bda1e5871d2bf9b44b72282a2a01`, is independently qualified by
+terminal-success [41793010312](https://github.com/Apdelrahman1911/parlor/actions/runs/41793010312),
+all eight producers and the optimized Apple Release join. Receipt SHA256
+`b6d3058217d2d677bce80511841c871aec0e580cf991a0ecc305455413665ad7`.
+29 Swift/781 KMP Simulator/454 readiness pass without native/readiness skips;
+both Android runtime lanes pass3/3, both754-method unit variants pass, all1,996
+Desktop methods retain three established LAN skips. Standard free runners,
+required architectures, Release optimizations, strict verification and custody
+are preserved. PR296/PR300 fixes are reused and protected-merged; scoped
+#293/#299/#301/#312/#313 are closed. Skills playbook PR13 is already published.
+
+Phase1 remains open: the iOS26.2 surface/AX-key-plane and invalid-frame observer
+correction now passes all15 fresh scoped native methods, including EN/AR
+typing/Done/reopen, Last Light and eleven regressions, zero native skips.
+[41805623717](https://github.com/Apdelrahman1911/parlor/actions/runs/41805623717)
+independently binds frozen a5f0f027 source, actual Debug app and owned cleanup;
+all measured public Name/code gaps are16pt. Protected PR/full-check and distinct
+resulting-main acceptance remain pending. See the
+[keyboard geometry report](audits/2026-11-04-IOS-KEYBOARD-GEOMETRY.md).
+Original #267/#276 HID/service-startup causality remains unresolved.
+Phase3/#258 is open: original six strict Complete checks remain failed; four
+native negative/readback controls pass on the isolated candidate, not positive
+Complete/lock-state acceptance. Physical Phase4 remains owner-reserved and
+Phase5 has not started. No physical verification or Store release is claimed.
+
+## Retained earlier source-bound checkpoints — not current certification
+
 ## Current merged source and qualification
 
 PR311 normally protected-merged as `bda97cde2aaa923b0ecf1adf2e3316c05c059baf`,
