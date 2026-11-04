@@ -21,6 +21,8 @@ from scripts.ci import apple_verification_hygiene as apple, verification_hygiene
 from scripts.ci.darwin_worker_identity import DarwinWorkerBackend
 
 LABEL = "com.apple.TextInput.kbd"
+# Exact forwarded executable observed in41901582085, not a prefix/name guess.
+CORE_SIMCTL = "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl"
 
 
 def argv_only(raw):
@@ -125,12 +127,27 @@ def is_direct_dispatcher(info, original, path, trusted_tools, python_pid):
         return False
 
 
-def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state):
-    trusted_tools = tuple(str(Path(tool).resolve(strict=True)) for tool in (
-        "/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl"))
-    if not (out / "trusted-dispatcher-tools.json").exists():
-        save(out, "trusted-dispatcher-tools", dict(executables=trusted_tools,
-             matching="samefile", toolchain=os.environ["DEVELOPER_DIR"]))
+def attested_dispatchers(out):
+    """Admit the observed installed forwarding binary only after Apple verification.
+
+    The selected Xcode simctl stub and native CoreSimulator simctl are distinct
+    files in41901582085. Resolve neither by basename nor a framework-wide grant.
+    """
+    native = str(Path(CORE_SIMCTL).resolve(strict=True))
+    code, _ = query(out, "verify-native-dispatcher", ["/usr/bin/codesign", "--verify", "--strict",
+                    "-R", "anchor apple", native], 10)
+    if code != 0:
+        raise RuntimeError("Observed native simctl did not pass Apple signature verification; no profile grant")
+    tools = tuple(str(Path(tool).resolve(strict=True)) for tool in (
+        "/usr/bin/xcrun", os.environ["DEVELOPER_DIR"] + "/usr/bin/simctl", native))
+    save(out, "trusted-dispatcher-tools", dict(executables=tools, matching="samefile",
+         toolchain=os.environ["DEVELOPER_DIR"], native_signature_requirement="anchor apple",
+         files=[dict(path=tool, bytes=Path(tool).stat().st_size,
+                     sha256=hashlib.sha256(Path(tool).read_bytes()).hexdigest()) for tool in tools]))
+    return tools
+
+
+def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state, trusted_tools):
     started, deadline, capture = time.time(), time.monotonic() + 20, None
     child = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     original = backend._basic(child.pid)
@@ -229,9 +246,10 @@ def main():
         code, _ = query(out, label, ["/usr/bin/xcrun", "simctl", *args], 180)
         if code != 0:
             raise RuntimeError("Owned simulator boot failed")
+    trusted_tools = attested_dispatchers(out)
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
     code, raw = observe_print(out, ["/usr/bin/xcrun", "simctl", "spawn", udid, "launchctl", "managerpid"],
-                              backend, None, None, label="managerpid", capture_state=capture_state)
+                              backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)
     if code is None:
         raise RuntimeError("Native managerpid timed out; no keyboard/service identity or app causality established")
     if code != 0 or not re.fullmatch(rb"[1-9][0-9]*", raw.strip()):
@@ -248,7 +266,7 @@ def main():
     # Run the exact observed failing read once, unchanged20s platform deadline.
     # Do not equate a timeout with a missing service or issue a kickstart.
     code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent,
-                              capture_state=capture_state)
+                              capture_state=capture_state, trusted_tools=trusted_tools)
     if code is None:
         raise RuntimeError("Native service print timed out; service existence and app causality remain unknown")
     if code != 0:

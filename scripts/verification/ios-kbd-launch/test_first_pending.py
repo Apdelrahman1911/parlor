@@ -46,7 +46,7 @@ class FirstPendingControls(unittest.TestCase):
                  patch.object(p.subprocess, 'Popen', return_value=child) as opened, \
                  patch.object(p, 'query', return_value=(0, b'')) as sampled:
                 code, _ = p.observe_print(out, ['owned-query'], backend, None, None,
-                                         label='managerpid', capture_state=state)
+                                         label='managerpid', capture_state=state, trusted_tools=(str(tool),))
             import json
             record = json.loads((out / 'managerpid.json').read_text())
             target = json.loads((out / 'target-before.json').read_text()) if sampled.called else None
