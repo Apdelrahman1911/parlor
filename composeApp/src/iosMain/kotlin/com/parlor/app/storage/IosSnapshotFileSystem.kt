@@ -110,8 +110,10 @@ internal class IosSnapshotFileSystem(
             ) {
                 throw IllegalStateException("Couldn't create protected snapshot directory")
             }
-            repairCompleteSnapshotProtection(fileManager, directory)
             backupExcluder(NSURL.fileURLWithPath(directory, isDirectory = true))
+            // Existing snapshots may include pre-encryption plaintext. Keep
+            // them out of backups even when Complete configuration fails closed.
+            repairCompleteSnapshotProtection(fileManager, directory)
             directory
         }
     }
