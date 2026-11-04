@@ -71,6 +71,7 @@ class AndroidManagedGpuTest(unittest.TestCase):
         self.assertEqual([args[0] for args in calls], [RELEASE, NAVIGATION, "--stop"])
         for args, variant in zip(calls[:2], ("release", "debug"), strict=True):
             self.assertEqual(args.count(GPU), 1)
+            self.assertEqual(args.count("--info"), 1)
             self.assertIn(f"-Pparlor.androidRuntimeTestVariant={variant}", args)
             self.assertIn("--dependency-verification=strict", args)
             self.assertIn("--no-daemon", args)
@@ -84,9 +85,11 @@ class AndroidManagedGpuTest(unittest.TestCase):
         self.assertEqual(status, 23)
         self.assertEqual([args[0] for args in calls], [RELEASE, "--stop"])
         self.assertEqual(calls[0].count(GPU), 1)
+        self.assertEqual(calls[0].count("--info"), 1)
 
     def test_failed_navigation_propagates_without_replaying_either_lane(self) -> None:
         status, calls = self.run_wrapper(NAVIGATION)
         self.assertEqual(status, 23)
         self.assertEqual([args[0] for args in calls], [RELEASE, NAVIGATION, "--stop"])
         self.assertEqual(calls[1].count(GPU), 1)
+        self.assertEqual(calls[1].count("--info"), 1)

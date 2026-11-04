@@ -46,12 +46,15 @@ keytool -genkeypair \
   -noprompt
 
 cd "$repo_root"
+# AGP retains only uppercase ERROR lines in snapshot-start exceptions. INFO
+# exposes both emulator streams, including loader/PANIC diagnostics it omits.
 gradle_command=(./gradlew productionAndroidRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=release \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
+  --info \
   --stacktrace \
   --console=plain \
   "-Pandroid.injected.signing.store.file=$keystore" \
@@ -79,6 +82,7 @@ navigation_command=(./gradlew productionAndroidNavigationRuntimeCheck \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
+  --info \
   --stacktrace \
   --console=plain)
 
