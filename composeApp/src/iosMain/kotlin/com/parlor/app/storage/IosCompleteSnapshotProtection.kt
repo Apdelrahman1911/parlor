@@ -5,7 +5,7 @@
 
 package com.parlor.app.storage
 
-import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 import kotlinx.cinterop.ObjCObjectVar
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -21,8 +21,8 @@ import platform.Foundation.NSURLVolumeSupportsFileProtectionKey
 
 /** Creation/write options do not repair an existing item. Verify after setting its class. */
 internal fun repairCompleteSnapshotProtection(fileManager: NSFileManager, path: String) {
-    val protectionKey = NSFileProtectionKey ?: throw SnapshotProtectionException()
-    val completeProtection = NSFileProtectionComplete ?: throw SnapshotProtectionException()
+    val protectionKey = NSFileProtectionKey ?: throw SnapshotProtectionUnavailableException()
+    val completeProtection = NSFileProtectionComplete ?: throw SnapshotProtectionUnavailableException()
     memScoped {
         val error = alloc<ObjCObjectVar<NSError?>>()
         error.value = null
@@ -31,15 +31,15 @@ internal fun repairCompleteSnapshotProtection(fileManager: NSFileManager, path: 
             ofItemAtPath = path,
             error = error.ptr,
         )
-        if (!configured || error.value != null) throw SnapshotProtectionException()
+        if (!configured || error.value != null) throw SnapshotProtectionUnavailableException()
     }
     requireCompleteSnapshotProtection(fileManager, path)
 }
 
 /** Metadata verification is necessary, but does not prove physical device-lock enforcement. */
 internal fun requireCompleteSnapshotProtection(fileManager: NSFileManager, path: String) {
-    val protectionKey = NSFileProtectionKey ?: throw SnapshotProtectionException()
-    val volumeKey = NSURLVolumeSupportsFileProtectionKey ?: throw SnapshotProtectionException()
+    val protectionKey = NSFileProtectionKey ?: throw SnapshotProtectionUnavailableException()
+    val volumeKey = NSURLVolumeSupportsFileProtectionKey ?: throw SnapshotProtectionUnavailableException()
     memScoped {
         val error = alloc<ObjCObjectVar<NSError?>>()
         error.value = null

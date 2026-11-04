@@ -1,6 +1,6 @@
 package com.parlor.app.storage
 
-import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 
 /** Metadata is evidence of the requested class, not proof of device-lock enforcement. */
 internal fun requireVerifiedCompleteSnapshotProtection(
@@ -15,6 +15,6 @@ internal fun requireVerifiedCompleteSnapshotProtection(
         completeProtection == null ||
         observedProtection != completeProtection
     ) {
-        throw SnapshotProtectionException()
+        throw SnapshotProtectionUnavailableException()
     }
 }
