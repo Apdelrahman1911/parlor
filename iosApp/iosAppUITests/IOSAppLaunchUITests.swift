@@ -337,6 +337,7 @@ final class IOSAppLaunchUITests: XCTestCase {
                     && field.frame.maxY <= action.frame.minY && gap >= 0 && gap <= 32
             }, object: nil)
             let result = XCTWaiter.wait(for: [settled], timeout: 10)
+            if result != .completed { captureFailedKeyboardFrames(app) }
             let gap = keyboardTop - action.frame.maxY
             print("Keyboard geometry: gap=\(gap), inputBottom=\(field.frame.maxY), " +
                   "actionTop=\(action.frame.minY), keyboardTop=\(keyboardTop)")
@@ -562,6 +563,34 @@ final class IOSAppLaunchUITests: XCTestCase {
             button.tap()
         }
         return dismissal
+    }
+
+    // Diagnostic copy only: one failure-only native snapshot. Never read or
+    // retain labels, values, identifiers, prediction text or debugDescription.
+    @MainActor
+    private func captureFailedKeyboardFrames(_ app: XCUIApplication) {
+        do {
+            var pending: [(any XCUIElementSnapshot, [Int])] = [(try app.snapshot(), [])]
+            var rows: [String] = []
+            while let (node, path) = pending.popLast() {
+                guard rows.count < 2048, path.count <= 16 else {
+                    rows.append("geometry-overflow")
+                    break
+                }
+                rows.append("path=\(path), type=\(node.elementType.rawValue), frame=\(node.frame)")
+                for (index, child) in node.children.enumerated().reversed() {
+                    pending.append((child, path + [index]))
+                }
+            }
+            let attachment = XCTAttachment(string: rows.joined(separator: "\n"))
+            attachment.name = "Failure-only public keyboard frame tree"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            print("FAILURE_ONLY_KEYBOARD_FRAME_TREE_BEGIN\n" + rows.joined(separator: "\n") +
+                  "\nFAILURE_ONLY_KEYBOARD_FRAME_TREE_END")
+        } catch {
+            print("Failure-only keyboard snapshot error code=\((error as NSError).code)")
+        }
     }
 
     @MainActor
