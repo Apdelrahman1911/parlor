@@ -217,8 +217,10 @@ private fun LastLightShellContent(
             isHost = true,
             initial = hostName,
             onConfirm = { name ->
-                hostName = name
-                screen = LastLightShellScreen.HostLobby
+                if (screen == LastLightShellScreen.HostName) {
+                    hostName = name
+                    screen = LastLightShellScreen.HostLobby
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -249,8 +251,10 @@ private fun LastLightShellContent(
             isHost = false,
             initial = peerName,
             onConfirm = { name ->
-                peerName = name
-                screen = LastLightShellScreen.JoinPrompt
+                if (screen == LastLightShellScreen.JoinName) {
+                    peerName = name
+                    screen = LastLightShellScreen.JoinPrompt
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -258,8 +262,10 @@ private fun LastLightShellContent(
 
         LastLightShellScreen.JoinPrompt -> JoinPromptScreen(
             onConfirm = { code ->
-                pendingJoinCode = code
-                screen = LastLightShellScreen.PeerLobby
+                if (screen == LastLightShellScreen.JoinPrompt) {
+                    pendingJoinCode = code
+                    screen = LastLightShellScreen.PeerLobby
+                }
             },
             onCancel = onExit,
             modifier = modifier,

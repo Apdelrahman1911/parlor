@@ -243,8 +243,10 @@ private fun WhodunitShellContent(
             isHost = true,
             initial = hostName,
             onConfirm = { name ->
-                hostName = name
-                screen = WhodunitShellScreen.HostCasePicker
+                if (screen == WhodunitShellScreen.HostName) {
+                    hostName = name
+                    screen = WhodunitShellScreen.HostCasePicker
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -307,8 +309,10 @@ private fun WhodunitShellContent(
             isHost = false,
             initial = peerName,
             onConfirm = { name ->
-                peerName = name
-                screen = WhodunitShellScreen.JoinPrompt
+                if (screen == WhodunitShellScreen.JoinName) {
+                    peerName = name
+                    screen = WhodunitShellScreen.JoinPrompt
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -316,8 +320,10 @@ private fun WhodunitShellContent(
 
         WhodunitShellScreen.JoinPrompt -> JoinPromptScreen(
             onConfirm = { code ->
-                pendingJoinCode = code
-                screen = WhodunitShellScreen.PeerLobby
+                if (screen == WhodunitShellScreen.JoinPrompt) {
+                    pendingJoinCode = code
+                    screen = WhodunitShellScreen.PeerLobby
+                }
             },
             onCancel = onExit,
             modifier = modifier,
