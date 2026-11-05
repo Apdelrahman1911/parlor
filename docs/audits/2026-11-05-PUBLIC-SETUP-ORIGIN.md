@@ -43,6 +43,29 @@ Transport and case-content tripwires prevent accidental networking/game entry.
 Existing short, cancelled, scrolling, repeated, recreated-launch, full-input,
 and Name-confirmation checks remain unchanged.
 
+## Adapter integration correction
+
+The first PR321 workflow [41978547098](https://github.com/Apdelrahman1911/parlor/actions/runs/41978547098)
+fails before KMP/native execution: portable readiness discovers 454 methods,
+with two errors in `CopyControls`. `pin01_copy.py` still requires the previous
+unguarded Host/Join anchors, so it correctly rejects the changed source. This
+is a diagnostic-copy integration error, not a new native input failure.
+
+The renderer now admits exactly one complete known callback revision: legacy
+unguarded or current guarded, never mixed, missing, duplicated or ambiguous
+known anchors. Instrumented guarded callbacks keep observation **inside** the
+origin check. Source digest checks, once-only transformations, the observer,
+privacy boundaries and original failure assertions are unchanged. Three new
+controls cover reversible guarded transformation, legacy assignments, and
+rejected invalid revisions. Both legacy renderings are byte-identical to the
+renderer on the independently verified baseline; this is transformation
+evidence, not native adapter-neutrality acceptance.
+
+Final corrected portable readiness: **457 methods, no failures/errors**, with
+the six established Apple-only skips on Linux. The macOS qualification must
+execute those controls without skips. The failed run cannot qualify the PR;
+a fresh corrected-source workflow and resulting-main checks remain required.
+
 ## Verification boundaries
 
 Run focused verification with JDK21 and the repository wrapper:

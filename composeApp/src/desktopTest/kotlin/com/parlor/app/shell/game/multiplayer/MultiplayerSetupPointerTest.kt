@@ -70,9 +70,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 
 /**
- * Real shared clickable/pointer-to-shell execution, not SemanticsActions.OnClick.
+ * Real shared clickable/pointer-to-shell execution; retained-callback regressions
+ * additionally invoke captured shipping SemanticsActions.OnClick callbacks.
  * The 50ms interval is Compose event time, not UIKit or physical-device evidence.
- * No observer, shipping seam, artificial callback or networking is introduced.
+ * No observer, shipping seam or networking is introduced.
  */
 @OptIn(ExperimentalTestApi::class)
 class MultiplayerSetupPointerTest {
