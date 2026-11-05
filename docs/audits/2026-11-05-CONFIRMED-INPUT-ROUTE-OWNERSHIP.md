@@ -19,12 +19,22 @@ instead of the first confirmed code; Mafia and Last Light also hand off the
 replacement peer name. Three generic peer-name controls already pass because
 their existing Name phase guard rejects the second activation.
 
-The remaining two Whodunit and three newly added host methods execute on a
-standard free Ubuntu runner in
-[42072796151](https://github.com/Apdelrahman1911/parlor/actions/runs/42072796151),
-frozen baseline `408f3b6e`. Their terminal results/readback are pending. Earlier
-incomplete Whodunit DI fixtures and exact-PID local kernel OOMs are preserved;
-they are not application assertion failures or passing tests.
+Frozen baseline `408f3b6e` on standard free Ubuntu runner
+[42072796151](https://github.com/Apdelrahman1911/parlor/actions/runs/42072796151)
+is terminal **FAILURE**. Independent XML readback establishes two additional
+Whodunit assertion failures: replacement peer name and replacement room code.
+Thus all six room-code paths and the three bespoke peer-name paths reproduce
+the defect; three generic peer-name controls already pass. XML SHA256:
+`b5163cd93ebe9fd53b3bf0af3acf3cfc9369e8dcf1e34a92b967776b57b3d588`.
+
+The same hosted baseline's three host methods fail before their assertions:
+the fixture omitted `LocalParlorToastState`, required by all three real host
+lobbies. The fixture now supplies the same provider as the app root. Only
+those previously unexecuted host assertions require another original-source
+baseline; earlier successful controls and confirmed failing methods are not
+replayed. Original fixture failures and exact-PID local kernel OOMs are retained,
+not classified as application defects. Initial PR run42076115222 is explicitly
+cancelled because its frozen fixture has this known error, not qualified.
 
 ## Correction
 
@@ -51,7 +61,8 @@ xvfb-run -a ./gradlew :composeApp:desktopTest \
 Fifteen permanent methods cover EN/AR/System, all six peer/code paths and the
 three bespoke host paths, including Whodunit's real case/mode setup. Fixtures use
 synthetic public inputs, never open LAN rooms, and cancel/join their owned scopes
-and close dispatchers. Eleven inventory controls pass locally. Corrected-source
-runtime/Detekt, all protected PR checks and independent resulting-main acceptance
-remain required and pending. Neither shared callback execution nor green CI
+and close dispatchers. The real lobbies receive their required app toast context.
+Eleven inventory controls pass locally. [PR326](https://github.com/Apdelrahman1911/parlor/pull/326)
+remains draft; corrected-source runtime/Detekt, all protected PR checks and
+independent resulting-main acceptance remain required and pending. Neither shared callback execution nor green CI
 would establish physical VoiceOver behavior or the original native causes.

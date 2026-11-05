@@ -14,7 +14,8 @@ Phase1/#267/#276 remain open: original archives establish cancelled native HID
 delivery and delayed keyboard-service insertion, not their deeper platform
 causes. Supported upstream correction remains pending at runner-images#15252.
 No unchanged native retries or larger assertions are selected. A separately
-confirmed application input-ownership correction is prepared at `d5c43a3d`;
+confirmed application input-ownership correction is published in draft
+[PR326](https://github.com/Apdelrahman1911/parlor/pull/326), at `d5c43a3d`;
 see the [route ownership report](audits/2026-11-05-CONFIRMED-INPUT-ROUTE-OWNERSHIP.md).
 Fresh corrected-source/protected/main acceptance is pending; #182/#324 stay open.
 
