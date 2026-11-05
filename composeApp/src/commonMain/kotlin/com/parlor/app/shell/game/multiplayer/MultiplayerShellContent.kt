@@ -86,7 +86,17 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> MultiplayerShellCont
                 onBack = onExit, modifier = modifier,
             )
         }
-        ShellStep.JoinCode -> JoinPromptScreen(onConfirm = { code = it; step = ShellStep.Peer }, onCancel = onExit, modifier = modifier)
+        ShellStep.JoinCode -> JoinPromptScreen(
+            onConfirm = {
+                // Once accepted, late editor/activation callbacks cannot select
+                // a different room or move an owned peer back into setup.
+                if (step == ShellStep.JoinCode) {
+                    code = it
+                    step = ShellStep.Peer
+                }
+            },
+            onCancel = onExit, modifier = modifier,
+        )
         ShellStep.Host -> if (name.isBlank()) InvalidGameRouteFallback(onExit) else
             HostedGameLobby(spec, transport, name, onExit, settings, activeBack, modifier)
         ShellStep.Peer, ShellStep.Resume -> if (name.isBlank() || (step == ShellStep.Peer && code.isBlank())) {
