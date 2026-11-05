@@ -1,4 +1,4 @@
-name: Held protection remaining iOS frontends (not native qualification)
+name: Reconciled protection iOS frontends (not native qualification)
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
       - name: Check out the exact held implementation, not diagnostic application code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: 2e7de440eeb867e6c1a7e6cd12cd4edf3cb6face
+          ref: c3406ec36bec5d8a06e9bd21c583e6e846d48fe6
           persist-credentials: false
       - name: Set up JDK 21
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
@@ -38,17 +38,18 @@ jobs:
       - name: Verify exact source and existing release security contract
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 2e7de440eeb867e6c1a7e6cd12cd4edf3cb6face
-          test "$(git rev-parse HEAD^{tree})" = 26456c5b7a9d36b807aec4d11ff4f7d615ab4c99
+          test "$(git rev-parse HEAD)" = c3406ec36bec5d8a06e9bd21c583e6e846d48fe6
+          test "$(git rev-parse HEAD^{tree})" = efe730ac44ddad863613f9810093844caf8172a5
           test -z "$(git status --porcelain)"
           test "$(sha256sum AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
           python3 -B scripts/release/workflow_contract.py
           mkdir -p "$RUNNER_TEMP/held-protection-frontends"
-      - name: Compile only the four unfinished architecture frontends
+      - name: Compile the six frontends affected by the new source reconciliation
         id: compile
         run: |
           set -euo pipefail
-          ./gradlew :composeApp:compileKotlinIosArm64 :composeApp:compileTestKotlinIosArm64 \
+          ./gradlew :composeApp:compileKotlinIosSimulatorArm64 :composeApp:compileTestKotlinIosSimulatorArm64 \
+            :composeApp:compileKotlinIosArm64 :composeApp:compileTestKotlinIosArm64 \
             :composeApp:compileKotlinIosX64 :composeApp:compileTestKotlinIosX64 \
             --dependency-verification=strict --no-daemon --no-parallel --max-workers=1 \
             -Dorg.gradle.jvmargs='-Xmx1536m -XX:+UseSerialGC -XX:ReservedCodeCacheSize=128m -Dfile.encoding=UTF-8' \
@@ -63,14 +64,14 @@ jobs:
           out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'held-protection-frontends'
           out.mkdir(exist_ok=True)
           source = subprocess.check_output(['git', 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines()
-          if source != ['2e7de440eeb867e6c1a7e6cd12cd4edf3cb6face', '26456c5b7a9d36b807aec4d11ff4f7d615ab4c99']:
+          if source != ['c3406ec36bec5d8a06e9bd21c583e6e846d48fe6', 'efe730ac44ddad863613f9810093844caf8172a5']:
               raise RuntimeError('Frozen implementation changed; no receipt qualification')
           log = out / 'compile.log'
           receipt = dict(source=source[0], tree=source[1], workflow_source=os.environ['GITHUB_SHA'],
               run=int(os.environ['GITHUB_RUN_ID']), attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
               compilation_outcome=os.environ['FRONTEND_OUTCOME'],
               log_sha256=hashlib.sha256(log.read_bytes()).hexdigest() if log.exists() else None,
-              completed_simulator_frontends_replayed=False, native_tests_executed=False,
+              changed_source_requires_all_six_frontends=True, unchanged_source_tests_replayed=False, native_tests_executed=False,
               complete_protection_qualified=False, main_qualified=False, physical_verified=False)
           (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
           PY
