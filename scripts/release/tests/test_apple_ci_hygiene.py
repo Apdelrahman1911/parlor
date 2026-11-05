@@ -189,6 +189,67 @@ class WorkerOwnershipTest(unittest.TestCase):
                 self.assertEqual(self.stop(backend)["result"], "FAIL")
                 self.assertEqual(backend.signals, [(value, 15)])
 
+    def test_swiftbuild_service_is_admitted_only_at_the_exact_reviewed_path(self):
+        relative = ("Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/"
+                    "SWBBuildService.bundle/Contents/MacOS/SWBBuildService")
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / relative))
+        backend = Workers([value])
+        receipt = self.stop(backend)
+        self.assertEqual(receipt["result"], "PASS", receipt)
+        self.assertEqual(backend.signals, [(value, 15)])
+        self.assertEqual(receipt["events"][0]["executable"], relative)
+        for path in (relative.replace("Versions/A", "Versions/B"), relative + "-copy",
+                     "Contents/Other/SWBBuildService", relative.replace("SwiftBuild.framework", "XCBuild.framework")):
+            with self.subTest(path=path):
+                backend = Workers([identity(command=str(APPLICATION / path))])
+                self.assertEqual(self.stop(backend)["result"], "FAIL")
+                self.assertEqual(backend.signals, [])
+
+    def test_swiftbuild_path_never_overrides_uid_marker_or_origin_boundaries(self):
+        relative = ("Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/"
+                    "SWBBuildService.bundle/Contents/MacOS/SWBBuildService")
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / relative))
+        foreign = Workers([value._replace(uid=UID + 1)])
+        foreign.tracking_id = Mock(side_effect=AssertionError("Foreign UID must not be inspected"))
+        self.assertEqual(self.stop(foreign)["result"], "FAIL")
+        self.assertEqual(foreign.signals, [])
+        foreign.tracking_id.assert_not_called()
+        for marker in (None, "another-job", "prefix" + TRACKING, TRACKING + "suffix"):
+            with self.subTest(marker=marker):
+                backend = Workers([value], marker=marker)
+                self.assertEqual(self.stop(backend)["result"], "FAIL" if marker is None else "PASS")
+                self.assertEqual(backend.signals, [])
+        for baseline, started in (([value.lifetime], (2, 0)), ([], (0, 999999))):
+            with self.subTest(baseline=baseline, started=started):
+                self.claim["baseline"] = baseline
+                backend = Workers([identity(command=value.command, started=started)])
+                self.assertEqual(self.stop(backend)["result"], "PASS")
+                self.assertEqual(backend.signals, [])
+
+    def test_swiftbuild_generation_marker_or_executable_change_revokes_the_grant(self):
+        relative = ("Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/"
+                    "SWBBuildService.bundle/Contents/MacOS/SWBBuildService")
+        self.claim["workers"] = [str(APPLICATION / path) for path in apple.WORKER_PATHS]
+        value = identity(command=str(APPLICATION / relative))
+        for change in ("generation", "marker", "executable"):
+            with self.subTest(change=change):
+                backend = Workers([value], retire_on=None)
+                original = backend.signal
+                def revoke(worker, signum):
+                    original(worker, signum)
+                    if change == "generation":
+                        backend.values[worker.pid] = worker._replace(token=worker.token[:-1] + (2,))
+                    elif change == "executable":
+                        backend.values[worker.pid] = worker._replace(command=str(APPLICATION / "Contents/unknown"))
+                    else:
+                        backend.marker = "another-job"
+                    return True
+                backend.signal = revoke
+                self.assertEqual(self.stop(backend)["result"], "FAIL")
+                self.assertEqual(backend.signals, [(value, 15)])
+
     def test_unknown_worker_receipt_retains_only_bounded_sdk_relative_executable(self):
         relative = "Contents/Unreviewed/DTServiceHub"
         backend = Workers([identity(command=str(APPLICATION / relative))])
