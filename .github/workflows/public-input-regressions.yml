@@ -21,7 +21,7 @@ jobs:
       - name: Check out frozen original application plus regression fixture
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: 408f3b6e44d30960f225ff7919ade7ee78c2d363
+          ref: ee080766376b26f76d8f927b9d21553f90db7098
           fetch-depth: 0
           persist-credentials: false
 
@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 408f3b6e44d30960f225ff7919ade7ee78c2d363
+          test "$(git rev-parse HEAD)" = ee080766376b26f76d8f927b9d21553f90db7098
           git diff --exit-code 40b02d74ce8e1529120e2a9bf7ee160ccb09e2c2 HEAD -- \
             composeApp/src/commonMain shared game-modes iosApp .github gradle gradle.properties
           python3 -B scripts/generate_review_inventory.py --check
@@ -57,7 +57,7 @@ jobs:
               'source_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'source_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
               'regression_sha256': hashlib.sha256(test.read_bytes()).hexdigest(),
-              'scope': 'Two unfinished Whodunit plus three newly added host identity methods',
+              'scope': 'Three previously unexecuted host assertions; fixture now supplies app toast context',
               'production_qualification': False,
           }
           pathlib.Path('build/ci-evidence/source.json').write_text(json.dumps(result, indent=2) + '\n')
@@ -68,7 +68,6 @@ jobs:
         run: |
           set -euo pipefail
           xvfb-run -a ./gradlew :composeApp:desktopTest \
-            --tests '*RetainedNameConfirmationIdentityTest.whodunit*' \
             --tests '*RetainedNameConfirmationIdentityTest.*host_identity*' \
             --dependency-verification=strict --no-daemon --no-parallel --max-workers=1 \
             '-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseSerialGC' \
