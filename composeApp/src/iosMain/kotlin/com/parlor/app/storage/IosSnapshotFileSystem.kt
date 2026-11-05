@@ -7,6 +7,7 @@ package com.parlor.app.storage
 
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
@@ -306,7 +307,7 @@ internal class IosSnapshotFileSystem(
             val receivedTag = protectedBytes.copyOfRange(ciphertextEnd, protectedBytes.size)
             if (ciphertext.size % AES_BLOCK_BYTES != 0) throw SnapshotProtectionException()
 
-            val keyMaterial = snapshotKeyReader() ?: throw SnapshotProtectionException()
+            val keyMaterial = readExistingSnapshotKey() ?: throw SnapshotProtectionException()
             val encryptionKey = keyMaterial.copyOfRange(0, AES_KEY_BYTES)
             val macKey = keyMaterial.copyOfRange(AES_KEY_BYTES, IosSnapshotKeychain.KEY_BYTES)
             return try {
@@ -338,6 +339,19 @@ internal class IosSnapshotFileSystem(
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
+    }
+
+    private fun readExistingSnapshotKey(): ByteArray? = try {
+        snapshotKeyReader()
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (failure: SnapshotProtectionException) {
+        // Invalid/missing key material remains distinct from a failed lookup.
+        throw failure
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+        // Keychain unavailability precedes authentication. It cannot prove
+        // that the retained ciphertext is corrupt or justify discarding it.
+        throw SnapshotProtectionUnavailableException(cause = failure)
     }
 
     private fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray =
