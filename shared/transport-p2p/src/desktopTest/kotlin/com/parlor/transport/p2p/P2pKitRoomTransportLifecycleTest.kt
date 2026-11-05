@@ -828,8 +828,10 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(room.pendingAdmissions.value).isEmpty()
             assertThat(room.members.value).isEmpty()
         } finally {
-            room.leave()
             hostScope.coroutineContext[Job]?.cancel()
+            // Cancelled room jobs still need their independently paused scheduler.
+            hostScheduler.runCurrent()
+            room.leave()
         }
     }
 
