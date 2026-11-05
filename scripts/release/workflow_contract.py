@@ -20,6 +20,7 @@ EXPECTED = {
     "testing-external-promotion.yml",
     "production-promotion.yml",
     "ios-input-investigation.yml",
+    "ios-main-typing-archive-review.yml",
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
@@ -1817,8 +1818,27 @@ def verify_public_testing(text: str) -> None:
         fail("Public testing publication cannot rebuild, re-sign or call a production signer")
 
 
+# Only this source-frozen archive consumer is admitted on the diagnostic branch.
+# Production workflows/gates remain unchanged; generic unknown workflows still reject.
+CURRENT_MAIN_TYPING_CONTROLS = {
+    '.github/workflows/ios-main-typing-archive-review.yml': '8a3384e2b262e9b85e0353d35f1f01102e5e43946716f726e811a907c196f066',
+    'scripts/verification/ios-input-boundaries/review_current_main_typing.py': '0fa94153b1abbaff2875ce95dd85d0841d96e1d87628a394c6a8bd8b8f3b1e06',
+    'scripts/verification/ios-input-boundaries/test_current_main_typing_review.py': 'bc51233e6243af05b76bd3b8ff2a90f12db0628d8225ce19c8c999a7e9464318',
+    'scripts/verification/ios-input-boundaries/current_main_typing_manifest.json': 'd270d5bbf6b28583cd4cffa193615031e3184a8b0215d2504981210a44cf238a',
+    'scripts/ci/native_process_probe.py': 'f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681',
+}
+
+
+def verify_current_main_typing_review(root: Path = ROOT) -> None:
+    for name, digest in CURRENT_MAIN_TYPING_CONTROLS.items():
+        path = root / name
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            fail("Current main archive reader differs from its exact reviewed no-replay/public-only source")
+
+
 def main() -> int:
     files = load_files()
+    verify_current_main_typing_review()
     verify_policy()
     verify_signing_scripts()
     verify_android_runtime_script()
