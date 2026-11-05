@@ -114,7 +114,12 @@ fun NameInputScreen(
                     } else {
                         stringResource(Res.string.name_confirm_peer_description)
                     },
-                    onClick = { onConfirm(sanitized) },
+                    onClick = {
+                        // Input can change before this retained button callback is recomposed.
+                        // Read and validate the current draft at the activation boundary.
+                        val currentName = normalizedMultiplayerDisplayName(name)
+                        if (RoomInputPolicy.isValidDisplayName(currentName)) onConfirm(currentName)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = RoomInputPolicy.isValidDisplayName(sanitized),
                 )
