@@ -57,9 +57,23 @@ synthetic ownership methods pass, zero failures/skips. Existing methods remain.
 python3 -B -m unittest scripts.release.tests.test_apple_ci_hygiene -v
 ```
 
-Actual native cancellation-survivor retirement, final-source protected PR
-checks and independent resulting-main verification remain mandatory and
-**pending**. The isolated inventory/fixture must not be merged or represented
+The one-shot isolated [41985183754](https://github.com/Apdelrahman1911/parlor/actions/runs/41985183754),
+source `534e1b49`, remains terminal **FAILURE**: ARM holding-phase control passes;
+Intel fails its unchanged 10s acquisition boundary. The Intel service's native
+birth is 13.207428s after its client, outside that gate; its deeper startup
+cause is not proven. Three new portable controls pass on each host.
+
+Both actual first finalizers still observe and deliver native signals to the
+reviewed exact task-owned service, reap nonzero clients, and pass a separate
+final worker-quiescence check. ARM additionally attests the holding phase and
+explicit target reread absence; Intel does not. This is evidence of the worker
+correction, **not a passing complete cancellation workflow** or verified raw
+fixture-data retirement. No retry, larger gate, application build, Simulator,
+input or private build-log upload follows. Partial readback receipt SHA256
+`d0037ed37cee64f8a465e01886877d0ba67e4af1b26177908bfe82556d774bc6`.
+
+Final-source protected PR checks and independent resulting-main verification
+remain mandatory and **pending**. The isolated inventory/fixture must not be merged or represented
 as shipping qualification. Unknown, preexisting, foreign and surviving workers
 must continue to fail or remain excluded according to their existing policy.
 Original #267/#276 native boundaries and #258 Complete Protection stay separate.
