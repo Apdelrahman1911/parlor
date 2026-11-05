@@ -185,14 +185,15 @@ private fun LastLightShellContent(
         LastLightShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == LastLightShellScreen.Setup &&
                     mode is PlayMode.PassAndPlay &&
                     capabilities.supports(mode)
                 ) {
                     screen = LastLightShellScreen.LocalGame
                 }
             },
-            onHost = { screen = LastLightShellScreen.HostPermission },
-            onJoin = { screen = LastLightShellScreen.JoinPermission },
+            onHost = { if (screen == LastLightShellScreen.Setup) screen = LastLightShellScreen.HostPermission },
+            onJoin = { if (screen == LastLightShellScreen.Setup) screen = LastLightShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,
