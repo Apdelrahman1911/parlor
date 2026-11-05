@@ -48,8 +48,9 @@ were already active. Reducing only the command-local JVM heap1536→1024MiB and
 metaspace640→512MiB lets the unchanged corrected source finish successfully.
 No unrelated process/data or repository/Release configuration is changed.
 
-PR322 stays frozen while this independent regression/fix executes. Reconcile
-with its independently qualified resulting main before publication. Fresh full
+The failed PR322 source stays frozen while its producers finish. Fold this
+reviewed correction into the next PR revision with all identified CI fixes;
+do not publish an overlapping replacement PR. Fresh full
 protected/source-specific checks, native journeys, all optimized architectures
 and distinct resulting-main verification remain required. Original #267/#276,
 Strict Complete Protection and owner-reserved physical acceptance remain open;
