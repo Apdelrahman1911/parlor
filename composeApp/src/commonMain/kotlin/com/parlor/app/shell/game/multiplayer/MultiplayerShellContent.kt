@@ -60,7 +60,11 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> MultiplayerShellCont
     val settings = gate::openAppSettings.takeIf { gate.canOpenNetworkSettings }
     when (step) {
         ShellStep.Setup -> PlayModePickerScreen(
-            onModeSelected = {}, onHost = { step = ShellStep.HostPermission }, onJoin = { step = ShellStep.JoinPermission },
+            onModeSelected = {},
+            // A retained picker callback must not replace a route selected by
+            // an earlier activation, including its unsubmitted name draft.
+            onHost = { if (step == ShellStep.Setup) step = ShellStep.HostPermission },
+            onJoin = { if (step == ShellStep.Setup) step = ShellStep.JoinPermission },
             onBack = onExit, capabilities = capabilities,
             supportedPlayerCounts = spec.definition.supportedPlayerCounts, modifier = modifier,
         )

@@ -163,14 +163,15 @@ private fun MafiaShellContent(
         MafiaShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == MafiaShellScreen.Setup &&
                     mode is PlayMode.PassAndPlay &&
                     capabilities.supports(mode)
                 ) {
                     screen = MafiaShellScreen.LocalGame
                 }
             },
-            onHost = { screen = MafiaShellScreen.HostPermission },
-            onJoin = { screen = MafiaShellScreen.JoinPermission },
+            onHost = { if (screen == MafiaShellScreen.Setup) screen = MafiaShellScreen.HostPermission },
+            onJoin = { if (screen == MafiaShellScreen.Setup) screen = MafiaShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,

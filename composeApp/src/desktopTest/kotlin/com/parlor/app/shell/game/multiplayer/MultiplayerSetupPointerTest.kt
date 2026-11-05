@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsNodeInteraction
@@ -25,17 +26,33 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.app.shell.game.DominoGameShellBinding
+import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellBinding
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GhamzaGameShellBinding
+import com.parlor.app.shell.game.LastLightGameShellBinding
+import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.app.shell.game.WordImpostorGameShellBinding
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
+import com.parlor.content.repository.CaseRepository
+import com.parlor.content.repository.CaseUpdate
+import com.parlor.content.schema.CaseSummary
+import com.parlor.content.validation.PayloadValidator
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
+import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.dominoes.DominoDefinition
 import com.parlor.games.ghamza.GhamzaDefinition
+import com.parlor.games.lastlight.LastLightDefinition
+import com.parlor.games.mafia.MafiaDefinition
+import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.wordimpostor.WordImpostorDefinition
 import com.parlor.networking.room.DiscoveredRoom
 import com.parlor.networking.room.LocalRoom
@@ -45,6 +62,7 @@ import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.TransportCapability
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.Json
 import org.koin.compose.KoinApplication
 import org.koin.dsl.module
 import kotlin.test.Test
@@ -77,6 +95,18 @@ class MultiplayerSetupPointerTest {
     @Test
     fun repeated_short_input_does_not_skip_name_confirmation_or_start_networking() =
         SetupChoice.entries.forEach { verifyChoices(it, SetupGesture.RepeatedPress) }
+
+    @Test
+    fun queued_opposite_setup_choice_cannot_replace_the_first_host_selection() =
+        verifyRetainedChoice(SetupChoice.Host, afterNameInput = false)
+
+    @Test
+    fun queued_opposite_setup_choice_cannot_replace_the_first_join_selection() =
+        verifyRetainedChoice(SetupChoice.Join, afterNameInput = false)
+
+    @Test
+    fun retained_setup_choices_cannot_change_the_route_or_erase_a_typed_name() =
+        SetupChoice.entries.forEach { verifyRetainedChoice(it, afterNameInput = true) }
 
     @Test
     fun equal_recreated_launch_preserves_the_selected_destination_and_typed_name() {
@@ -115,6 +145,72 @@ class MultiplayerSetupPointerTest {
     private fun verifyChoices(choice: SetupChoice, gesture: SetupGesture) {
         for (binding in bindings()) {
             for (language in AppLanguage.entries) verifyChoice(binding, language, choice, gesture)
+        }
+    }
+
+    /** Retained public semantics callbacks, not a reproduced UIKit event sequence. */
+    private fun verifyRetainedChoice(choice: SetupChoice, afterNameInput: Boolean) {
+        val allBindings = bindings() + listOf(
+            MafiaGameShellBinding(MafiaDefinition(Json)),
+            LastLightGameShellBinding(LastLightDefinition()),
+            WhodunitGameShellBinding(WhodunitDefinition(Json)),
+        )
+        for (binding in allBindings) {
+            for (language in AppLanguage.entries) runComposeUiTest {
+                val transport = SetupNetworkTripwire()
+                var exits = 0
+                setContent {
+                    KoinApplication(application = { modules(module {
+                        single<RoomTransport> { transport }
+                        single<CaseRepository> { SetupContentTripwire() }
+                        single { AppLifecycleCoordinator(transport).apply { notifyActive() } }
+                    }) }) {
+                        ProvideAppLanguage(language) {
+                            ParlorTheme(reducedMotion = true) {
+                                binding.Content(
+                                    GameShellLaunch.New(binding.definition.id), { exits++ }, GameShellBackRequest.Initial,
+                                )
+                            }
+                        }
+                    }
+                }
+                val copy = setupCopy(language)
+                val opposite = if (choice == SetupChoice.Host) SetupChoice.Join else SetupChoice.Host
+                val activate = onNodeWithContentDescription(copy.choice(choice)).performScrollTo()
+                    .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                val activateOpposite = onNodeWithContentDescription(copy.choice(opposite)).performScrollTo()
+                    .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                val activateLocal = if (binding.capabilities.supports(GameEntryMode.PassAndPlay)) {
+                    val description = if (language == AppLanguage.Arabic) {
+                        "ابدأ جلسة تمرير ولعب على هذا الجهاز."
+                    } else {
+                        "Start a pass-and-play session on this device."
+                    }
+                    onNodeWithContentDescription(description).performScrollTo()
+                        .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                } else null
+                runOnUiThread {
+                    activate()
+                    if (!afterNameInput) activateOpposite()
+                }
+                assertNameDestination(copy, choice)
+                if (afterNameInput) {
+                    val input = if (language == AppLanguage.Arabic) "أحمد" else "Table Test"
+                    onNodeWithText(copy.nameField).performTextInput(input)
+                    runOnUiThread {
+                        activateOpposite()
+                        activateLocal?.invoke()
+                        activate()
+                    }
+                    onNodeWithText(copy.nameField).assertTextContains(input, substring = false)
+                    onNodeWithContentDescription(copy.confirm(choice)).assertIsEnabled()
+                    onNodeWithContentDescription(copy.confirm(opposite)).assertDoesNotExist()
+                }
+                runOnIdle {
+                    assertEquals(0, transport.operations)
+                    assertEquals(0, exits)
+                }
+            }
         }
     }
 
@@ -285,6 +381,19 @@ class MultiplayerSetupPointerTest {
             }
         }
     }
+}
+
+/** Public mode/name selection must not fetch a case or enter gameplay. */
+private class SetupContentTripwire : CaseRepository {
+    override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, DataError> = unexpectedOperation()
+    override suspend fun <TPayload> loadCase(
+        id: CaseId, payloadValidator: PayloadValidator<TPayload>,
+    ): Result<ValidatedCase<TPayload>, DataError> = unexpectedOperation()
+    override fun observeCacheUpdates(): Flow<CaseUpdate> = unexpectedOperation()
+    override suspend fun <TPayload> refresh(
+        gameId: GameId, payloadValidator: PayloadValidator<TPayload>,
+    ): Result<Unit, DataError> = unexpectedOperation()
+    private fun unexpectedOperation(): Nothing = error("Public mode/name selection must not access case content")
 }
 
 private enum class SetupChoice { Host, Join }

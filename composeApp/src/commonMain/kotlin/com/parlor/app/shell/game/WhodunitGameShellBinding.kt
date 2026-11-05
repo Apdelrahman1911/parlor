@@ -198,6 +198,7 @@ private fun WhodunitShellContent(
         WhodunitShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == WhodunitShellScreen.Setup &&
                     capabilities.supports(mode) &&
                     WhodunitPlayModePolicy.supportsLocalEntry(mode)
                 ) {
@@ -205,8 +206,8 @@ private fun WhodunitShellContent(
                     screen = WhodunitShellScreen.LocalCasePicker
                 }
             },
-            onHost = { screen = WhodunitShellScreen.HostPermission },
-            onJoin = { screen = WhodunitShellScreen.JoinPermission },
+            onHost = { if (screen == WhodunitShellScreen.Setup) screen = WhodunitShellScreen.HostPermission },
+            onJoin = { if (screen == WhodunitShellScreen.Setup) screen = WhodunitShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,
