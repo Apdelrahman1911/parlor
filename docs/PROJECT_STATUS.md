@@ -1,6 +1,31 @@
-# Project status — November 4, 2026
+# Project status — November 5, 2026
 
-## Latest independently verified checkpoint
+## Current merged source and outstanding acceptance
+
+Actual main `40b02d74ce8e1529120e2a9bf7ee160ccb09e2c2` (PR325) has a
+terminal **failed** independent
+[42030154806](https://github.com/Apdelrahman1911/parlor/actions/runs/42030154806):
+802 KMP Simulator methods pass, but Swift is39 PASS/1 FAIL at Arabic public Name
+typing. Seven other producers pass; passing PR325 checks do not replace this
+failed main. Latest independently accepted main remains `ffaa001b`,
+[42011471187](https://github.com/Apdelrahman1911/parlor/actions/runs/42011471187).
+
+Phase1/#267/#276 remain open: original archives establish cancelled native HID
+delivery and delayed keyboard-service insertion, not their deeper platform
+causes. Supported upstream correction remains pending at runner-images#15252.
+No unchanged native retries or larger assertions are selected. A separately
+confirmed application input-ownership correction is prepared at `d5c43a3d`;
+see the [route ownership report](audits/2026-11-05-CONFIRMED-INPUT-ROUTE-OWNERSHIP.md).
+Fresh corrected-source/protected/main acceptance is pending; #182/#324 stay open.
+
+Phase2 is complete: #293/#299/#301 integrations and #312's published skills
+playbook must not be repeated. Phase3/#258's existing candidate `2e7de440` has
+all six iOS main/test frontends compiled, but original strict0 PASS/6 FAIL,
+supported-volume positive protection and applicable native qualification remain
+unsatisfied. Physical Phase4 is owner-reserved; Phase5 has not started. No
+physical-device success, phase completion or Store release is claimed.
+
+## Earlier independently verified checkpoint — November 4
 
 Main `42efb22ac930447ab841ea1e0a385f50be49fa01`, tree
 `77d873600193bda1e5871d2bf9b44b72282a2a01`, is independently qualified by
