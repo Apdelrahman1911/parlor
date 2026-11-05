@@ -253,6 +253,69 @@ class IosLegacySnapshotBackupTest {
     }
 
     @Test
+    fun unavailableCurrentLookupNeverFallsBackAndExplicitRecoveryUsesCurrentCopy(): Unit = runBlocking {
+        withValidCopies { record, saved ->
+            var available = false
+            var currentInspections = 0
+            var legacyInspections = 0
+            var keyReads = 0
+            val filesystem = IosSnapshotFileSystem(
+                pathInspector = { path ->
+                    if (path == record.legacyPath) legacyInspections++
+                    if (path == record.protectedPath) {
+                        currentInspections++
+                        if (!available) throw IllegalStateException("synthetic inaccessible path")
+                    }
+                    snapshotItemExists(fileManager, path)
+                },
+                snapshotKeyReader = { keyReads++; syntheticKey() },
+            )
+            val store = FileBackedSnapshotStore(filesystem, Json)
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.load(saved.sessionId))
+            assertEquals(1, currentInspections)
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.loadMetadata(saved.sessionId))
+            assertEquals(2, currentInspections, "No automatic inspection retry")
+            assertEquals(0, legacyInspections, "Unavailable current data cannot authorize legacy fallback")
+            assertEquals(0, keyReads, "Unavailable inspection must precede secret reads")
+            assertValidRetainedCopy(record, saved)
+
+            available = true
+            assertEquals(Result.Success(saved), store.load(saved.sessionId))
+            assertEquals(3, currentInspections)
+            assertEquals(1, keyReads)
+            assertFalse(fileManager.fileExistsAtPath(record.legacyPath))
+            assertContentEquals(record.originalProtectedBytes, readBoundedSnapshotBytes(record.protectedPath, 65_536))
+        }
+    }
+
+    @Test
+    fun unavailableLegacyDirectoryDoesNotBecomeEmptyInventoryOrMissingData(): Unit = runBlocking {
+        withSyntheticRecord(malformedLegacy()) { record ->
+            var inspections = 0
+            val filesystem = IosSnapshotFileSystem(pathInspector = { path ->
+                if (path == record.legacyDirectory) {
+                    inspections++
+                    throw IllegalStateException("synthetic inaccessible directory")
+                }
+                snapshotItemExists(fileManager, path)
+            })
+            val store = FileBackedSnapshotStore(filesystem, Json)
+            val sessionId = SessionId(record.name.removeSuffix(FileBackedSnapshotStore.SUFFIX))
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.listUnfinished())
+            assertEquals(1, inspections)
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.load(sessionId))
+            assertEquals(2, inspections)
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.loadMetadata(sessionId))
+            assertEquals(3, inspections)
+            assertContentEquals(malformedLegacy(), readBoundedSnapshotBytes(record.legacyPath, 1024))
+            // Explicit Discard performs no lookup retry or protection initialization.
+            assertEquals(Result.Success(Unit), store.delete(sessionId))
+            assertEquals(3, inspections)
+            assertFalse(fileManager.fileExistsAtPath(record.legacyPath))
+        }
+    }
+
+    @Test
     fun failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard(): Unit = runBlocking {
         withValidCopies(protect = { name, bytes ->
             protectSyntheticSnapshot(name, bytes).also { it[it.lastIndex] = (it.last().toInt() xor 1).toByte() }

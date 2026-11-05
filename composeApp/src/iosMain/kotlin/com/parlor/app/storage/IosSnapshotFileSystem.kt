@@ -70,6 +70,7 @@ internal class IosSnapshotFileSystem(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val snapshotKeyReader: () -> ByteArray? = keychain::readExisting,
     private val backupExcluder: (NSURL) -> Unit = ::excludeSnapshotFromBackup,
+    private val pathInspector: (String) -> Boolean = { path -> snapshotItemExists(fileManager, path) },
 ) : SnapshotFileSystem {
 
     /** Resolve the location without creating or qualifying the snapshots directory. */
@@ -169,7 +170,7 @@ internal class IosSnapshotFileSystem(
         // listUnfinished() runs on cold start, so upgrade old plaintext even
         // if the user does not open its resume tile. Migrate independently so
         // one damaged legacy record cannot hide every healthy saved game.
-        val legacyNames = if (fileManager.fileExistsAtPath(legacyBasePath)) {
+        val legacyNames = if (pathInspector(legacyBasePath)) {
             listDirectory(legacyBasePath)
                 .asSequence()
                 .filter(::isSafeSnapshotFileName)
@@ -186,7 +187,8 @@ internal class IosSnapshotFileSystem(
     private fun readProtectedOrMigrate(name: String): ByteArray? {
         excludeLegacyDirectoryFromBackup()
         val path = filePath(name)
-        if (!fileManager.fileExistsAtPath(path)) return migrateLegacy(name)
+        // Only confirmed absence permits legacy fallback; unavailable lookup is opaque IO.
+        if (!pathInspector(path)) return migrateLegacy(name)
 
         // Older builds can leave plaintext here. Protect the existing item
         // before its bounded migration read; never silently accept weak metadata.
@@ -222,7 +224,7 @@ internal class IosSnapshotFileSystem(
      */
     private fun migrateLegacy(name: String): ByteArray? {
         val legacyPath = "$legacyBasePath/$name"
-        if (!fileManager.fileExistsAtPath(legacyPath)) return null
+        if (!pathInspector(legacyPath)) return null
         // Backup exclusion is not Data Protection. Existing Documents plaintext
         // must also satisfy Complete before its bounded migration read.
         repairCompleteSnapshotProtection(fileManager, legacyPath)
@@ -240,7 +242,7 @@ internal class IosSnapshotFileSystem(
     private fun excludeLegacyDirectoryFromBackup() {
         // Reapply on every access: filesystem operations can recreate the
         // directory or reset its exclusion bit after this instance was made.
-        if (fileManager.fileExistsAtPath(legacyBasePath)) {
+        if (pathInspector(legacyBasePath)) {
             backupExcluder(NSURL.fileURLWithPath(legacyBasePath, isDirectory = true))
         }
     }
@@ -261,14 +263,7 @@ internal class IosSnapshotFileSystem(
         }
 
     private fun deletePathIfPresent(path: String) {
-        if (!fileManager.fileExistsAtPath(path)) return
-        memScoped {
-            val error = alloc<ObjCObjectVar<NSError?>>()
-            error.value = null
-            if (!fileManager.removeItemAtPath(path, error.ptr)) {
-                throw IllegalStateException("Couldn't delete snapshot")
-            }
-        }
+        removeSnapshotItemIfPresent(fileManager, path)
     }
 
     private fun encrypt(name: String, plaintext: ByteArray): ByteArray {
