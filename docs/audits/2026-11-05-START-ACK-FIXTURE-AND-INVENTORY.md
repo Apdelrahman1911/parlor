@@ -59,6 +59,10 @@ python3 -B scripts/generate_review_inventory.py --check
 
 Full affected transport-suite and inventory controls, fresh source-specific
 protected checks/Windows/native journeys, all optimized Release architectures
-and distinct resulting-main acceptance remain required. Old run remains failed;
-no unchanged rerun, skipped check, timeout increase, original iOS/security
+and distinct resulting-main acceptance remain required. The old Common/Windows
+failures stay unqualified: after all corrections were reviewed, the obsolete
+remaining wrapper build was cancelled to avoid an unusable qualification. Its
+source-bound finalizers, owned cleanup and uploads pass; the build is **cancelled**,
+not qualified. All original failure/cancellation evidence remains preserved.
+No unchanged rerun, skipped check, timeout increase, original iOS/security
 closure, physical-device acceptance or Store release is inferred.
