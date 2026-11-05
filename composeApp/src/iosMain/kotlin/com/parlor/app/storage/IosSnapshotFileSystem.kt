@@ -7,6 +7,7 @@ package com.parlor.app.storage
 
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
@@ -46,10 +47,8 @@ import platform.Foundation.NSNumber
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUserDomainMask
-import platform.Foundation.closeFile
 import platform.Foundation.create
 import platform.Foundation.fileHandleForReadingAtPath
-import platform.Foundation.readDataOfLength
 import platform.Foundation.writeToFile
 import platform.Security.SecRandomCopyBytes
 import platform.Security.errSecSuccess
@@ -315,7 +314,7 @@ internal class IosSnapshotFileSystem(
             val receivedTag = protectedBytes.copyOfRange(ciphertextEnd, protectedBytes.size)
             if (ciphertext.size % AES_BLOCK_BYTES != 0) throw SnapshotProtectionException()
 
-            val keyMaterial = snapshotKeyReader() ?: throw SnapshotProtectionException()
+            val keyMaterial = readExistingSnapshotKey() ?: throw SnapshotProtectionException()
             val encryptionKey = keyMaterial.copyOfRange(0, AES_KEY_BYTES)
             val macKey = keyMaterial.copyOfRange(AES_KEY_BYTES, IosSnapshotKeychain.KEY_BYTES)
             return try {
@@ -347,6 +346,19 @@ internal class IosSnapshotFileSystem(
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
+    }
+
+    private fun readExistingSnapshotKey(): ByteArray? = try {
+        snapshotKeyReader()
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (failure: SnapshotProtectionException) {
+        // Invalid/missing key material remains distinct from a failed lookup.
+        throw failure
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+        // Keychain unavailability precedes authentication. It cannot prove
+        // that the retained ciphertext is corrupt or justify discarding it.
+        throw SnapshotProtectionUnavailableException(cause = failure)
     }
 
     private fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray =
@@ -448,13 +460,39 @@ internal fun readBoundedSnapshotBytes(path: String, maximumBytes: Int): ByteArra
     require(maximumBytes >= 0) { "Snapshot byte limit must be non-negative" }
     val handle = NSFileHandle.fileHandleForReadingAtPath(path)
         ?: throw IllegalStateException("Couldn't open protected snapshot")
-    val data = try {
-        handle.readDataOfLength(maximumBytes.toULong() + 1uL)
+    return readOwnedSnapshotHandle(handle, maximumBytes)
+}
+
+/** Takes exclusive ownership of an open handle, including on invalid input or read failure. */
+internal fun readOwnedSnapshotHandle(handle: NSFileHandle, maximumBytes: Int): ByteArray {
+    var closeSucceeded = false
+    val bytes = try {
+        require(maximumBytes >= 0) { "Snapshot byte limit must be non-negative" }
+        val data = memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            // Legacy readDataOfLength raises NSException on I/O errors; those
+            // do not become Kotlin exceptions at the Foundation boundary.
+            val result = handle.readDataUpToLength(maximumBytes.toULong() + 1uL, error.ptr)
+            if (error.value != null || result == null) {
+                throw IllegalStateException("Couldn't read protected snapshot")
+            }
+            result
+        }
+        if (data.length > maximumBytes.toULong()) throw SnapshotProtectionException()
+        data.toByteArray()
     } finally {
-        handle.closeFile()
+        // Do not replace a primary read/validation/cancellation failure with
+        // a cleanup error. Report close failure only after a successful read.
+        closeSucceeded = memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            val closed = handle.closeAndReturnError(error.ptr)
+            closed && error.value == null
+        }
     }
-    if (data.length > maximumBytes.toULong()) throw SnapshotProtectionException()
-    return data.toByteArray()
+    check(closeSucceeded) { "Couldn't close protected snapshot" }
+    return bytes
 }
 
 /** CommonCrypto wrapper that passes a null input pointer for an empty payload. */

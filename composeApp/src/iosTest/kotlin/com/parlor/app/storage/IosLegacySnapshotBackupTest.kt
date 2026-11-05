@@ -22,7 +22,9 @@ import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
+import com.parlor.storage.snapshot.SnapshotMetadata
 import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.CancellationException
@@ -213,6 +215,40 @@ class IosLegacySnapshotBackupTest {
             val actual = assertFailsWith<SnapshotProtectionException> { filesystem.read(record.name) }
             assertSame(failure, actual.cause)
             assertValidRetainedCopy(record, saved)
+        }
+    }
+
+    @Test
+    fun keyReadFailureReportsOpaqueIoAndRecoversWithoutDiscardingCopies(): Unit = runBlocking {
+        withValidCopies { record, saved ->
+            val failure = IllegalStateException("synthetic key unavailable")
+            var available = false
+            var keyReads = 0
+            val filesystem = IosSnapshotFileSystem(snapshotKeyReader = {
+                keyReads++
+                if (available) syntheticKey() else throw failure
+            })
+            val store = FileBackedSnapshotStore(filesystem, Json)
+
+            val actual = assertFailsWith<SnapshotProtectionUnavailableException> { filesystem.read(record.name) }
+            assertSame(failure, actual.cause)
+            assertEquals(1, keyReads)
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.load(saved.sessionId))
+            assertEquals(2, keyReads, "A failed load must not retry key acquisition")
+            assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.loadMetadata(saved.sessionId))
+            assertEquals(3, keyReads, "A failed metadata load must not retry key acquisition")
+            assertValidRetainedCopy(record, saved)
+
+            available = true
+            assertEquals(Result.Success(saved), store.load(saved.sessionId))
+            assertEquals(4, keyReads)
+            assertFalse(fileManager.fileExistsAtPath(record.legacyPath))
+            assertContentEquals(record.originalProtectedBytes, readBoundedSnapshotBytes(record.protectedPath, 65_536))
+            assertEquals(
+                Result.Success(SnapshotMetadata(saved.sessionId, saved.gameId)),
+                store.loadMetadata(saved.sessionId),
+            )
+            assertEquals(5, keyReads)
         }
     }
 
