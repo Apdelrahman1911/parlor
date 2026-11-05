@@ -58,6 +58,15 @@ class CurrentMainStartupReviewTest(unittest.TestCase):
         self.assertNotIn('contents: write', workflow)
         self.assertNotIn('setup-java', workflow)
 
+    def test_only_the_missing_host_context_is_read_not_the_prior_daemon_query(self):
+        self.assertIn('com.apple.CoreSimulator', startup.PREDICATE)
+        self.assertIn('dyld', startup.PREDICATE)
+        self.assertNotIn('processIdentifier == 38943', startup.PREDICATE)
+        self.assertNotIn('process == "kbd"', startup.PREDICATE)
+        self.assertNotIn('process == "xpcproxy_sim"', startup.PREDICATE)
+        self.assertIn('HOST_PREEXEC_CONTEXT_UNAVAILABLE_IN_ORIGINAL_SIMULATOR_ARCHIVE',
+                      Path(startup.__file__).read_text())
+
     def test_exact_workflow_and_all_companions_remain_frozen(self):
         import sys
         sys.path.insert(0, str(startup.frozen.ROOT))

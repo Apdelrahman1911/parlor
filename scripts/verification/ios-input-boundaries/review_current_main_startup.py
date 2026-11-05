@@ -21,9 +21,12 @@ CERTIFICATE = Path(__file__).with_name('current_main_startup_custody.crt')
 # Native platform processes only, in the existing failing public Name interval.
 # Includes launchd's original service-startup records and the proxy/daemon
 # processes; no application console, UI hierarchy, screenshots or gameplay.
-PREDICATE = ('processIdentifier == 38943 OR process == "xpcproxy_sim" OR process == "kbd" '
-             'OR process == "amfid" OR subsystem CONTAINS "com.apple.TextInput.kbd" '
-             'OR subsystem CONTAINS "AppleMobileFileIntegrity"')
+# This second view reads the previously excluded host/runtime pre-exec context;
+# it does not replay the already admitted 442 native daemon records.
+PREDICATE = ('subsystem BEGINSWITH "com.apple.CoreSimulator" OR '
+             'process == "SimLaunchHostService" OR process == "CoreSimulatorService" OR '
+             'subsystem CONTAINS "dyld" OR process == "taskgated" OR process == "syspolicyd"')
+
 
 
 def envelope_command(source, destination, certificate):
@@ -54,7 +57,7 @@ def main():
     out.mkdir(mode=0o700)
     receipt = dict(result='RUNNING_NOT_QUALIFIED', source=os.environ['GITHUB_SHA'],
                    original_run=SPEC['run'], original_head=SPEC['head'], original_artifact=SPEC['artifact'],
-                   application_executed=False, input_replayed=False, previous_numeric_decode_repeated=False,
+                   application_executed=False, input_replayed=False, previous_numeric_decode_repeated=False, previous_daemon_context_repeated=False,
                    shipping_qualified=False, physical_verified=False, plaintext_published=False,
                    certificate_sha256=hashlib.sha256(CERTIFICATE.read_bytes()).hexdigest())
     def checkpoint(**_):
@@ -93,6 +96,11 @@ def main():
         raw = run(['/usr/bin/log', 'show', '--archive', str(archives[0]), '--start', SPEC['start'],
                    '--end', SPEC['end'], '--timezone', 'UTC', '--info', '--debug', '--style', 'json',
                    '--predicate', PREDICATE], 'missing-native-startup-context', 90)
+        if json.loads(raw) == []:
+            receipt.update(result='HOST_PREEXEC_CONTEXT_UNAVAILABLE_IN_ORIGINAL_SIMULATOR_ARCHIVE',
+                           native_rows=0, native_output_sha256=frozen.sha(raw),
+                           original_archive_sha256=SPEC['digest'])
+            return 0
         count = validate_native_rows(raw)
         plaintext = out / 'private-native-startup.json'
         with plaintext.open('xb') as stream: stream.write(raw)

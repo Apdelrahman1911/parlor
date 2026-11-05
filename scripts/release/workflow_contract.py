@@ -1821,13 +1821,13 @@ def verify_public_testing(text: str) -> None:
 # Only this source-frozen archive consumer is admitted on the diagnostic branch.
 # Production workflows/gates remain unchanged; generic unknown workflows still reject.
 CURRENT_MAIN_TYPING_CONTROLS = {
-    '.github/workflows/ios-main-typing-archive-review.yml': '95a9e18e1e01b6331e2f25e44b57dd89090e6cc935019658f7560b21a38865d3',
+    '.github/workflows/ios-main-typing-archive-review.yml': 'fff14ba40cc0b60ae75c6cfe9cc53ae56765c6e69e0849beb60d996ecb938e88',
     'scripts/verification/ios-input-boundaries/review_current_main_typing.py': '0fa94153b1abbaff2875ce95dd85d0841d96e1d87628a394c6a8bd8b8f3b1e06',
     'scripts/verification/ios-input-boundaries/test_current_main_typing_review.py': 'bc51233e6243af05b76bd3b8ff2a90f12db0628d8225ce19c8c999a7e9464318',
     'scripts/verification/ios-input-boundaries/current_main_typing_manifest.json': 'd270d5bbf6b28583cd4cffa193615031e3184a8b0215d2504981210a44cf238a',
     'scripts/ci/native_process_probe.py': 'f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681',
-    'scripts/verification/ios-input-boundaries/review_current_main_startup.py': 'd5f1a13dbefbf6aad5456ac3eb04022140ec57943c118350c5ebe915dbf948fc',
-    'scripts/verification/ios-input-boundaries/test_current_main_startup_review.py': '9aa7de4af9303ab994de6fb2478e0a64126700934f8cfdcbc128bcb410e9edc0',
+    'scripts/verification/ios-input-boundaries/review_current_main_startup.py': 'dd137696f5efcb014dad72132a764f9f09282e0b939791e65e69d6a99dac0e87',
+    'scripts/verification/ios-input-boundaries/test_current_main_startup_review.py': '42067ca99e00b53463628e3dc9f11b487d90d0946889f2f20aeda53c5db7565e',
     'scripts/verification/ios-input-boundaries/current_main_startup_custody.crt': '0056e69f6ff98dfbbb009dc25463c8f67fb746eb9a0d626be7e3d9ab1be1f28f',
 }
 
