@@ -116,6 +116,9 @@ class IosSnapshotReadErrorTest {
                     val descriptor = openDescriptor(path, O_WRONLY)
                     try {
                         return readOwnedSnapshotHandle(ownedHandle(descriptor), 8)
+                    } catch (failure: IllegalStateException) {
+                        assertEquals("Couldn't read protected snapshot", failure.message)
+                        throw failure
                     } finally {
                         assertClosed(descriptor)
                     }
