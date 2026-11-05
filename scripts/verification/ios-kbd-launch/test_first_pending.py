@@ -16,7 +16,7 @@ spec.loader.exec_module(p)
 
 
 class FirstPendingControls(unittest.TestCase):
-    def execute(self, *, finish_at=None, state=None):
+    def execute(self, *, finish_at=None, state=None, report_format="spindump"):
         clock = SimpleNamespace(now=1000.0)
         child = SimpleNamespace(pid=123, returncode=None, killed=False)
         def wait(timeout=None):
@@ -55,7 +55,9 @@ class FirstPendingControls(unittest.TestCase):
                  patch.object(p.subprocess, 'Popen', side_effect=launch) as opened, \
                  patch.object(p, 'profile_command', return_value=0) as sampled:
                 code, _ = p.observe_print(out, ['owned-query'], backend, None, None,
-                                         label='managerpid', capture_state=state, trusted_tools=(str(tool),))
+                                         label='managerpid', capture_state=state, trusted_tools=(str(tool),),
+                                         report_format=report_format)
+                self.last_profile_call = sampled.call_args
             import json
             record = json.loads((out / 'managerpid.json').read_text())
             target = json.loads((out / 'target-before.json').read_text()) if sampled.called else None

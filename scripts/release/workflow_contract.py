@@ -20,10 +20,13 @@ EXPECTED = {
     "testing-external-promotion.yml",
     "production-promotion.yml",
     "ios-input-investigation.yml",
+    "ios-kbd-launch.yml",
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
 INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+# Temporary diagnostic branch only: exact reviewed non-production workflow.
+NATIVE_QUERY_DIAGNOSTIC_SHA256 = "3b5c3db685803063992c35c2943720f632b04097f1f361be59fefdaab8f9100a"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -1824,6 +1827,8 @@ def main() -> int:
     verify_android_runtime_script()
     for name, text in files.items():
         verify_common(name, text)
+    if hashlib.sha256(files["ios-kbd-launch.yml"].encode("utf-8")).hexdigest() != NATIVE_QUERY_DIAGNOSTIC_SHA256:
+        fail("Native query diagnostic must retain its exact reviewed free-runner read-only workflow")
     verify_validation(files["production-verification.yml"])
     verify_input_investigation(files["ios-input-investigation.yml"])
     for name in STORE_WORKFLOWS:

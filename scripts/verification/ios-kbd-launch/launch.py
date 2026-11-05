@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from scripts.ci import apple_verification_hygiene as apple, verification_hygiene as common, owned_ci_simulator as sim
 from scripts.ci.darwin_worker_identity import DarwinWorkerBackend
 import private_profiler
+import private_sample
 
 LABEL = "com.apple.TextInput.kbd"
 # Exact forwarded executable observed in41901582085, not a prefix/name guess.
@@ -230,15 +231,17 @@ def script_children(backend, parent, since, deadline):
     return children
 
 
-def profile_command(out, argv, *, deadline):
+def profile_command(out, argv, *, deadline, report_format="spindump"):
     """File-backed streams cannot wait on a descendant's pipe EOF.
 
     Cancel only our direct profiler caller with TERM first. Never signal the
     service/sampled PID or a process group.
     Direct reaping alone is not a claim about privileged descendant termination.
     """
-    # Capture one second with the independently admitted target-only spindump;
-    # its native5s time limit fits within the retained8s caller ceiling.
+    if report_format not in ("spindump", "sample"):
+        raise ValueError("Only the reviewed private report formats are admitted")
+    # Capture one second with the target-only native profiler;
+    # spindump also has a native5s bound; sample uses the same8s caller ceiling.
     # Allow1s for TERM/reaping inside the query's
     # original deadline. Do not start a capture that cannot fit that budget.
     timeout = min(8, deadline - time.monotonic() - 1.25)
@@ -249,7 +252,7 @@ def profile_command(out, argv, *, deadline):
     started, code, outcome = time.time(), None, "INCOMPLETE"
     profile_command.private_capture = None
     private = Path(tempfile.mkdtemp(prefix="parlor-native-private-", dir=os.environ.get("RUNNER_TEMP"))).resolve(strict=True)
-    # The known-working -noFile mode writes opaque system metadata to stdout.
+    # Both report formats write unfiltered system metadata to private stdout.
     # Never put either unfiltered stream inside the uploaded evidence tree.
     with (private / "record.opaque-output").open("x+b") as stdout, (private / "record.stderr").open("x+b") as stderr:
         child = subprocess.Popen(argv, stdout=stdout, stderr=stderr)
@@ -281,8 +284,11 @@ def profile_command(out, argv, *, deadline):
                 captured_prefix_bytes=len(raw),
                 captured_prefix_sha256=hashlib.sha256(raw).hexdigest() if bounded else None,
                 bounded=bounded, raw_metadata_uploaded=False, unfiltered_stderr_uploaded=False,
-                native_mode="REUSED_41423553336_PRIVATE_STDOUT_NOFILE",
-                independent_reference="c064c2bfa7db8f63207908d287a2de0d6389e197"))
+                native_mode=("DOCUMENTED_SAMPLE_PRIVATE_FILE_STDOUT" if report_format == "sample"
+                             else "REUSED_41423553336_PRIVATE_STDOUT_NOFILE"),
+                independent_reference=("installed-sample-man-and-native_process_probe-exact-command"
+                                       if report_format == "sample"
+                                       else "c064c2bfa7db8f63207908d287a2de0d6389e197")))
             # Internal-only locator, never serialized or published.
             profile_command.private_capture = private if code == 0 and bounded else None
             save(out, "query-sample", dict(argv=argv, exit_code=code, status=outcome,
@@ -293,7 +299,11 @@ def profile_command(out, argv, *, deadline):
     return code
 
 
-def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state, trusted_tools):
+def observe_print(out, argv, backend, parent, runtime_root, *, label="service-before", capture_state, trusted_tools,
+                  report_format="spindump"):
+    if report_format not in ("spindump", "sample"):
+        raise ValueError("Only the reviewed private report formats are admitted")
+    profiler = private_sample if report_format == "sample" else private_profiler
     started, deadline, capture = time.time(), time.monotonic() + 20, None
     with tempfile.TemporaryFile() as stdout_file, tempfile.TemporaryFile() as stderr_file:
         child = subprocess.Popen(argv, stdout=stdout_file, stderr=stderr_file)
@@ -376,9 +386,12 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
                 save(out, "target-before", dict(pid=target.pid, uid=target.uid, parent=target.ppid,
                      start=[target.start_sec,target.start_usec], executable=path, scope=scope,
                      observed_epoch=time.time(), query_argv=argv, original_deadline_seconds=20))
-                sample = private_profiler.capture_command(target.pid, None)
+                sample = profiler.capture_command(target.pid, None)
                 capture_state["attempted"] = True  # One profile attempt for the whole run, including failures.
-                sample_code = profile_command(out, sample, deadline=deadline)
+                if report_format == "sample":
+                    sample_code = profile_command(out, sample, deadline=deadline, report_format="sample")
+                else:
+                    sample_code = profile_command(out, sample, deadline=deadline)
                 later = backend._basic(target.pid)
                 capture = dict(pid=target.pid, scope=scope, exit_code=sample_code,
                                after_start=None if later is None else [later.start_sec,later.start_usec],
@@ -407,7 +420,7 @@ def observe_print(out, argv, backend, parent, runtime_root, *, label="service-be
             private = getattr(profile_command, "private_capture", None)
             if isinstance(private, Path) and capture is not None:
                 try:
-                    decoded = private_profiler.decode(private, out, target.pid, path)
+                    decoded = profiler.decode(private, out, target.pid, path)
                     save(out, "query-native-frames", decoded)
                 except (OSError, ValueError, subprocess.TimeoutExpired):
                     save(out, "query-native-frames", dict(result="OFFLINE_DECODE_REJECTED",
@@ -461,7 +474,8 @@ def main():
             raise RuntimeError("Owned simulator boot failed")
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
     code, raw = observe_print(out, [native_query_tool, "spawn", udid, "launchctl", "managerpid"],
-                              backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)
+                              backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools,
+                              report_format="sample")
     if code is None:
         raise RuntimeError("Native managerpid timed out; no keyboard/service identity or app causality established")
     if code != 0 or not re.fullmatch(rb"[1-9][0-9]*", raw.strip()):
@@ -478,7 +492,7 @@ def main():
     # Run the exact observed failing read once, unchanged20s platform deadline.
     # Do not equate a timeout with a missing service or issue a kickstart.
     code, raw = observe_print(out, [*control, "print", target], backend, parent, Path(path).parent.parent,
-                              capture_state=capture_state, trusted_tools=trusted_tools)
+                              capture_state=capture_state, trusted_tools=trusted_tools, report_format="sample")
     if code is None:
         raise RuntimeError("Native service print timed out; service existence and app causality remain unknown")
     if code != 0:
