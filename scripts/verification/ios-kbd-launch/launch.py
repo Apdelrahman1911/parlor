@@ -436,11 +436,7 @@ def main():
          architecture=platform.machine(),
          runtime=plan["runtime"], device_type=plan["device_type"], app_built=False,
          input_executed=False, application_qualified=False, physical_verified=False))
-    udid, boot_time = device["udid"], time.time()
-    for label, args in (("boot", ["boot", udid]), ("bootstatus", ["bootstatus", udid, "-b"])):
-        code, _ = query(out, label, ["/usr/bin/xcrun", "simctl", *args], 180)
-        if code != 0:
-            raise RuntimeError("Owned simulator boot failed")
+    udid = device["udid"]
     trusted_tools = attested_dispatchers(out)
     # Public installed metadata only; the stub invokes -runFirstLaunch on a
     # version mismatch. Do not run that mutating operation or infer a mismatch.
@@ -455,6 +451,14 @@ def main():
          matches_observed_stub=version == "1051.17.8", explicit_first_launch_command_executed=False,
          prior_shim_branch_execution="NOT_OBSERVED"))
     native_query_tool = initialized_native_query_tool(out, trusted_tools, version)
+    # Establish the selected toolchain prerequisite before booting its runtime,
+    # not after allocating running Simulator services. UNKNOWN refuses boot too;
+    # this ordering is not an assertion extension or automatic initialization.
+    boot_time = time.time()
+    for label, args in (("boot", ["boot", udid]), ("bootstatus", ["bootstatus", udid, "-b"])):
+        code, _ = query(out, label, ["/usr/bin/xcrun", "simctl", *args], 180)
+        if code != 0:
+            raise RuntimeError("Owned simulator boot failed")
     backend, capture_state = DarwinWorkerBackend(), {"attempted": False}
     code, raw = observe_print(out, [native_query_tool, "spawn", udid, "launchctl", "managerpid"],
                               backend, None, None, label="managerpid", capture_state=capture_state, trusted_tools=trusted_tools)

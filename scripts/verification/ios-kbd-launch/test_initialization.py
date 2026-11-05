@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import plistlib
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -14,6 +15,33 @@ spec.loader.exec_module(p)
 
 
 class InitializationControls(unittest.TestCase):
+    def test_unknown_initialization_prevents_boot_not_just_later_queries(self):
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            resources = root / 'native/Resources'
+            resources.mkdir(parents=True)
+            (resources / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleVersion': '1051.55'}))
+            tools = ('/usr/bin/xcrun', '/selected/stub', str(resources / 'bin/simctl'))
+            plan = dict(nonce='fixture', runtime='com.apple.CoreSimulator.SimRuntime.iOS-26-2',
+                        device_type='com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro')
+            with patch.object(p, 'ROOT', root), \
+                 patch.object(p.common, 'context', return_value=(root, root / 'prefix', {'GITHUB_JOB': 'ios'})), \
+                 patch.object(p.common, 'git', return_value=''), \
+                 patch.object(p.apple, 'configuration', return_value={}), \
+                 patch.object(p.apple, 'validate_claim', return_value={'nonce': 'fixture'}), \
+                 patch.object(p.apple, 'source', return_value={'fixture': True}), \
+                 patch.object(p.sim, 'read_record', side_effect=[plan, {}]), \
+                 patch.object(p.sim.SimctlBackend, 'inventory', return_value={'devices': {}}), \
+                 patch.object(p.sim, 'owned_device', return_value={'udid': 'owned-fixture', 'state': 'Shutdown'}), \
+                 patch.object(p, 'attested_dispatchers', return_value=tools), \
+                 patch.object(p, 'initialized_native_query_tool', side_effect=RuntimeError('UNKNOWN initialization')) as initialize, \
+                 patch.object(p, 'query', return_value=(0, b'')) as query, \
+                 patch.dict(os.environ, {'PARLOR_NATIVE_RUNNER_LABEL': 'macos-26'}):
+                with self.assertRaisesRegex(RuntimeError, 'UNKNOWN initialization'):
+                    p.main()
+            initialize.assert_called_once()
+            query.assert_not_called()
+
     def test_initialized_exact_declared_forwarder_does_not_require_unproven_version_equality(self):
         with TemporaryDirectory() as temp:
             out = Path(temp)
