@@ -1,8 +1,8 @@
-name: iOS native print wait (not application qualification)
+name: iOS native macOS 26 compatibility (not application qualification)
 
 on:
   push:
-    branches: [diagnostic/ios-kbd-launch-2026-11-04]
+    branches: [diagnostic/ios-native-host26-2026-11-05]
 
 permissions:
   contents: read
@@ -16,9 +16,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Standard/free public-repository Intel host, not a paid larger runner.
+        # Documented standard/free ARM macOS 26 host; Xcode/runtime/budgets unchanged.
         # Native-only alternative-host control; production CI stays unchanged.
-        runner: [macos-15-intel]
+        runner: [macos-26]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 10
     env:
