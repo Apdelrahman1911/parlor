@@ -121,7 +121,11 @@ fun JoinPromptScreen(
                 ParlorButton(
                     label = stringResource(Res.string.join_confirm),
                     contentDescription = stringResource(Res.string.join_confirm_description),
-                    onClick = { onConfirm(code) },
+                    onClick = {
+                        // An enabled callback can outlive the draft it was rendered for.
+                        val currentCode = code
+                        if (RoomInputPolicy.isValidRoomCode(currentCode)) onConfirm(currentCode)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = RoomInputPolicy.isValidRoomCode(code),
                 )
