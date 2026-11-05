@@ -92,8 +92,7 @@ class CopyControls(unittest.TestCase):
         source = actual_sources()
         anchors = ((copies.PICKER, '                        onClick = onHost,\n                        modifier = Modifier.fillMaxWidth(),'),
                    (copies.PICKER, '                        onClick = onJoin,\n                        modifier = Modifier.fillMaxWidth(),'),
-                   (copies.SHELL, 'onHost = { step = ShellStep.HostPermission }'),
-                   (copies.SHELL, 'onJoin = { step = ShellStep.JoinPermission }'),
+                   *((copies.SHELL, old) for old, _ in copies.setup_callbacks(source[copies.SHELL])),
                    (copies.MAIN, '        startKoinOnce()'),
                    (copies.CONTENT, '        ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())'))
         for path, anchor in anchors:
@@ -102,6 +101,51 @@ class CopyControls(unittest.TestCase):
                 with self.subTest(path=path, changed=changed[-45:]), self.assertRaises(RuntimeError):
                     copies.render(altered, digest(altered), native_observer=True)
         self.assertEqual(actual_sources(), source)
+
+    def test_guarded_callback_plan_preserves_the_origin_check_and_is_exactly_reversible(self):
+        source = actual_sources()
+        shell = source[copies.SHELL]
+        for phase in ('HostPermission', 'JoinPermission'):
+            self.assertIn(f'if (step == ShellStep.Setup) step = ShellStep.{phase}', shell)
+        for native in (False, True):
+            transformed = copies.render(source, digest(source), native_observer=native)
+            restored = transformed[copies.SHELL]
+            for old, new in copies.setup_callbacks(shell):
+                self.assertEqual(restored.count(new), 1)
+                self.assertIn('if (step == ShellStep.Setup) { com.parlor.app.inputcopy.', new)
+                restored = restored.replace(new, old)
+            stage = ('    com.parlor.app.inputcopy.PIN01PublicStage(when (step) {\n'
+                     '        ShellStep.Setup -> 0\n        ShellStep.HostPermission -> 1\n'
+                     '        ShellStep.JoinPermission -> 2\n        ShellStep.HostName -> 3\n'
+                     '        ShellStep.JoinName -> 4\n        else -> 5\n    })\n')
+            self.assertEqual(restored.count(stage), 1)
+            self.assertEqual(restored.replace(stage, ''), shell)
+
+    def test_legacy_callback_plan_keeps_the_original_unguarded_assignments(self):
+        source = actual_sources()
+        for action, phase in (('onHost', 'HostPermission'), ('onJoin', 'JoinPermission')):
+            source[copies.SHELL] = source[copies.SHELL].replace(
+                f'{action} = {{ if (step == ShellStep.Setup) step = ShellStep.{phase} }}',
+                f'{action} = {{ step = ShellStep.{phase} }}')
+        for native in (False, True):
+            transformed = copies.render(source, digest(source), native_observer=native)
+            for control, phase in ((1, 'HostPermission'), (2, 'JoinPermission')):
+                self.assertIn(f'PIN01Observation.callback({control}); step = ShellStep.{phase}',
+                              transformed[copies.SHELL])
+
+    def test_mixed_duplicate_or_unknown_callback_revisions_are_rejected(self):
+        source = actual_sources()
+        old, _ = copies.setup_callbacks(source[copies.SHELL])[0]
+        for replacement in (
+            old.replace('if (step == ShellStep.Setup) ', ''),
+            old + ', ' + old,
+            old + ', ' + old.replace('if (step == ShellStep.Setup) ', ''),
+            old.replace('ShellStep.Setup)', 'ShellStep.JoinName)'),
+        ):
+            altered = dict(source)
+            altered[copies.SHELL] = altered[copies.SHELL].replace(old, replacement)
+            with self.subTest(replacement=replacement), self.assertRaises(RuntimeError):
+                copies.render(altered, digest(altered), native_observer=True)
 
     def test_public_scope_lifecycle_and_buffer_controls_are_explicit(self):
         text = (copies.HERE / 'PIN01Observation.kt.in').read_text()
