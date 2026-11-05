@@ -1,8 +1,8 @@
 # Project status — November 5, 2026
 
-## Current merged source and outstanding acceptance
+## Source checkpoint before PR326 and outstanding acceptance
 
-Actual main `40b02d74ce8e1529120e2a9bf7ee160ccb09e2c2` (PR325) has a
+At this checkpoint, main `40b02d74ce8e1529120e2a9bf7ee160ccb09e2c2` (PR325) has a
 terminal **failed** independent
 [42030154806](https://github.com/Apdelrahman1911/parlor/actions/runs/42030154806):
 802 KMP Simulator methods pass, but Swift is39 PASS/1 FAIL at Arabic public Name
@@ -17,7 +17,10 @@ No unchanged native retries or larger assertions are selected. A separately
 confirmed application input-ownership correction is published in draft
 [PR326](https://github.com/Apdelrahman1911/parlor/pull/326), at `d5c43a3d`;
 see the [route ownership report](audits/2026-11-05-CONFIRMED-INPUT-ROUTE-OWNERSHIP.md).
-Fresh corrected-source/protected/main acceptance is pending; #182/#324 stay open.
+Fresh final-source/protected/main acceptance is pending; #182/#324 stay open.
+Subsequent PR326/main evidence is tracked on [#182](https://github.com/Apdelrahman1911/parlor/issues/182).
+The new fifteen ownership methods cover explicit EN/AR, not System; their initial
+Linux ARM64/Windows passes are not complete protected qualification.
 
 Phase2 is complete: #293/#299/#301 integrations and #312's published skills
 playbook must not be repeated. Phase3/#258's existing candidate `2e7de440` has

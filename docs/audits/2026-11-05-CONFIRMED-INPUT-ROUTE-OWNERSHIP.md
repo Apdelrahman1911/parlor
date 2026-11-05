@@ -1,6 +1,8 @@
 # Confirmed input must belong to its originating route
 
 Related: [#182](https://github.com/Apdelrahman1911/parlor/issues/182).
+This is the pre-qualification source report; subsequent terminal PR/main
+evidence and acceptance updates are recorded on that issue and PR326.
 This correction does not explain the original Simulator HID cancellation or
 keyboard-service startup delay tracked by #267/#276.
 
@@ -27,14 +29,24 @@ Thus all six room-code paths and the three bespoke peer-name paths reproduce
 the defect; three generic peer-name controls already pass. XML SHA256:
 `b5163cd93ebe9fd53b3bf0af3acf3cfc9369e8dcf1e34a92b967776b57b3d588`.
 
-The same hosted baseline's three host methods fail before their assertions:
-the fixture omitted `LocalParlorToastState`, required by all three real host
-lobbies. The fixture now supplies the same provider as the app root. Only
-those previously unexecuted host assertions require another original-source
-baseline; earlier successful controls and confirmed failing methods are not
-replayed. Original fixture failures and exact-PID local kernel OOMs are retained,
-not classified as application defects. Initial PR run42076115222 is explicitly
-cancelled because its frozen fixture has this known error, not qualified.
+That baseline's three host methods instead failed before their assertions:
+the fixture omitted `LocalParlorToastState`, required by the real host lobbies.
+Supplying the app-equivalent provider resolves those fixture errors. Only the
+three previously unexecuted assertions ran again on unchanged application
+`ee080766` in [42076734686](https://github.com/Apdelrahman1911/parlor/actions/runs/42076734686):
+**3 exact wrong-host-name assertion failures, no errors or skips**. XML SHA256:
+`778ab8f2c23db9a9ad235606307ad7199e3f88ef2aca86666dc29b4ce9fd61c3`. All twelve affected room/peer/host paths now reproduce;
+no further baseline replay is needed. Earlier fixture errors and exact-PID local
+kernel OOMs remain recorded, not application defects.
+
+Initial PR42076115222 is explicitly cancelled for its known fixture error.
+PR42076835519 independently passes all fifteen corrected methods in EN/AR on
+Linux ARM64 and Windows; it is subsequently cancelled to correct this report's
+coverage wording. `AppLanguage.entries` contains only English and Arabic;
+**System was not exercised by this regression class**. Neither cancelled run
+qualifies the complete PR. The final reviewed source still requires every
+protected check; no application/test/assertion/input/dependency change is made
+for this documentation correction.
 
 ## Correction
 
@@ -58,7 +70,7 @@ xvfb-run -a ./gradlew :composeApp:desktopTest \
   --dependency-verification=strict
 ```
 
-Fifteen permanent methods cover EN/AR/System, all six peer/code paths and the
+Fifteen permanent methods cover explicit EN/AR, all six peer/code paths and the
 three bespoke host paths, including Whodunit's real case/mode setup. Fixtures use
 synthetic public inputs, never open LAN rooms, and cancel/join their owned scopes
 and close dispatchers. The real lobbies receive their required app toast context.
