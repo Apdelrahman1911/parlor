@@ -1,0 +1,85 @@
+name: SwiftBuild cancellation control (not production qualification)
+on:
+  push:
+    branches: [diagnostic/swiftbuild-worker-cancellation-2026-11-05]
+permissions:
+  contents: read
+concurrency:
+  group: swiftbuild-cancellation-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  ios-release-simulator:
+    name: Exact SwiftBuild cancellation (${{ matrix.architecture }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: arm64
+            runner: macos-15
+          - architecture: x64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Check out exact isolated cancellation source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Validate new cancellation controls
+        run: /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-input-boundaries -p test_swiftbuild_worker_cancellation.py -v
+      - name: Exercise exact owned cancellation without Parlor or Simulator
+        id: control
+        run: |
+          /usr/bin/python3 -B scripts/verification/ios-input-boundaries/swiftbuild_worker_cancellation.py \
+            --output "$RUNNER_TEMP/parlor-swiftbuild-cancel-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+      - name: Always verify final exact-worker quiescence
+        if: always()
+        env:
+          CONTROL_OUTCOME: ${{ steps.control.outcome }}
+        run: |
+          /usr/bin/python3 -B - <<'PY'
+          import json, os, sys, time
+          from pathlib import Path
+          sys.path.insert(0, str(Path.cwd()))
+          from scripts.ci import apple_verification_hygiene as apple
+          from scripts.ci import verification_hygiene as common
+          output = Path(os.environ['RUNNER_TEMP']) / ('parlor-swiftbuild-cancel-' + os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT'])
+          prefix = output / 'apple-wrapper'
+          if not apple.claim_path(prefix).exists():
+              print('NOT_CLAIMED: no worker signal authorized')
+              raise SystemExit(0)
+          primary = output / 'swiftbuild-cancellation-result.json'
+          if primary.exists():
+              original = json.loads(primary.read_text())
+              # Allow the fixture's finite 30s shell phase to finish naturally;
+              # this is not an application assertion deadline or an input retry.
+              observed = original.get('holding_observed_epoch')
+              if type(observed) in (int, float):
+                  remaining = observed + 35 - time.time()
+                  if 0 < remaining <= 35:
+                      time.sleep(remaining)
+          task = {k: os.environ[k] for k in ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_JOB')}
+          receipt = apple.finish(Path.cwd().resolve(), prefix, task, 'apple-wrapper', 'success', os.environ['CONTROL_OUTCOME'])
+          common.write_new(output / 'final-worker-quiescence.json', receipt)
+          print(json.dumps(receipt, indent=2))
+          raise SystemExit(0 if receipt['result'] == 'PASS' else 1)
+          PY
+      - name: Retain public identity and native cleanup evidence only
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: swiftbuild-cancellation-${{ matrix.architecture }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/parlor-swiftbuild-cancel-${{ github.run_id }}-${{ github.run_attempt }}/swiftbuild-cancellation-result.json
+            ${{ runner.temp }}/parlor-swiftbuild-cancel-${{ github.run_id }}-${{ github.run_attempt }}/apple-wrapper-ownership.json
+            ${{ runner.temp }}/parlor-swiftbuild-cancel-${{ github.run_id }}-${{ github.run_attempt }}/final-worker-quiescence.json
