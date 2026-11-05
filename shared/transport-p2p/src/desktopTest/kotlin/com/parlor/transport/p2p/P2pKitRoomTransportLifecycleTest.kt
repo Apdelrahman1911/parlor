@@ -841,7 +841,9 @@ class P2pKitRoomTransportLifecycleTest {
         message: PeerMessage,
     ) {
         kit.incomingSessionsFlow.emit(session)
-        yield()
+        // Replay-zero fake frames are lost without a real subscriber. Yielding
+        // this sender does not establish readiness on the receiver's dispatcher.
+        withTimeout(2_000L) { session.incomingFlow.subscriptionCount.first { it == 1 } }
         session.incomingFlow.emit(P2pMessage.Binary(codec.encode(message)))
     }
 
