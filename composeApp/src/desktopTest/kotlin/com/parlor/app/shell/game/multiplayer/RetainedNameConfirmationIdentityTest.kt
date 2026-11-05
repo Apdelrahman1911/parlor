@@ -25,6 +25,8 @@ import com.parlor.app.shell.game.MafiaGameShellBinding
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.app.shell.game.WordImpostorGameShellBinding
 import com.parlor.core.result.Result
+import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.ParlorToastState
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
@@ -125,6 +127,7 @@ class RetainedNameConfirmationIdentityTest {
         val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
         val owner = ProcessMultiplayerSessionOwner(CoroutineScope(job + dispatcher))
         val transport = IdentityJoinTripwire(isHost)
+        val toast = ParlorToastState()
         val arabic = language == AppLanguage.Arabic
         val original = if (arabic) "أحمد" else "First Peer"
         val replacement = if (arabic) "نور" else "Replacement Peer"
@@ -144,7 +147,10 @@ class RetainedNameConfirmationIdentityTest {
                         single { owner }
                         single { AppLifecycleCoordinator(transport).apply { notifyActive() } }
                     }) }) {
-                        CompositionLocalProvider(LocalDensity provides Density(1f)) {
+                        CompositionLocalProvider(
+                            LocalDensity provides Density(1f),
+                            LocalParlorToastState provides toast,
+                        ) {
                             ProvideAppLanguage(language) {
                                 ParlorTheme(reducedMotion = true) {
                                     binding.Content(GameShellLaunch.New(binding.definition.id), {}, GameShellBackRequest.Initial)
