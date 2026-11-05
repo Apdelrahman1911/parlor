@@ -823,8 +823,12 @@ class P2pKitRoomTransportLifecycleTest {
             runCurrent()
             hostScheduler.runCurrent()
             assertThat(sent.isCompleted).isTrue()
-            assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
             assertThat(session.admissionRejections()).containsExactly(AdmissionRejection.InvalidRequest)
+            // Execute the production rejection flush on the independent virtual
+            // clock; no sender retry or increased real-time assertion budget.
+            hostScheduler.advanceTimeBy(P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS)
+            hostScheduler.runCurrent()
+            assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
             assertThat(room.pendingAdmissions.value).isEmpty()
             assertThat(room.members.value).isEmpty()
         } finally {
