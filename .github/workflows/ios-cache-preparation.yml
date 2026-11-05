@@ -1,0 +1,42 @@
+name: iOS supported cache preparation (experiment, not qualification)
+
+on:
+  push:
+    branches: [diagnostic/ios-cache-preparation-2026-11-05]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parlor-ios-cache-preparation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    # Exclusive standard public runner; no paid resources, application build,
+    # input warm-up, signing, protection waiver, or production substitution.
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      PARLOR_CACHE_NAME: parlor-cache-preparation-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate reused intake and one-shot preparation controls
+        run: |
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-runtime-cache-intake -v
+          /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-cache-preparation -v
+      - name: Complete supported caches once without forcing recreation
+        env:
+          PARLOR_CACHE_PREPARATION_OUTPUT: ${{ runner.temp }}/${{ env.PARLOR_CACHE_NAME }}
+        run: /usr/bin/python3 -B scripts/verification/ios-cache-preparation/prepare.py
+      - name: Preserve native exit and scoped preparation evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-cache-preparation-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/${{ env.PARLOR_CACHE_NAME }}
