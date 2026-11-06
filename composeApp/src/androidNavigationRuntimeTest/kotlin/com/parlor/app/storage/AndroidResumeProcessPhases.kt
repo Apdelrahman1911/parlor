@@ -72,7 +72,11 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
         settings.setReducedMotion(true)
         val activity = launchHome()
         try {
-            val ui = AndroidPublicRecoveryUi(instrumentation)
+            val evidence = AndroidRecoveryFailureEvidence(instrumentation, activity, AndroidRecoveryPublicLabels(
+                fixture.discardDescription(if (membership == null) 2 else 1, "en"),
+                fixture.discardDescription(if (membership == null) 2 else 1, "ar"),
+            ))
+            val ui = AndroidPublicRecoveryUi(instrumentation, evidence::capture)
             // A fresh process legitimately auto-navigates to a stored membership.
             // Make a real public navigation decision before staging this synthetic
             // storage-only fixture. Never override the startup gate or contact a
@@ -189,7 +193,10 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
         assertTrue(settings.reducedMotion.first())
         val activity = launchHome()
         try {
-            val ui = AndroidPublicRecoveryUi(instrumentation)
+            val evidence = AndroidRecoveryFailureEvidence(instrumentation, activity, AndroidRecoveryPublicLabels(
+                fixture.discardDescription(1, "en"), fixture.discardDescription(1, "ar"),
+            ))
+            val ui = AndroidPublicRecoveryUi(instrumentation, evidence::capture)
             try {
                 ui.awaitDescription(fixture.discardDescription(total = 1))
             } catch (cancelled: CancellationException) {

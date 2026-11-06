@@ -5,10 +5,14 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
+import kotlinx.coroutines.CancellationException
 
 /** Bounded observation only; an action is sent once and never retried on failure. */
 @Suppress("DEPRECATION")
-internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentation) {
+internal class AndroidPublicRecoveryUi(
+    private val instrumentation: Instrumentation,
+    private val failureEvidence: (() -> String)? = null,
+) {
     private var observation = AndroidRecoveryObservation()
     private var reportedCompoundAction = false
 
@@ -48,6 +52,20 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
     fun textPresentNow(text: String): Boolean {
         val node = findNode(resolveClickOwner = false) { it.text?.toString() == text }
         return (node != null).also { node?.recycle() }
+    }
+
+    /** One native tree read, fixed public predicates only, used after failure. */
+    fun publicStateNow(labels: AndroidRecoveryPublicLabels): AndroidRecoveryPublicState {
+        val state = AndroidRecoveryPublicState()
+        findNode(resolveClickOwner = false) { node ->
+            state.observe(
+                labels, node.text?.toString(), listOfNotNull(node.contentDescription?.toString()),
+                node.isHeading, node.isVisibleToUser && node.isEnabled,
+            )
+            false
+        }
+        state.roots = if (observation.rootPresent) 1 else 0
+        return state
     }
 
     /** One known adjacent Home page, never a repeated click or event-dependent scroll loop. */
@@ -102,7 +120,17 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         } while (SystemClock.uptimeMillis() < deadline)
         // Never dump a native accessibility tree: even a public screen can
         // share a window with input methods or other platform-owned content.
-        error("Expected unique, visible, enabled native recovery node was not observed: $observation")
+        val original = observation.toString()
+        val evidence = try {
+            failureEvidence?.invoke()
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            // Evidence must never replace the original failed assertion or
+            // export a platform exception containing arbitrary UI content.
+            "captureFailed=true"
+        }
+        error("Expected unique, visible, enabled native recovery node was not observed: $original; evidence=$evidence")
     }
 
     private fun findNode(

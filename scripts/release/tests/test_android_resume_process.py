@@ -223,7 +223,9 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertNotIn("fun test", source)
         self.assertIn("originalProcess != PROCESS_NONCE", source)
         self.assertIn("AndroidLegalResumeFixtures.create", source)
-        self.assertIn("AndroidPublicRecoveryUi(instrumentation)", source)
+        # Both cold phases still use the real native observer; the only
+        # additional argument captures evidence after its original failure.
+        self.assertEqual(source.count("AndroidPublicRecoveryUi(instrumentation, evidence::capture)"), 2)
         self.assertNotIn("pm clear", source)
         report = source.split("private fun report(", 1)[1].split("private companion object", 1)[0]
         self.assertNotIn("payload", report)
@@ -254,6 +256,45 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertIn("OBSERVATION_TIMEOUT_MILLIS = 10_000L", source)
         self.assertIn("OBSERVATION_INTERVAL_MILLIS = 100L", source)
         self.assertIn("check(matches.size <= 1)", source)
+
+    def test_compose_and_fresh_native_evidence_cannot_replace_or_act_on_a_failed_assertion(self):
+        prefix = driver.ROOT / "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage"
+        for name in ("AndroidRecoveryFailureEvidence.kt", "AndroidLocaleConfigurationRuntimeTest.kt"):
+            self.assertIn(str((prefix / name).relative_to(driver.ROOT)), driver.SOURCE_PATHS)
+        ui = (prefix / "AndroidPublicRecoveryUi.kt").read_text()
+        evidence = (prefix / "AndroidRecoveryFailureEvidence.kt").read_text()
+        failure = ui.split("val original = observation.toString()", 1)[1].split("private fun findNode", 1)[0]
+        self.assertIn("failureEvidence?.invoke()", failure)
+        self.assertIn("throw cancelled", failure)
+        self.assertIn('"captureFailed=true"', failure)
+        self.assertIn("$original; evidence=$evidence", failure)
+        self.assertNotIn("clearCache", ui)
+        self.assertEqual(evidence.count(".clearCache()"), 1)
+        self.assertLess(evidence.index("val composeBefore = composeState()"), evidence.index("val cached ="))
+        self.assertLess(evidence.index("val cached ="), evidence.index(".clearCache()"))
+        self.assertLess(evidence.index(".clearCache()"), evidence.index("val fresh ="))
+        self.assertLess(evidence.index("val fresh ="), evidence.index("val composeAfter = composeState()"))
+        self.assertIn("view.semanticsOwner.unmergedRootSemanticsNode", evidence)
+        self.assertIn("++nodes <= 4_096 && level <= 64", evidence)
+        self.assertIn("++views <= 4_096 && depth <= 64", evidence)
+        for forbidden in ("performAction", "performClick", "requestFocus", "setContent(", "takeScreenshot",
+                          "dumpWindowHierarchy", "setLanguageOverride", "notifyActive", "SystemClock.sleep",
+                          "measureAndLayoutForTest", "invalidateDescendants(", "forceAccessibilityForTesting"):
+            self.assertNotIn(forbidden, evidence)
+        phases = (prefix / "AndroidResumeProcessPhases.kt").read_text()
+        self.assertEqual(phases.count("AndroidPublicRecoveryUi(instrumentation, evidence::capture)"), 2)
+
+    def test_configuration_control_changes_the_real_platform_once_not_process_locale_or_ui(self):
+        source = (driver.ROOT / "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidLocaleConfigurationRuntimeTest.kt").read_text()
+        self.assertEqual(source.count("launched.requestedOrientation ="), 1)
+        self.assertEqual(source.count("ui.clickDescription("), 1)
+        self.assertIn("assertEquals(target, orientation(launched))", source)
+        self.assertIn("ui.awaitHeading(heading)", source)
+        self.assertIn('verifyOrientation("en")', source)
+        self.assertIn('verifyOrientation("ar")', source)
+        self.assertIn("settings.setLanguageOverride(previousLanguage)", source)
+        for forbidden in ("Locale.setDefault", "LocaleList.setDefault", "setContent(", "notifyActive", "recreate("):
+            self.assertNotIn(forbidden, source)
 
     def test_platform_runner_stubs_are_test_compile_only_and_source_bound(self):
         path = "composeApp/build.gradle.kts"
