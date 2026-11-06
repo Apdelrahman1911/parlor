@@ -40,6 +40,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
@@ -58,6 +59,7 @@ internal val WordText = Color(0xFFF9F2F0)
 internal fun WordFrame(modifier: Modifier, resetKey: String, content: @Composable ColumnScope.() -> Unit) {
     // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
     val scroll = key(resetKey) { rememberScrollState() }
+    val compact = LocalDensity.current.fontScale >= 1.5f
     Box(
         modifier.fillMaxSize().background(Brush.verticalGradient(listOf(WordInk, Color(0xFF3B244F), WordInk))),
         contentAlignment = Alignment.TopCenter,
@@ -68,7 +70,7 @@ internal fun WordFrame(modifier: Modifier, resetKey: String, content: @Composabl
         }
         Column(
             Modifier.widthIn(max = 760.dp).fillMaxSize().verticalScroll(scroll).parlorSafeContentPadding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 20.dp),
             content = content,
         )
     }
@@ -76,9 +78,11 @@ internal fun WordFrame(modifier: Modifier, resetKey: String, content: @Composabl
 
 @Composable
 internal fun WordPanel(content: @Composable ColumnScope.() -> Unit) {
+    val compact = LocalDensity.current.fontScale >= 1.5f
     Column(
-        Modifier.fillMaxWidth().background(WordPanelColor, RoundedCornerShape(28.dp)).padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        Modifier.fillMaxWidth().background(WordPanelColor, RoundedCornerShape(28.dp))
+            .padding(if (compact) 16.dp else 24.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 18.dp),
         content = content,
     )
 }
@@ -122,10 +126,22 @@ internal fun WordButton(text: String, enabled: Boolean = true, secondary: Boolea
 @Composable
 internal fun WordPhaseTrack(step: Int, label: String) {
     val duration = if (ParlorTheme.reducedMotion) 0 else 240
+    val compact = LocalDensity.current.fontScale >= 1.5f
+    val progress = ProgressBarRangeInfo((step + 1).toFloat(), 1f..6f)
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(label, color = WordPeach, style = ParlorTheme.typography.labelLarge,
-            modifier = Modifier.semantics { progressBarRangeInfo = ProgressBarRangeInfo((step + 1).toFloat(), 1f..6f) })
-        Row(Modifier.fillMaxWidth().clearAndSetSemantics {}, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        if (!compact) {
+            Text(label, color = WordPeach, style = ParlorTheme.typography.labelLarge,
+                modifier = Modifier.semantics { progressBarRangeInfo = progress })
+        }
+        // At large text, the real phase heading below already supplies the
+        // title. Keep the complete progress label on the bar for assistive
+        // technology instead of repeating a tall heading above every action.
+        Row(Modifier.fillMaxWidth().clearAndSetSemantics {
+            if (compact) {
+                contentDescription = label
+                progressBarRangeInfo = progress
+            }
+        }, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             repeat(6) { index ->
                 val color by animateColorAsState(if (index <= step) WordPeach else WordPanelColor, tween(duration))
                 Box(Modifier.weight(1f).height(4.dp).background(color, RoundedCornerShape(2.dp)))

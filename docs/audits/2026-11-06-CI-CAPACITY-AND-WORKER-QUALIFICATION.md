@@ -76,12 +76,25 @@ replay. The live Linux descendant fixture also checks the allocated home and
 success-versus-failure retention. This container lacks the required procfs child
 file; that established local skip must execute successfully on hosted Linux.
 
-Fresh full protected-PR and distinct-main verification are required for the
-capacity correction. An additional explicitly constrained-free-space Common
-execution can test the26GiB reserve without randomly searching for a smaller
-runner allocation. Such an experiment must record actual reserved/available
-bytes and hold its reservation through both runtime lanes and artifact upload;
-it is not a claim to have received the historical smaller filesystem. Current
-qualification progress and eventual measured results belong on #308/the PR.
+Full [PR42142636265](https://github.com/Apdelrahman1911/parlor/actions/runs/42142636265)
+passed all eight producers and the optimized Apple Release join. Distinct
+constrained-free-space [42143063097](https://github.com/Apdelrahman1911/parlor/actions/runs/42143063097)
+held a real, non-sparse79,682,158,592-byte reservation through both runtime lanes
+and upload, with27,934,056,448 bytes (about26.015GiB) free before restore.
+Both Android lanes passed3/3 and retired their exclusively owned AVDs. This is
+actual constrained-free-space acceptance, not receipt of the historical smaller
+total filesystem, peak-use measurement or a speed benchmark. Do not replay the
+successful experiment to obtain another equivalent observation.
+
+[PR327](https://github.com/Apdelrahman1911/parlor/pull/327) normally
+protected-merged as `705c934babd6b746e4850114b2c3fe99f118b361`. Distinct automatic
+[main42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522)
+also finished successfully. Independent admission binds all eight producers,
+the optimized Apple join, exact native method rosters, artifacts and owned
+cleanup to tree `e9a6566ccc3f7092ffaf46fa2f8eef41fdf64ca8`.
+Final main receipt SHA256:
+`12c9f1adc9ffeb65ee84c81de871584e8a6b8aabaa72de3ed4aeae9c6fc40541`.
+#308 closed only after this independent main acceptance. Later PR328 native/UX
+changes require their own qualification; this result does not certify them.
 
 No issue is closed merely because a workflow starts or compilation succeeds.

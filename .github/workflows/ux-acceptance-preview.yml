@@ -1,4 +1,4 @@
-name: Public UX fixtures and Android test compilation (not full qualification)
+name: Word Impostor large-text journeys (not full qualification)
 on:
   push:
     branches: [verification/ux-acceptance-preview-2026-11-06]
@@ -11,7 +11,7 @@ env:
   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
 jobs:
   ux-preview:
-    name: Render synthetic UI and compile native acceptance tests
+    name: Verify Word Impostor complete large-text journeys
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain)"
-          git checkout --detach f47447e7fb1d6b3043c4d9c4fef6a5ece3ce857f
+          git checkout --detach 7931ce16b0f623ca6ad05877114ec05267a310ae
           test -z "$(git status --porcelain)"
       - name: Set up JDK 21
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
@@ -50,48 +50,44 @@ jobs:
           timeout --signal=TERM --kill-after=10s 300s \
             "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" \
             "platforms;android-36" "build-tools;36.0.0" "platform-tools"
-      - name: Render unchanged shipping UI and compile new Android tests
+      - name: Run changed module rules, private-state and rendered UI regressions
         run: |
           set -euo pipefail
-          ./gradlew productionDesktopCheck :composeApp:compileDebugAndroidTestKotlinAndroid \
-            -Pparlor.androidRuntimeTestVariant=debug --dependency-verification=strict \
+          ./gradlew :game-modes:word-impostor:desktopTest :game-modes:word-impostor:detekt \
+            --dependency-verification=strict \
             --no-daemon --max-workers=2 --console=plain \
             2>&1 | tee "$RUNNER_TEMP/parlor-ux-build.log"
-      - name: Bind real render and compiled test evidence
+      - name: Bind source, exact tests and synthetic renders
         run: |
           python3 -B - <<'PY'
-          import hashlib,json,pathlib,re,subprocess
+          import hashlib,json,pathlib,subprocess,xml.etree.ElementTree as ET
           root=pathlib.Path.cwd()
           head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          assert head=='f47447e7fb1d6b3043c4d9c4fef6a5ece3ce857f'
-          assert not subprocess.check_output(['git','status','--porcelain'])
-          source='composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeStorageRuntimeTest.kt'
-          expected=sorted(re.findall(r'fun (test\w+)\(',pathlib.Path(source).read_text()))
-          targets=list((root/'composeApp/build').rglob('AndroidResumeStorageRuntimeTest.class'))
-          assert len(targets)==1 and len(expected)==7
-          compiled=subprocess.check_output(['javap','-p',str(targets[0])],text=True)
-          assert sorted(re.findall(r'public final void (test\w+)\(\);',compiled))==expected
-          images=sorted(p for p in root.rglob('*.png') if '/build/reports/tests/public-ux/' in str(p))
-          assert len(images)>=16
-          home=root/'composeApp/build/reports/tests/public-ux'
-          for language in ('en','ar'):
-              for theme in ('light','dark'):
-                  for scale in ('1.0','2.0'):
-                      for screen in ('home','setup'):
-                          assert (home/f'{screen}-{language}-{theme}-{scale}.png').is_file()
+          assert head=='7931ce16b0f623ca6ad05877114ec05267a310ae' and not subprocess.check_output(['git','status','--porcelain'])
+          expected=[['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'authorityPersistenceRejectsFormatControlsInsteadOfChangingIdentity()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'identifierValidationRejectsUnsafeScalarsWithoutRewritingValidIds()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'initialStateRejectsSupplementaryFormatControls()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'publicSnapshotRejectsFormatControlsInsteadOfSilentlyRepairingTheName()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'supplementaryFormatControlsAreRejectedByNamesAndRosters()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorDisplayScalarBoundaryTest', 'supplementaryLettersEmojiAndVariationMarksRemainCanonical()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorIntegrityTest', 'abort_cannot_be_used_to_smuggle_impossible_vote_totals_or_progress()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorIntegrityTest', 'bounded_history_aborts_without_revealing_the_word_votes_or_roles_and_still_restores()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorIntegrityTest', 'deeply_nested_input_is_rejected_before_recursive_decoding()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorIntegrityTest', 'private_guess_cannot_arrive_before_its_public_submission_count()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorRecoveryJourneyTest', 'forty_two_complete_matches_preserve_private_ballots_guesses_scores_and_identity()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorRulesTest', 'completeBanksHaveUniqueWordsQuestionsAndPlausibleChoices()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorRulesTest', 'disconnectedOrForgedActionsCannotAdvanceOrExposeASecret()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorRulesTest', 'everyPlayerAndImpostorCountCompletesAllPhasesPrivately()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorRulesTest', 'tiesFailIdentificationAndScoresFollowBothIndependentObjectives()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorScoringTest', 'each_correct_voter_and_each_correct_guesser_get_independent_points_for_every_supported_size()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorScoringTest', 'multiple_rounds_accumulate_only_personal_points_and_snapshots_validate_own_ballot()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorScoringTest', 'tied_tallies_do_not_cancel_a_correct_individual_vote_or_successful_word_guess()[desktop]', False], ['com.parlor.games.wordimpostor.WordImpostorVersionTest', 'legacy_and_future_actions_projections_and_authority_snapshots_fail_closed()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordFrameRestorationTest', 'restoration_after_authority_advanced_does_not_apply_an_old_phases_scroll()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordFrameRestorationTest', 'same_phase_recreation_restores_scroll_but_new_phase_starts_at_the_header()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'arabic_dark_compact_large_text_journey()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'arabic_light_compact_large_text_journey()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'english_dark_compact_large_text_journey()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'english_light_compact_large_text_journey()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'guided_question_is_private_to_asker_and_advances_with_its_exact_index()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'hiding_a_revealed_secret_does_not_submit_readiness_or_wait_for_network()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'ordinary_and_impostor_secrets_are_covered_on_entry_and_interruption_in_both_languages()[desktop]', False], ['com.parlor.games.wordimpostor.ui.WordImpostorTableTest', 'private_vote_confirmation_then_five_choice_guess_and_public_result_work_end_to_end()[desktop]', False]]
+          reports=sorted((root/'game-modes/word-impostor/build/test-results/desktopTest').glob('TEST-*.xml'))
+          actual=[]
+          for report in reports:
+              xml=ET.parse(report)
+              assert not list(xml.iter('failure')) and not list(xml.iter('error')) and not list(xml.iter('skipped'))
+              actual += [[t.get('classname'),t.get('name'),False] for t in xml.iter('testcase')]
+          assert sorted(actual)==sorted(expected)
+          expected_images=['game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-ar-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-ar-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-ar-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-en-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-en-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-guessing-covered-en-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-ar-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-ar-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-ar-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-en-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-en-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-next-question-public-en-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-ar-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-ar-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-ar-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-en-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-en-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-rematch-covered-en-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-ar-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-ar-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-ar-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-en-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-en-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-results-en-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-ar-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-ar-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-ar-system-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-en-dark-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-en-light-2.0.png', 'game-modes/word-impostor/build/reports/tests/public-ux/word-impostor-voting-en-system-2.0.png']
+          images=sorted((root/'game-modes/word-impostor/build/reports/tests/public-ux').glob('*.png'))
+          assert sorted(str(p.relative_to(root)) for p in images)==sorted(expected_images)
           sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-          record=dict(scope='Desktop renders and Android test compilation only; no native runtime or full qualification',
-            source=head,tree=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),
-            test_source_sha256=sha(pathlib.Path(source)),test_class_sha256=sha(targets[0]),native_methods=expected,
-            renders=[dict(path=str(p.relative_to(root)),bytes=p.stat().st_size,sha256=sha(p)) for p in images])
+          record=dict(scope='Word Impostor Desktop rules/private-state and rendered journeys only; not native/full PR/main qualification',
+              source=head,tree=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),methods=sorted(actual),
+              xml={str(p.relative_to(root)):sha(p) for p in reports},
+              renders=[dict(path=str(p.relative_to(root)),bytes=p.stat().st_size,sha256=sha(p)) for p in images])
           output=root/'build/ci-evidence/public-ux-preview.json';output.parent.mkdir(parents=True,exist_ok=True)
           with output.open('x') as stream:json.dump(record,stream,indent=2)
-          print('Retained synthetic PNGs:',len(images),'; compiled native methods:',len(expected))
+          print('Actual Word Impostor methods:',len(actual),'; retained synthetic PNGs:',len(images))
           PY
       - name: Stop owned Gradle workers
         if: always()
         run: python3 -B scripts/ci/verification_hygiene.py stop ux-preview
-      - name: Upload only current fixture and compilation evidence
+      - name: Upload only current fixture and test evidence
         if: always()
         id: verification_artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -102,6 +98,7 @@ jobs:
           path: |
             **/build/reports/tests/
             **/build/test-results/**/*.xml
+            **/build/reports/detekt/
             build/ci-evidence/public-ux-preview.json
             ${{ runner.temp }}/parlor-ux-build.log
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json

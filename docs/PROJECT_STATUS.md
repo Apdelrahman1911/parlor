@@ -2,19 +2,48 @@
 
 ## Twelve-Issue acceptance audit and active CI work
 
-Current independently accepted main is `c3c0e2b3`,
-[42120235829](https://github.com/Apdelrahman1911/parlor/actions/runs/42120235829),
-all eight producers/optimized Apple join. PR326 and scoped #324 are complete.
+Current independently accepted main is `705c934b`,
+[42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522),
+all eight producers/optimized Apple join. PR326/327 and scoped #324 are complete.
 The [twelve-Issue acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md)
 distinguishes implemented scope, new CI work, physical gates and external
 runner/security/credential prerequisites. It is not an all-work-complete claim.
 
 #285 is closed after its missing Intel native control passed42141604588.
-PR327/#308's full42142636265 and constrained-capacity42143063097 executions are
-in progress, **not qualified**. Android native Resume/storage acceptance and
-public screenshot-custody corrections are prepared separately for #253/#259;
-their new native/full/main qualification remains pending. Phase5 can proceed
-independently, but a screenshot destination repair is not a full redesign.
+PR327/#308 passed full42142636265 (all eight producers and Apple join) and the
+real constrained-capacity42143063097 experiment, then protected-merged as
+`705c934b`. Distinct main42150601522 finished successfully and independent
+source/artifact/cleanup readback passed; #308 is now closed. Receipt SHA256:
+`12c9f1adc9ffeb65ee84c81de871584e8a6b8aabaa72de3ed4aeae9c6fc40541`.
+The experiment held its reservation from about26.015GiB free before restore
+through both Android lanes/upload, not a historical small total filesystem or a
+speed benchmark. Ten of the original twelve Issues remain open.
+
+Android native Resume/storage acceptance and the public screenshot-custody
+corrections are prepared separately for #253/#259. Actual earlier preview
+readback found a 200%-text catalog defect: first-game requirements/Open were
+offscreen. The new adaptive layout prioritizes those choices and strengthens
+320/390dp EN/AR assertions without shrinking text. These later changes and the
+eight native Home methods (six legal-game journeys and two actual deletion-error
+live-region checks) still require fresh full/protected/main qualification;
+preview success does not qualify them or complete the broad UX/device gates.
+PR328 revision04 passed Release3 and actual API34 navigation3/storage7, but
+Home8 failed at the first control lookup. The test incorrectly required a
+Compose button's native description and action on the same node. Revision05
+resolves the exact label's nearest unique action owner, with five additional
+native boundary controls; it retains single actions and all outcome assertions.
+Strict local Detekt passes; hosted native/full-PR/main acceptance is pending.
+Corrected preview42165263589 then passed19/23: all owner/navigation/storage
+controls and all four English Home journeys. Arabic4 pass Cancel/deletion and
+storage assertions but fail only at the subsequent Activity-relaunch label.
+Single-method42167369595 isolates that later boundary without another full run,
+extra action, longer timeout or production change. Locale causality remains
+unproven; draft PR328 is not qualified or merged.
+That isolated method failed first at unsynchronized Koin startup (0.012s), not
+relaunch. The native fixture now joins Application's main-thread startup turn
+before resolving its graph; the original relaunch observation still must run.
+Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
+and complete names are retained. This scoped visual result is not native play.
 
 Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
 remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles
