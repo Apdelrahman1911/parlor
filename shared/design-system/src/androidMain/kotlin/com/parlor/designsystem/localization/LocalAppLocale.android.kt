@@ -1,5 +1,6 @@
 package com.parlor.designsystem.localization
 
+import android.content.ComponentCallbacks
 import android.content.res.Configuration
 import android.os.LocaleList
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ internal actual fun PlatformAppLocale(
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
     val baseContext = LocalContext.current
+    val applicationContext = baseContext.applicationContext
     val baseConfiguration = LocalConfiguration.current
     val systemLocales = baseConfiguration.locales
     val systemLocale = systemLocales[0]
@@ -41,11 +43,29 @@ internal actual fun PlatformAppLocale(
         mutableStateOf<String?>(null)
     }
 
-    DisposableEffect(requestedDefaults) {
+    // System and an explicit language can have equal defaults but must respond
+    // differently to the next system-language change.
+    DisposableEffect(applicationContext, languageTag, requestedDefaults) {
         val releaseLocale = androidLocaleOverrides.acquire(requestedDefaults)
+        // Android resets process defaults before dispatching configuration
+        // callbacks, including changes that leave the selected language equal.
+        // Restore the active owner's choice before resource-bearing UI updates;
+        // do not remount content, mutate shared Resources or poll global state.
+        val callbacks = object : ComponentCallbacks {
+            override fun onConfigurationChanged(newConfig: Configuration) {
+                releaseLocale.refresh(
+                    defaults = if (languageTag == null) newConfig.locales else requestedDefaults,
+                    platformDefaults = newConfig.locales,
+                )
+            }
+
+            override fun onLowMemory() = Unit
+        }
+        applicationContext.registerComponentCallbacks(callbacks)
         appliedLanguageTag = requestedLocale.toLanguageTag()
 
         onDispose {
+            applicationContext.unregisterComponentCallbacks(callbacks)
             releaseLocale()
         }
     }
@@ -70,8 +90,8 @@ internal actual fun PlatformAppLocale(
     }
 }
 
-// Only Compose's UI-thread effect acquire/release invokes these ports. The
-// registry itself performs no platform mutation when this file initializes.
+// Only Compose's UI-thread effects and their registered configuration callbacks
+// invoke these ports. File initialization itself performs no platform mutation.
 private val androidLocaleOverrides = ScopedLocaleOverrides(
     // Capture the effective priority: selected Locale first, all remaining
     // preferences retained. The nonzero-index setter is a hidden system API,

@@ -33,11 +33,15 @@ EMULATOR_LOG_LIMIT = 16 * 1024 * 1024
 ANDROID = "{http://schemas.android.com/apk/res/android}"
 SOURCE_PATHS = (
     "composeApp/build.gradle.kts",
+    "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ScopedLocaleOverrides.kt",
     "scripts/android/run_resume_process_acceptance.py",
     "scripts/android/resume_process_contract.py",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidLegalResumeFixtures.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidPublicRecoveryUi.kt",
+    "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryFailureEvidence.kt",
+    "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidLocaleConfigurationRuntimeTest.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryHeadingRuntimeTest.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryRevealObservation.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryRevealRuntimeTest.kt",

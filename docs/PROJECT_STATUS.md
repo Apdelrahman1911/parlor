@@ -1,22 +1,25 @@
 # Project status — November 6, 2026
 
-## Current main failed qualification; focused correction in progress
+## Current main failed qualification; confirmed Android locale correction
 
-PR330 is merged as `081a6f68`, tree
-`a912d30b62c81ba30382f87016f34183d593b611`. Its distinct
-[main42208844307](https://github.com/Apdelrahman1911/parlor/actions/runs/42208844307)
+PR331 is normally merged as `d7d6f415`, tree
+`5df94fa010446cf16426151b6bbb570ce4b2632d`. Its distinct
+[main42227976735](https://github.com/Apdelrahman1911/parlor/actions/runs/42227976735)
 is terminal **FAILURE**: seven producers/optimized Apple join pass, but the
-Android process matrix errors on Whodunit/Arabic/multiplayer preparation after
-11 cases/22 phases. Deletion/process death had not started in that case.
-This newer main is **not independently qualified**. No whole-main or security
-completion is inferred from the passing subset or earlier successful PR.
+Android process matrix errors on Mafia/Arabic/multiplayer verification after
+15 successful native phases. This main is **not independently qualified**.
+The separate [navigation-boundary correction](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
+is already integrated, not being reproduced or republished.
 
-The [navigation-boundary report](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
-records the original native failure, an actual-App EN/AR deterministic
-reproduction of unacknowledged Settings→Library coalescing, and the fixture
-correction. The original native frame sequence remains unproven. Fresh full
-checks, protected merge and distinct main remain required; no unchanged retry,
-longer deadline, repeated tap or production refresh workaround is used.
+New [#332 / handled-configuration report](audits/2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md)
+records a distinct actual application defect: one real rotation changes Arabic
+Settings to English while the same Activity and persisted preference remain.
+Original, freshly cleared native and before/after Compose observations agree;
+this is not corrected by accessibility cache clearing. The exact-owner
+configuration callback correction and17 common regressions are prepared for
+fresh full protected-PR/native/main qualification. No new diagnostic workflow
+is integrated. Earlier cold-failure frame sequences remain unproven; successful
+subsets are not certificates for current main or causality.
 
 ## Latest independently accepted main
 
