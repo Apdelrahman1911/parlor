@@ -2,9 +2,9 @@
 
 ## Twelve-Issue acceptance audit and active CI work
 
-Current independently accepted main is `c3c0e2b3`,
-[42120235829](https://github.com/Apdelrahman1911/parlor/actions/runs/42120235829),
-all eight producers/optimized Apple join. PR326 and scoped #324 are complete.
+Current independently accepted main is `705c934b`,
+[42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522),
+all eight producers/optimized Apple join. PR326/327 and scoped #324 are complete.
 The [twelve-Issue acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md)
 distinguishes implemented scope, new CI work, physical gates and external
 runner/security/credential prerequisites. It is not an all-work-complete claim.
@@ -12,10 +12,12 @@ runner/security/credential prerequisites. It is not an all-work-complete claim.
 #285 is closed after its missing Intel native control passed42141604588.
 PR327/#308 passed full42142636265 (all eight producers and Apple join) and the
 real constrained-capacity42143063097 experiment, then protected-merged as
-`705c934b`. Distinct main42150601522 is still running; #308 remains open until
-independent main readback succeeds. The experiment held about26.015GiB free
-before restore through both Android lanes/upload, not a historical small total
-filesystem or a speed benchmark.
+`705c934b`. Distinct main42150601522 finished successfully and independent
+source/artifact/cleanup readback passed; #308 is now closed. Receipt SHA256:
+`12c9f1adc9ffeb65ee84c81de871584e8a6b8aabaa72de3ed4aeae9c6fc40541`.
+The experiment held its reservation from about26.015GiB free before restore
+through both Android lanes/upload, not a historical small total filesystem or a
+speed benchmark. Ten of the original twelve Issues remain open.
 
 Android native Resume/storage acceptance and the public screenshot-custody
 corrections are prepared separately for #253/#259. Actual earlier preview
@@ -25,6 +27,11 @@ offscreen. The new adaptive layout prioritizes those choices and strengthens
 eight native Home methods (six legal-game journeys and two actual deletion-error
 live-region checks) still require fresh full/protected/main qualification;
 preview success does not qualify them or complete the broad UX/device gates.
+PR328 revision03 failed before native execution on four Detekt magic-number
+findings. Revision04 uses one named roster-size constant; both affected module
+Detekt tasks pass locally without suppressions. The same revision incorporates
+the prepared Last Light wrapped-nameplate insets and stronger EN/AR spacing
+assertions. Fresh rendering/native/full-PR/main acceptance remains required.
 
 Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
 remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles

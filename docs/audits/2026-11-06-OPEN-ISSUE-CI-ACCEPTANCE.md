@@ -4,16 +4,16 @@
 
 All twelve Issues open at intake were reviewed, including their original
 acceptance and later comments: #182, #230, #251, #252, #253, #258, #259, #260,
-#267, #276, #285 and #308. #285 subsequently met its remaining requirement and
-closed. Passing general CI does not close an unmet device, security or upstream
+#267, #276, #285 and #308. #285 and #308 subsequently met their remaining
+requirements and closed; ten remain open. Passing general CI does not close an unmet device, security or upstream
 requirement. This is an execution matrix, **not a claim that all CI work is done**.
 
-Accepted baseline is actual main `c3c0e2b3dc299ba48a71d40c302377c46da745f7`,
-tree `453f235a653e537743a21f52a854a0a35685b5a2`, independently verified by
-[42120235829](https://github.com/Apdelrahman1911/parlor/actions/runs/42120235829).
+Accepted baseline is actual main `705c934babd6b746e4850114b2c3fe99f118b361`,
+tree `e9a6566ccc3f7092ffaf46fa2f8eef41fdf64ca8`, independently verified by
+[42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522).
 All eight producers and optimized Apple Release join pass, with source/artifact
 and owned-cleanup bindings. Receipt SHA256:
-`41473ac4d5cdceb35f522f1aff1410e90a67811ff4c547ae0755284083261fe4`.
+`12c9f1adc9ffeb65ee84c81de871584e8a6b8aabaa72de3ed4aeae9c6fc40541`.
 Counts: 2,022 Desktop methods (three established single-JVM LAN skips),
 756 Android methods per unit variant, 802 KMP Simulator, 40 Swift, 457 readiness
 and 73 worker controls; both Android runtime lanes pass 3/3. These are baseline
@@ -24,7 +24,7 @@ results, not qualification of changes prepared after that source.
 | Issue / priority | Implemented and verified scope | Work still required / disposition |
 |---|---|---|
 | [#285](https://github.com/Apdelrahman1911/parlor/issues/285), CI P1 | Production worker ownership was merged in PR322. Missing Intel cancellation/holding control now independently passes [42141604588](https://github.com/Apdelrahman1911/parlor/actions/runs/42141604588), including actual signal, client exit, worker absence and final cleanup. | **CLOSED.** Exact cold-start versus acquisition boundary and receipts are in the [worker/capacity report](2026-11-06-CI-CAPACITY-AND-WORKER-QUALIFICATION.md). No duplicate production integration or successful ARM replay. |
-| [#308](https://github.com/Apdelrahman1911/parlor/issues/308), CI P1 | Fourteen-root pre-build cleanup is independently main-qualified, but earlier passes used larger filesystems. | **Main qualification in progress:** PR327's all-eight full [42142636265](https://github.com/Apdelrahman1911/parlor/actions/runs/42142636265) and actual constrained-free-space [42143063097](https://github.com/Apdelrahman1911/parlor/actions/runs/42143063097) are independently verified PASS; normal merge is `705c934b`. Distinct [main42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522) must finish and pass independent readback before closure. Each successful runtime retires only its owned AVD; ~26.015GiB reserved-free-space acceptance is not the historical smaller total filesystem or a speed benchmark. |
+| [#308](https://github.com/Apdelrahman1911/parlor/issues/308), CI P1 | Fourteen-root pre-build cleanup plus exclusive per-invocation AVD retirement are independently main-qualified. Actual constrained-free-space [42143063097](https://github.com/Apdelrahman1911/parlor/actions/runs/42143063097) passed both runtime lanes and owned cleanup. | **CLOSED:** PR327's all-eight full [42142636265](https://github.com/Apdelrahman1911/parlor/actions/runs/42142636265), protected merge `705c934b` and distinct [main42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522) passed independent readback. Each successful runtime retires only its owned AVD; ~26.015GiB reserved-free-space acceptance is not the historical smaller total filesystem, peak-use measurement or a speed benchmark. |
 | [#182](https://github.com/Apdelrahman1911/parlor/issues/182), navigation P2 | PR311/326 correct retained phase/identity ownership. EN/AR duplicate/stale Name/code regressions, protected merge and distinct main are complete. Stale merge checkbox and `invalid` label corrected. | **Device acceptance:** real TalkBack/VoiceOver single/repeated confirmation, with Host remaining Host and Join requiring explicit code. Do not relabel original HID cancellation as fixed by these callback guards. |
 | [#230](https://github.com/Apdelrahman1911/parlor/issues/230), release critical | PR250 migrated executable IDs to `me.parlor.android` / `me.parlor.ios`, with Debug suffixes. Unsigned identity/packaging gates pass. Issue title/body now reflect the replacement IDs. | **External accounts/credentials/approval:** verify ownership, signing, provisioning and release/privacy/legal gates. Both policy records remain blocked. Disabled Store workflows remain disabled; repeated unsigned CI cannot supply ownership. |
 | [#251](https://github.com/Apdelrahman1911/parlor/issues/251), admission P1 | `PeerOpeningCancellationTest`, session start/deadline and authoritative-envelope tests exercise game/version rejection before credential staging, valid joins, selected rejoin and start. Generic registry dispatch and exact protocol4.2 remain. | **Device matrix:** wrong/same-game joins in both Android↔iOS host directions, start eligibility/commit and selected rejoin. Existing same-machine separate-process P2pKit results are not this cross-platform matrix. |

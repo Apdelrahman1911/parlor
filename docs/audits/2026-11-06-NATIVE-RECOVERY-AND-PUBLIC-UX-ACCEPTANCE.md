@@ -117,6 +117,15 @@ layouts** for the first game's counts, device requirements and Open at 320dp and
 the original sixteen Home/setup images. This is an incremental implemented
 usability improvement, not a claim of complete redesign or physical acceptance.
 
+Actual retained Last Light large-text frames also showed wrapped player labels
+crowded against their rounded nameplate edges. The prepared refinement adds
+12dp horizontal/6dp vertical insets only at the existing large-text breakpoint;
+ordinary density, text scale, game rules and recipient projection are unchanged.
+Existing EN/AR tests now require those insets as well as full unellipsized text,
+hand counts and private-view isolation. This is a spacing correction, not a
+claim that a native font or glyph-rendering cause was established. Its new
+rendered output still requires fresh verification and visual inspection.
+
 ## Qualification status and remaining acceptance
 
 At preparation, eleven artifact-selection controls pass locally. Native compilation,
@@ -130,7 +139,18 @@ mechanical review metadata; its inventory had been generated before the source
 commit it must reference. Neither run qualifies native acceptance. Revision03
 consolidates the prepared eight Home methods and regenerates the inventory only
 after source/document commits, then checks it again on the final committed HEAD.
-No inventory gate, runtime assertion, timeout or action is weakened.
+Revision03 passed that inventory boundary but failed at `:composeApp:detekt`:
+four uses of the six-player roster size in `AndroidLegalResumeFixtures.kt` were
+magic-number findings. API34/API35 runtime steps had not executed; this was not
+a native gameplay failure. The original ZIP, four-error Detekt XML, failed log
+and successful owned cleanup are retained, with failure receipt SHA256
+`6b2b9a27b7a84616c639d850837abb4355a7bb9beeb67c44e2aa2d651435c90e`.
+Obsolete remaining work was cancelled rather than retried unchanged. Revision04
+replaces the four expressions with `ORIGINAL_GAME_PLAYERS`; focused JDK21/wrapper
+`:composeApp:detekt :game-modes:last-light:detekt` passes with strict verification
+and the unchanged policy. Source/docs are again committed before regenerating
+the inventory and checking the final commit. No inventory gate, lint rule,
+runtime assertion, timeout or action is weakened.
 
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.

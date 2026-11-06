@@ -37,6 +37,7 @@ internal enum class AndroidResumeGame(val englishTitle: String, val arabicTitle:
 
 internal object AndroidLegalResumeFixtures {
     private const val SEED = 7L
+    private const val ORIGINAL_GAME_PLAYERS = 6
     private val instant = Instant.fromEpochMilliseconds(0)
 
     suspend fun create(game: AndroidResumeGame, id: SessionId, repository: CaseRepository): GameSnapshot = when (game) {
@@ -60,7 +61,7 @@ internal object AndroidLegalResumeFixtures {
     private fun mafia(id: SessionId): GameSnapshot {
         val definition = MafiaDefinition(Json)
         val initial = definition.createInitialState(SessionConfig(
-            id, CaseId("default"), MafiaIds.ClassicModeId, players(6), SEED,
+            id, CaseId("default"), MafiaIds.ClassicModeId, players(ORIGINAL_GAME_PLAYERS), SEED,
         ))
         val state = definition.reducer().reduce(initial, MafiaAction.ConfigureAndStart(initial.public.settings),
             DefaultReducerContext(FakeClock(instant), RandomSource.seeded(SEED))).newState
@@ -79,11 +80,12 @@ internal object AndroidLegalResumeFixtures {
         check(loaded is Result.Success) { "The shipping bundled case must validate" }
         val case = loaded.data
         val initial = definition.createInitialState(SessionConfig(
-            id, CaseId(case.envelope.caseId), WhodunitIds.ClassicVoteModeId, players(6), SEED,
+            id, CaseId(case.envelope.caseId), WhodunitIds.ClassicVoteModeId, players(ORIGINAL_GAME_PLAYERS), SEED,
         ))
         val state = definition.reducer().reduce(initial, WhodunitAction.AssignRoles(SEED),
             WhodunitReducerContext(FakeClock(instant), RandomSource.seeded(SEED), case)).newState
-        check(state.privatePerPlayer.size == 6 && state.hostOnly.seatToCharacter.size == 6)
+        check(state.privatePerPlayer.size == ORIGINAL_GAME_PLAYERS &&
+            state.hostOnly.seatToCharacter.size == ORIGINAL_GAME_PLAYERS)
         val payload = definition.snapshotCodec().encode(state)
         check(definition.snapshotCodec().decode(payload) == state)
         val identity = case.envelope.contentIdentity()
