@@ -1,25 +1,28 @@
 # Project status — November 6, 2026
 
-## Current main failed qualification; confirmed Android locale correction
+## Current qualification checkpoint — ARM64 runtime isolation prepared
 
-PR331 is normally merged as `d7d6f415`, tree
-`5df94fa010446cf16426151b6bbb570ce4b2632d`. Its distinct
-[main42227976735](https://github.com/Apdelrahman1911/parlor/actions/runs/42227976735)
-is terminal **FAILURE**: seven producers/optimized Apple join pass, but the
-Android process matrix errors on Mafia/Arabic/multiplayer verification after
-15 successful native phases. This main is **not independently qualified**.
-The separate [navigation-boundary correction](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
-is already integrated, not being reproduced or republished.
+Actual main `3fde30d5` (protected PR333) passes the scoped Android EN/AR
+handled-configuration and process recovery corrections, but distinct
+[main42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
+failed the iOS public-control pre-tap observer. PR334 corrects that redundant
+query traversal; all five new native controls pass. Its subsequent full
+[42274478001](https://github.com/Apdelrahman1911/parlor/actions/runs/42274478001)
+passes seven producers/optimized Apple join,819 KMP/457 readiness methods, but
+Swift is **46 PASS /1 FAIL** at Arabic Name typing. Original native evidence
+places a27.547310s delay before UIKit insertion; the deeper service-start cause
+is not established. This source has not qualified as a complete main.
 
-New [#332 / handled-configuration report](audits/2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md)
-records a distinct actual application defect: one real rotation changes Arabic
-Settings to English while the same Activity and persisted preference remain.
-Original, freshly cleared native and before/after Compose observations agree;
-this is not corrected by accessibility cache clearing. The exact-owner
-configuration callback correction and17 common regressions are prepared for
-fresh full protected-PR/native/main qualification. No new diagnostic workflow
-is integrated. Earlier cold-failure frame sequences remain unproven; successful
-subsets are not certificates for current main or causality.
+The unchanged full47-method Swift suite independently passes supplemental
+free Intel [42286948623](https://github.com/Apdelrahman1911/parlor/actions/runs/42286948623),
+including exact source/artifact and owned cleanup. It is not ARM64/main or
+permanent native-cause acceptance. The [current CI correction](audits/2026-11-06-ISOLATED-ARM64-RUNTIME.md)
+isolates **both original ARM64 suites**, retains the original required check as
+a fail-closed source/custody join, and preserves every optimized Release target.
+It needs fresh protected and distinct-main verification before qualification.
+This is a source-authoring checkpoint; [#276](https://github.com/Apdelrahman1911/parlor/issues/276)
+and [PR334](https://github.com/Apdelrahman1911/parlor/pull/334) retain subsequent
+terminal workflow evidence, not assumptions that a queued/run-started job passed.
 
 ## Latest independently accepted main
 
@@ -60,13 +63,16 @@ Scoped Word30 / Ghamza28 / combined Last Light204 module methods and Detekt
 pass; corrected EN/AR original images were inspected. PR330's fresh full
 [42201793916](https://github.com/Apdelrahman1911/parlor/actions/runs/42201793916)
 and source/22 preselected original-image review passed before protected merge.
-However, distinct main failed the separate Android preparation boundary above.
-Scoped layout evidence remains valid; **whole-main acceptance is not claimed**.
+Subsequent PR331/333 correct the Android preparation/configuration boundaries,
+and their current main passes native Android process acceptance. The new iOS
+observer failure above still blocks **whole-main acceptance**; scoped layout
+evidence remains valid.
 
 ## Open acceptance and external prerequisites
 
 Of the twelve Issues at intake, #285/#308 are closed; ten remain open.
-The additional #329 is also closed. The
+The additional #329 is also closed; new #332 remains open for its whole-main
+gate, making **eleven open Issues** in total. The
 [acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md) maps each
 remaining requirement, including exact device scenarios; generic green CI
 cannot replace those criteria.

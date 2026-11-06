@@ -61,7 +61,7 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
         assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
-            "let sample = PublicControlSample(read: {",
+            "let sample = PublicControlSample(read: read ?? {",
             "let snapshot = try control.snapshot()",
             "return (snapshot.frame, snapshot.isEnabled)",
             "let frame = sample.frame",
@@ -104,6 +104,41 @@ class ProductionVerificationWorkflowContractTest {
             "testDisabledControlBreaksFrameAdjacency",
             "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
             "testHittabilityInterruptionRequiresTwoFreshFrames",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_button_geometry_uses_a_unique_bounded_bulk_snapshot_without_remote_reselection() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val setup = swift.substringAfter("private func tapSetupButton(")
+            .substringBefore("private func readPublicButtonSample(")
+        assertContains(setup, "try tapSettledControl(button, read: {")
+        assertContains(setup, "try self.readPublicButtonSample(app, prefix: prefix)")
+        val capture = swift.substringAfter("private func readPublicButtonSample(")
+            .substringBefore("private func tapPublicSetupTransition(")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(capture).count())
+        listOf("PublicButtonSnapshot.select(", "children: { $0.children }",
+            "isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) }",
+            "geometry: { ($0.frame, $0.isEnabled) }", "return sample",
+            """throw NSError(domain: "PublicButtonSelection", code: 1)""",
+        ).forEach { assertContains(capture, it) }
+        listOf(".firstMatch", ".matching(", ".isHittable", ".tap()", ".typeText(",
+            "print(", ".value", ".identifier", ".debugDescription",
+        ).forEach { assertFalse(it in capture) }
+        val selection = swift.substringAfter("private enum PublicButtonSnapshot {")
+            .substringBefore("final class PublicButtonSnapshotTests")
+        listOf("count <= 2048", "depth <= 32", "guard selected == nil else { return nil }",
+            "selected = geometry(node)", "descendants.count <= 2048 - count - pending.count",
+            "return selected",
+        ).forEach { assertContains(selection, it) }
+        listOf("XCUIElement", "print(", ".tap()", ".typeText(", ".snapshot()",
+            "sleep(", ".label", ".value",
+        ).forEach { assertFalse(it in selection) }
+        listOf("testUniqueControlUsesOneGenerationWithoutAnotherQuery",
+            "testMissingAndDuplicateControlsCannotProvideAFrame",
+            "testDisabledControlStillBreaksFrameAdjacency",
+            "testOversizedTreeCannotAcceptAnEarlierMatch",
+            "testExcessiveDepthCannotAcceptAnEarlierMatch",
         ).forEach { assertContains(swift, "func $it()") }
     }
 
@@ -568,7 +603,8 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtimeJob = workflow.substringAfter("\n  ios-kmp:\n").substringBefore("\n  ios:\n")
+        val swiftJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         val releaseJob = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         assertContains(
             releaseJob.substringBefore("\n    steps:\n"),
@@ -676,8 +712,8 @@ class ProductionVerificationWorkflowContractTest {
 
         val appLaunchMarker = "- name: Launch Swift host and Compose root on iOS Simulator"
         val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
-        assertContains(runtimeJob, appLaunchMarker)
-        val appLaunchStep = runtimeJob
+        assertContains(swiftJob, appLaunchMarker)
+        val appLaunchStep = swiftJob
             .substringAfter(appLaunchMarker)
             .substringBefore("\n      - name:")
         listOf(
@@ -698,7 +734,7 @@ class ProductionVerificationWorkflowContractTest {
             )
         }
         assertFalse("xcrun simctl list devices available --json" in appLaunchStep)
-        assertOwnedAppleUiLifecycle(runtimeJob, appLaunchMarker)
+        assertOwnedAppleUiLifecycle(swiftJob, appLaunchMarker)
         listOf(
             "com.apple.product-type.bundle.ui-testing",
             "IOSAppLaunchUITests.swift in Sources",
@@ -799,12 +835,14 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtime = workflow.substringAfter("\n  ios-kmp:\n").substringBefore("\n  ios:\n")
+        val swift = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         val release = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
-        listOf(runtime to listOf("apple-aggregate", "apple-ui"), release to listOf("apple-aggregate", "apple-wrapper"))
+        listOf(runtime to listOf("apple-aggregate"), swift to listOf("apple-ui"),
+            release to listOf("apple-aggregate", "apple-wrapper"))
             .forEach { (job, cycles) ->
                 val header = job.substringBefore("\n    steps:")
-                assertContains(header, if (job == runtime) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
+                assertContains(header, if (job != release) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
                 assertContains(header, "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer")
                 assertFalse("needs:" in header || "strategy:" in header)
                 listOf(
@@ -829,6 +867,20 @@ class ProductionVerificationWorkflowContractTest {
                 assertContains(cleanup, "steps.verification_artifact.outputs.artifact-digest")
             }
         assertContains(runtime, "name: ios-runtime-verification")
+        assertContains(swift, "name: ios-swift-verification")
+        assertFalse("productionIosSimulatorRuntimeTests" in swift)
+        assertFalse("create-simulator apple-ui" in runtime)
+        listOf(runtime, swift).forEach { job ->
+            assertContains(job, "test \"\$(cat build/ci-evidence/architecture.txt)\" = arm64")
+            assertContains(job, "scripts.ci.apple_runtime_gate lane")
+        }
+        val join = workflow.substringAfter("\n  ios-runtime:\n").substringBefore("\n  ios-release-simulator:\n")
+        assertContains(join, "name: iOS simulator runtime and Swift host")
+        assertContains(join, "needs: [ios-kmp, ios]")
+        assertContains(join, "if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')")
+        assertContains(join, "PARLOR_APPLE_RUNTIME_NEEDS: \${{ toJSON(needs) }}")
+        assertContains(join, "scripts.ci.apple_runtime_gate aggregate")
+        assertContains(join, "if-no-files-found: error")
         assertContains(runtime, "**/build/test-results/**/*.xml")
         assertContains(release, "name: ios-release-verification")
         assertContains(release, "**/build/reports/detekt/")
@@ -842,7 +894,7 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         assertEquals(
             listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+                "ios-kmp", "ios", "ios-runtime", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
                 "darwin-host-capability"),
             Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
                 .map { it.groupValues[1] }.toList(),
@@ -879,7 +931,7 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(3, Regex("(?m)^      - name:").findAll(capability).count())
         listOf("./gradlew", "build/", "RUNNER_TRACKING_ID:", "self-hosted", "macos-latest", "|| true",
             "continue-on-error", "github.token", "secrets.").forEach { assertFalse(it in capability) }
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         assertContains(runtime.substringBefore("\n    steps:"), "inputs.verification_scope != 'darwin-host-capability'")
     }
 
@@ -887,7 +939,7 @@ class ProductionVerificationWorkflowContractTest {
     fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
         val jobs = listOf(
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+            "ios-kmp", "ios", "ios-runtime", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
         )
         val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
         fun assertJobBoundaries(checkoutText: String) {
@@ -899,7 +951,7 @@ class ProductionVerificationWorkflowContractTest {
             )
             assertEquals(
                 "    name: ios",
-                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n"),
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n"),
             )
             assertEquals(
                 "    name: ios-release-simulator",

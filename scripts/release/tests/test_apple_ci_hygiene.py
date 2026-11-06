@@ -866,7 +866,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         self.claim_path = self.base / "ci-ownership.json"
         self.task = {**TASK, "GITHUB_JOB": self.JOB}
         self.cycles = hygiene.apple_cycles(self.task)
-        self.secondary = self.cycles[1]
+        self.primary, self.secondary = self.cycles[0], self.cycles[-1]
         self.source = {"root": str(self.root), "head": "a" * 40, "tree": "b" * 40}
         self.identity = {**self.source, "outputs": ["build"]}
         self.upload = {"outcome": "success", "artifact_id": "123", "artifact_digest": "c" * 64}
@@ -911,12 +911,12 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         cleanup.assert_not_called()
 
     def test_failed_prepare_cannot_adopt_old_same_task_claim_and_skipped_is_not_pass(self):
-        prefix = self.prepare_cycle("apple-aggregate")
+        prefix = self.prepare_cycle(self.primary)
         for preparation, run in (("failure", "skipped"), ("cancelled", "skipped"), ("skipped", "skipped")):
-            receipt = apple.finish(self.root, prefix, self.task, "apple-aggregate", preparation, run,
+            receipt = apple.finish(self.root, prefix, self.task, self.primary, preparation, run,
                                    backend_factory=Mock(side_effect=AssertionError("must not instantiate native backend")))
             self.assertEqual(receipt["result"], "FAIL")
-        fresh = apple.cycle_prefix(self.prefix, self.secondary)
+        fresh = apple.cycle_prefix(Path(str(self.prefix) + "-unprepared"), self.secondary)
         receipt = apple.finish(self.root, fresh, self.task, self.secondary, "skipped", "skipped")
         self.assertEqual(receipt["result"], "NOT_RUN")
         self.assertEqual(receipt["gradle_stop"]["exit_code"], 0)
@@ -964,7 +964,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual((self.root / "build/test.xml").read_text(), "preserve required evidence")
 
     def test_wrong_jobs_cycles_and_simulator_commands_never_admit_native_resources(self):
-        cases = (("ios", "apple-wrapper"), ("ios-release-simulator", "apple-ui"), (self.JOB, "unknown-cycle"),
+        cases = (("ios", "apple-wrapper"), ("ios", "apple-aggregate"), ("ios-kmp", "apple-ui"), ("ios-release-simulator", "apple-ui"), (self.JOB, "unknown-cycle"),
                  ("ios-other", "apple-aggregate"), ("ios-protection-probe", "apple-aggregate"), ("desktop-macos-x64", "apple-aggregate"))
         for job, cycle in cases:
             task = {**TASK, "GITHUB_JOB": job}
@@ -990,7 +990,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
                     self.assertEqual(result["result"], "FAIL")
                     self.assertIn("Unknown Apple verification job", result["errors"][0]["error"])
                     self.assertEqual(result["removed"], [])
-        for job, cycle in (("ios", "apple-aggregate"), ("ios", "apple-wrapper"),
+        for job, cycle in (("ios-kmp", "apple-aggregate"), ("ios-kmp", "apple-ui"), ("ios", "apple-aggregate"), ("ios", "apple-wrapper"),
                            ("ios-release-simulator", "apple-aggregate"), ("ios-release-simulator", "apple-wrapper"), ("ios-release-simulator", "apple-ui")):
             with self.subTest(create_job=job, cycle=cycle), \
                     patch.object(hygiene, "context", return_value=(self.root, self.prefix, {**TASK, "GITHUB_JOB": job})), \
@@ -1011,7 +1011,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
     def test_exact_job_cycle_outcomes_foreign_receipts_and_upload_gate(self):
         outcomes = self.receipts()
         foreign = next(cycle for cycle in apple.CYCLES if cycle not in self.cycles)
-        for changed in ({self.secondary: outcomes[self.secondary]}, {**outcomes, foreign: outcomes[self.secondary]},
+        for changed in ({cycle: value for cycle, value in outcomes.items() if cycle != self.primary}, {**outcomes, foreign: outcomes[self.secondary]},
                         {**outcomes, "unknown-cycle": outcomes[self.secondary]}):
             self.assertEqual(self.cleanup_outputs(changed)["result"], "FAIL")
         foreign_paths = [Path(str(self.prefix) + "-stop-" + foreign + ".json"),
@@ -1024,9 +1024,9 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual(receipt["removed"], [])
             self.assertEqual(path.read_text(), "unassigned cycle evidence")
             path.unlink()
-        other_task = {**self.task, "GITHUB_JOB": "ios-release-simulator" if self.JOB == "ios" else "ios"}
+        other_task = {**self.task, "GITHUB_RUN_ID": "124"}
         with self.assertRaisesRegex(RuntimeError, "ownership changed"):
-            apple.validate_claim(self.root, apple.cycle_prefix(self.prefix, "apple-aggregate"), other_task, "apple-aggregate", self.config)
+            apple.validate_claim(self.root, apple.cycle_prefix(self.prefix, self.primary), other_task, self.primary, self.config)
         result = hygiene.cleanup(self.root, self.claim_path, self.task, {**self.upload, "outcome": "failure"}, "success", outcomes)
         self.assertEqual(result["result"], "FAIL")
         self.assertEqual(result["removed"], [])
@@ -1038,12 +1038,16 @@ class AppleReleaseCycleAndOutputGateTest(AppleCycleAndOutputGateTest):
     JOB = "ios-release-simulator"
 
 
+class KmpAppleCycleAndOutputGateTest(AppleCycleAndOutputGateTest):
+    JOB = "ios-kmp"
+
+
 class AppleWorkflowOwnershipTest(unittest.TestCase):
     def test_each_apple_cycle_has_preparation_always_finalizer_and_output_gate(self):
         workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
         jobs = {block.split(":\n", 1)[0]: block for block in
                 re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]}
-        self.assertEqual(hygiene.APPLE_JOB_CYCLES, {"ios": ("apple-aggregate", "apple-ui"),
+        self.assertEqual(hygiene.APPLE_JOB_CYCLES, {"ios-kmp": ("apple-aggregate",), "ios": ("apple-ui",),
                                                    "ios-release-simulator": ("apple-aggregate", "apple-wrapper"),
                                                    "ios-release-device": ("apple-aggregate",),
                                                    "ios-release-x64": ("apple-aggregate",)})

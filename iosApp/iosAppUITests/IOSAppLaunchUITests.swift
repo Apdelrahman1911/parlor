@@ -223,13 +223,33 @@ final class IOSAppLaunchUITests: XCTestCase {
         let button = setupButton(app, prefix: prefix)
         for _ in 0..<8 {
             if button.waitForExistence(timeout: 1), button.isHittable {
-                try tapSettledControl(button)
+                try tapSettledControl(button, read: {
+                    try self.readPublicButtonSample(app, prefix: prefix)
+                })
                 return
             }
             app.swipeUp(velocity: .slow)
         }
         XCTFail("Public setup control is not reachable: " + prefix)
         throw NSError(domain: "KeyboardLayoutSetup", code: 1)
+    }
+
+    @MainActor
+    private func readPublicButtonSample(
+        _ app: XCUIApplication, prefix: String
+    ) throws -> (frame: CGRect, enabled: Bool) {
+        // Public setup only. Bulk snapshot capture avoids re-running a remote
+        // first-match traversal for each geometry sample. Selection is local,
+        // complete, unique and bounded; no snapshots or labels leave this read.
+        let root = try app.snapshot()
+        guard let sample = PublicButtonSnapshot.select(
+            from: root, children: { $0.children },
+            isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) },
+            geometry: { ($0.frame, $0.isEnabled) }
+        ) else {
+            throw NSError(domain: "PublicButtonSelection", code: 1)
+        }
+        return sample
     }
 
     @MainActor
@@ -262,19 +282,25 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSettledControl(_ control: XCUIElement) throws {
+    private func tapSettledControl(
+        _ control: XCUIElement,
+        read: (() throws -> (frame: CGRect, enabled: Bool))? = nil
+    ) throws {
         // One resolved public snapshot supplies frame and enabled together.
         // Separate XCUIElement property reads each re-evaluate the remote query;
         // an interrupted resolution can return false rather than native disabled
         // state (original failure41180128325). Missing/error samples still break
         // adjacency. Keep exact frames, native hittability, the ten-second
         // deadline and the single ordinary tap; never admit stale cached state.
+        // Buttons supply fresh bulk app snapshots: in42261837661 two redundant
+        // remote first-match traversals spent the budget before native hittability
+        // could even resolve its target. Text controls keep their own snapshots.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let sample = PublicControlSample(read: {
+            let sample = PublicControlSample(read: read ?? {
                 let snapshot = try control.snapshot()
                 return (snapshot.frame, snapshot.isEnabled)
             })
@@ -822,6 +848,97 @@ final class PublicControlFramesTests: XCTestCase {
         frames.reset()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+}
+
+// Traverse only a single already-captured public snapshot. A partial tree,
+// duplicate match or absent control is unknown, never a usable cached frame.
+private enum PublicButtonSnapshot {
+    static func select<Node>(
+        from root: Node,
+        children: (Node) -> [Node],
+        isMatch: (Node) -> Bool,
+        geometry: (Node) -> (frame: CGRect, enabled: Bool)
+    ) -> (frame: CGRect, enabled: Bool)? {
+        var pending: [(Node, Int)] = [(root, 0)]
+        var selected: (frame: CGRect, enabled: Bool)?
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if isMatch(node) {
+                guard selected == nil else { return nil }
+                selected = geometry(node)
+            }
+            let descendants = children(node)
+            guard descendants.count <= 2048 - count - pending.count else { return nil }
+            for child in descendants { pending.append((child, depth + 1)) }
+        }
+        return selected
+    }
+}
+
+final class PublicButtonSnapshotTests: XCTestCase {
+    private struct Node {
+        var matches = false
+        var enabled = true
+        var frame = CGRect(x: 32, y: 466, width: 338, height: 52)
+        var children: [Node] = []
+    }
+
+    private func sample(_ root: Node) -> (frame: CGRect, enabled: Bool)? {
+        PublicButtonSnapshot.select(from: root, children: { $0.children },
+                                    isMatch: { $0.matches }, geometry: { ($0.frame, $0.enabled) })
+    }
+
+    func testUniqueControlUsesOneGenerationWithoutAnotherQuery() throws {
+        let target = Node(matches: true)
+        var reads = 0
+        let selected = try XCTUnwrap(PublicButtonSnapshot.select(
+            from: Node(children: [Node(), target]), children: { $0.children },
+            isMatch: { $0.matches }, geometry: { node in
+                reads += 1
+                return (node.frame, node.enabled)
+            }
+        ))
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(selected.frame, target.frame)
+        XCTAssertTrue(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: selected.enabled))
+    }
+
+    func testMissingAndDuplicateControlsCannotProvideAFrame() {
+        XCTAssertNil(sample(Node()))
+        XCTAssertNil(sample(Node(children: [Node(matches: true), Node(matches: true)])))
+        XCTAssertNil(sample(Node(matches: true, children: [Node(matches: true)])))
+    }
+
+    func testDisabledControlStillBreaksFrameAdjacency() throws {
+        let selected = try XCTUnwrap(sample(Node(matches: true, enabled: false)))
+        XCTAssertFalse(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: true))
+    }
+
+    func testOversizedTreeCannotAcceptAnEarlierMatch() {
+        let withinBudget = Node(children: Array(repeating: Node(), count: 2046) + [Node(matches: true)])
+        XCTAssertNotNil(sample(withinBudget))
+        let overBudget = Node(children: [Node(children: Array(repeating: Node(), count: 2047)),
+                                         Node(matches: true)])
+        XCTAssertNil(sample(overBudget))
+    }
+
+    func testExcessiveDepthCannotAcceptAnEarlierMatch() {
+        var chain = Node()
+        for _ in 0..<31 { chain = Node(children: [chain]) }
+        XCTAssertNotNil(sample(Node(children: [chain, Node(matches: true)])))
+        chain = Node(children: [chain])
+        XCTAssertNil(sample(Node(children: [chain, Node(matches: true)])))
     }
 }
 

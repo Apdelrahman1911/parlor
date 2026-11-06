@@ -352,7 +352,7 @@ the old evidence expires.
 Configure `main`, `testing`, and `release` independently:
 
 - require pull requests and at least the organization's approved reviewer count;
-- require all six mandatory full **Production verification** jobs and require branches to be up to date.
+- require all six mandatory **Production verification** check groups and require branches to be up to date.
   The check names in `.github/workflows/production-verification.yml` are:
   - `Common, desktop, and Android release`;
   - `Desktop strict verification (Linux arm64)`;
@@ -370,6 +370,10 @@ Configure `main`, `testing`, and `release` independently:
   succeed at the same source with retained evidence and successful cleanup.
   These standard free macOS workers preserve every Release architecture without
   changing the required check name or requiring new protection settings.
+  The unchanged runtime check similarly joins both ARM64 runtime lanes
+  (`ios-kmp` and `ios`). Neither KMP tests nor the complete native Swift suite
+  may be skipped or replaced by Intel evidence; source, retained artifacts and
+  successful cleanup must match the triggering checkout.
   An authorized owner must update external branch-protection settings for these
   two Apple check names; this source contract does not prove those settings were
   changed. Include newly added mandatory full jobs when updating protection;

@@ -9,7 +9,9 @@ requirements and closed; ten remain open. Passing general CI does not close an u
 requirement. This is an execution matrix, **not a claim that all CI work is done**.
 The later native acceptance investigation found a distinct Android locale
 lifetime defect, closed #329 below, and live configuration-reset defect #332.
-Neither is one of the original twelve; #332 remains in active correction.
+Neither is one of the original twelve; #332's correction is merged and its
+native Android acceptance passes, but its complete-main gate remains open.
+There are **eleven current open Issues**; ten are from the original twelve.
 
 Accepted baseline is actual main `6028009f43c8fcd6b5d22ce8d94e0b822d5685d0`,
 tree `70b4cbe78dde95c1ea4519f60dbbda36f79c133a`, independently verified by
@@ -24,10 +26,22 @@ iOS: 809 KMP Simulator / 42 Swift / 457 readiness methods; 844 release and
 73 worker controls pass. All257 synthetic PNGs per Desktop host are retained and
 decoded, with explicitly scoped original-image review rather than a claim that
 every frame was manually inspected. This qualifies the baseline, not newer
-main. PR330's game-layout and PR331's navigation-fixture corrections are merged,
-but actual main `d7d6f415`/42227976735 still fails Android process verification.
-Fresh native correction, complete protected checks and independent main remain
-required; see the [handled-configuration report](2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md).
+main. PR330/331/333's layout, native fixture and handled-configuration corrections
+are merged. Actual main `3fde30d5` /
+[42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
+fails a separate iOS pre-tap observer. PR334's observer correction passes its five
+new native controls, but full42274478001 is **46 Swift PASS /1 FAIL** at Arabic
+Name typing; seven other producers,819 KMP and457 readiness methods pass. The
+original native log establishes27.547310s before UIKit insertion, not a shipping
+focus/sanitizer correction or the deeper keyboard-service startup cause.
+
+Supplemental Intel [42286948623](https://github.com/Apdelrahman1911/parlor/actions/runs/42286948623)
+independently passes the unchanged47-method Swift suite and owned cleanup.
+It does **not** qualify ARM64, PR334/main or permanent input causality. The
+[isolated ARM64 runtime preparation](2026-11-06-ISOLATED-ARM64-RUNTIME.md)
+retains both full suites and all optimized Release architectures. Fresh protected
+and independent-main qualification remains required; latest execution evidence
+is linked on [#276](https://github.com/Apdelrahman1911/parlor/issues/276).
 
 ## Acceptance matrix
 
@@ -46,7 +60,7 @@ required; see the [handled-configuration report](2026-11-06-ANDROID-HANDLED-CONF
 | [#267](https://github.com/Apdelrahman1911/parlor/issues/267), native input P1 | App retained callback and XCTest geometry/query defects have separate verified fixes. Original native evidence reaches same-sender HID registration/discard/cancellation. | **External runner/platform boundary remains:** supported correction or usable native acquisition at [runner-images#15252](https://github.com/actions/runner-images/issues/15252); no new upstream fix at intake. Full diagnostic neutrality is not certified by a scoped passing pair. Do not retry unchanged probes or activate cancelled touches. |
 | [#276](https://github.com/Apdelrahman1911/parlor/issues/276), native typing P1 | End-to-end evidence confirms deferred UIKit insertion after keyboard-service delay, not lost Kotlin draft updates. Retained app handoff defects are separately fixed. PR328's distinct sequential tutorial-query interruption now has a bounded coherent [observer correction](2026-11-06-IOS-KEYBOARD-TUTORIAL-OBSERVATION.md), independently passing full PR/main42 Swift/809 KMP Simulator/457 readiness methods with original deadlines/actions intact. | **External runner/platform boundary remains:** latest retained proxy→daemon delay33.130487s; alternate macOS26 acquisition produced zero usable frames at unchanged bounds. No supported deeper HID/service-startup fix at runner-images#15252. No keyboard warmup, speculative focus change, extra input or longer assertion; a green run is not a permanent upstream correction. |
 | [#329](https://github.com/Apdelrahman1911/parlor/issues/329), Android locale P2 (new) | Actual42169900414 reproduced English after Activity relaunch despite persisted Arabic and intact sibling storage. Exact acquisition identity/successor-aware restoration fixes late same-language disposal; seven common regressions and all27 current native API34 methods preserve EN/AR Home outcomes. | **CLOSED:** PR328's full42185129610, normal protected merge6028009f and distinct main42193749434 independently pass all producers/Release join/source/artifact/cleanup acceptance. The original failed evidence remains failed. Broader iOS protection/device #253/#259 gates are not closed by this fix. |
-| [#332](https://github.com/Apdelrahman1911/parlor/issues/332), Android configuration locale P2 (new) | Native42246135518 confirms actual English after one handled rotation, with persisted Arabic and the same live Activity; clearing the observer cache makes no difference. Exact-owner configuration refresh and17 common regressions are prepared. | **Active CI correction:** integrate the executed EN/AR reproducer, qualify the correction through all required native/optimized-platform checks, protected merge and distinct main. This is separate from #329's verified disposal fix and does not prove the original cold-process failure sequence. |
+| [#332](https://github.com/Apdelrahman1911/parlor/issues/332), Android configuration locale P2 (new) | PR333's exact-owner configuration refresh,17 common regressions and actual EN/AR rotation tests pass fresh full PR42253730217 before protected merge. Distinct main42261837661 independently passes33 API34/3 optimized API35 methods and12 process cases/24 native phases. | **Complete-main gate:** current main fails a separate iOS permission pre-tap observer. Keep open until the corrected whole-main gate passes. This is separate from #329's verified disposal fix and does not prove the original cold-process failure sequence. |
 
 ## What this audit does not repeat
 
@@ -103,3 +117,11 @@ the Gradle wrapper and Xcode26.3/17C529 for Store-qualified build work.
 The upstream input and supported-volume prerequisites are **not mislabeled as
 completed CI or device-only work**. Owner device findings can supply new evidence;
 they do not retroactively turn failed hosted controls into successful ones.
+
+### Physical roster prerequisite
+
+A two-phone pair alone cannot execute every all-physical game. The bundled
+Whodunit case requires exactly6; Mafia5–16; Last Light2–6; Egyptian Dominoes2–4
+(teams exactly4); Ghamza3–12; Word Impostor3–12 with a valid impostor minority.
+Record actual devices versus synthetic peers separately; never label a mixed
+fixture as an all-physical roster. Phase4 remains the owner's separate campaign.
