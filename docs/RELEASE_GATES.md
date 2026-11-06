@@ -44,6 +44,14 @@ Automated evidence is attributable only when the command starts and finishes
 at the same recorded commit and `git status --short` is empty. A later code or
 repository-contract change invalidates that receipt and requires a new run.
 
+The Linux managed-device supervisor gives each runtime invocation a fresh
+`ANDROID_AVD_HOME`. After a passing runtime and verified descendant retirement,
+it removes only that owned AVD data before the next lane and records actual
+allocated/free bytes. Failed runs retain their AVD; test reports and all build
+artifacts remain subject to the existing upload-before-output-cleanup policy.
+This avoids overlapping API35/API34 writable images without shrinking devices,
+skipping tests, changing the GPU mode, or removing SDK/dependency caches.
+
 ## External gates
 
 These are `UNVERIFIED` until the release evidence folder contains a dated

@@ -1632,6 +1632,8 @@ def verify_android_runtime_script() -> None:
     for token in required:
         if token not in script:
             fail(f"Android managed-device runner is missing {token!r}")
+    if script.count("    --isolated-avd \\\n") != 2:
+        fail("Both Linux managed-device invocations must isolate and retire their own completed AVD data")
     for production_secret in (
         "PARLOR_ANDROID_KEYSTORE_PATH",
         "PARLOR_ANDROID_KEYSTORE_PASSWORD",
