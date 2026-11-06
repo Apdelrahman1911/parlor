@@ -1,0 +1,126 @@
+name: Public UX fixtures and Android test compilation (not full qualification)
+on:
+  push:
+    branches: [verification/ux-acceptance-preview-2026-11-06]
+permissions:
+  contents: read
+concurrency:
+  group: ux-acceptance-preview-${{ github.ref }}
+  cancel-in-progress: false
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+jobs:
+  ux-preview:
+    name: Render synthetic UI and compile native acceptance tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out reviewed experiment
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Freeze the exact acceptance candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          git checkout --detach f47447e7fb1d6b3043c4d9c4fef6a5ece3ce857f
+          test -z "$(git status --porcelain)"
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Restore reviewed dependencies only
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        run: python3 -B scripts/ci/verification_hygiene.py prepare
+      - name: Install the compile-only Android SDK inputs
+        timeout-minutes: 6
+        run: |
+          set -euo pipefail
+          timeout --signal=TERM --kill-after=10s 300s \
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" \
+            "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+      - name: Render unchanged shipping UI and compile new Android tests
+        run: |
+          set -euo pipefail
+          ./gradlew productionDesktopCheck :composeApp:compileDebugAndroidTestKotlinAndroid \
+            -Pparlor.androidRuntimeTestVariant=debug --dependency-verification=strict \
+            --no-daemon --max-workers=2 --console=plain \
+            2>&1 | tee "$RUNNER_TEMP/parlor-ux-build.log"
+      - name: Bind real render and compiled test evidence
+        run: |
+          python3 -B - <<'PY'
+          import hashlib,json,pathlib,re,subprocess
+          root=pathlib.Path.cwd()
+          head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert head=='f47447e7fb1d6b3043c4d9c4fef6a5ece3ce857f'
+          assert not subprocess.check_output(['git','status','--porcelain'])
+          source='composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeStorageRuntimeTest.kt'
+          expected=sorted(re.findall(r'fun (test\w+)\(',pathlib.Path(source).read_text()))
+          targets=list((root/'composeApp/build').rglob('AndroidResumeStorageRuntimeTest.class'))
+          assert len(targets)==1 and len(expected)==7
+          compiled=subprocess.check_output(['javap','-p',str(targets[0])],text=True)
+          assert sorted(re.findall(r'public final void (test\w+)\(\);',compiled))==expected
+          images=sorted(p for p in root.rglob('*.png') if '/build/reports/tests/public-ux/' in str(p))
+          assert len(images)>=16
+          home=root/'composeApp/build/reports/tests/public-ux'
+          for language in ('en','ar'):
+              for theme in ('light','dark'):
+                  for scale in ('1.0','2.0'):
+                      for screen in ('home','setup'):
+                          assert (home/f'{screen}-{language}-{theme}-{scale}.png').is_file()
+          sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+          record=dict(scope='Desktop renders and Android test compilation only; no native runtime or full qualification',
+            source=head,tree=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),
+            test_source_sha256=sha(pathlib.Path(source)),test_class_sha256=sha(targets[0]),native_methods=expected,
+            renders=[dict(path=str(p.relative_to(root)),bytes=p.stat().st_size,sha256=sha(p)) for p in images])
+          output=root/'build/ci-evidence/public-ux-preview.json';output.parent.mkdir(parents=True,exist_ok=True)
+          with output.open('x') as stream:json.dump(record,stream,indent=2)
+          print('Retained synthetic PNGs:',len(images),'; compiled native methods:',len(expected))
+          PY
+      - name: Stop owned Gradle workers
+        if: always()
+        run: python3 -B scripts/ci/verification_hygiene.py stop --cycle ux-preview
+      - name: Upload only current fixture and compilation evidence
+        if: always()
+        id: verification_artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: public-ux-acceptance-preview
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            build/ci-evidence/public-ux-preview.json
+            ${{ runner.temp }}/parlor-ux-build.log
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            !remediation-runs/**
+            !docs/archives/**
+      - name: Clean only attested and uploaded outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        run: python3 -B scripts/ci/verification_hygiene.py cleanup
+      - name: Retain output cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: public-ux-preview-cleanup
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
