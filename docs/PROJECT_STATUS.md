@@ -1,4 +1,28 @@
-# Project status — November 5, 2026
+# Project status — November 6, 2026
+
+## Twelve-Issue acceptance audit and active CI work
+
+Current independently accepted main is `c3c0e2b3`,
+[42120235829](https://github.com/Apdelrahman1911/parlor/actions/runs/42120235829),
+all eight producers/optimized Apple join. PR326 and scoped #324 are complete.
+The [twelve-Issue acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md)
+distinguishes implemented scope, new CI work, physical gates and external
+runner/security/credential prerequisites. It is not an all-work-complete claim.
+
+#285 is closed after its missing Intel native control passed42141604588.
+PR327/#308's full42142636265 and constrained-capacity42143063097 executions are
+in progress, **not qualified**. Android native Resume/storage acceptance and
+public screenshot-custody corrections are prepared separately for #253/#259;
+their new native/full/main qualification remains pending. Phase5 can proceed
+independently, but a screenshot destination repair is not a full redesign.
+
+Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
+remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles
+all six iOS frontends, but original strict0 PASS/6 FAIL, supported-volume positive
+acceptance and physical locked-keybag behavior remain unmet. Physical Phase4 is
+reserved for the owner. No release, signing or physical success is claimed.
+
+## Historical checkpoints below — not the current execution status
 
 ## Source checkpoint before PR326 and outstanding acceptance
 
