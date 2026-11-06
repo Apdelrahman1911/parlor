@@ -1,0 +1,303 @@
+name: Android capacity envelope (not full qualification)
+on:
+  workflow_dispatch:
+    inputs:
+      verification_scope:
+        description: Full Common only; experiment admission still requires its exact push context
+        type: choice
+        options: [full]
+        default: full
+  push:
+    branches: [verification/android-capacity-envelope-2026-11-06]
+permissions:
+  contents: read
+concurrency:
+  group: capacity-envelope-${{ github.ref }}
+  cancel-in-progress: false
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+jobs:
+  desktop-android:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only'
+    name: Common, desktop, and Android release
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.verification_scope == 'linux-process-probe' && 10 || inputs.verification_scope == 'android-cleanup-only' && 45 || 90 }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The review-inventory gate derives per-file findings from the
+          # accepted review baseline, so this job needs that history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Validate control and freeze the exact application source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          python3 -B -m unittest discover -s scripts/verification/android-capacity-envelope -v
+          test ! -e "$RUNNER_TEMP/parlor-capacity-reservation.py"
+          cp scripts/verification/android-capacity-envelope/reservation.py "$RUNNER_TEMP/parlor-capacity-reservation.py"
+          chmod 700 "$RUNNER_TEMP/parlor-capacity-reservation.py"
+          git checkout --detach 9511ee3abe0f7ffd30c4c87a02eba18523cf7021
+          test -z "$(git status --porcelain)"
+
+      - name: Reclaim unused standard Linux runner toolchains
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        run: python3 -B scripts/ci/hosted_linux_capacity.py
+
+      - name: Hold the measured 26GiB pre-restore free-space envelope
+        id: reservation
+        run: python3 -B "$RUNNER_TEMP/parlor-capacity-reservation.py" reserve
+
+      - name: Restore reviewed Gradle dependencies
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: dependency_cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Validate Linux process-probe source and controls
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'
+        env:
+          PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
+        run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate
+
+      - name: Validate Android cleanup source and controls
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'android-cleanup-only'
+        env:
+          PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
+        run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate-android-cleanup
+
+      - name: Install Linux process-probe emulator package
+        if: github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only')
+        timeout-minutes: 4
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout --signal=TERM --kill-after=10s 180s \
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" "emulator"
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Install pinned Android SDK packages
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
+        timeout-minutes: 11
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          managed_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)
+          test "$managed_device_image" = "system-images;android-35;google_apis;x86_64"
+          navigation_device_image=$(jq -r '.toolchains.android_navigation_device.system_image_package' config/release-policy.json)
+          test "$navigation_device_image" = "system-images;android-34;google_apis;x86_64"
+          # Install both required lanes before spending time on compilation.
+          # Do not let AGP fetch an unreviewed/missing image halfway through tests.
+          /usr/bin/timeout --signal=TERM --kill-after=10s 600s \
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "platform-tools" \
+            "emulator" \
+            "$managed_device_image" \
+            "$navigation_device_image"
+          image_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
+          image_properties="${ANDROID_HOME}/system-images/android-34/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_navigation_device.system_image_revision' config/release-policy.json)"
+
+      - name: Record exact source and require a clean checkout
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"
+
+      - name: Run common, desktop, Android, static-analysis, and release gates
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after common-android
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "common-android"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Run release Android managed-device smoke tests
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
+        shell: bash
+        run: scripts/android/run_release_managed_device_smoke.sh
+
+      - name: Stop Gradle after managed-device
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "managed-device"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Inspect unsigned Android release artifact and merged manifest
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t aabs < <(find composeApp/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print)
+          test "${#aabs[@]}" -eq 1
+          aab="${aabs[0]}"
+          unzip -t "$aab"
+          unzip -l "$aab" | grep -Fq 'base/manifest/AndroidManifest.xml'
+          unzip -l "$aab" | grep -Fq 'base/dex/classes.dex'
+          manifest="composeApp/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml"
+          test -s "$manifest"
+          sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
+          cp "$manifest" build/ci-evidence/merged-release-manifest.xml
+          python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json
+          tools=$(mktemp -d "${RUNNER_TEMP}/parlor-unsigned-aab-tools.XXXXXX")
+          trap 'rm -rf "$tools"' EXIT
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            --max-filesize 134217728 --max-time 120 --retry 3 \
+            "$(jq -r '.tools.bundletool.url' config/release-policy.json)" -o "$tools/bundletool.jar"
+          python3 -B scripts/verification/android_release_artifacts.py --package "$aab" \
+            --bundletool "$tools/bundletool.jar" --dexdump "$ANDROID_HOME/build-tools/36.0.0/dexdump" \
+            >build/ci-evidence/android-release-artifact-inventory.json
+
+      - name: Upload verification reports, mappings, and unsigned AAB
+        id: verification_artifact
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: desktop-android-verification
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            build/ci-evidence/
+            **/build/reports/detekt/
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-hosted-disk.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            **/build/reports/androidTests/managedDevice/
+            **/build/outputs/androidTest-results/managedDevice/
+            **/build/reports/lint-results-*
+            composeApp/build/reports/lint-repository-inputs-*.json
+            composeApp/build/outputs/mapping/release/
+            composeApp/build/outputs/bundle/release/*.aab
+            !remediation-runs/**
+            !docs/archives/**
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v2"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+      - name: Observe Linux process access without a build
+        id: linux_process_probe
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'
+        env:
+          PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+        run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py run
+
+      - name: Upload bounded Linux process-probe evidence
+        id: linux_process_probe_artifact
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe')
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-process-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-linux-probe.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-linux-probe.json
+
+      - name: Finalize Linux process-probe resources and uploaded custody
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe')
+        env:
+          PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.linux_process_probe_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.linux_process_probe_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.linux_process_probe_artifact.outputs.artifact-digest }}
+        run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py cleanup
+
+      - name: Upload Linux process-probe cleanup receipt
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe')
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
+
+      - name: Verify and release only the unchanged capacity reservation
+        if: always() && steps.reservation.outcome == 'success'
+        env:
+          CAPACITY_SOURCE_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+        run: python3 -B "$RUNNER_TEMP/parlor-capacity-reservation.py" finish
+
+      - name: Retain capacity experiment measurements
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-capacity-envelope
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-capacity-envelope-*.json
