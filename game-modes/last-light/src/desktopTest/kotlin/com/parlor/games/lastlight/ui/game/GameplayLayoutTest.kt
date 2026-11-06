@@ -121,6 +121,19 @@ class GameplayLayoutTest {
         }
 
         capture("concealed")
+        if (scale == 2f) {
+            // Check the complete shipping wrapper's initial viewport before
+            // bringIntoView can hide an excessively tall introductory layout.
+            val reveal = onNodeWithTag("game-reveal-hand").getUnclippedBoundsInRoot()
+            val viewport = onNodeWithTag(LAST_LIGHT_VIEWPORT).getUnclippedBoundsInRoot()
+            assertTrue(
+                reveal.top >= viewport.top && reveal.bottom <= viewport.bottom,
+                "Initial Reveal must be completely visible before scrolling: $reveal in $viewport",
+            )
+            assertTrue(reveal.bottom - reveal.top >= 56.dp)
+            val label = if (language == AppLanguage.Arabic) "أظهر أوراقك" else "Show hand"
+            onNodeWithText(label, useUnmergedTree = true).assertTextDoesNotOverflow(requireWholeWords = true)
+        }
         assertPrimaryControl("game-reveal-hand")
         onNodeWithTag("game-reveal-hand").performClick()
         for (index in 0..4) {
