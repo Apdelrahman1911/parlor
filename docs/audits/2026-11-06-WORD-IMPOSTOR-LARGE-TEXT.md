@@ -52,5 +52,20 @@ language the light/dark/System voting images are byte-identical because this
 game uses its established fixed palette. This does not certify native fonts,
 insets, touch delivery, screen-reader operation or subjective device usability.
 
-Fresh hosted verification, focused protected PR review/merge and independent
-main acceptance are **pending**. No Issue is closed from this local preview.
+The corrected free hosted preview
+[42174087342](https://github.com/Apdelrahman1911/parlor/actions/runs/42174087342)
+at exact source `cd0debdd7f57568fa390e5b4a9abeaee435b1edd` is also terminal
+**SUCCESS**. Independent original XML readback confirms all30 module methods,
+zero failures/errors/skips, Detekt and all30 decoded PNGs, with source/archive
+and owned-cleanup bindings. Receipt SHA256:
+`6c056652faeda0214db4d956c584affaaab8c40fdc1edbc0b4c41c06106a7030`.
+Actual hosted voting images were inspected: three complete English choices and
+four Arabic choices are visible before scrolling. The original failed compile
+remains failed; it is not substituted for this corrected result.
+
+The subsequent focused game-layout integration reuses the exact verified Word
+source, alongside the separately reproduced Ghamza first-role-action refinement
+([report](2026-11-06-GHAMZA-LARGE-TEXT-REVEAL.md)). Source equivalence allows
+scoped evidence reuse, not substitution for full qualification of the integrated
+tree. Complete protected PR review/checks/merge and distinct main acceptance
+remain **pending**. #259/#260 retain their broader native/device requirements.
