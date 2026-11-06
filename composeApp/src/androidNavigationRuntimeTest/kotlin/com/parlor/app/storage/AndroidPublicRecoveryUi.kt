@@ -44,6 +44,12 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         return (node != null).also { node?.recycle() }
     }
 
+    /** Exact public status text only, after failure; never return arbitrary node content. */
+    fun textPresentNow(text: String): Boolean {
+        val node = findNode(resolveClickOwner = false) { it.text?.toString() == text }
+        return (node != null).also { node?.recycle() }
+    }
+
     /** One known adjacent Home page, never a repeated click or event-dependent scroll loop. */
     fun revealDescription(description: String, forward: Boolean = true) {
         val action = if (forward) AccessibilityNodeInfo.ACTION_SCROLL_FORWARD
@@ -117,7 +123,13 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
                     !node.contentDescription?.toString().orEmpty().contains("SyntheticSeat")) {
                     "Home exposed synthetic gameplay state outside its metadata-only recovery UI"
                 }
-                if (node.isVisibleToUser && node.isEnabled && matchesExpected(node)) {
+                val expected = matchesExpected(node)
+                if (expected) {
+                    observation.matchingLabels++
+                    if (node.isVisibleToUser) observation.visibleLabels++
+                    if (node.isEnabled) observation.enabledLabels++
+                }
+                if (node.isVisibleToUser && node.isEnabled && expected) {
                     observation.exactLabels++
                     if (node.isClickable) observation.sameNodeActions++
                     val selected = if (resolveClickOwner) action else node
@@ -168,6 +180,9 @@ internal fun androidRecoveryHeading(node: AccessibilityNodeInfo, text: String): 
 private data class AndroidRecoveryObservation(
     var rootPresent: Boolean = false,
     var targetNodes: Int = 0,
+    var matchingLabels: Int = 0,
+    var visibleLabels: Int = 0,
+    var enabledLabels: Int = 0,
     var exactLabels: Int = 0,
     var sameNodeActions: Int = 0,
     var resolvedNodes: Int = 0,

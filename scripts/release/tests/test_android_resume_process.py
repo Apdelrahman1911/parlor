@@ -231,6 +231,30 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertEqual(report.count("putString("), 6)
         self.assertEqual(report.count("putInt("), 1)
 
+    def test_cold_home_failure_evidence_keeps_the_original_assertion_and_never_acts(self):
+        source = (driver.ROOT / "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt").read_text()
+        verify = source.split("fun verify()", 1)[1].split("private fun application()", 1)[0]
+        self.assertEqual(verify.count("ui.awaitDescription(fixture.discardDescription(total = 1))"), 1)
+        evidence = verify.split("catch (cancelled: CancellationException)", 1)[1].split("} finally {", 1)[0]
+        self.assertIn("throw cancelled", evidence)
+        self.assertIn("throw AssertionError(\"Cold process Home:", evidence)
+        self.assertIn("languageMatches=", evidence)
+        self.assertIn("siblingIntact=", evidence)
+        self.assertIn("visibility=", evidence)
+        for forbidden in ("performAction", "clickDescription", "revealDescription", "sleep(",
+                          "takeScreenshot", "dumpWindowHierarchy", "setLanguageOverride", "notifyActive"):
+            self.assertNotIn(forbidden, evidence)
+
+    def test_failure_counters_do_not_relax_native_visibility_enablement_or_deadlines(self):
+        source = (driver.ROOT / "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidPublicRecoveryUi.kt").read_text()
+        self.assertIn("if (node.isVisibleToUser && node.isEnabled && expected)", source)
+        self.assertIn("observation.matchingLabels++", source)
+        self.assertIn("if (node.isVisibleToUser) observation.visibleLabels++", source)
+        self.assertIn("if (node.isEnabled) observation.enabledLabels++", source)
+        self.assertIn("OBSERVATION_TIMEOUT_MILLIS = 10_000L", source)
+        self.assertIn("OBSERVATION_INTERVAL_MILLIS = 100L", source)
+        self.assertIn("check(matches.size <= 1)", source)
+
     def test_platform_runner_stubs_are_test_compile_only_and_source_bound(self):
         path = "composeApp/build.gradle.kts"
         self.assertIn(path, driver.SOURCE_PATHS)
