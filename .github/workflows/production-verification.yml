@@ -199,6 +199,17 @@ jobs:
           sys.argv = ["verification_hygiene.py", "stop", "managed-device"]
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
+      - name: Verify Android saved-session removal across process restart
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \
+            --receipt build/ci-evidence/android-process-device-supervision.json \
+            --isolated-avd -- \
+            python3 -B -m scripts.android.run_resume_process_acceptance \
+              --output build/ci-evidence/android-process-acceptance
+
       - name: Inspect unsigned Android release artifact and merged manifest
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         shell: bash
