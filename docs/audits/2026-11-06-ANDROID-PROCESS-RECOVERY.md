@@ -1,5 +1,15 @@
 # Android saved-session deletion across process death
 
+## Newer-main failure under investigation
+
+The newer PR330 main `081a6f68` failed
+[42208844307](https://github.com/Apdelrahman1911/parlor/actions/runs/42208844307)
+at the twelfth case's **pre-delete preparation**, after11 complete cases.
+See the [navigation-boundary correction](2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
+for original evidence, confirmed fixture coalescing reproduction, its historical
+causality limit and required fresh qualification. The accepted checkpoint below
+does not certify that newer failed main. #253 remains open.
+
 ## Latest accepted result — integrated into verified main
 
 The normal implementation is integrated through PR328 and protected merge

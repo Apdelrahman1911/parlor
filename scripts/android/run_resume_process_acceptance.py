@@ -38,6 +38,7 @@ SOURCE_PATHS = (
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidLegalResumeFixtures.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidPublicRecoveryUi.kt",
+    "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryHeadingRuntimeTest.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryRevealObservation.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryRevealRuntimeTest.kt",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryClickOwner.kt",

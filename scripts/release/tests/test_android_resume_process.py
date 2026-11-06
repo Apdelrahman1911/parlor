@@ -259,6 +259,33 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertIn("awaitDescription(description)", reveal)
         self.assertIn("OBSERVATION_TIMEOUT_MILLIS = 10_000L", ui)
 
+    def test_settings_destination_is_observed_before_external_fixture_writes(self):
+        prefix = "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/"
+        source = (driver.ROOT / (prefix + "AndroidResumeProcessPhases.kt")).read_text()
+        prepare = source.split("fun prepare()", 1)[1].split("private suspend fun awaitPreparedHome", 1)[0]
+        settings = 'ui.clickDescription(if (fixture.language == "ar") "افتح الإعدادات." else "Open settings.")'
+        heading = 'ui.awaitHeading(if (fixture.language == "ar") "الإعدادات" else "Settings")'
+        games = 'ui.clickDescription(if (fixture.language == "ar") "افتح مكتبة الألعاب." else "Open the game library.")'
+        self.assertLess(prepare.index(settings), prepare.index(heading))
+        for write in ("store.save(selected)", "store.save(sibling)", "secure.put(", "membership?.seed()"):
+            self.assertLess(prepare.index(heading), prepare.index(write))
+            self.assertLess(prepare.index(write), prepare.index(games))
+        self.assertLess(prepare.index(games), prepare.index("awaitPreparedHome(ui, fixture, sibling, store, settings)"))
+        self.assertEqual(prepare.count(heading), 1)
+        self.assertIn(prefix + "AndroidRecoveryHeadingRuntimeTest.kt", driver.SOURCE_PATHS)
+        ui = (driver.ROOT / (prefix + "AndroidPublicRecoveryUi.kt")).read_text()
+        await_heading = ui.split("fun awaitHeading(", 1)[1].split("fun headingPresentNow", 1)[0]
+        self.assertIn("awaitNode(resolveClickOwner = false) { androidRecoveryHeading(it, text) }.recycle()", await_heading)
+        self.assertNotIn("performAction", await_heading)
+        self.assertIn("node.isHeading && node.text?.toString() == text", ui)
+        self.assertIn("OBSERVATION_TIMEOUT_MILLIS = 10_000L", ui)
+        evidence = source.split("private suspend fun awaitPreparedHome", 1)[1].split("fun verify()", 1)[0]
+        self.assertLess(evidence.index("catch (failure: IllegalStateException)"), evidence.index("descriptionPresentNow"))
+        self.assertIn("throw cancelled", evidence)
+        self.assertLess(evidence.index("catch (cancelled: CancellationException)"),
+                        evidence.index("catch (failure: IllegalStateException)"))
+        self.assertIn("throw AssertionError(", evidence)
+
 
 class AndroidResumeProcessExecutionTest(unittest.TestCase):
     def execute(self, failure=None):
