@@ -55,10 +55,20 @@ The default is now `build/reports/tests/public-ux`, outside Gradle's `desktopTes
 HTML subtree but inside the existing upload selection. Local property/environment
 overrides remain. No additional/private artifact glob is introduced.
 
-A portable control evaluates each Desktop producer's actual upload globs against
-the default destination. Full-run acceptance must additionally find/decode all
-sixteen PNGs in the source-bound uploaded ZIP and review both languages/themes at
-1x/2x text; the structural selection test is not a screenshot or native UI pass.
+The same gap affected fourteen existing renderer/helper files across settings,
+room flows, shared artwork and all six games (`build/reports/ux` or
+`build/ui-snapshots`). Their destinations are corrected together. The separate
+room-code layout test now also captures its synthetic `WWWWWW` fixture by default.
+These tests use fabricated players, public/covered views or a synthetic own-player
+view, not actual saved sessions or a live room. “Public” here means artifact-safe
+fixtures, not a change to a game's private-information policy.
+
+Portable controls evaluate each Desktop producer's actual upload globs against
+the default destination and reject the old uncollected renderer paths. Full-run
+acceptance must additionally find/decode the sixteen Home/setup PNGs and existing
+game/shell/design renders in the source-bound uploaded ZIP, then inspect languages,
+themes and large-text layouts. Structural selection is not a screenshot or native
+UI pass; preserving all existing rendering assertions remains mandatory.
 
 ## Qualification status and remaining acceptance
 

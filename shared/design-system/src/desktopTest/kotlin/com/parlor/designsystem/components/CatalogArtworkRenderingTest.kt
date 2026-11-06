@@ -59,7 +59,7 @@ class CatalogArtworkRenderingTest {
                 val image = onNodeWithTag("artwork-capture").captureToImage()
                 pixels = IntArray(image.width * image.height)
                 image.readPixels(pixels)
-                val output = File("build/reports/ux/catalog-artwork", "${theme.tag}-${language.tag}-${artwork.name}.png")
+                val output = File("build/reports/tests/public-ux/catalog-artwork", "${theme.tag}-${language.tag}-${artwork.name}.png")
                 check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
                 Image.makeFromBitmap(image.asSkiaBitmap()).use { native ->
                     checkNotNull(native.encodeToData()).use { output.writeBytes(it.bytes) }

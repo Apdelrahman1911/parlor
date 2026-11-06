@@ -83,7 +83,7 @@ internal fun SemanticsNodeInteraction.assertFullText() {
 @OptIn(ExperimentalTestApi::class)
 internal fun ComposeUiTest.capturePublicGameFrame(name: String) {
     val directory = System.getenv("PARLOR_UI_SCREENSHOT_DIR")?.takeIf { it.isNotBlank() }
-        ?: "build/reports/ux"
+        ?: "build/reports/tests/public-ux"
     val output = File(directory, "word-impostor-$name.png")
     check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
     Image.makeFromBitmap(onNodeWithTag("game-viewport").captureToImage().asSkiaBitmap()).use { image ->

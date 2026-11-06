@@ -168,7 +168,7 @@ class GameplayChromeTest {
     }
 
     private fun ComposeUiTest.capture(name: String, tag: String = LAST_LIGHT_VIEWPORT) {
-        val file = File("build/ui-snapshots/table-chrome-$name.png").apply { parentFile.mkdirs() }
+        val file = File("build/reports/tests/public-ux/table-chrome-$name.png").apply { parentFile.mkdirs() }
         ImageIO.write(onNodeWithTag(tag).captureToImage().toAwtImage(), "png", file)
     }
 }

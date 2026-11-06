@@ -38,6 +38,19 @@ def paths(text: str, job: str) -> list[str]:
 
 
 class CurrentVerificationArtifactTest(unittest.TestCase):
+    def test_synthetic_renderers_do_not_write_to_uncollected_legacy_destinations(self) -> None:
+        outdated = []
+        for module in ("composeApp", "shared/design-system", "game-modes"):
+            for source in (workflow_contract.ROOT / module).rglob("*.kt"):
+                if "desktopTest" not in source.parts:
+                    continue
+                text = source.read_text()
+                if "captureToImage" in text and any(
+                    path in text for path in ("build/reports/ux", "build/ui-snapshots")
+                ):
+                    outdated.append(str(source.relative_to(workflow_contract.ROOT)))
+        self.assertEqual(outdated, [], "Synthetic visual evidence must survive the reviewed CI upload")
+
     def test_public_ux_render_default_is_collected_by_every_desktop_producer(self) -> None:
         source = (workflow_contract.ROOT / "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/"
                   "HomeCatalogVisualEvidenceTest.kt").read_text()

@@ -116,7 +116,7 @@ class GameplayLayoutTest {
         }
         fun capture(phase: String) {
             val filename = "last-light-${language.tag}-${width.value.toInt()}x${height.value.toInt()}-$scale-$phase.png"
-            val file = File("build/ui-snapshots/$filename").apply { parentFile.mkdirs() }
+            val file = File("build/reports/tests/public-ux/$filename").apply { parentFile.mkdirs() }
             ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", file)
         }
 

@@ -417,7 +417,7 @@ class GameplayHandCountsTest {
     }
 
     private fun ComposeUiTest.capture(name: String) {
-        val file = File("build/ui-snapshots/$name.png").apply { parentFile.mkdirs() }
+        val file = File("build/reports/tests/public-ux/$name.png").apply { parentFile.mkdirs() }
         ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", file)
     }
 
