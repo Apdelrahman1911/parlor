@@ -90,7 +90,7 @@ jobs:
           PY
       - name: Stop owned Gradle workers
         if: always()
-        run: python3 -B scripts/ci/verification_hygiene.py stop --cycle ux-preview
+        run: python3 -B scripts/ci/verification_hygiene.py stop ux-preview
       - name: Upload only current fixture and compilation evidence
         if: always()
         id: verification_artifact
