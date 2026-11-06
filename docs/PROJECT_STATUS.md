@@ -1,25 +1,30 @@
 # Project status — November 6, 2026
 
-## Current main failed qualification; confirmed Android locale correction
+## Current main: Android locale correction passes; iOS observer fails
 
-PR331 is normally merged as `d7d6f415`, tree
-`5df94fa010446cf16426151b6bbb570ce4b2632d`. Its distinct
-[main42227976735](https://github.com/Apdelrahman1911/parlor/actions/runs/42227976735)
-is terminal **FAILURE**: seven producers/optimized Apple join pass, but the
-Android process matrix errors on Mafia/Arabic/multiplayer verification after
-15 successful native phases. This main is **not independently qualified**.
-The separate [navigation-boundary correction](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
-is already integrated, not being reproduced or republished.
+PR333 is normally protected-merged as `3fde30d5`, tree
+`1e371e51d24799c80dbb1b35054c99dea48394d9`. Its distinct
+[main42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
+is terminal **FAILURE**, not independently qualified. Seven producers and the
+optimized Apple Release join pass independent original readback. Android passes
+both actual EN/AR rotation journeys among33 API34 methods,3 optimized API35
+methods and12 process cases/24 native phases. #332's implementation and scoped
+acceptance pass, but the Issue retains its whole-main qualification gate.
 
-New [#332 / handled-configuration report](audits/2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md)
-records a distinct actual application defect: one real rotation changes Arabic
-Settings to English while the same Activity and persisted preference remain.
-Original, freshly cleared native and before/after Compose observations agree;
-this is not corrected by accessibility cache clearing. The exact-owner
-configuration callback correction and17 common regressions are prepared for
-fresh full protected-PR/native/main qualification. No new diagnostic workflow
-is integrated. Earlier cold-failure frame sequences remain unproven; successful
-subsets are not certificates for current main or causality.
+The remaining failure is Arabic Ghamza's iOS Join permission Continue pre-tap
+observer.819 KMP/457 readiness pass; Swift41 PASS/1 FAIL. Original native logs
+prove the outer waiter cancels another remote target lookup before native
+hit-point computation, not that the button was disabled or unhittable. The
+[public-button snapshot correction](audits/2026-11-06-IOS-PUBLIC-BUTTON-SNAPSHOT.md)
+removes redundant geometry-query traversal while preserving two exact fresh
+frames, native hittability, the deadline and one tap. Five new Swift controls,
+fresh EN/AR/full protected checks and distinct main qualification are pending.
+No unchanged workflow replay or speculative application change is selected.
+
+The [Android handled-configuration correction](audits/2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md)
+and earlier [navigation fixture](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
+are already merged, not being reproduced. Earlier failures remain failed;
+their unproven deeper timing causes are not retroactively declared fixed.
 
 ## Latest independently accepted main
 
@@ -60,8 +65,10 @@ Scoped Word30 / Ghamza28 / combined Last Light204 module methods and Detekt
 pass; corrected EN/AR original images were inspected. PR330's fresh full
 [42201793916](https://github.com/Apdelrahman1911/parlor/actions/runs/42201793916)
 and source/22 preselected original-image review passed before protected merge.
-However, distinct main failed the separate Android preparation boundary above.
-Scoped layout evidence remains valid; **whole-main acceptance is not claimed**.
+Subsequent PR331/333 correct the Android preparation/configuration boundaries,
+and their current main passes native Android process acceptance. The new iOS
+observer failure above still blocks **whole-main acceptance**; scoped layout
+evidence remains valid.
 
 ## Open acceptance and external prerequisites
 

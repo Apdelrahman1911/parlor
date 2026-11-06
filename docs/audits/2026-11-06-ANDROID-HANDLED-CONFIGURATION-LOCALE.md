@@ -1,5 +1,22 @@
 # Android locale ownership across handled configuration changes
 
+## Latest qualification — Android scope passes, whole main does not
+
+PR333 passed all required producers and the optimized Apple Release join in
+[42253730217](https://github.com/Apdelrahman1911/parlor/actions/runs/42253730217)
+before normal protected merge as `3fde30d5`. Its distinct
+[main42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
+independently passes the actual EN/AR rotation journeys among33 API34 methods,
+3 optimized API35 methods,12 process cases/24 native phases and the common
+locale regressions on every Desktop host. PR receipt SHA256:
+`67761e9862cb73e6c95e3dc8f270348f6058be06f6cf88fbc340b003f065b054`.
+
+Main nevertheless fails the separate iOS Ghamza permission pre-tap observer;
+see the [original native boundary](2026-11-06-IOS-PUBLIC-BUTTON-SNAPSHOT.md).
+#332 stays open for its complete-main gate. The source/failure statements
+below describe preparation and the original reproductions, not current success
+for unrelated iOS, physical-device or earlier unproven timing causes.
+
 ## Confirmed defect and original evidence
 
 [#332](https://github.com/Apdelrahman1911/parlor/issues/332) is a distinct live

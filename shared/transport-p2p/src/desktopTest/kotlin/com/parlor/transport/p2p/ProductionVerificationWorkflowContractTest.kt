@@ -61,7 +61,7 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
         assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
-            "let sample = PublicControlSample(read: {",
+            "let sample = PublicControlSample(read: read ?? {",
             "let snapshot = try control.snapshot()",
             "return (snapshot.frame, snapshot.isEnabled)",
             "let frame = sample.frame",
@@ -104,6 +104,41 @@ class ProductionVerificationWorkflowContractTest {
             "testDisabledControlBreaksFrameAdjacency",
             "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
             "testHittabilityInterruptionRequiresTwoFreshFrames",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_button_geometry_uses_a_unique_bounded_bulk_snapshot_without_remote_reselection() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val setup = swift.substringAfter("private func tapSetupButton(")
+            .substringBefore("private func readPublicButtonSample(")
+        assertContains(setup, "try tapSettledControl(button, read: {")
+        assertContains(setup, "try self.readPublicButtonSample(app, prefix: prefix)")
+        val capture = swift.substringAfter("private func readPublicButtonSample(")
+            .substringBefore("private func tapPublicSetupTransition(")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(capture).count())
+        listOf("PublicButtonSnapshot.select(", "children: { $0.children }",
+            "isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) }",
+            "geometry: { ($0.frame, $0.isEnabled) }", "return sample",
+            """throw NSError(domain: "PublicButtonSelection", code: 1)""",
+        ).forEach { assertContains(capture, it) }
+        listOf(".firstMatch", ".matching(", ".isHittable", ".tap()", ".typeText(",
+            "print(", ".value", ".identifier", ".debugDescription",
+        ).forEach { assertFalse(it in capture) }
+        val selection = swift.substringAfter("private enum PublicButtonSnapshot {")
+            .substringBefore("final class PublicButtonSnapshotTests")
+        listOf("count <= 2048", "depth <= 32", "guard selected == nil else { return nil }",
+            "selected = geometry(node)", "descendants.count <= 2048 - count - pending.count",
+            "return selected",
+        ).forEach { assertContains(selection, it) }
+        listOf("XCUIElement", "print(", ".tap()", ".typeText(", ".snapshot()",
+            "sleep(", ".label", ".value",
+        ).forEach { assertFalse(it in selection) }
+        listOf("testUniqueControlUsesOneGenerationWithoutAnotherQuery",
+            "testMissingAndDuplicateControlsCannotProvideAFrame",
+            "testDisabledControlStillBreaksFrameAdjacency",
+            "testOversizedTreeCannotAcceptAnEarlierMatch",
+            "testExcessiveDepthCannotAcceptAnEarlierMatch",
         ).forEach { assertContains(swift, "func $it()") }
     }
 
