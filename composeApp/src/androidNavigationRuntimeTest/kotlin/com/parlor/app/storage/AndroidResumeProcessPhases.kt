@@ -7,10 +7,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.os.LocaleList
 import android.os.Process
 import android.test.InstrumentationTestCase
 import android.test.InstrumentationTestRunner
 import com.parlor.app.shell.game.GameShellRegistry
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
@@ -27,6 +29,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import java.util.UUID
+import java.util.Locale
 
 /**
  * Explicit two-invocation JUnit3 phases for the hosted-emulator process driver.
@@ -69,7 +72,11 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
         settings.setReducedMotion(true)
         val activity = launchHome()
         try {
-            val ui = AndroidPublicRecoveryUi(instrumentation)
+            val evidence = AndroidRecoveryFailureEvidence(instrumentation, activity, AndroidRecoveryPublicLabels(
+                fixture.discardDescription(if (membership == null) 2 else 1, "en"),
+                fixture.discardDescription(if (membership == null) 2 else 1, "ar"),
+            ))
+            val ui = AndroidPublicRecoveryUi(instrumentation, evidence::capture)
             // A fresh process legitimately auto-navigates to a stored membership.
             // Make a real public navigation decision before staging this synthetic
             // storage-only fixture. Never override the startup gate or contact a
@@ -186,8 +193,38 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
         assertTrue(settings.reducedMotion.first())
         val activity = launchHome()
         try {
-            val ui = AndroidPublicRecoveryUi(instrumentation)
-            ui.awaitDescription(fixture.discardDescription(total = 1))
+            val evidence = AndroidRecoveryFailureEvidence(instrumentation, activity, AndroidRecoveryPublicLabels(
+                fixture.discardDescription(1, "en"), fixture.discardDescription(1, "ar"),
+            ))
+            val ui = AndroidPublicRecoveryUi(instrumentation, evidence::capture)
+            try {
+                ui.awaitDescription(fixture.discardDescription(total = 1))
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: IllegalStateException) {
+                // Failure-only, fixed public alternatives and booleans. Preserve
+                // the failed assertion; no new action, sleep, tree or screenshot.
+                val english = ui.descriptionPresentNow(fixture.discardDescription(1, "en"))
+                val arabic = ui.descriptionPresentNow(fixture.discardDescription(1, "ar"))
+                val checking = ui.textPresentNow("Checking saved games and resumable sessions…") ||
+                    ui.textPresentNow("جارٍ التحقق من الألعاب المحفوظة والجلسات القابلة للاستئناف…")
+                val unavailable = ui.textPresentNow("Some recovery information is unavailable.") ||
+                    ui.textPresentNow("بعض معلومات الاستعادة غير متاحة.")
+                val onSettings = ui.headingPresentNow("Settings") || ui.headingPresentNow("الإعدادات")
+                var platform = "not-observed"
+                instrumentation.runOnMainSync {
+                    platform = "default=${publicLanguage(Locale.getDefault().language)}, " +
+                        "defaultList=${publicLanguage(LocaleList.getDefault()[0].language)}, " +
+                        "compose=${publicLanguage(androidx.compose.ui.text.intl.Locale.current.language)}, " +
+                        "activity=${publicLanguage(activity.resources.configuration.locales[0].language)}, " +
+                        "focused=${activity.hasWindowFocus()}, destroyed=${activity.isDestroyed}, " +
+                        "visibility=${koin.get<AppLifecycleCoordinator>().visibility.value.appVisibility}"
+                }
+                throw AssertionError("Cold process Home: english=$english, arabic=$arabic, " +
+                    "checking=$checking, unavailable=$unavailable, onSettings=$onSettings, " +
+                    "languageMatches=${settings.languageOverride.first() == fixture.language}, " +
+                    "siblingIntact=${store.load(fixture.sibling) == Result.Success(sibling)}; $platform", failure)
+            }
         } finally {
             finish(activity)
         }
@@ -246,6 +283,11 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
     private fun finish(activity: Activity) {
         instrumentation.runOnMainSync { activity.finish() }
         instrumentation.waitForIdleSync()
+    }
+
+    private fun publicLanguage(language: String): String = when (language) {
+        "en", "ar" -> language
+        else -> "other"
     }
 
     private fun report(fixture: ProcessResumeFixture, phase: String) {
