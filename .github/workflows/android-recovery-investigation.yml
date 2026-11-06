@@ -1,0 +1,233 @@
+name: Android rendered-state recovery boundary (diagnostic only)
+
+on:
+  push:
+    branches: [test/android-locale-configuration-2026-11-06]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-recovery-state-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
+jobs:
+  desktop-android:
+    name: Source-bound Android recovery and configuration investigation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out the exact diagnostic source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 4
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Reclaim only the existing unused hosted-tool roots
+        run: python3 -B scripts/ci/hosted_linux_capacity.py
+      - name: Restore dependencies only
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Claim fresh output ownership
+        id: verification_ownership
+        run: python3 -B scripts/ci/verification_hygiene.py prepare
+      - name: Check the reviewed test-only delta and unchanged production source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD^)" = c055f271eebc0204b39f77428fb366ae3a778edf
+          test -z "$(git status --porcelain)"
+          python3 -B - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          base = 'd7d6f41594190092311fdef4497f852f53ddc76a'
+          expected = {
+              '.github/workflows/android-recovery-investigation.yml',
+              'composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidRecoveryFailureEvidence.kt',
+              'composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidLocaleConfigurationRuntimeTest.kt',
+              'scripts/android/run_resume_process_acceptance.py',
+              'composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidPublicRecoveryUi.kt',
+              'composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt',
+              'scripts/release/tests/test_android_resume_process.py',
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only', base, 'HEAD'], text=True).splitlines())
+          assert changed == expected
+          assert hashlib.sha256(pathlib.Path('AGENTS.md').read_bytes()).hexdigest() == 'd9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b'
+          out = pathlib.Path('build/ci-evidence')
+          out.mkdir(parents=True, exist_ok=False)
+          receipt = dict(base=base, source=os.environ['GITHUB_SHA'],
+              tree=subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              run=int(os.environ['GITHUB_RUN_ID']), attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
+              changed_files={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sorted(changed)},
+              shipping_source_changed=False, main_or_release_or_security_qualified=False,
+              physical_verified=False, scope='Failure-boundary investigation, not protected qualification')
+          (out/'cold-recovery-source.json').write_text(json.dumps(receipt, indent=2)+'\n')
+          PY
+      - name: Install the pinned API34 diagnostic device
+        timeout-minutes: 11
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+          image=$(jq -r '.toolchains.android_navigation_device.system_image_package' config/release-policy.json)
+          test "$image" = 'system-images;android-34;google_apis;x86_64'
+          /usr/bin/timeout --signal=TERM --kill-after=10s 600s \
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" \
+            'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' "$image"
+          revision=$(sed -n 's/^Pkg.Revision=//p' "$ANDROID_HOME/system-images/android-34/google_apis/x86_64/source.properties" | tr -d '\r')
+          test "$revision" = "$(jq -r '.toolchains.android_navigation_device.system_image_revision' config/release-policy.json)"
+      - name: Validate the new failure-only controls
+        run: |
+          set -euo pipefail
+          python3 -B -m unittest -v scripts.release.tests.test_android_resume_process \
+            2>&1 | tee build/ci-evidence/cold-recovery-controls.log
+      - name: Build the unchanged Debug app and diagnostic test APK
+        id: native_build
+        run: |
+          set -euo pipefail
+          ./gradlew :composeApp:assembleDebug :composeApp:assembleDebugAndroidTest \
+            -Pparlor.androidRuntimeTestVariant=debug --dependency-verification=strict \
+            --no-daemon --no-parallel --max-workers=1 \
+            -Dorg.gradle.jvmargs='-Xmx1536m -XX:+UseSerialGC -XX:ReservedCodeCacheSize=128m -Dfile.encoding=UTF-8' \
+            2>&1 | tee build/ci-evidence/cold-recovery-build.log
+      - name: Stop the owned Gradle invocation before runtime
+        id: native_stop
+        if: always()
+        run: python3 -B scripts/ci/verification_hygiene.py stop cold-recovery-build
+      - name: Execute the original process matrix once with failure-only observation
+        if: ${{ !cancelled() && steps.native_build.outcome == 'success' && steps.native_stop.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \
+            --receipt build/ci-evidence/android-process-device-supervision.json --isolated-avd -- \
+            python3 -B -m scripts.android.run_resume_process_acceptance \
+              --output build/ci-evidence/android-process-acceptance
+      - name: Check real English and Arabic configuration transitions on another fresh device
+        if: ${{ !cancelled() && steps.native_build.outcome == 'success' && steps.native_stop.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \
+            --receipt build/ci-evidence/android-configuration-device-supervision.json --isolated-avd -- \
+            python3 -B - <<'PY'
+          import json, os, re, signal, time
+          from pathlib import Path
+          from scripts.android import run_resume_process_acceptance as native
+          from scripts.android.resume_process_contract import require, MAX_PHASE_OUTPUT
+          from scripts.release.github_distribution import run, run_logged
+
+          out = native.ROOT / 'build/ci-evidence/android-configuration-control'
+          sdk, avd, config, source = native.preflight(out)
+          out.mkdir(mode=0o700, exist_ok=False)
+          record = dict(result='FAIL', source=source,
+              scope='One real handled rotation per language on the shipping Settings screen; not cold-start or main qualification',
+              physical_device_verified=False, ios_protection_verified=False)
+          def interrupted(_number, _frame):
+              raise InterruptedError('Configuration diagnostic interrupted; no success inferred')
+          previous = {number: signal.signal(number, interrupted) for number in (signal.SIGTERM, signal.SIGINT)}
+          try:
+              apps = list((native.ROOT/'composeApp/build/outputs/apk/debug').glob('*.apk'))
+              tests = list((native.ROOT/'composeApp/build/outputs/apk/androidTest/debug').glob('*.apk'))
+              require(len(apps) == len(tests) == 1, 'Need the already-built Debug application and test APK')
+              app, test = apps[0], tests[0]
+              analyzer = str(sdk/'cmdline-tools/latest/bin/apkanalyzer')
+              app_id = config['applications']['android']['debug_application_id']
+              component = native.inspect_manifests(run([analyzer,'manifest','print',str(app)]),
+                  run([analyzer,'manifest','print',str(test)]), app_id)
+              record['apks'] = {key: dict(sha256=native.digest(path), bytes=path.stat().st_size)
+                  for key,path in (('app',app),('test',test))}
+              with native.owned_emulator(sdk, avd, out, config['toolchains']['android_navigation_device']) as (command, _phase):
+                  require(command('install',str(app),timeout=120).strip().endswith('Success'), 'Debug install failed')
+                  require(command('install','-t',str(test),timeout=120).strip().endswith('Success'), 'Test install failed')
+                  log = out/'orientation-original.log'
+                  require(not log.exists() and not log.is_symlink(), 'Never replay or overwrite native controls')
+                  klass = 'com.parlor.app.storage.AndroidLocaleConfigurationRuntimeTest'
+                  env = dict(os.environ, ANDROID_USER_HOME=str(avd/'android-user'),
+                      ANDROID_ADB_SERVER_PORT=str(native.ADB_PORT), ADB_SERVER_SOCKET=f'tcp:localhost:{native.ADB_PORT}')
+                  started = time.monotonic()
+                  code = run_logged([str(sdk/'platform-tools/adb'),'-P',str(native.ADB_PORT),'-s',native.SERIAL,
+                      'shell','am','instrument','-w','-r','-e','class',klass,component],
+                      log, timeout=90, output_limit=MAX_PHASE_OUTPUT, env=env)
+                  record['native'] = dict(log=log.name, sha256=native.digest(log), exit_code=code,
+                      elapsed_seconds=time.monotonic()-started)
+                  require(code == 0, 'Native diagnostic failed; retain original output')
+                  text = log.read_bytes().decode('utf-8',errors='strict').replace('\r\n','\n')
+                  pending, events, terminals = {}, [], []
+                  for line in text.splitlines():
+                      if line.startswith('INSTRUMENTATION_STATUS: '):
+                          key,sep,value = line.removeprefix('INSTRUMENTATION_STATUS: ').partition('=')
+                          require(bool(sep) and key not in pending and not terminals, 'Malformed or late native event')
+                          pending[key] = value
+                      elif line.startswith('INSTRUMENTATION_STATUS_CODE: '):
+                          require(not terminals, 'Late native status')
+                          events.append((line.removeprefix('INSTRUMENTATION_STATUS_CODE: '),pending))
+                          pending = {}
+                      elif line.startswith('INSTRUMENTATION_CODE: '):
+                          terminals.append(line.removeprefix('INSTRUMENTATION_CODE: '))
+                      elif line.startswith(('INSTRUMENTATION_FAILED','INSTRUMENTATION_ABORTED')):
+                          raise RuntimeError('Native controls did not complete')
+                  require(not pending and terminals == ['-1'], 'Missing or ambiguous native termination')
+                  require([status for status,_event in events] == ['1','0','1','0'], 'Need two started and passed native methods')
+                  expected = {'testEnglishSettingsSurviveHandledOrientationChange','testArabicSettingsSurviveHandledOrientationChange'}
+                  passed = []
+                  for index in range(2):
+                      before, after = events[index*2][1], events[index*2+1][1]
+                      for event in (before,after):
+                          require(set(event) == {'id','numtests','class','test','current','stream'} and
+                              event['id'] == 'InstrumentationTestRunner' and event['class'] == klass and
+                              event['numtests'] == '2' and event['current'] == str(index+1), 'Different or multiple native methods')
+                      require(before['test'] == after['test'] and before['test'] in expected, 'Unexpected native method')
+                      passed.append(before['test'])
+                  require(set(passed) == expected and len(passed) == 2, 'Missing or repeated configuration control')
+                  require(re.findall(r'(?m)^OK \([0-9]+ tests?\)$',text) == ['OK (2 tests)'] and
+                      not re.search(r'(?m)^(FAILURES|ERRORS)',text), 'Missing exact native JUnit success')
+                  record['passed_methods'] = passed
+              require(native.digest(app) == record['apks']['app']['sha256'] and
+                  native.digest(test) == record['apks']['test']['sha256'], 'APK changed during native execution')
+              record['result'] = 'PASS'
+          finally:
+              for number,handler in previous.items():
+                  signal.signal(number,handler)
+              with (out/'result.json').open('x') as stream:
+                  stream.write(json.dumps(record,indent=2)+'\n')
+          PY
+      - name: Retain original diagnostic evidence before cleanup
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-recovery-state-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/ci-evidence/
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-hosted-disk.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+      - name: Clean only attested uploaded outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        run: python3 -B scripts/ci/verification_hygiene.py cleanup --android-reader=sudo-proc-exe-v2
+      - name: Retain owned cleanup outcome
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-recovery-state-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
