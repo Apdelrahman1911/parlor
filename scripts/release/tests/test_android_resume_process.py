@@ -217,7 +217,7 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
             run.assert_not_called()
 
     def test_native_phases_have_no_default_single_process_discovery_or_private_export(self):
-        source = (driver.ROOT / driver.SOURCE_PATHS[2]).read_text()
+        source = (driver.ROOT / "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt").read_text()
         self.assertIn("fun prepare()", source)
         self.assertIn("fun verify()", source)
         self.assertNotIn("fun test", source)
@@ -230,6 +230,19 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertNotIn("encodeTo", report)
         self.assertEqual(report.count("putString("), 6)
         self.assertEqual(report.count("putInt("), 1)
+
+    def test_platform_runner_stubs_are_test_compile_only_and_source_bound(self):
+        path = "composeApp/build.gradle.kts"
+        self.assertIn(path, driver.SOURCE_PATHS)
+        gradle = (driver.ROOT / path).read_text()
+        test_dependencies = gradle.split("androidInstrumentedTest.dependencies {", 1)[1].split("commonTest.dependencies", 1)[0]
+        self.assertEqual(test_dependencies.count("compileOnly("), 1)
+        self.assertNotIn("implementation(", test_dependencies)
+        self.assertIn("androidComponents.sdkComponents.sdkDirectory.map", test_dependencies)
+        for name in ("android.test.base.jar", "android.test.runner.jar"):
+            self.assertEqual(gradle.count(name), 1)
+            self.assertIn("/optional/" + name, test_dependencies)
+        self.assertNotIn("mavenLocal", gradle)
 
 
 class AndroidResumeProcessExecutionTest(unittest.TestCase):
