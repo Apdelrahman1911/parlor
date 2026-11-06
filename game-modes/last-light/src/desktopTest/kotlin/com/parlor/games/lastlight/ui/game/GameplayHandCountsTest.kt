@@ -309,7 +309,15 @@ class GameplayHandCountsTest {
         view.players.forEach { player ->
             assertCount(player.id, 5, scroll = true, language = language)
             onNodeWithTag("game-player-${player.id}").assert(hasContentDescription(longName, substring = true))
-            onNodeWithTag("game-player-name-${player.id}", useUnmergedTree = true).assertTextNotTruncated()
+            val name = onNodeWithTag("game-player-name-${player.id}", useUnmergedTree = true)
+            name.assertTextNotTruncated()
+            val nameBounds = name.getUnclippedBoundsInRoot()
+            val plateBounds = onNodeWithTag("game-player-nameplate-${player.id}", useUnmergedTree = true)
+                .getUnclippedBoundsInRoot()
+            assertTrue(nameBounds.top >= plateBounds.top + 6.dp, "Large-text name touches the rounded top edge")
+            assertTrue(nameBounds.bottom <= plateBounds.bottom - 6.dp, "Large-text name touches the rounded bottom edge")
+            assertTrue(nameBounds.left >= plateBounds.left + 12.dp, "Large-text name touches the rounded left edge")
+            assertTrue(nameBounds.right <= plateBounds.right - 12.dp, "Large-text name touches the rounded right edge")
         }
         capture("hand-counts-${language.tag}-large-text")
         onNodeWithTag("game-reveal-hand").bringIntoView().assertIsDisplayed()
