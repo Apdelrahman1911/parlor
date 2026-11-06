@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
@@ -49,6 +50,7 @@ internal fun LastLightExitConfirmation(
     val copy = sessionExitCopy(kind)
     val destructive = kind != SessionExitKind.Local
     val progress = stringResource(if (destructive) Res.string.table_leaving else Res.string.table_saving)
+    val largeText = LocalDensity.current.fontScale >= 1.3f
     LastLightTheme {
         TableBackdrop(modifier.fillMaxSize().testTag("game-exit-confirmation").semantics { paneTitle = copy.title }) {
             Column(
@@ -62,7 +64,9 @@ internal fun LastLightExitConfirmation(
                     }
                     Text(
                         copy.title,
-                        style = MaterialTheme.typography.headlineMedium,
+                        // Match the compact results heading at enlarged text: complete
+                        // Arabic words and punctuation fit without capping font scale.
+                        style = if (largeText) MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineMedium,
                         color = LastLightColors.Paper,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().semantics { heading() },
