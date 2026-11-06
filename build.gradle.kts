@@ -58,7 +58,7 @@ val productionAndroidRuntimeCheck = tasks.register("productionAndroidRuntimeChec
 
 tasks.register("productionAndroidNavigationRuntimeCheck") {
     group = "verification"
-    description = "Exercises navigator Back and native recovery storage on API 34; requires -Pparlor.androidRuntimeTestVariant=debug."
+    description = "Exercises navigator Back on API 34; requires -Pparlor.androidRuntimeTestVariant=debug."
     dependsOn(":composeApp:pixel2Api34DebugAndroidTest")
 }
 

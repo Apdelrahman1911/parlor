@@ -10,11 +10,20 @@ distinguishes implemented scope, new CI work, physical gates and external
 runner/security/credential prerequisites. It is not an all-work-complete claim.
 
 #285 is closed after its missing Intel native control passed42141604588.
-PR327/#308's full42142636265 and constrained-capacity42143063097 executions are
-in progress, **not qualified**. Android native Resume/storage acceptance and
-public screenshot-custody corrections are prepared separately for #253/#259;
-their new native/full/main qualification remains pending. Phase5 can proceed
-independently, but a screenshot destination repair is not a full redesign.
+PR327/#308 passed full42142636265 (all eight producers and Apple join) and the
+real constrained-capacity42143063097 experiment, then protected-merged as
+`705c934b`. Distinct main42150601522 is still running; #308 remains open until
+independent main readback succeeds. The experiment held about26.015GiB free
+before restore through both Android lanes/upload, not a historical small total
+filesystem or a speed benchmark.
+
+Android native Resume/storage acceptance and the public screenshot-custody
+corrections are prepared separately for #253/#259. Actual earlier preview
+readback found a 200%-text catalog defect: first-game requirements/Open were
+offscreen. The new adaptive layout prioritizes those choices and strengthens
+320/390dp EN/AR assertions without shrinking text. These later changes and the
+two native Home journeys still require fresh full/protected/main qualification;
+preview success does not qualify them or complete the broad UX/device gates.
 
 Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
 remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles
