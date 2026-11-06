@@ -65,8 +65,11 @@ gradle_command=(./gradlew productionAndroidRuntimeCheck \
 if [[ "$(uname -s)" == Linux ]]; then
   # AGP's emulator exit request is not an exit guarantee. Retire only this
   # build's kernel-owned descendants, including helpers detached with setsid.
+  # A fresh ANDROID_AVD_HOME is retired only after that proof and a passing
+  # runtime. API35's completed writable images must not overlap API34's peak.
   python3 -B scripts/android/supervise_managed_device.py \
     --receipt build/ci-evidence/android-managed-device-supervision.json \
+    --isolated-avd \
     -- "${gradle_command[@]}"
 else
   # Preserve the existing non-Linux invocation; it makes no subreaper claim.
@@ -89,6 +92,7 @@ navigation_command=(./gradlew productionAndroidNavigationRuntimeCheck \
 if [[ "$(uname -s)" == Linux ]]; then
   python3 -B scripts/android/supervise_managed_device.py \
     --receipt build/ci-evidence/android-navigation-device-supervision.json \
+    --isolated-avd \
     -- "${navigation_command[@]}"
 else
   "${navigation_command[@]}"
