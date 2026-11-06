@@ -32,7 +32,20 @@ Home8 failed at the first control lookup. The test incorrectly required a
 Compose button's native description and action on the same node. Revision05
 resolves the exact label's nearest unique action owner, with five additional
 native boundary controls; it retains single actions and all outcome assertions.
-Strict local Detekt passes; hosted native/full-PR/main acceptance is pending.
+Corrected preview42165263589 passed19/23: all owner/navigation/storage controls
+and all four English Home journeys. Arabic4 pass Cancel/deletion and storage
+assertions but fail only at the subsequent Activity-relaunch label. Isolated
+42167369595 failed first at unsynchronized test-runner/Koin startup (0.012s).
+The fixture now joins Application's main-thread startup turn before graph
+resolution. Corrected42169900414 reached the original relaunch boundary:
+English actually renders while the preference is Arabic; process/Compose
+defaults reverted to English across overlapping old/new Activity lifetimes.
+New [#329](https://github.com/Apdelrahman1911/parlor/issues/329) tracks the
+equality-only locale-disposal defect. Exact scope ownership now prevents late
+old disposal from overwriting a newer owner; seven common regressions and
+focused Detekt pass locally. Actual corrected native23, full PR/main checks
+and protected merge remain pending. Draft PR328 is not qualified or merged;
+no timeout, repeated tap or weakened language assertion masks the failure.
 Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
 and complete names are retained. This scoped visual result is not native play.
 

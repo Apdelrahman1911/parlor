@@ -27,6 +27,12 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         awaitAction(description).recycle()
     }
 
+    /** One read-only probe of a whitelisted public label, only after an assertion failed. */
+    fun descriptionPresentNow(description: String): Boolean {
+        val node = findNode(resolveClickOwner = true) { it.contentDescription?.toString() == description }
+        return (node != null).also { node?.recycle() }
+    }
+
     fun awaitPoliteStatus(text: String) {
         awaitNode(resolveClickOwner = false) {
             it.text?.toString() == text && it.liveRegion == View.ACCESSIBILITY_LIVE_REGION_POLITE

@@ -255,7 +255,9 @@ class ProductionUiAccessibilityContractTest {
         }
         assertFalse(android.contains("updateConfiguration"))
         assertFalse(android.contains("@Suppress(\"DEPRECATION\")"))
-        assertTrue(android.indexOf("Locale.setDefault") > android.indexOf("DisposableEffect("))
+        assertContains(android, "val releaseLocale = androidLocaleOverrides.acquire(requestedDefaults)")
+        assertContains(android, "onDispose {\n            releaseLocale()")
+        assertTrue(android.indexOf("LocaleList.setDefault") > android.indexOf("DisposableEffect("))
         assertContains(ios, "val overrideOwner = remember {")
         assertContains(ios, "IosLanguageOverrideOwner(")
         assertContains(ios, "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)")

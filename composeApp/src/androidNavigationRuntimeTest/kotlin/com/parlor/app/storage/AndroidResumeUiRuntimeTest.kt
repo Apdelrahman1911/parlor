@@ -3,6 +3,7 @@ package com.parlor.app.storage
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.os.LocaleList
 import android.test.InstrumentationTestCase
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.SessionId
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import java.util.UUID
+import java.util.Locale
 import java.io.File
 
 /**
@@ -29,6 +31,15 @@ import java.io.File
  */
 @Suppress("DEPRECATION")
 class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
+    override fun setUp() {
+        super.setUp()
+        // The framework JUnit3 runner starts its test thread from onCreate,
+        // before ActivityThread calls Application.onCreate on the main thread.
+        // Join that startup turn before resolving the real application graph;
+        // do not rely on preceding tests, sleep, retry Koin, or replace modules.
+        instrumentation.waitForIdleSync()
+    }
+
     fun testEnglishCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = false)
 
     fun testArabicCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = true)
@@ -121,10 +132,37 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
             ui.awaitDescription(discardDescription(arabic, game, total = 1))
             assertEquals(Result.Failure(DataError.NotFound), store.load(selected.sessionId))
             assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
-            finish(checkNotNull(activity))
+            val previousActivity = checkNotNull(activity)
+            finish(previousActivity)
+            val destroyedBeforeRelaunch = previousActivity.isDestroyed
+            val languageBeforeRelaunch = publicLanguage(Locale.getDefault().language)
             activity = null
             activity = launchHome()
-            ui.awaitDescription(discardDescription(arabic, game, total = 1))
+            try {
+                ui.awaitDescription(discardDescription(arabic, game, total = 1))
+            } catch (failure: IllegalStateException) {
+                // Exact public alternatives and booleans only. No tree, screenshot,
+                // player, snapshot bytes, credential, or arbitrary exception export.
+                val englishPresent = ui.descriptionPresentNow(discardDescription(false, game, total = 1))
+                val arabicPresent = ui.descriptionPresentNow(discardDescription(true, game, total = 1))
+                val preferenceMatches = settings.languageOverride.first() == if (arabic) "ar" else "en"
+                val selectedAbsent = store.load(selected.sessionId) == Result.Failure(DataError.NotFound)
+                val siblingIntact = store.load(sibling.sessionId) == Result.Success(sibling)
+                var platform = "not-observed"
+                val relaunched = checkNotNull(activity)
+                instrumentation.runOnMainSync {
+                    platform = "default=${publicLanguage(Locale.getDefault().language)}, " +
+                        "defaultList=${publicLanguage(LocaleList.getDefault()[0].language)}, " +
+                        "compose=${publicLanguage(androidx.compose.ui.text.intl.Locale.current.language)}, " +
+                        "activity=${publicLanguage(relaunched.resources.configuration.locales[0].language)}, " +
+                        "oldDestroyed=$destroyedBeforeRelaunch/${previousActivity.isDestroyed}, " +
+                        "before=$languageBeforeRelaunch, " +
+                        "focused=${relaunched.hasWindowFocus()}, destroyed=${relaunched.isDestroyed}"
+                }
+                throw AssertionError("Relaunch boundary: english=$englishPresent, arabic=$arabicPresent, " +
+                    "preferenceMatches=$preferenceMatches, selectedAbsent=$selectedAbsent, siblingIntact=$siblingIntact; " +
+                    platform, failure)
+            }
             assertEquals(Result.Success(listOf(sibling.sessionId)), store.listUnfinished())
             assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
             if (game == AndroidResumeGame.LastLight) {
@@ -164,6 +202,11 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
         "حذف: استئناف لعبة ${game.arabicTitle} المحلية، وهي اللعبة المحفوظة 1 من $total."
     } else {
         "Remove: Resume ${game.englishTitle} local game, saved game 1 of $total."
+    }
+
+    private fun publicLanguage(language: String): String = when (language) {
+        "en", "ar" -> language
+        else -> "other"
     }
 
     private companion object {
