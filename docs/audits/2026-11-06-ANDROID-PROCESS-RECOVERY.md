@@ -77,7 +77,7 @@ must succeed before checkout-output cleanup.
 
 ## Current status and remaining work
 
-Prepared source passes32 portable controls and focused application Detekt with
+Prepared source passes33 portable controls and focused application Detekt with
 JDK21, the wrapper and strict verification. These results do not compile or
 execute the native phases. Fresh hosted native execution, complete protected
 PR qualification, review/merge and distinct main verification remain required.
@@ -99,6 +99,33 @@ a separate SDK compile probe fails with the base stub alone and succeeds with
 both stubs. Neither probe is native test execution.
 Original compilation failure and successful upload-bound cleanup remain retained;
 corrected native execution and full qualification are still required.
+
+The corrected compile preview
+[42179735995](https://github.com/Apdelrahman1911/parlor/actions/runs/42179735995)
+successfully builds both APKs and passes three complete Last Light process cases
+(English local/multiplayer and Arabic local), with six original passing native
+phases. The seventh phase, Arabic multiplayer preparation, errors after Remove:
+`AndroidPublicRecoveryUi.revealDescription` line45 is waiting for an advertised
+backward scroll, **not** its final sibling-label assertion. The original native
+error, three successful process pairs and upload/descendant cleanup are retained.
+The matrix remains failed; the fourth case's post-delete storage assertions did
+not run.
+
+The observer sampled the target once, then waited only for backward scrolling.
+A top-of-list layout that settles without a backward action could therefore
+never satisfy it, even after the target became available. The exact transient
+reason for the original target's absence is not recorded; this is not evidence
+of another locale reset or failed deletion. The correction reobserves **target
+or available scroll** at each existing bounded read, prioritizes the target,
+and still performs at most one scroll. All exact labels, store checks, process
+boundaries and deadlines remain. Four native decision regressions supplement
+the mandatory ordinary API34 suite (now27 methods); the12-case real Home matrix
+remains separate and requires fresh corrected execution.
+The actual Kotlin decision helper also passes a four-scenario local JVM probe,
+compiled through JDK21/the repository wrapper and its existing strictly verified
+compiler classpath. Focused Detekt and33 portable safeguards pass. This probe
+does not execute native accessibility, the four native regression methods or
+the process matrix; no production dependency/configuration override is added.
 
 iOS positive protected persistence remains subject to #258's supported-volume
 and real keybag prerequisites. TalkBack/VoiceOver, physical lock/low-memory

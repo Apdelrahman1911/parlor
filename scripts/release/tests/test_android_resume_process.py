@@ -244,6 +244,21 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
             self.assertIn("/optional/" + name, test_dependencies)
         self.assertNotIn("mavenLocal", gradle)
 
+    def test_reveal_wait_reobserves_target_before_selecting_a_single_scroll(self):
+        prefix = "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/"
+        for name in ("AndroidRecoveryRevealObservation.kt", "AndroidRecoveryRevealRuntimeTest.kt"):
+            self.assertIn(prefix + name, driver.SOURCE_PATHS)
+        ui = (driver.ROOT / (prefix + "AndroidPublicRecoveryUi.kt")).read_text()
+        reveal = ui.split("fun revealDescription(", 1)[1].split("fun awaitPoliteStatus", 1)[0]
+        self.assertIn("val choice = awaitObservation {", reveal)
+        self.assertIn("androidRecoveryRevealObservation(", reveal)
+        self.assertIn("target = { findNode(resolveClickOwner = true)", reveal)
+        self.assertIn("if (!choice.needsScroll) return", reveal)
+        self.assertEqual(reveal.count(".performAction("), 1)
+        self.assertIn("choice.node.recycle()", reveal)
+        self.assertIn("awaitDescription(description)", reveal)
+        self.assertIn("OBSERVATION_TIMEOUT_MILLIS = 10_000L", ui)
+
 
 class AndroidResumeProcessExecutionTest(unittest.TestCase):
     def execute(self, failure=None):

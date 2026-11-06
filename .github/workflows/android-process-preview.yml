@@ -27,7 +27,7 @@ jobs:
           test -z "$(git status --porcelain)"
           python3 -B - <<'PYCODE'
           import subprocess
-          base='6c450ec4b359d6ad66b154766e554a4d151912c6'
+          base='ec0eb95b90dde5de3b41dfdfdd163312b7d98087'
           delta=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines()
           assert set(delta)=={'.github/workflows/android-process-preview.yml','docs/review/INDEPENDENT_REVIEW_INVENTORY.csv'}
           PYCODE
