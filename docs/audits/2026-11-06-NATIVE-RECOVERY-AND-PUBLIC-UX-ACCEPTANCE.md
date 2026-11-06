@@ -218,8 +218,45 @@ not missing production storage registration or new locale evidence.
 The fixture now calls `instrumentation.waitForIdleSync()` in `setUp` before any
 application graph resolution. It neither sleeps nor retries Koin, starts a
 replacement graph, warms up the UI or changes a gameplay assertion deadline.
-The same isolated method must now reach its intended boundary. The original
-Arabic-relaunch cause remains unproven; no speculative locale patch is applied.
+The corrected isolated method subsequently reached its intended boundary in
+[42169900414](https://github.com/Apdelrahman1911/parlor/actions/runs/42169900414),
+at source `3318a36e`, and failed after relaunch. Independent source, archive,
+exact XML and owned-cleanup readback receipt SHA256:
+`017a5418569e814e8fa82c02ec39bb010aae2c96ac74e3560da957e866cc98cc`.
+
+## Android locale lifetime correction — #329
+
+The bounded failure evidence establishes an actual application language reset:
+the English sibling control exists, the Arabic control does not, and the
+persisted preference still matches Arabic. Selected deletion and surviving
+storage are correct. JVM, Android default-list and Compose locales are English.
+Immediately before relaunch the default was Arabic and the old Activity had
+not yet been destroyed; at failure the old Activity is destroyed and the new
+one is alive and focused. This is not merely a native query missing an Arabic
+label. The failure does not trace every framework locale setter.
+
+`LocalAppLocale.android.kt` used language equality to decide whether disposal
+could restore previous process defaults. Two overlapping Activity compositions
+can request the same language: the older one's disposal then overwrites a newer
+owner. [#329](https://github.com/Apdelrahman1911/parlor/issues/329) tracks this
+separate concrete ownership defect. The prepared correction uses an exact
+per-effect acquisition and rewires a removed predecessor's restoration target
+only when its successor captured that predecessor's value. Older disposal
+cannot overwrite a live successor; independent platform changes are preserved.
+System mode also acquires the complete configured locale list. Restoring with
+`LocaleList.setDefault(list, index)` preserves both defaults and a nonzero
+original default index. No shared Resources object is mutated, no navigation
+content is re-keyed, and iOS/Desktop providers remain unchanged.
+
+Seven common ownership tests pass with JDK21, the wrapper and strict dependency
+verification: same-Arabic overlap, reverse/middle disposal, later/captured
+external changes, System supersession and duplicate release. Focused design
+system/application Detekt also passes. These deterministic checks expose the
+ownership contract; **the correction still needs actual API34 execution and
+full protected PR/main qualification**. Other independent framework-reset risks
+are not ruled out by source reasoning. The existing23 native methods retain
+their exact actions, deadlines, cancellation/deletion and surviving-state
+assertions; no retry or weaker language lookup is added.
 
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.
