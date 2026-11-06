@@ -558,19 +558,43 @@ final class IOSAppLaunchUITests: XCTestCase {
         dismissal: KeyboardIntroductionDismissal = KeyboardIntroductionDismissal()
     ) -> KeyboardIntroductionDismissal {
         guard !dismissal.hasDismissed else { return dismissal }
-        // The retained failing Arabic recording exposes this exact English
-        // Apple tutorial. Never tap a generic Continue or a Parlor action.
-        let tutorial = app.staticTexts[
-            "Speed up your typing by sliding your finger across the letters to compose a word."
-        ]
-        guard tutorial.exists else { return dismissal }
-        let button = app.buttons["Continue"]
-        guard button.exists else { return dismissal }
-        if dismissal.observe(tutorialExists: true, buttonFrame: button.frame,
-                             applicationFrame: app.frame, hittable: button.isHittable) {
+        // One coherent app snapshot replaces four remote presence/geometry queries.
+        // In 42177783654 those queries consumed the exact-value deadline before
+        // the tutorial tap or even the first field snapshot could complete.
+        // Keep the original deadline, native hittability and single ordinary tap.
+        guard let observation = try? readKeyboardIntroduction(app),
+              let frame = observation.targetFrame else { return dismissal }
+        let button = app.buttons.matching(NSPredicate(format: "label == %@", "Continue")).element
+        if dismissal.observe(tutorialExists: true, buttonFrame: frame,
+                             applicationFrame: observation.applicationFrame, hittable: button.isHittable) {
             button.tap()
         }
         return dismissal
+    }
+
+    @MainActor
+    private func readKeyboardIntroduction(_ app: XCUIApplication) throws -> KeyboardIntroductionSnapshot? {
+        // Public setup only. Snapshot objects and labels never leave this read
+        // or enter logs; an incomplete/ambiguous traversal cannot admit a tap.
+        let root = try app.snapshot()
+        var pending: [(any XCUIElementSnapshot, Int)] = [(root, 0)]
+        var tutorialCount = 0
+        var buttons: [(frame: CGRect, enabled: Bool)] = []
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if node.elementType == .staticText,
+               node.label == "Speed up your typing by sliding your finger across the letters to compose a word." {
+                tutorialCount += 1
+            }
+            if node.elementType == .button, node.label == "Continue" {
+                buttons.append((frame: node.frame, enabled: node.isEnabled))
+            }
+            for child in node.children { pending.append((child, depth + 1)) }
+        }
+        return KeyboardIntroductionSnapshot(applicationFrame: root.frame,
+                                            tutorialCount: tutorialCount, buttons: buttons)
     }
 
     @MainActor
@@ -798,6 +822,46 @@ final class PublicControlFramesTests: XCTestCase {
         frames.reset()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+}
+
+// One resolved generation: never pair tutorial presence with another frame or
+// accept a generic/duplicate Continue. Geometry/hittability remain separately
+// mandatory in KeyboardIntroductionDismissal before the one ordinary tap.
+private struct KeyboardIntroductionSnapshot {
+    let applicationFrame: CGRect
+    let tutorialCount: Int
+    let buttons: [(frame: CGRect, enabled: Bool)]
+
+    var targetFrame: CGRect? {
+        guard tutorialCount == 1, buttons.count == 1, buttons[0].enabled else { return nil }
+        return buttons[0].frame
+    }
+}
+
+final class KeyboardIntroductionSnapshotTests: XCTestCase {
+    private let application = CGRect(x: 0, y: 0, width: 402, height: 874)
+    private let button = CGRect(x: 140, y: 800, width: 122, height: 44)
+
+    func testOnlyOneEnabledButtonWithOneTutorialIsAccepted() {
+        let sample = KeyboardIntroductionSnapshot(applicationFrame: application, tutorialCount: 1,
+                                                  buttons: [(frame: button, enabled: true)])
+        XCTAssertEqual(sample.targetFrame, button)
+        XCTAssertEqual(sample.applicationFrame, application)
+    }
+
+    func testMissingDuplicateOrDisabledTutorialTargetsCannotAdmitATap() {
+        for tutorials in [0, 1, 2] {
+            for buttons in [0, 1, 2] {
+                for enabled in [false, true] {
+                    let sample = KeyboardIntroductionSnapshot(applicationFrame: application,
+                        tutorialCount: tutorials,
+                        buttons: Array(repeating: (frame: button, enabled: enabled), count: buttons))
+                    if tutorials == 1 && buttons == 1 && enabled { continue }
+                    XCTAssertNil(sample.targetFrame)
+                }
+            }
+        }
     }
 }
 

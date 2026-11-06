@@ -141,7 +141,7 @@ class ProductionVerificationWorkflowContractTest {
     fun public_ios_exact_value_observer_handles_only_the_identified_late_keyboard_tutorial() {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val observer = swift.substringAfter("private func assertTextValue(")
-            .substringBefore("private func fullKeyboardTop(")
+            .substringBefore("private func readKeyboardIntroduction(")
         val code = observer.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
         listOf(
             "if let introduction", "dismissKeyboardIntroduction(app, dismissal: introduction)",
@@ -150,9 +150,10 @@ class ProductionVerificationWorkflowContractTest {
             "return exact",
             "XCTWaiter.wait(for: [committed], timeout: 10)",
             "XCTAssertEqual(field.value as? String, expected",
-            "guard !dismissal.hasDismissed", "guard tutorial.exists", "guard button.exists",
-            "Speed up your typing by sliding your finger across the letters to compose a word.",
-            "app.buttons[\"Continue\"]", "buttonFrame: button.frame", "hittable: button.isHittable",
+            "guard !dismissal.hasDismissed", "try? readKeyboardIntroduction(app)",
+            "let frame = observation.targetFrame", "buttonFrame: frame",
+            "applicationFrame: observation.applicationFrame", "hittable: button.isHittable",
+            "app.buttons.matching(NSPredicate(format: \"label == %@\", \"Continue\")).element",
         ).forEach { assertContains(code, it) }
         assertEquals(1, Regex(Regex.escape("button.tap()")).findAll(code).count())
         listOf(".typeText", "sleep(", "press(forDuration", "while ", "app.debugDescription",
@@ -166,6 +167,34 @@ class ProductionVerificationWorkflowContractTest {
             "testGenericContinueWithoutIdentifiedTutorialNeverAdmitsATap",
             "testNonhittableIntroductionDoesNotConsumeTheSingleDismissal",
             "testMissingInvalidOffscreenOrUpperScreenButtonCannotBeDismissed",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_keyboard_tutorial_is_one_bounded_snapshot_without_repeated_remote_properties() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val capture = swift.substringAfter("private func readKeyboardIntroduction(")
+            .substringBefore("private func fullKeyboardTop(")
+        val code = capture.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(code).count())
+        listOf("count <= 2048", "depth <= 32", "tutorialCount += 1",
+            "node.elementType == .staticText", "node.elementType == .button",
+            "Speed up your typing by sliding your finger across the letters to compose a word.",
+            "node.label == \"Continue\"", "frame: node.frame, enabled: node.isEnabled",
+            "applicationFrame: root.frame", "for child in node.children",
+        ).forEach { assertContains(code, it) }
+        listOf(".exists", "app.frame", "app.buttons", "app.staticTexts", "print(",
+            ".value", ".debugDescription", "sleep(", ".tap()", ".typeText(").forEach {
+            assertFalse(it in code)
+        }
+        val dismissal = swift.substringAfter("private func dismissKeyboardIntroduction(")
+            .substringBefore("private func readKeyboardIntroduction(")
+        listOf("tutorial.exists", "button.exists", "button.frame", "app.frame").forEach {
+            assertFalse(it in dismissal)
+        }
+        assertContains(swift, "tutorialCount == 1, buttons.count == 1, buttons[0].enabled")
+        listOf("testOnlyOneEnabledButtonWithOneTutorialIsAccepted",
+            "testMissingDuplicateOrDisabledTutorialTargetsCannotAdmitATap",
         ).forEach { assertContains(swift, "func $it()") }
     }
 

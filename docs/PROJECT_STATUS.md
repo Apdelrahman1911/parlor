@@ -1,5 +1,26 @@
 # Project status — November 6, 2026
 
+## Latest qualification and active correction
+
+PR328 remains draft/unmerged. Its full42177783654 iOS producer failed with
+809 KMP PASS /39 Swift PASS /1 FAIL: sequential keyboard-tutorial queries
+exhausted the unchanged exact-value waiter before its first successful field
+snapshot. The [source/evidence correction](audits/2026-11-06-IOS-KEYBOARD-TUTORIAL-OBSERVATION.md)
+uses one bounded coherent observation, retains native hittability/single input
+and adds two native regressions. It does not resolve the older upstream input
+cause. Fresh complete checks on the corrected source and distinct main remain
+required; no failed required check is bypassed.
+
+Separately, the [Android process-boundary matrix](audits/2026-11-06-ANDROID-PROCESS-RECOVERY.md)
+passed all12 cases/24 original native phases in42182051742. Independent receipt
+`ef829bb50e1c916dc2b2b5ae09201787a929899bade122f7634bb7fc4c25b236`
+binds exact source/artifacts/process nonces/cleanup. This prepared normal
+implementation is now integrated into PR328's same recovery-acceptance scope;
+the auxiliary preview workflow is excluded. Full native27+3 and process24,
+protected merge and distinct main are pending. #253/#329 stay open; real
+admission, positive iOS protected persistence and physical accessibility remain
+separate gates.
+
 ## Twelve-Issue acceptance audit and active CI work
 
 Current independently accepted main is `705c934b`,

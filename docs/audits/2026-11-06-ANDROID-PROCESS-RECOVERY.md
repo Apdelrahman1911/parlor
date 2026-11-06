@@ -127,6 +127,19 @@ compiler classpath. Focused Detekt and33 portable safeguards pass. This probe
 does not execute native accessibility, the four native regression methods or
 the process matrix; no production dependency/configuration override is added.
 
+The corrected [42182051742](https://github.com/Apdelrahman1911/parlor/actions/runs/42182051742)
+is terminal **SUCCESS**: twelve complete cases/twenty-four original JUnit phases,
+with no omitted or duplicate case. Independent receipt SHA256
+`ef829bb50e1c916dc2b2b5ae09201787a929899bade122f7634bb7fc4c25b236`
+binds implementation `ec0eb95b`, executed preview `e5e3a60`, original native
+outcomes, distinct process nonces, explicit force-stop/PID absence, exact source
+and artifact identities, and uploaded/owned cleanup. App/test APK hashes were
+attested before/after by the driver; preview did not upload those binaries.
+The normal implementation is reused in PR328 without the auxiliary workflow.
+Complete final-source checks must still execute ordinary API34's27 methods,
+API35's3, and the separate24 process phases before protected/main acceptance.
+The original compile and observer failures remain retained and failed.
+
 iOS positive protected persistence remains subject to #258's supported-volume
 and real keybag prerequisites. TalkBack/VoiceOver, physical lock/low-memory
 behavior, real multiplayer recovery and energy measurements remain in the
