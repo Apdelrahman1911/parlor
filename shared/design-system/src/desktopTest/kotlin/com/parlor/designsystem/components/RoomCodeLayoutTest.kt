@@ -59,12 +59,12 @@ class RoomCodeLayoutTest {
                         }
                     }
                 }
-                System.getenv("PARLOR_UI_SCREENSHOT_DIR")?.let { directory ->
-                    val output = File(directory, "room-code-${language.tag}-${theme.tag}-$fontScale.png")
-                    check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
-                    Image.makeFromBitmap(onNodeWithTag("code-viewport").captureToImage().asSkiaBitmap()).use { image ->
-                        checkNotNull(image.encodeToData()).use { output.writeBytes(it.bytes) }
-                    }
+                val directory = System.getenv("PARLOR_UI_SCREENSHOT_DIR")?.takeIf { it.isNotBlank() }
+                    ?: "build/reports/tests/public-ux"
+                val output = File(directory, "room-code-${language.tag}-${theme.tag}-$fontScale.png")
+                check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
+                Image.makeFromBitmap(onNodeWithTag("code-viewport").captureToImage().asSkiaBitmap()).use { image ->
+                    checkNotNull(image.encodeToData()).use { output.writeBytes(it.bytes) }
                 }
                 val layouts = mutableListOf<TextLayoutResult>()
                 onNodeWithText(CODE).performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }

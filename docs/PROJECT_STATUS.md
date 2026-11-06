@@ -1,4 +1,87 @@
-# Project status — November 5, 2026
+# Project status — November 6, 2026
+
+## Latest qualification and active correction
+
+PR328 remains draft/unmerged. Its full42177783654 iOS producer failed with
+809 KMP PASS /39 Swift PASS /1 FAIL: sequential keyboard-tutorial queries
+exhausted the unchanged exact-value waiter before its first successful field
+snapshot. The [source/evidence correction](audits/2026-11-06-IOS-KEYBOARD-TUTORIAL-OBSERVATION.md)
+uses one bounded coherent observation, retains native hittability/single input
+and adds two native regressions. It does not resolve the older upstream input
+cause. Fresh complete checks on the corrected source and distinct main remain
+required; no failed required check is bypassed.
+
+Separately, the [Android process-boundary matrix](audits/2026-11-06-ANDROID-PROCESS-RECOVERY.md)
+passed all12 cases/24 original native phases in42182051742. Independent receipt
+`ef829bb50e1c916dc2b2b5ae09201787a929899bade122f7634bb7fc4c25b236`
+binds exact source/artifacts/process nonces/cleanup. This prepared normal
+implementation is now integrated into PR328's same recovery-acceptance scope;
+the auxiliary preview workflow is excluded. Full native27+3 and process24,
+protected merge and distinct main are pending. #253/#329 stay open; real
+admission, positive iOS protected persistence and physical accessibility remain
+separate gates.
+
+## Twelve-Issue acceptance audit and active CI work
+
+Current independently accepted main is `705c934b`,
+[42150601522](https://github.com/Apdelrahman1911/parlor/actions/runs/42150601522),
+all eight producers/optimized Apple join. PR326/327 and scoped #324 are complete.
+The [twelve-Issue acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md)
+distinguishes implemented scope, new CI work, physical gates and external
+runner/security/credential prerequisites. It is not an all-work-complete claim.
+
+#285 is closed after its missing Intel native control passed42141604588.
+PR327/#308 passed full42142636265 (all eight producers and Apple join) and the
+real constrained-capacity42143063097 experiment, then protected-merged as
+`705c934b`. Distinct main42150601522 finished successfully and independent
+source/artifact/cleanup readback passed; #308 is now closed. Receipt SHA256:
+`12c9f1adc9ffeb65ee84c81de871584e8a6b8aabaa72de3ed4aeae9c6fc40541`.
+The experiment held its reservation from about26.015GiB free before restore
+through both Android lanes/upload, not a historical small total filesystem or a
+speed benchmark. Ten of the original twelve Issues remain open.
+
+Android native Resume/storage acceptance and the public screenshot-custody
+corrections are prepared separately for #253/#259. Actual earlier preview
+readback found a 200%-text catalog defect: first-game requirements/Open were
+offscreen. The new adaptive layout prioritizes those choices and strengthens
+320/390dp EN/AR assertions without shrinking text. These later changes and the
+eight native Home methods (six legal-game journeys and two actual deletion-error
+live-region checks) still require fresh full/protected/main qualification;
+preview success does not qualify them or complete the broad UX/device gates.
+PR328 revision04 passed Release3 and actual API34 navigation3/storage7, but
+Home8 failed at the first control lookup. The test incorrectly required a
+Compose button's native description and action on the same node. Revision05
+resolves the exact label's nearest unique action owner, with five additional
+native boundary controls; it retains single actions and all outcome assertions.
+Corrected preview42165263589 passed19/23: all owner/navigation/storage controls
+and all four English Home journeys. Arabic4 pass Cancel/deletion and storage
+assertions but fail only at the subsequent Activity-relaunch label. Isolated
+42167369595 failed first at unsynchronized test-runner/Koin startup (0.012s).
+The fixture now joins Application's main-thread startup turn before graph
+resolution. Corrected42169900414 reached the original relaunch boundary:
+English actually renders while the preference is Arabic; process/Compose
+defaults reverted to English across overlapping old/new Activity lifetimes.
+New [#329](https://github.com/Apdelrahman1911/parlor/issues/329) tracks the
+equality-only locale-disposal defect. Exact scope ownership now prevents late
+old disposal from overwriting a newer owner; seven common regressions and
+focused Detekt pass locally. The corrected public-SDK adapter now passes all23
+actual API34 methods in [42174962013](https://github.com/Apdelrahman1911/parlor/actions/runs/42174962013),
+including all eight English/Arabic Home journeys. Independent original XML,
+source/artifact and owned-cleanup readback receipt SHA256:
+`503d40a6851009ea8f5ded09aad61f89206628b10257d39dfe634aa4b52b7940`.
+This scoped pass does not qualify the full PR or main. Fresh full PR328 checks,
+protected merge and distinct main remain pending; #329 stays open. No timeout,
+repeated tap or weakened language assertion masks the original failure.
+Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
+and complete names are retained. This scoped visual result is not native play.
+
+Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
+remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles
+all six iOS frontends, but original strict0 PASS/6 FAIL, supported-volume positive
+acceptance and physical locked-keybag behavior remain unmet. Physical Phase4 is
+reserved for the owner. No release, signing or physical success is claimed.
+
+## Historical checkpoints below — not the current execution status
 
 ## Source checkpoint before PR326 and outstanding acceptance
 

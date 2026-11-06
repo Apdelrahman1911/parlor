@@ -29,7 +29,7 @@ class GameplayChallengeGuideTest {
         onNodeWithText(bodyStart, substring = true).assertDoesNotExist()
         onNodeWithTag("game-challenge-help").bringIntoView().performClick()
         onNodeWithText(bodyStart, substring = true).bringIntoView()
-        val output = File("build/reports/ux/last-light-guide-${language.tag}-2x.png")
+        val output = File("build/reports/tests/public-ux/last-light-guide-${language.tag}-2x.png")
         output.parentFile.mkdirs()
         ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", output)
         onNodeWithTag("game-card-0").assertDoesNotExist()

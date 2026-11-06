@@ -69,7 +69,7 @@ internal fun SemanticsNodeInteraction.assertPhoneTouchTarget() {
 internal fun ComposeUiTest.captureShellAcceptance(name: String) {
     val directory = System.getProperty("parlor.ux.screenshotDir")?.takeIf { it.isNotBlank() }
         ?: System.getenv("PARLOR_UI_SCREENSHOT_DIR")?.takeIf { it.isNotBlank() }
-        ?: "build/reports/ux"
+        ?: "build/reports/tests/public-ux"
     val output = File(directory, "$name.png")
     check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
     Image.makeFromBitmap(onNodeWithTag("acceptance-viewport").captureToImage().asSkiaBitmap()).use { image ->

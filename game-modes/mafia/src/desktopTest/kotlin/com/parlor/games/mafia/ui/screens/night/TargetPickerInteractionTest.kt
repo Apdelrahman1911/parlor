@@ -74,7 +74,7 @@ class TargetPickerInteractionTest {
         }
         onNodeWithContentDescription(submitLabel).assertIsNotEnabled()
         onNodeWithText(name).performScrollTo().performClick().assertIsSelected()
-        val output = File("build/reports/ux/mafia-target-${language.tag}-2x.png")
+        val output = File("build/reports/tests/public-ux/mafia-target-${language.tag}-2x.png")
         output.parentFile.mkdirs()
         ImageIO.write(onNodeWithTag("mafia-target-evidence").captureToImage().toAwtImage(), "png", output)
         onNodeWithContentDescription(submitLabel).performScrollTo().performClick()

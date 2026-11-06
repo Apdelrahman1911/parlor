@@ -186,14 +186,20 @@ kotlin {
             )
         }
         androidInstrumentedTest.dependencies {
-            // InstrumentationTestCase is supplied by the platform's
-            // android.test.runner shared library. Compile against the matching
-            // SDK stub without adding a Maven dependency to the test APK.
+            // InstrumentationTestCase and the runner's public argument API are
+            // supplied by the platform's android.test.runner shared library.
+            // Compile against both matching SDK stubs; neither is packaged in
+            // the application/test APK or added as a Maven dependency.
             compileOnly(
                 files(
                     androidComponents.sdkComponents.sdkDirectory.map { sdkDirectory ->
-                        sdkDirectory.file(
-                            "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.base.jar",
+                        listOf(
+                            sdkDirectory.file(
+                                "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.base.jar",
+                            ),
+                            sdkDirectory.file(
+                                "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.runner.jar",
+                            ),
                         )
                     },
                 ),
