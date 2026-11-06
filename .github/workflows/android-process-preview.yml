@@ -1,0 +1,151 @@
+name: Android process recovery preview (not full qualification)
+on:
+  push:
+    branches: [verification/android-process-preview-2026-11-06]
+permissions:
+  contents: read
+concurrency:
+  group: android-process-preview-${{ github.ref }}
+  cancel-in-progress: false
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+jobs:
+  android-process-preview:
+    name: Verify durable local and multiplayer removal across process death
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Check out reviewed preview harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require the actual reviewed harness checkout
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          python3 -B - <<'PYCODE'
+          import subprocess
+          base='86a1a9a92b41f5cf12b4cc56c1456713b933608e'
+          delta=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines()
+          assert set(delta)=={'.github/workflows/android-process-preview.yml','docs/review/INDEPENDENT_REVIEW_INVENTORY.csv'}
+          PYCODE
+      - name: Set up JDK 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - name: Restore reviewed dependencies only
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        run: python3 -B scripts/ci/verification_hygiene.py prepare
+      - name: Install pinned API34 and compilation packages
+        timeout-minutes: 11
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          image=$(jq -r '.toolchains.android_navigation_device.system_image_package' config/release-policy.json)
+          test "$image" = 'system-images;android-34;google_apis;x86_64'
+          timeout --signal=TERM --kill-after=10s 600s \
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" \
+            "platforms;android-36" "build-tools;36.0.0" "platform-tools" "emulator" "$image"
+          image_properties="$ANDROID_HOME/system-images/android-34/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_navigation_device.system_image_revision' config/release-policy.json)"
+      - name: Verify source inventory and unchanged instructions
+        run: |
+          set -euo pipefail
+          python3 -B scripts/generate_review_inventory.py --check
+          echo 'd9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b  AGENTS.md' | sha256sum --check
+      - name: Compile the actual native phases and their portable safeguards
+        run: |
+          set -euo pipefail
+          python3 -B -m unittest scripts.release.tests.test_android_resume_process -v
+          ./gradlew :composeApp:detekt :composeApp:assembleDebug :composeApp:assembleDebugAndroidTest \
+            -Pparlor.androidRuntimeTestVariant=debug --dependency-verification=strict \
+            --no-daemon --max-workers=2 --stacktrace --console=plain \
+            2>&1 | tee "$RUNNER_TEMP/parlor-android-process-build.log"
+      - name: Execute twelve actual process-boundary cases once
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \
+            --receipt build/ci-evidence/android-process-device-supervision.json --isolated-avd -- \
+            python3 -B -m scripts.android.run_resume_process_acceptance \
+              --output build/ci-evidence/android-process-acceptance \
+            2>&1 | tee "$RUNNER_TEMP/parlor-android-process-preview.log"
+      - name: Bind the actual source and all original native phase outcomes
+        run: |
+          python3 -B - <<'PYCODE'
+          import hashlib,json,os,pathlib,subprocess
+          from scripts.android import resume_process_contract as contract
+          root=pathlib.Path.cwd();head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert head==os.environ['GITHUB_SHA'] and not subprocess.check_output(['git','status','--porcelain'])
+          folder=root/'build/ci-evidence/android-process-acceptance'
+          v=json.loads((folder/'result.json').read_text())
+          assert v['result']=='PASS' and v['source']['head']==head
+          assert v['source']['tree']==subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip()
+          assert all(hashlib.sha256((root/p).read_bytes()).hexdigest()==h for p,h in v['source']['files'].items())
+          expected={(g,l,k) for g in contract.GAMES for l in contract.LANGUAGES for k in contract.ENTRY_KINDS}
+          assert len(v['cases'])==len(expected)==12 and {(r['game'],r['language'],r['entry_kind']) for r in v['cases']}==expected
+          assert len({r['fixture'] for r in v['cases']})==12
+          for case in v['cases']:
+              fixture=contract.Fixture(case['fixture'],case['game'],case['language'],case['entry_kind'])
+              assert case['result']=='PASS' and case['explicit_force_stop_and_independent_absence'] is True
+              for field,phase in [('prepared','prepare'),('verified','verify')]:
+                  result=case[field];raw=(folder/result['log']).read_bytes()
+                  assert hashlib.sha256(raw).hexdigest()==result['log_sha256']
+                  parsed=contract.phase_result(raw,fixture,phase)
+                  assert all(result[k]==value for k,value in parsed.items())
+              assert case['prepared']['process_nonce']!=case['verified']['process_nonce']
+          print('PASS: twelve cases,24 exact native JUnit phases,actual forced process boundary;not physical/native iOS acceptance')
+          PYCODE
+      - name: Stop owned Gradle workers
+        if: always()
+        run: python3 -B scripts/ci/verification_hygiene.py stop android-process-preview
+      - name: Upload source-bound native evidence
+        if: always()
+        id: verification_artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-process-preview
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            **/build/outputs/androidTest-results/
+            **/build/reports/androidTests/
+            **/build/reports/detekt/
+            build/ci-evidence/
+            ${{ runner.temp }}/parlor-android-process-preview.log
+            ${{ runner.temp }}/parlor-android-process-build.log
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            !remediation-runs/**
+            !docs/archives/**
+      - name: Clean only attested and uploaded outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        run: python3 -B scripts/ci/verification_hygiene.py cleanup
+      - name: Retain output cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-process-preview-cleanup
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
