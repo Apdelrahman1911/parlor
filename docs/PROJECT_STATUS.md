@@ -1,30 +1,28 @@
 # Project status — November 6, 2026
 
-## Current main: Android locale correction passes; iOS observer fails
+## Current qualification checkpoint — ARM64 runtime isolation prepared
 
-PR333 is normally protected-merged as `3fde30d5`, tree
-`1e371e51d24799c80dbb1b35054c99dea48394d9`. Its distinct
+Actual main `3fde30d5` (protected PR333) passes the scoped Android EN/AR
+handled-configuration and process recovery corrections, but distinct
 [main42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
-is terminal **FAILURE**, not independently qualified. Seven producers and the
-optimized Apple Release join pass independent original readback. Android passes
-both actual EN/AR rotation journeys among33 API34 methods,3 optimized API35
-methods and12 process cases/24 native phases. #332's implementation and scoped
-acceptance pass, but the Issue retains its whole-main qualification gate.
+failed the iOS public-control pre-tap observer. PR334 corrects that redundant
+query traversal; all five new native controls pass. Its subsequent full
+[42274478001](https://github.com/Apdelrahman1911/parlor/actions/runs/42274478001)
+passes seven producers/optimized Apple join,819 KMP/457 readiness methods, but
+Swift is **46 PASS /1 FAIL** at Arabic Name typing. Original native evidence
+places a27.547310s delay before UIKit insertion; the deeper service-start cause
+is not established. This source has not qualified as a complete main.
 
-The remaining failure is Arabic Ghamza's iOS Join permission Continue pre-tap
-observer.819 KMP/457 readiness pass; Swift41 PASS/1 FAIL. Original native logs
-prove the outer waiter cancels another remote target lookup before native
-hit-point computation, not that the button was disabled or unhittable. The
-[public-button snapshot correction](audits/2026-11-06-IOS-PUBLIC-BUTTON-SNAPSHOT.md)
-removes redundant geometry-query traversal while preserving two exact fresh
-frames, native hittability, the deadline and one tap. Five new Swift controls,
-fresh EN/AR/full protected checks and distinct main qualification are pending.
-No unchanged workflow replay or speculative application change is selected.
-
-The [Android handled-configuration correction](audits/2026-11-06-ANDROID-HANDLED-CONFIGURATION-LOCALE.md)
-and earlier [navigation fixture](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
-are already merged, not being reproduced. Earlier failures remain failed;
-their unproven deeper timing causes are not retroactively declared fixed.
+The unchanged full47-method Swift suite independently passes supplemental
+free Intel [42286948623](https://github.com/Apdelrahman1911/parlor/actions/runs/42286948623),
+including exact source/artifact and owned cleanup. It is not ARM64/main or
+permanent native-cause acceptance. The [current CI correction](audits/2026-11-06-ISOLATED-ARM64-RUNTIME.md)
+isolates **both original ARM64 suites**, retains the original required check as
+a fail-closed source/custody join, and preserves every optimized Release target.
+It needs fresh protected and distinct-main verification before qualification.
+This is a source-authoring checkpoint; [#276](https://github.com/Apdelrahman1911/parlor/issues/276)
+and [PR334](https://github.com/Apdelrahman1911/parlor/pull/334) retain subsequent
+terminal workflow evidence, not assumptions that a queued/run-started job passed.
 
 ## Latest independently accepted main
 
@@ -73,7 +71,8 @@ evidence remains valid.
 ## Open acceptance and external prerequisites
 
 Of the twelve Issues at intake, #285/#308 are closed; ten remain open.
-The additional #329 is also closed. The
+The additional #329 is also closed; new #332 remains open for its whole-main
+gate, making **eleven open Issues** in total. The
 [acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md) maps each
 remaining requirement, including exact device scenarios; generic green CI
 cannot replace those criteria.

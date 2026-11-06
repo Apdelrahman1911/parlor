@@ -11,6 +11,7 @@ The later native acceptance investigation found a distinct Android locale
 lifetime defect, closed #329 below, and live configuration-reset defect #332.
 Neither is one of the original twelve; #332's correction is merged and its
 native Android acceptance passes, but its complete-main gate remains open.
+There are **eleven current open Issues**; ten are from the original twelve.
 
 Accepted baseline is actual main `6028009f43c8fcd6b5d22ce8d94e0b822d5685d0`,
 tree `70b4cbe78dde95c1ea4519f60dbbda36f79c133a`, independently verified by
@@ -25,13 +26,22 @@ iOS: 809 KMP Simulator / 42 Swift / 457 readiness methods; 844 release and
 73 worker controls pass. All257 synthetic PNGs per Desktop host are retained and
 decoded, with explicitly scoped original-image review rather than a claim that
 every frame was manually inspected. This qualifies the baseline, not newer
-main. PR330/331/333 are merged; `3fde30d5`/42261837661 passes fresh native Android
-rotation/process acceptance and seven producers/optimized Apple join, but fails
-Arabic Ghamza's iOS permission pre-tap observer. Original logs establish
-deadline-interrupted target resolution, not native unhittability. The
-[public-button snapshot correction](2026-11-06-IOS-PUBLIC-BUTTON-SNAPSHOT.md)
-requires fresh protected/full/distinct-main qualification. #332 remains open
-until that gate passes; older native/upstream causes remain unresolved.
+main. PR330/331/333's layout, native fixture and handled-configuration corrections
+are merged. Actual main `3fde30d5` /
+[42261837661](https://github.com/Apdelrahman1911/parlor/actions/runs/42261837661)
+fails a separate iOS pre-tap observer. PR334's observer correction passes its five
+new native controls, but full42274478001 is **46 Swift PASS /1 FAIL** at Arabic
+Name typing; seven other producers,819 KMP and457 readiness methods pass. The
+original native log establishes27.547310s before UIKit insertion, not a shipping
+focus/sanitizer correction or the deeper keyboard-service startup cause.
+
+Supplemental Intel [42286948623](https://github.com/Apdelrahman1911/parlor/actions/runs/42286948623)
+independently passes the unchanged47-method Swift suite and owned cleanup.
+It does **not** qualify ARM64, PR334/main or permanent input causality. The
+[isolated ARM64 runtime preparation](2026-11-06-ISOLATED-ARM64-RUNTIME.md)
+retains both full suites and all optimized Release architectures. Fresh protected
+and independent-main qualification remains required; latest execution evidence
+is linked on [#276](https://github.com/Apdelrahman1911/parlor/issues/276).
 
 ## Acceptance matrix
 
@@ -107,3 +117,11 @@ the Gradle wrapper and Xcode26.3/17C529 for Store-qualified build work.
 The upstream input and supported-volume prerequisites are **not mislabeled as
 completed CI or device-only work**. Owner device findings can supply new evidence;
 they do not retroactively turn failed hosted controls into successful ones.
+
+### Physical roster prerequisite
+
+A two-phone pair alone cannot execute every all-physical game. The bundled
+Whodunit case requires exactly6; Mafia5–16; Last Light2–6; Egyptian Dominoes2–4
+(teams exactly4); Ghamza3–12; Word Impostor3–12 with a valid impostor minority.
+Record actual devices versus synthetic peers separately; never label a mixed
+fixture as an all-physical roster. Phase4 remains the owner's separate campaign.
