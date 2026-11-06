@@ -17,11 +17,13 @@ import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyOk
 import com.parlor.core.result.Result
+import com.parlor.engine.snapshot.GameSnapshot
 import com.parlor.storage.secure.SecureStorage
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import java.util.UUID
@@ -73,6 +75,11 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
             // storage-only fixture. Never override the startup gate or contact a
             // fabricated host just to get back to the Home deletion controls.
             ui.clickDescription(if (fixture.language == "ar") "افتح الإعدادات." else "Open settings.")
+            // ACTION_CLICK only acknowledges dispatch. Both tabs already exist
+            // on Home, so Settings -> Games can coalesce before a frame and
+            // leave Home's recovery effect on the old, empty inventory. Observe
+            // the real destination BEFORE writing external test fixtures.
+            ui.awaitHeading(if (fixture.language == "ar") "الإعدادات" else "Settings")
             if (membership == null) assertEquals(EmptyOk, store.save(selected))
             assertEquals(EmptyOk, store.save(sibling))
             assertEquals(EmptyOk, secure.put(fixture.credentialKey, CREDENTIAL))
@@ -80,7 +87,7 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
             ui.clickDescription(if (fixture.language == "ar") "افتح مكتبة الألعاب." else "Open the game library.")
             // The local saved row proves Home has committed after Settings;
             // never scroll a stale Settings surface while navigation is pending.
-            ui.awaitDescription(fixture.discardDescription(total = if (membership == null) 2 else 1))
+            awaitPreparedHome(ui, fixture, sibling, store, settings)
             val selectedDescription = if (membership == null) fixture.discardDescription(total = 2)
                 else fixture.multiplayerDescription
             ui.revealDescription(selectedDescription)
@@ -119,6 +126,34 @@ class AndroidResumeProcessPhases : InstrumentationTestCase() {
             report(fixture, "prepared")
         } finally {
             finish(activity)
+        }
+    }
+
+    private suspend fun awaitPreparedHome(
+        ui: AndroidPublicRecoveryUi,
+        fixture: ProcessResumeFixture,
+        sibling: GameSnapshot,
+        store: SnapshotStore,
+        settings: SettingsStore,
+    ) {
+        val total = if (fixture.kind == ResumeEntryKind.Local) 2 else 1
+        try {
+            ui.awaitDescription(fixture.discardDescription(total))
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: IllegalStateException) {
+            // Only whitelisted public alternatives and booleans after failure.
+            // Never export an AX tree, screenshot, player, snapshot or credential.
+            val englishLocal = ui.descriptionPresentNow(fixture.discardDescription(total, "en"))
+            val arabicLocal = ui.descriptionPresentNow(fixture.discardDescription(total, "ar"))
+            val englishSettings = ui.headingPresentNow("Settings")
+            val arabicSettings = ui.headingPresentNow("الإعدادات")
+            val languageMatches = settings.languageOverride.first() == fixture.language
+            val siblingIntact = store.load(sibling.sessionId) == Result.Success(sibling)
+            throw AssertionError("Prepared Home after acknowledged Settings: " +
+                "englishLocal=$englishLocal, arabicLocal=$arabicLocal, " +
+                "englishSettings=$englishSettings, arabicSettings=$arabicSettings, " +
+                "languageMatches=$languageMatches, siblingIntact=$siblingIntact", failure)
         }
     }
 
@@ -251,7 +286,7 @@ private data class ProcessResumeFixture(
         "Remove: Rejoin the previous multiplayer game."
     }
 
-    fun discardDescription(total: Int): String = if (language == "ar") {
+    fun discardDescription(total: Int, language: String = this.language): String = if (language == "ar") {
         "حذف: استئناف لعبة ${game.arabicTitle} المحلية، وهي اللعبة المحفوظة 1 من $total."
     } else {
         "Remove: Resume ${game.englishTitle} local game, saved game 1 of $total."

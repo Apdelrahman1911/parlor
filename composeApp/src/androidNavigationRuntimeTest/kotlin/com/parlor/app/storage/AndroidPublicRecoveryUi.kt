@@ -27,6 +27,17 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         awaitAction(description).recycle()
     }
 
+    /** A shared navigation caption is not evidence that its destination was composed. */
+    fun awaitHeading(text: String) {
+        awaitNode(resolveClickOwner = false) { androidRecoveryHeading(it, text) }.recycle()
+    }
+
+    /** Fixed public heading probe for failure-only evidence, never a tree/text dump. */
+    fun headingPresentNow(text: String): Boolean {
+        val node = findNode(resolveClickOwner = false) { androidRecoveryHeading(it, text) }
+        return (node != null).also { node?.recycle() }
+    }
+
     /** One read-only probe of a whitelisted public label, only after an assertion failed. */
     fun descriptionPresentNow(description: String): Boolean {
         val node = findNode(resolveClickOwner = true) { it.contentDescription?.toString() == description }
@@ -148,6 +159,10 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         const val MAX_DEPTH = 64
     }
 }
+
+/** Visibility, package ownership and uniqueness are checked by the bounded native traversal. */
+internal fun androidRecoveryHeading(node: AccessibilityNodeInfo, text: String): Boolean =
+    node.isHeading && node.text?.toString() == text
 
 /** Counts only; failure evidence must not include arbitrary accessibility text or package names. */
 private data class AndroidRecoveryObservation(

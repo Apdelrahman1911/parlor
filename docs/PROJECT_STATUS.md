@@ -1,5 +1,23 @@
 # Project status — November 6, 2026
 
+## Current main failed qualification; focused correction in progress
+
+PR330 is merged as `081a6f68`, tree
+`a912d30b62c81ba30382f87016f34183d593b611`. Its distinct
+[main42208844307](https://github.com/Apdelrahman1911/parlor/actions/runs/42208844307)
+is terminal **FAILURE**: seven producers/optimized Apple join pass, but the
+Android process matrix errors on Whodunit/Arabic/multiplayer preparation after
+11 cases/22 phases. Deletion/process death had not started in that case.
+This newer main is **not independently qualified**. No whole-main or security
+completion is inferred from the passing subset or earlier successful PR.
+
+The [navigation-boundary report](audits/2026-11-06-ANDROID-RECOVERY-NAVIGATION-BOUNDARY.md)
+records the original native failure, an actual-App EN/AR deterministic
+reproduction of unacknowledged Settings→Library coalescing, and the fixture
+correction. The original native frame sequence remains unproven. Fresh full
+checks, protected merge and distinct main remain required; no unchanged retry,
+longer deadline, repeated tap or production refresh workaround is used.
+
 ## Latest independently accepted main
 
 PR328 is normally protected-merged as `6028009f`, tree
@@ -26,7 +44,7 @@ The separate iOS keyboard-tutorial observer correction passes without longer
 waits, repeated input or weakened assertions; original native HID/service-startup
 causes in #267/#276 remain unresolved. Earlier failed runs remain failed.
 
-## Active Phase5 game-UI follow-up
+## Phase5 game-UI corrections merged; newer main qualification failed
 
 Four reproduced large-text layout defects are corrected in this focused branch:
 [Word Impostor voting](audits/2026-11-06-WORD-IMPOSTOR-LARGE-TEXT.md),
@@ -36,9 +54,11 @@ Four reproduced large-text layout defects are corrected in this focused branch:
 Full instructions, accessible descriptions, privacy, game rules and user font
 scaling remain. Existing before-scroll/whole-word assertions are strengthened.
 Scoped Word30 / Ghamza28 / combined Last Light204 module methods and Detekt
-pass; corrected EN/AR original images were inspected. These scoped results
-**do not yet qualify this whole follow-up**: fresh full PR checks/review,
-protected merge and distinct main remain required before acceptance.
+pass; corrected EN/AR original images were inspected. PR330's fresh full
+[42201793916](https://github.com/Apdelrahman1911/parlor/actions/runs/42201793916)
+and source/22 preselected original-image review passed before protected merge.
+However, distinct main failed the separate Android preparation boundary above.
+Scoped layout evidence remains valid; **whole-main acceptance is not claimed**.
 
 ## Open acceptance and external prerequisites
 
