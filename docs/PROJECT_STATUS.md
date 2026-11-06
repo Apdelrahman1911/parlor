@@ -1,5 +1,29 @@
 # Project status — November 6, 2026
 
+## Current execution — Android instrumentation retirement correction
+
+PR334 passed complete source-specific protected qualification
+[42298070702](https://github.com/Apdelrahman1911/parlor/actions/runs/42298070702)
+and merged normally as `1e08bab4`. Distinct
+[main42307325714](https://github.com/Apdelrahman1911/parlor/actions/runs/42307325714)
+fails Android process acceptance after3 cases/7 original phases. The fourth
+preparation and normal launch status pass, but the next PID command exits1;
+its withheld output does not prove an app crash versus a transport failure.
+API34 33/33, optimized API35 3/3,819 KMP/47 Swift/457 readiness methods pass;
+these do not qualify the failed whole main.
+
+The [reviewed correction](audits/2026-11-06-ANDROID-INSTRUMENTATION-RETIREMENT.md)
+joins instrumentation PID retirement within the existing phase deadline before
+the next single operation. Android's result callback precedes its ordinary
+teardown; this confirms a driver gap, not the original uncaptured native cause.
+New [#335](https://github.com/Apdelrahman1911/parlor/issues/335) records evidence,
+regressions and pending fresh protected/main qualification. #332 remains open
+for its whole-main gate. Original #267/#276 platform causes, #258 supported-volume
+positive security and owner-reserved physical/Store requirements remain open.
+The twelve-Issue audit and already closed #285/#308/#312 work are not repeated.
+
+## Prior source-authoring checkpoint — retained, not current status
+
 ## Current qualification checkpoint — ARM64 runtime isolation prepared
 
 Actual main `3fde30d5` (protected PR333) passes the scoped Android EN/AR
