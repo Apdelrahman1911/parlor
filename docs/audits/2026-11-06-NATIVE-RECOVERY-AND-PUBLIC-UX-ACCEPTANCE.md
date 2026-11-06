@@ -38,6 +38,19 @@ deletes only those records; it never clears application data or shared Keystore
 aliases. All payloads are synthetic. Envelope tests do not claim legal gameplay,
 actual OS process termination, screen-reader operation or physical key protection.
 
+Two further `AndroidResumeUiRuntimeTest` methods use the shipping `MainActivity`,
+unchanged Koin graph and actual native accessibility actions in English/Arabic.
+They seed two valid, recoverable Last Light games, cancel then confirm selected
+deletion, relaunch the Activity, and verify the surviving game, independent
+credential and language. The native tree is bounded and never logged; gameplay
+fixture names must not appear on Home. Each action is sent once, without input
+retries or fake UI routes. Only exclusively named fixture records are removed;
+an existing nonempty inventory fails the precondition instead of being cleared.
+This exercises an actual app/Compose/storage journey, **not OS process death,
+physical taps, TalkBack itself or all three games' legal resume journeys**.
+The API34 lane now expects twelve methods: the three existing navigation methods,
+seven storage methods and two native Home journeys. Release remains three.
+
 ```bash
 ./gradlew productionAndroidNavigationRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=debug \
@@ -72,7 +85,7 @@ UI pass; preserving all existing rendering assertions remains mandatory.
 
 ## Qualification status and remaining acceptance
 
-At preparation, ten artifact-selection controls pass locally. Native compilation,
+At preparation, eleven artifact-selection controls pass locally. Native compilation,
 API34 execution, retained-PNG inspection, full protected PR qualification, normal
 merge and distinct main verification are **pending**, tracked on #253/#259.
 
@@ -80,5 +93,5 @@ Existing iOS native discard/path/error/backup-order controls are retained rather
 than duplicated. Positive protected iOS persistence is still gated by #258's
 unsupported observed hosted volume; actual locked-access/keybag behavior belongs
 to the owner's Phase4. The held protection candidate is not imported here.
-Public Home-to-confirmation tests are not actual app process-relaunch acceptance.
+Activity recreation and public Home confirmation are not process-relaunch acceptance.
 Do not close either broad Issue from these scoped additions alone.
