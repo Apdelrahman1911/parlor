@@ -43,9 +43,14 @@ defaults reverted to English across overlapping old/new Activity lifetimes.
 New [#329](https://github.com/Apdelrahman1911/parlor/issues/329) tracks the
 equality-only locale-disposal defect. Exact scope ownership now prevents late
 old disposal from overwriting a newer owner; seven common regressions and
-focused Detekt pass locally. Actual corrected native23, full PR/main checks
-and protected merge remain pending. Draft PR328 is not qualified or merged;
-no timeout, repeated tap or weakened language assertion masks the failure.
+focused Detekt pass locally. The corrected public-SDK adapter now passes all23
+actual API34 methods in [42174962013](https://github.com/Apdelrahman1911/parlor/actions/runs/42174962013),
+including all eight English/Arabic Home journeys. Independent original XML,
+source/artifact and owned-cleanup readback receipt SHA256:
+`503d40a6851009ea8f5ded09aad61f89206628b10257d39dfe634aa4b52b7940`.
+This scoped pass does not qualify the full PR or main. Fresh full PR328 checks,
+protected merge and distinct main remain pending; #329 stays open. No timeout,
+repeated tap or weakened language assertion masks the original failure.
 Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
 and complete names are retained. This scoped visual result is not native play.
 

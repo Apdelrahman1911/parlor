@@ -278,6 +278,30 @@ by the host's kernel OOM killer (PID31177, November6 06:24:44 UTC), after the
 changed module compiled; it is not a successful application/test-APK build.
 Hosted native compilation and all23 methods remain required.
 
+## Corrected native acceptance — full qualification next
+
+[42174962013](https://github.com/Apdelrahman1911/parlor/actions/runs/42174962013)
+is terminal **SUCCESS** on the standard free Ubuntu runner. It compiled exact
+application source `d168a8cb928a5fda6a66f9c254ff75b3cfcee4e4`, tree
+`d779feae18bfdeca2fb20ce7614cf0ef52820a87`, then passed all23 actual API34
+methods: navigation3, native action-owner5, storage7 and Home8, without
+failures/errors/skips. All English and Arabic cancel/discard/relaunch/error
+journeys pass at the unchanged action and assertion bounds.
+
+Independent readback checked original native XML and identities against source,
+both uploaded archive sizes/SHA256, focused Detekt, build log, source ownership,
+successful descendant/AVD retirement and upload-bound output cleanup. Receipt
+SHA256: `503d40a6851009ea8f5ded09aad61f89206628b10257d39dfe634aa4b52b7940`.
+The actual fixture assertions confirm surviving storage and requested labels;
+no earlier failure is reclassified by this newer result.
+
+This is a **scoped native preview**, not complete PR/main qualification,
+OS process-death acceptance, authenticated multiplayer recovery, physical taps
+or screen-reader operation. PR328 must still pass fresh complete checks,
+protected merge and distinct main verification before #329 closes. #253/#259
+retain their broader acceptance requirements; original iOS input and strict
+protection prerequisites remain separate.
+
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.
 That scoped visual review can apply only while rendering inputs remain identical;
