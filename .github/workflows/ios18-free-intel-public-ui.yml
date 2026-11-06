@@ -1,0 +1,119 @@
+name: iOS 18.5 free Intel Swift acceptance (not production qualification)
+
+on:
+  push:
+    branches: [test/ios18-free-intel-public-ui-2026-11-06]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parlor-ios18-free-intel-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ios:
+    # Additional host availability evidence only. The production ARM64 runtime,
+    # complete protected checks and optimized Release architectures are unchanged.
+    runs-on: macos-15-intel
+    timeout-minutes: 120
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Require the reviewed source and exact standard Intel toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = x86_64
+          test -z "$(git status --porcelain)"
+          test "$(git diff --name-only 9161fdcd7aad92e3b4bdabbfc13a05d605b183ba HEAD)" = .github/workflows/ios18-free-intel-public-ui.yml
+          test "$(shasum -a 256 AGENTS.md | cut -d' ' -f1)" = d9505fa9e8338a8a1ca85a63e87ffc72a4a0013468116f6f6d7a5c4c7dfbc02b
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD HEAD^{tree} > build/ci-evidence/source.txt
+          git ls-tree -r HEAD > build/ci-evidence/source-tree.txt
+          uname -m > build/ci-evidence/architecture.txt
+          sw_vers > build/ci-evidence/macos-version.txt
+          java -version 2>build/ci-evidence/java-version.txt
+          grep -q 'version "21\.' build/ci-evidence/java-version.txt
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = 'Xcode 26.3'
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = 'Build version 17C529'
+          xcrun --sdk iphonesimulator --show-sdk-version > build/ci-evidence/simulator-sdk.txt
+      - name: Claim existing apple-ui ownership before native execution
+        id: prepare
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
+      - name: Create the exact fresh iOS 18.5 iPhone 16 Pro profile
+        id: simulator
+        shell: bash
+        run: |
+          /usr/bin/python3 -B - <<'PY' >> "$GITHUB_OUTPUT"
+          from scripts.ci import apple_verification_hygiene as apple, verification_hygiene as common, owned_ci_simulator as sim
+          class OriginalRuntime(sim.SimctlBackend):
+              def inventory(self):
+                  value = super().inventory()
+                  runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-18-5'
+                  kind = 'com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro'
+                  groups = value['devices']
+                  matches = [d for d in groups.get(runtime, []) if d.get('isAvailable') is True and d.get('deviceTypeIdentifier') == kind]
+                  if not matches:
+                      raise RuntimeError('Exact iOS18.5/iPhone16Pro unavailable; no fallback')
+                  ordered = sorted(groups[runtime], key=lambda d: not (d.get('isAvailable') is True and d.get('deviceTypeIdentifier') == kind))
+                  return {**value, 'devices': {runtime: ordered, **{k:v for k,v in groups.items() if k != runtime}}}
+          root, prefix, task = common.context()
+          owned = apple.cycle_prefix(prefix, 'apple-ui')
+          claim = apple.validate_claim(root, owned, task, 'apple-ui', apple.configuration(root))
+          print('udid=' + sim.create(owned, claim, OriginalRuntime()))
+          PY
+      - name: Execute the unchanged complete Swift suite once
+        id: run
+        shell: bash
+        env:
+          SIMULATOR_UDID: ${{ steps.simulator.outputs.udid }}
+        run: |
+          set -euo pipefail
+          test ! -e build/ci-evidence/ios-ui-tests.xcresult
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
+            -destination-timeout 120 \
+            -derivedDataPath build/xcode-derived-data \
+            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+            test | tee build/ci-evidence/xcode-ui-test.log
+      - name: Retire only owned workers and profile while retaining every outcome
+        id: finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.run.outcome }}
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+      - name: Retain source, original XCTest result and owned cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios18-free-intel-swift-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/ci-evidence/
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-ios*.json
