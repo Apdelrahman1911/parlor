@@ -77,12 +77,28 @@ must succeed before checkout-output cleanup.
 
 ## Current status and remaining work
 
-Prepared source passes31 portable controls and focused application Detekt with
+Prepared source passes32 portable controls and focused application Detekt with
 JDK21, the wrapper and strict verification. These results do not compile or
 execute the native phases. Fresh hosted native execution, complete protected
 PR qualification, review/merge and distinct main verification remain required.
 This work follows the separate #329 locale-ownership correction; no previously
 failed locale or native-input run is retroactively declared successful.
+
+The first hosted preview
+[42177564699](https://github.com/Apdelrahman1911/parlor/actions/runs/42177564699)
+failed test compilation before any process case ran. The test used the public
+`InstrumentationTestRunner.getArguments()` API, but the existing test-only
+compile classpath contained `android.test.base.jar`, not the separate SDK
+`android.test.runner.jar`. API36 stub inspection confirms the runner and getter
+are public; this is not a hidden API or missing production registration.
+Both platform stubs are now `compileOnly` in `androidInstrumentedTest`; neither
+enters a shipping/test APK or adds a Maven dependency. A new portable safeguard
+requires that scope and binds the Gradle configuration into process receipts.
+The corrected Gradle DSL evaluates successfully with JDK21 and strict verification;
+a separate SDK compile probe fails with the base stub alone and succeeds with
+both stubs. Neither probe is native test execution.
+Original compilation failure and successful upload-bound cleanup remain retained;
+corrected native execution and full qualification are still required.
 
 iOS positive protected persistence remains subject to #258's supported-volume
 and real keybag prerequisites. TalkBack/VoiceOver, physical lock/low-memory
