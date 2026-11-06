@@ -8,8 +8,13 @@ import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
@@ -22,6 +27,7 @@ import com.parlor.app.shell.game.MafiaGameShellBinding
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.app.shell.game.WordImpostorGameShellBinding
 import com.parlor.app.shell.playmode.PlayModePickerScreen
+import com.parlor.app.shell.fullTextLayout
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
@@ -36,6 +42,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.skia.Image
 import java.io.File
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 /** Render the shipping composables, not screenshot-only replicas or production-private state. */
 @OptIn(ExperimentalTestApi::class)
@@ -48,11 +55,14 @@ class HomeCatalogVisualEvidenceTest {
                     renderScreen(language, theme, fontScale, catalog = true)
                     renderScreen(language, theme, fontScale, catalog = false)
                 }
+                renderScreen(language, theme, 2f, catalog = true, width = 320)
             }
         }
     }
 
-    private fun renderScreen(language: AppLanguage, theme: ThemeMode, fontScale: Float, catalog: Boolean) = runComposeUiTest {
+    private fun renderScreen(
+        language: AppLanguage, theme: ThemeMode, fontScale: Float, catalog: Boolean, width: Int = 390,
+    ) = runComposeUiTest {
         val games = listOf(
             WhodunitGameShellBinding(WhodunitDefinition(Json.Default)),
             MafiaGameShellBinding(MafiaDefinition(Json.Default)),
@@ -65,7 +75,7 @@ class HomeCatalogVisualEvidenceTest {
             CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
                 ProvideAppLanguage(language) {
                     ParlorTheme(themeMode = theme, reducedMotion = true) {
-                        Box(Modifier.size(390.dp, 740.dp).testTag("shell-preview")) {
+                        Box(Modifier.size(width.dp, 740.dp).testTag("shell-preview")) {
                             if (catalog) {
                                 HomeScreen(games = games, onGameSelected = {})
                             } else {
@@ -83,14 +93,7 @@ class HomeCatalogVisualEvidenceTest {
         }
         onNodeWithTag("shell-preview").assertIsDisplayed()
         if (catalog && fontScale == 2f) {
-            // A real game action must be visible without scrolling past marketing copy.
-            onNodeWithContentDescription(
-                if (language == AppLanguage.Arabic) {
-                    "افتح من القاتل واختر طريقة اللعب."
-                } else {
-                    "Open Whodunit and pick how you want to play."
-                },
-            ).assertIsDisplayed()
+            assertFirstGameChoicesVisible(language)
         }
         // Public fixtures only. Stay below the existing **/build/reports/tests/
         // artifact glob, but outside desktopTest so Gradle's HTML writer cannot
@@ -100,11 +103,30 @@ class HomeCatalogVisualEvidenceTest {
             ?: "build/reports/tests/public-ux"
         if (!directory.isNullOrBlank()) {
             val screen = if (catalog) "home" else "setup"
-            val output = File(directory, "$screen-${language.tag}-${theme.tag}-$fontScale.png")
+            val sizeSuffix = if (width == 390) "" else "-${width}dp"
+            val output = File(directory, "$screen-${language.tag}-${theme.tag}-$fontScale$sizeSuffix.png")
             check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
             Image.makeFromBitmap(onNodeWithTag("shell-preview").captureToImage().asSkiaBitmap()).use { image ->
                 checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }
             }
+        }
+    }
+
+    private fun ComposeUiTest.assertFirstGameChoicesVisible(language: AppLanguage) {
+        val arabic = language == AppLanguage.Arabic
+        val description = if (arabic) "افتح من القاتل واختر طريقة اللعب."
+            else "Open Whodunit and pick how you want to play."
+        onNodeWithContentDescription(description).assertIsDisplayed()
+        val viewport = onNodeWithTag("shell-preview").getUnclippedBoundsInRoot()
+        val labels = if (arabic) listOf("6 لاعبين", "محلي + شبكة Wi-Fi نفسها", "افتح من القاتل")
+            else listOf("6 players", "Local + same Wi-Fi", "Open Whodunit")
+        for (label in labels) {
+            val node = onNode(hasText(label) and hasAnyAncestor(hasContentDescription(description)), useUnmergedTree = true)
+            node.assertIsDisplayed().fullTextLayout()
+            val bounds = node.getUnclippedBoundsInRoot()
+            assertTrue(bounds.top >= viewport.top && bounds.bottom <= viewport.bottom &&
+                bounds.left >= viewport.left && bounds.right <= viewport.right,
+                "Actual game requirements/action must be fully visible without scrolling: $label at $bounds in $viewport")
         }
     }
 }

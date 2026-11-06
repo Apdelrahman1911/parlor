@@ -83,6 +83,38 @@ game/shell/design renders in the source-bound uploaded ZIP, then inspect languag
 themes and large-text layouts. Structural selection is not a screenshot or native
 UI pass; preserving all existing rendering assertions remains mandatory.
 
+## Verified preview and a concrete Phase5 correction
+
+Frozen preview source `f47447e7` passed free Ubuntu
+[42146142306](https://github.com/Apdelrahman1911/parlor/actions/runs/42146142306):
+2,022 Desktop methods (three established LAN skips) and the seven native storage
+method signatures compiled. It uploaded **253 synthetic PNGs**, independently
+hash-bound to the executed source and successful owned cleanup. Artifact
+13471310005 SHA256:
+`69ecdde5d351489259bb5d99c4f0ccd1e1b64377482d1fe3a30364d73e81a5ee`.
+Preview admission receipt:
+`f6f52fefaab482bec4ec0d4a9613a523bacbfd3b86e979869ba6b44d608c4d93`.
+Neither the two later native Home tests nor subsequent visual changes are
+qualified by that earlier source. The preceding preview was cancelled for a
+known cleanup-CLI argument defect; it is not a successful run.
+
+Actual EN/AR light/dark catalog readback exposed a gap the old assertion missed:
+at 200% text, a fragment of the first clickable card was visible, but its device
+requirements and written Open action were below the viewport. The new shipping
+layout drops decorative introductory copy at the existing large-text breakpoint,
+retains meaningful section-heading semantics and stable restoration keys, and
+puts full-width player/device labels and Open ahead of the complete description.
+Titles use the full card width rather than competing with artwork; six registry
+motifs and normal-text layout remain. No text scale, contrast token, privacy rule
+or action gate is weakened. Shorter bilingual filter labels and reduced-motion
+guidance remove redundant wording and long settings-control explanations.
+
+The existing rendering test now additionally requires **unclipped, complete text
+layouts** for the first game's counts, device requirements and Open at 320dp and
+390dp, EN/AR and both themes, without scrolling. Four narrow-phone PNGs supplement
+the original sixteen Home/setup images. This is an incremental implemented
+usability improvement, not a claim of complete redesign or physical acceptance.
+
 ## Qualification status and remaining acceptance
 
 At preparation, eleven artifact-selection controls pass locally. Native compilation,
