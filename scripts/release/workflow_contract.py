@@ -377,9 +377,36 @@ def verify_hosted_linux_capacity(job: str) -> None:
         fail("Real capacity measurements must be retained in the existing verification upload")
 
 
+def verify_android_resume_process(job: str) -> None:
+    """Normal PR/main acceptance reuses APKs; no shortened qualification path."""
+    name = "Verify Android saved-session removal across process restart"
+    expected = '''        if: ''' + FULL_VERIFICATION_SCOPE + '''
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \\
+            --receipt build/ci-evidence/android-process-device-supervision.json \\
+            --isolated-avd -- \\
+            python3 -B -m scripts.android.run_resume_process_acceptance \\
+              --output build/ci-evidence/android-process-acceptance
+'''
+    if validation_step(job, name).strip("\n") != expected.strip("\n"):
+        fail("Android process acceptance requires the exact full-only owned runtime and retained receipts")
+    order = ("Run release Android managed-device smoke tests", "Stop Gradle after managed-device", name,
+             "Inspect unsigned Android release artifact and merged manifest",
+             "Upload verification reports, mappings, and unsigned AAB", "Clean only attested verification outputs")
+    positions = [job.index("- name: " + step + "\n") for step in order]
+    if positions != sorted(positions):
+        fail("Android process acceptance must reuse built APKs after managed runtime and before evidence upload")
+    upload = validation_step(job, order[-2])
+    if upload.count("            build/ci-evidence/\n") != 1:
+        fail("Android process acceptance logs and both runtime/cleanup receipts must remain uploaded")
+
+
 def verify_linux_process_probe(job: str) -> None:
     """Closed probe/managed-cleanup paths; full qualification keeps its complete gates."""
     verify_hosted_linux_capacity(job)
+    verify_android_resume_process(job)
     full = ("Install pinned Android SDK packages", "Record exact source and require a clean checkout",
             "Run common, desktop, Android, static-analysis, and release gates",
             "Run release Android managed-device smoke tests", "Inspect unsigned Android release artifact and merged manifest")
@@ -392,7 +419,7 @@ def verify_linux_process_probe(job: str) -> None:
     admission = "Validate Android cleanup source and controls"
     prerequisite = "Install Linux process-probe emulator package"
     expected = ["Check out source", "Set up JDK 21", "Reclaim unused standard Linux runner toolchains", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
-                full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
+                full[0], full[1], full[2], final[0], full[3], final[1], "Verify Android saved-session removal across process restart", full[4], *final[2:], *probe[1:]]
     if (re.findall(r"(?m)^      - name: (.*)$", job) != expected + ["Save dependencies from trusted main only"] or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [

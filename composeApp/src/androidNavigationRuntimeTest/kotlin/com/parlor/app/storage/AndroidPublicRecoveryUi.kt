@@ -33,6 +33,34 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         return (node != null).also { node?.recycle() }
     }
 
+    /** One known adjacent Home page, never a repeated click or event-dependent scroll loop. */
+    fun revealDescription(description: String, forward: Boolean = true) {
+        val action = if (forward) AccessibilityNodeInfo.ACTION_SCROLL_FORWARD
+            else AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD
+        // A deletion can remove the need/ability to scroll while Home is still
+        // settling. Keep observing the actual target; one early absent/disabled
+        // sample must not commit us to waiting only for a backward action.
+        val choice = awaitObservation {
+            androidRecoveryRevealObservation(
+                target = { findNode(resolveClickOwner = true) { it.contentDescription?.toString() == description } },
+                scroll = {
+                    findNode(resolveClickOwner = false) { node ->
+                        node.isScrollable && node.actionList.any { it.id == action }
+                    }
+                },
+            )
+        }
+        try {
+            if (!choice.needsScroll) return
+            check(choice.node.performAction(action)) { "Native Home scroll was rejected; no action will be repeated" }
+        } finally {
+            choice.node.recycle()
+        }
+        // UiAutomation is not guaranteed a Compose TYPE_VIEW_SCROLLED event.
+        // Observe the original exact target, with the same bounded assertion.
+        awaitDescription(description)
+    }
+
     fun awaitPoliteStatus(text: String) {
         awaitNode(resolveClickOwner = false) {
             it.text?.toString() == text && it.liveRegion == View.ACCESSIBILITY_LIVE_REGION_POLITE
@@ -46,10 +74,12 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
     private fun awaitNode(
         resolveClickOwner: Boolean,
         matchesExpected: (AccessibilityNodeInfo) -> Boolean,
-    ): AccessibilityNodeInfo {
+    ): AccessibilityNodeInfo = awaitObservation { findNode(resolveClickOwner, matchesExpected) }
+
+    private fun <T : Any> awaitObservation(observe: () -> T?): T {
         val deadline = SystemClock.uptimeMillis() + OBSERVATION_TIMEOUT_MILLIS
         do {
-            val node = findNode(resolveClickOwner, matchesExpected)
+            val node = observe()
             if (node != null) return node
             SystemClock.sleep(OBSERVATION_INTERVAL_MILLIS)
         } while (SystemClock.uptimeMillis() < deadline)
