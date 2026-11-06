@@ -41,8 +41,8 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         fun visit(node: AccessibilityNodeInfo, depth: Int) {
             check(++visited <= MAX_NODES && depth <= MAX_DEPTH) { "Native recovery tree exceeded observation bound" }
             if (node.packageName?.toString() == instrumentation.targetContext.packageName) {
-                check(!node.text.orEmpty().contains("SyntheticSeat") &&
-                    !node.contentDescription.orEmpty().contains("SyntheticSeat")) {
+                check(!node.text?.toString().orEmpty().contains("SyntheticSeat") &&
+                    !node.contentDescription?.toString().orEmpty().contains("SyntheticSeat")) {
                     "Home exposed synthetic gameplay state outside its metadata-only recovery UI"
                 }
                 if (node.isVisibleToUser && node.isEnabled && node.isClickable &&
