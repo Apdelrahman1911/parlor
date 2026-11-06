@@ -2,6 +2,7 @@ package com.parlor.app.storage
 
 import android.app.Instrumentation
 import android.os.SystemClock
+import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 
 /** Bounded observation only; an action is sent once and never retried on failure. */
@@ -22,19 +23,29 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
         awaitAction(description).recycle()
     }
 
-    private fun awaitAction(description: String): AccessibilityNodeInfo {
+    fun awaitPoliteStatus(text: String) {
+        awaitNode {
+            it.text?.toString() == text && it.liveRegion == View.ACCESSIBILITY_LIVE_REGION_POLITE
+        }.recycle()
+    }
+
+    private fun awaitAction(description: String): AccessibilityNodeInfo = awaitNode {
+        it.isClickable && it.contentDescription?.toString() == description
+    }
+
+    private fun awaitNode(matchesExpected: (AccessibilityNodeInfo) -> Boolean): AccessibilityNodeInfo {
         val deadline = SystemClock.uptimeMillis() + OBSERVATION_TIMEOUT_MILLIS
         do {
-            val node = findAction(description)
+            val node = findNode(matchesExpected)
             if (node != null) return node
             SystemClock.sleep(OBSERVATION_INTERVAL_MILLIS)
         } while (SystemClock.uptimeMillis() < deadline)
         // Never dump a native accessibility tree: even a public screen can
         // share a window with input methods or other platform-owned content.
-        error("Expected unique, visible, enabled native recovery action was not observed")
+        error("Expected unique, visible, enabled native recovery node was not observed")
     }
 
-    private fun findAction(description: String): AccessibilityNodeInfo? {
+    private fun findNode(matchesExpected: (AccessibilityNodeInfo) -> Boolean): AccessibilityNodeInfo? {
         val root = instrumentation.uiAutomation.rootInActiveWindow ?: return null
         val matches = mutableListOf<AccessibilityNodeInfo>()
         var visited = 0
@@ -45,9 +56,7 @@ internal class AndroidPublicRecoveryUi(private val instrumentation: Instrumentat
                     !node.contentDescription?.toString().orEmpty().contains("SyntheticSeat")) {
                     "Home exposed synthetic gameplay state outside its metadata-only recovery UI"
                 }
-                if (node.isVisibleToUser && node.isEnabled && node.isClickable &&
-                    node.contentDescription?.toString() == description
-                ) {
+                if (node.isVisibleToUser && node.isEnabled && matchesExpected(node)) {
                     matches += AccessibilityNodeInfo.obtain(node)
                 }
             }

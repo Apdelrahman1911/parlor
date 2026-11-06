@@ -4,25 +4,22 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.test.InstrumentationTestCase
-import com.parlor.core.ids.PlayerId
+import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyOk
 import com.parlor.core.result.Result
-import com.parlor.engine.session.SessionConfig
-import com.parlor.engine.snapshot.GameSnapshot
-import com.parlor.engine.state.Player
 import com.parlor.games.lastlight.LastLightDefinition
-import com.parlor.games.lastlight.LastLightIds
 import com.parlor.games.lastlight.snapshot.LastLightSnapshotRecovery
 import com.parlor.storage.secure.SecureStorage
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
+import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 import java.util.UUID
-import kotlin.time.Instant
+import java.io.File
 
 /**
  * The shipping Activity, Koin graph, Compose accessibility actions and native
@@ -36,7 +33,29 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
 
     fun testArabicCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = true)
 
-    private fun verifyJourney(arabic: Boolean) = runBlocking<Unit> {
+    fun testEnglishMafiaCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() =
+        verifyJourney(arabic = false, game = AndroidResumeGame.Mafia)
+
+    fun testArabicMafiaCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() =
+        verifyJourney(arabic = true, game = AndroidResumeGame.Mafia)
+
+    fun testEnglishWhodunitCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() =
+        verifyJourney(arabic = false, game = AndroidResumeGame.Whodunit)
+
+    fun testArabicWhodunitCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() =
+        verifyJourney(arabic = true, game = AndroidResumeGame.Whodunit)
+
+    fun testEnglishNativeDeletionFailureIsAccessibleAndKeepsBothSaves() =
+        verifyJourney(arabic = false, injectDeleteFailure = true)
+
+    fun testArabicNativeDeletionFailureIsAccessibleAndKeepsBothSaves() =
+        verifyJourney(arabic = true, injectDeleteFailure = true)
+
+    private fun verifyJourney(
+        arabic: Boolean,
+        game: AndroidResumeGame = AndroidResumeGame.LastLight,
+        injectDeleteFailure: Boolean = false,
+    ) = runBlocking<Unit> {
         val application = instrumentation.targetContext.applicationContext as Application
         val koin = application.getKoin()
         val store = koin.get<SnapshotStore>()
@@ -48,8 +67,9 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
         val previousLanguage = settings.languageOverride.first()
         val previousMotion = settings.reducedMotion.first()
         val id = UUID.randomUUID().toString()
-        val selected = legalSnapshot(SessionId("native-home-$id-1"))
-        val sibling = legalSnapshot(SessionId("native-home-$id-2"))
+        val repository = koin.get<CaseRepository>()
+        val selected = AndroidLegalResumeFixtures.create(game, SessionId("native-home-$id-1"), repository)
+        val sibling = AndroidLegalResumeFixtures.create(game, SessionId("native-home-$id-2"), repository)
         val credentialKey = "native-home-$id"
         assertEquals(Result.Success<ByteArray?>(null), secure.get(credentialKey))
         var activity: Activity? = null
@@ -59,28 +79,57 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
             assertEquals(EmptyOk, store.save(selected))
             assertEquals(EmptyOk, store.save(sibling))
             assertEquals(EmptyOk, secure.put(credentialKey, SYNTHETIC_CREDENTIAL))
-            assertTrue(LastLightSnapshotRecovery.load(store, LastLightDefinition(), selected.sessionId) is Result.Success)
+            if (game == AndroidResumeGame.LastLight) {
+                assertTrue(LastLightSnapshotRecovery.load(store, LastLightDefinition(), selected.sessionId) is Result.Success)
+            }
             val ui = AndroidPublicRecoveryUi(instrumentation)
             activity = launchHome()
-            ui.clickDescription(discardDescription(arabic, total = 2))
+            ui.clickDescription(discardDescription(arabic, game, total = 2))
             ui.clickDescription(if (arabic) "الاحتفاظ بالجلسة" else "Keep session")
-            ui.awaitDescription(discardDescription(arabic, total = 2))
+            ui.awaitDescription(discardDescription(arabic, game, total = 2))
             assertEquals(Result.Success(selected), store.load(selected.sessionId))
             assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
 
-            ui.clickDescription(discardDescription(arabic, total = 2))
+            if (injectDeleteFailure) {
+                val record = File(File(application.noBackupFilesDir, "snapshots"),
+                    selected.sessionId.raw + FileBackedSnapshotStore.SUFFIX)
+                AndroidSelectedSnapshotDeleteFault(record).use { fault ->
+                    fault.install()
+                    ui.clickDescription(discardDescription(arabic, game, total = 2))
+                    ui.clickDescription(if (arabic) "حذف" else "Remove")
+                    ui.awaitPoliteStatus(if (arabic) {
+                        "تعذّر حذف الجلسة. ربما تغيّرت أو تعذّر الوصول إلى التخزين. احتفظ بها وحدّث القائمة قبل المحاولة مجددًا."
+                    } else {
+                        "Could not remove this session. It may have changed or storage may be unavailable. " +
+                            "Keep it and refresh the list before trying again."
+                    })
+                    assertTrue(record.isDirectory)
+                    assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
+                    // Remove the injected fault explicitly. Never replay a failed
+                    // tap or increase a timeout to hide the observed error.
+                    fault.restore()
+                    assertEquals(Result.Success(selected), store.load(selected.sessionId))
+                    ui.clickDescription(if (arabic) "الاحتفاظ بالجلسة" else "Keep session")
+                    ui.awaitDescription(discardDescription(arabic, game, total = 2))
+                }
+            }
+
+            ui.clickDescription(discardDescription(arabic, game, total = 2))
             ui.clickDescription(if (arabic) "حذف" else "Remove")
             // The refreshed, enabled sibling action is the app's completion
             // signal, not a delay/repeated activation of the destructive action.
-            ui.awaitDescription(discardDescription(arabic, total = 1))
+            ui.awaitDescription(discardDescription(arabic, game, total = 1))
             assertEquals(Result.Failure(DataError.NotFound), store.load(selected.sessionId))
             assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
             finish(checkNotNull(activity))
             activity = null
             activity = launchHome()
-            ui.awaitDescription(discardDescription(arabic, total = 1))
+            ui.awaitDescription(discardDescription(arabic, game, total = 1))
             assertEquals(Result.Success(listOf(sibling.sessionId)), store.listUnfinished())
-            assertTrue(LastLightSnapshotRecovery.load(store, LastLightDefinition(), sibling.sessionId) is Result.Success)
+            assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
+            if (game == AndroidResumeGame.LastLight) {
+                assertTrue(LastLightSnapshotRecovery.load(store, LastLightDefinition(), sibling.sessionId) is Result.Success)
+            }
             val credential = secure.get(credentialKey)
             assertTrue(credential is Result.Success && credential.data?.contentEquals(SYNTHETIC_CREDENTIAL) == true)
             assertEquals(if (arabic) "ar" else "en", settings.languageOverride.first())
@@ -111,37 +160,13 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
         instrumentation.waitForIdleSync()
     }
 
-    private fun legalSnapshot(sessionId: SessionId): GameSnapshot {
-        val definition = LastLightDefinition()
-        val config = SessionConfig(
-            sessionId = sessionId,
-            caseId = LastLightIds.CaseId,
-            modeId = LastLightIds.StandardModeId,
-            players = List(definition.supportedPlayerCounts.first) { seat ->
-                Player(PlayerId("native-seat-$seat"), "SyntheticSeat$seat", seat)
-            },
-            randomSeed = SYNTHETIC_SEED,
-        )
-        val state = definition.createInitialState(config)
-        return GameSnapshot(
-            sessionId = sessionId,
-            gameId = definition.id,
-            engineVersion = LastLightSnapshotRecovery.VERSION,
-            createdAt = Instant.fromEpochMilliseconds(0),
-            phaseId = state.phase.id,
-            payload = definition.snapshotCodec().encode(state),
-            metadata = mapOf(LastLightSnapshotRecovery.PLAY_MODE_KEY to LastLightSnapshotRecovery.PASS_AND_PLAY_MODE),
-        )
-    }
-
-    private fun discardDescription(arabic: Boolean, total: Int): String = if (arabic) {
-        "حذف: استئناف لعبة الضوء الأخير المحلية، وهي اللعبة المحفوظة 1 من $total."
+    private fun discardDescription(arabic: Boolean, game: AndroidResumeGame, total: Int): String = if (arabic) {
+        "حذف: استئناف لعبة ${game.arabicTitle} المحلية، وهي اللعبة المحفوظة 1 من $total."
     } else {
-        "Remove: Resume Last Light local game, saved game 1 of $total."
+        "Remove: Resume ${game.englishTitle} local game, saved game 1 of $total."
     }
 
     private companion object {
-        const val SYNTHETIC_SEED = 7L
         val SYNTHETIC_CREDENTIAL = "synthetic unrelated native home credential".encodeToByteArray()
     }
 }
