@@ -77,17 +77,53 @@ def inspect_manifests(app_xml: str, test_xml: str, application_id: str) -> str:
 
 def case_journey(fixture: contract.Fixture, application_id: str, component: str, command, phase) -> dict:
     """Each action executes once. Only process observation is separate from it."""
-    prepared = phase(fixture, "prepare", component)
+    prepared = retired_phase(fixture, "prepare", application_id, component, command, phase)
     launch = command("shell", "am", "start", "-W", "-n", application_id + "/com.parlor.app.MainActivity")
     contract.require(re.findall(r"(?m)^Status: (\w+)$", launch) == ["ok"] and "Error" not in launch,
                      "Actual app did not launch between instrumentation phases")
-    pid = contract.live_pid(command("shell", "pidof", application_id))
+    pid = contract.observed_pid(command(*contract.pid_observation_command(application_id)))
+    contract.require(pid is not None, "Launched app is absent after instrumentation retirement; never retry launch")
     command("shell", "am", "force-stop", application_id)
-    absence = command("shell", f"pidof {application_id}; result=$?; "
-                      "printf '\\nPARLOR_PIDOF_EXIT=%s\\n' \"$result\"")
+    absence = command(*contract.pid_observation_command(application_id))
     contract.require_absent(absence)
-    verified = phase(fixture, "verify", component)
+    verified = retired_phase(fixture, "verify", application_id, component, command, phase)
     return contract.complete_case(fixture, prepared, verified, pid, absence)
+
+
+def retired_phase(fixture: contract.Fixture, method: str, application_id: str, component: str, command, phase) -> dict:
+    # am instrument -w waits for its result watcher, not process death. Android
+    # reports that result before its "finished inst" package force-stop. Do not
+    # let that teardown race a single normal launch or the next instrumentation.
+    # Retirement consumes the existing phase budget; no action/deadline retry.
+    deadline = time.monotonic() + PHASE_SECONDS
+    result = phase(fixture, method, component)
+    retirement = await_instrumentation_exit(command, application_id, result["pid"], deadline)
+    result = dict(result, instrumentation_retirement=retirement)
+    contract.require_retired_phase(result)
+    return result
+
+
+def await_instrumentation_exit(command, application_id: str, phase_pid: int, deadline: float) -> dict:
+    contract.live_pid(str(phase_pid))
+    arguments = contract.pid_observation_command(application_id)
+    started = time.monotonic()
+    observations = 0
+    while True:
+        remaining = deadline - time.monotonic()
+        contract.require(0 < remaining <= PHASE_SECONDS, "Instrumentation did not retire within its original phase budget")
+        contract.require(observations < contract.MAX_RETIREMENT_OBSERVATIONS,
+                         "Instrumentation retirement observation budget exhausted")
+        # A transport failure propagates. Only this exact process's continued
+        # existence permits another bounded observation, never another action.
+        pid = contract.observed_pid(command(*arguments, timeout=min(10, remaining)))
+        observations += 1
+        observed_at = time.monotonic()
+        contract.require(observed_at < deadline, "Instrumentation retirement exceeded its original phase budget")
+        if pid is None:
+            return {"result": "PASS", "pid": phase_pid, "observations": observations,
+                    "elapsed_seconds": observed_at - started}
+        contract.require(pid == phase_pid, "Unexpected replacement process during instrumentation retirement")
+        time.sleep(min(0.25, deadline - observed_at))
 
 
 @contextmanager
