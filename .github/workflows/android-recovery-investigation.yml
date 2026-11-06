@@ -1,4 +1,4 @@
-name: Android rendered-state recovery boundary (diagnostic only)
+name: Android handled-configuration boundary (diagnostic only)
 
 on:
   push:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   desktop-android:
-    name: Source-bound Android recovery and configuration investigation
+    name: Source-bound Android handled-configuration investigation
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -47,7 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$(git rev-parse HEAD^)" = c055f271eebc0204b39f77428fb366ae3a778edf
+          test "$(git rev-parse HEAD^)" = 958967178cbc08014d4e60e3697a8a40f7e668f9
           test -z "$(git status --porcelain)"
           python3 -B - <<'PY'
           import hashlib, json, os, pathlib, subprocess
@@ -71,7 +71,7 @@ jobs:
               run=int(os.environ['GITHUB_RUN_ID']), attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
               changed_files={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sorted(changed)},
               shipping_source_changed=False, main_or_release_or_security_qualified=False,
-              physical_verified=False, scope='Failure-boundary investigation, not protected qualification')
+              physical_verified=False, scope='Previously unexecuted configuration investigation only; completed process matrix is not replayed; not protected qualification')
           (out/'cold-recovery-source.json').write_text(json.dumps(receipt, indent=2)+'\n')
           PY
       - name: Install the pinned API34 diagnostic device
@@ -106,15 +106,7 @@ jobs:
         id: native_stop
         if: always()
         run: python3 -B scripts/ci/verification_hygiene.py stop cold-recovery-build
-      - name: Execute the original process matrix once with failure-only observation
-        if: ${{ !cancelled() && steps.native_build.outcome == 'success' && steps.native_stop.outcome == 'success' }}
-        run: |
-          set -euo pipefail
-          python3 -B scripts/android/supervise_managed_device.py \
-            --receipt build/ci-evidence/android-process-device-supervision.json --isolated-avd -- \
-            python3 -B -m scripts.android.run_resume_process_acceptance \
-              --output build/ci-evidence/android-process-acceptance
-      - name: Check real English and Arabic configuration transitions on another fresh device
+      - name: Check only the unexecuted English and Arabic configuration transitions
         if: ${{ !cancelled() && steps.native_build.outcome == 'success' && steps.native_stop.outcome == 'success' }}
         run: |
           set -euo pipefail
