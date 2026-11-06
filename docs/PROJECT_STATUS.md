@@ -33,6 +33,15 @@ Compose button's native description and action on the same node. Revision05
 resolves the exact label's nearest unique action owner, with five additional
 native boundary controls; it retains single actions and all outcome assertions.
 Strict local Detekt passes; hosted native/full-PR/main acceptance is pending.
+Corrected preview42165263589 then passed19/23: all owner/navigation/storage
+controls and all four English Home journeys. Arabic4 pass Cancel/deletion and
+storage assertions but fail only at the subsequent Activity-relaunch label.
+Single-method42167369595 isolates that later boundary without another full run,
+extra action, longer timeout or production change. Locale causality remains
+unproven; draft PR328 is not qualified or merged.
+That isolated method failed first at unsynchronized Koin startup (0.012s), not
+relaunch. The native fixture now joins Application's main-thread startup turn
+before resolving its graph; the original relaunch observation still must run.
 Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
 and complete names are retained. This scoped visual result is not native play.
 
