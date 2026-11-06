@@ -31,6 +31,15 @@ import java.io.File
  */
 @Suppress("DEPRECATION")
 class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
+    override fun setUp() {
+        super.setUp()
+        // The framework JUnit3 runner starts its test thread from onCreate,
+        // before ActivityThread calls Application.onCreate on the main thread.
+        // Join that startup turn before resolving the real application graph;
+        // do not rely on preceding tests, sleep, retry Koin, or replace modules.
+        instrumentation.waitForIdleSync()
+    }
+
     fun testEnglishCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = false)
 
     fun testArabicCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = true)
@@ -123,7 +132,10 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
             ui.awaitDescription(discardDescription(arabic, game, total = 1))
             assertEquals(Result.Failure(DataError.NotFound), store.load(selected.sessionId))
             assertEquals(Result.Success(sibling), store.load(sibling.sessionId))
-            finish(checkNotNull(activity))
+            val previousActivity = checkNotNull(activity)
+            finish(previousActivity)
+            val destroyedBeforeRelaunch = previousActivity.isDestroyed
+            val languageBeforeRelaunch = publicLanguage(Locale.getDefault().language)
             activity = null
             activity = launchHome()
             try {
@@ -143,6 +155,8 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
                         "defaultList=${publicLanguage(LocaleList.getDefault()[0].language)}, " +
                         "compose=${publicLanguage(androidx.compose.ui.text.intl.Locale.current.language)}, " +
                         "activity=${publicLanguage(relaunched.resources.configuration.locales[0].language)}, " +
+                        "oldDestroyed=$destroyedBeforeRelaunch/${previousActivity.isDestroyed}, " +
+                        "before=$languageBeforeRelaunch, " +
                         "focused=${relaunched.hasWindowFocus()}, destroyed=${relaunched.isDestroyed}"
                 }
                 throw AssertionError("Relaunch boundary: english=$englishPresent, arabic=$arabicPresent, " +

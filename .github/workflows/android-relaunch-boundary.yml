@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain)"
-          git checkout --detach dbe68f0b96301fe75bd85151d1fab50ef43ed942
+          git checkout --detach 3318a36e211b26291e4e17ff7dc6ae755027f359
           test -z "$(git status --porcelain)"
       - name: Set up JDK 21
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
@@ -83,7 +83,7 @@ jobs:
           import hashlib,json,pathlib,re,subprocess,xml.etree.ElementTree as ET
           root=pathlib.Path.cwd()
           head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          assert head=='dbe68f0b96301fe75bd85151d1fab50ef43ed942' and not subprocess.check_output(['git','status','--porcelain'])
+          assert head=='3318a36e211b26291e4e17ff7dc6ae755027f359' and not subprocess.check_output(['git','status','--porcelain'])
           sources=sorted((root/'composeApp/src/androidNavigationRuntimeTest/kotlin').rglob('*.kt'))
           expected=[]
           for source in sources:

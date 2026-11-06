@@ -181,6 +181,46 @@ Local strict-wrapper Detekt passes. A focused hosted native run must verify
 the correction before the next complete PR qualification; merge and distinct
 main verification remain pending.
 
+The corrected preview [42165263589](https://github.com/Apdelrahman1911/parlor/actions/runs/42165263589),
+at exact candidate `69b6ad17`, is terminal **FAILURE: 19 PASS / 4 FAIL**, with no
+errors or skips. All five owner controls, navigation3, storage7 and all four
+complete English Home journeys pass. Every Home method records actual compound
+label/action resolution. All four Arabic methods also pass Cancel, selected
+deletion, the refreshed sibling control and selected-absent/sibling-intact
+storage assertions. Their failure is **only after Activity finish/relaunch**,
+at line127, not the earlier post-deletion assertion at line121. A visible native
+root has no exact expected Arabic label. This does not yet establish which
+language it displays or whether application locale ownership or native
+observation is responsible.
+
+Both uploaded ZIPs, their SHA256/size/source bindings, actual23-method XML,
+per-method fixed markers and successful owned cleanup were independently
+inspected. Failure-intake SHA256:
+`3063869279b6d76d52c13b0ca5af63edf4b949ef0ca8f8bc9ce3c4f618dfe541`.
+The complete build log is the uploaded `_temp/parlor-android-recovery-preview.log`;
+the GitHub job-log API copy is truncated and cannot replace it.
+Single-method [42167369595](https://github.com/Apdelrahman1911/parlor/actions/runs/42167369595)
+observes that new relaunch boundary on failure only: fixed EN/AR label presence,
+storage/preference booleans and public locale categories. It retains the original
+assertion/action bounds and changes no production application code. Its result
+cannot qualify all23 methods or replace full PR/main acceptance.
+
+That isolated run terminated before reaching the relaunch probe: its sole
+method failed in **0.012s** resolving `SnapshotStore` from Koin. Source/artifact
+and owned-cleanup readback passed; failure-intake SHA256:
+`57a73d98494611641526007e0c18e836347db34e9a9eed8f9841863a56346c65`.
+The legacy framework runner starts its test thread in `onCreate`, before
+`ActivityThread` calls `Application.onCreate`. It does not join that main-thread
+startup turn before running a selected method. Koin publishes its context before
+the synchronous application module registration finishes; earlier tests had
+incidentally supplied startup time. This is a native-test precondition defect,
+not missing production storage registration or new locale evidence.
+The fixture now calls `instrumentation.waitForIdleSync()` in `setUp` before any
+application graph resolution. It neither sleeps nor retries Koin, starts a
+replacement graph, warms up the UI or changes a gameplay assertion deadline.
+The same isolated method must now reach its intended boundary. The original
+Arabic-relaunch cause remains unproven; no speculative locale patch is applied.
+
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.
 That scoped visual review can apply only while rendering inputs remain identical;
