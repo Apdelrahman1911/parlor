@@ -1,6 +1,7 @@
 package com.parlor.app.storage
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.test.InstrumentationTestCase
 import com.parlor.core.ids.PlayerId
@@ -36,8 +37,8 @@ class AndroidResumeUiRuntimeTest : InstrumentationTestCase() {
     fun testArabicCancelAndDiscardThroughNativeHomeSurviveActivityRelaunch() = verifyJourney(arabic = true)
 
     private fun verifyJourney(arabic: Boolean) = runBlocking<Unit> {
-        val context = instrumentation.targetContext
-        val koin = context.getKoin()
+        val application = instrumentation.targetContext.applicationContext as Application
+        val koin = application.getKoin()
         val store = koin.get<SnapshotStore>()
         val settings = koin.get<SettingsStore>()
         val secure = koin.get<SecureStorage>()
