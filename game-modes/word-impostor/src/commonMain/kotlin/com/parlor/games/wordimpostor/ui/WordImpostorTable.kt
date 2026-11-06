@@ -14,7 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,9 @@ import com.parlor.games.wordimpostor.resources.wi_host_controls
 import com.parlor.games.wordimpostor.resources.wi_impostor
 import com.parlor.games.wordimpostor.resources.wi_impostor_hint
 import com.parlor.games.wordimpostor.resources.wi_leave
+import com.parlor.games.wordimpostor.resources.wi_leave_compact
+import com.parlor.games.wordimpostor.resources.wi_help_compact
+import com.parlor.games.wordimpostor.resources.wi_close_help_compact
 import com.parlor.games.wordimpostor.resources.wi_open_vote
 import com.parlor.games.wordimpostor.resources.wi_ordinary
 import com.parlor.games.wordimpostor.resources.wi_pair
@@ -76,15 +81,21 @@ fun WordImpostorTable(
 ) {
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
     var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
+    val compact = LocalDensity.current.fontScale >= 1.5f
+    val leaveDescription = stringResource(Res.string.wi_leave)
+    val helpDescription = stringResource(if (help) Res.string.wi_close_help else Res.string.wi_help)
     InPlaceBackHandler(help) { help = false }
     WordFrame(modifier, "${state.phase.id}:${state.public.token}:$help:${state.public.questionIndex}") {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text(stringResource(Res.string.wi_leave), color = WordPeach)
+            TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)
+                .semantics { contentDescription = leaveDescription }) {
+                Text(if (compact) stringResource(Res.string.wi_leave_compact) else leaveDescription, color = WordPeach)
             }
-            TextButton(onClick = { help = !help }, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text(stringResource(if (help) Res.string.wi_close_help else Res.string.wi_help), color = WordPeach)
+            TextButton(onClick = { help = !help }, modifier = Modifier.heightIn(min = 48.dp)
+                .semantics { contentDescription = helpDescription }) {
+                Text(if (compact) stringResource(if (help) Res.string.wi_close_help_compact else Res.string.wi_help_compact)
+                    else helpDescription, color = WordPeach)
             }
         }
         WordBody(stringResource(Res.string.wi_round, state.public.round, state.public.settings.rounds))

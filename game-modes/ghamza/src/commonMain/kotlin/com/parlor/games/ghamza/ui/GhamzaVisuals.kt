@@ -49,6 +49,7 @@ internal val GhamzaText = Color(0xFFF0F7EF)
 internal fun GhamzaFrame(modifier: Modifier, resetKey: String, content: @Composable ColumnScope.() -> Unit) {
     // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
     val scroll = key(resetKey) { rememberScrollState() }
+    val compact = LocalDensity.current.fontScale >= 1.5f
     Box(modifier.fillMaxSize().background(Brush.verticalGradient(listOf(GhamzaInk, Color(0xFF133B3C), GhamzaInk))),
         contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.fillMaxSize().clearAndSetSemantics {}) {
@@ -56,7 +57,7 @@ internal fun GhamzaFrame(modifier: Modifier, resetKey: String, content: @Composa
             drawCircle(GhamzaMint.copy(alpha = .07f), size.width * .72f, Offset(size.width, size.height * .24f), style = Stroke(2f))
         }
         Column(Modifier.widthIn(max = 680.dp).fillMaxSize().verticalScroll(scroll)
-            .parlorSafeContentPadding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp), content = content)
+            .parlorSafeContentPadding(20.dp), verticalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 18.dp), content = content)
     }
 }
 

@@ -1,5 +1,74 @@
 # Project status — November 6, 2026
 
+## Latest independently accepted main
+
+PR328 is normally protected-merged as `6028009f`, tree
+`70b4cbe78dde95c1ea4519f60dbbda36f79c133a`. Fresh
+[PR42185129610](https://github.com/Apdelrahman1911/parlor/actions/runs/42185129610)
+and distinct automatic
+[main42193749434](https://github.com/Apdelrahman1911/parlor/actions/runs/42193749434)
+pass all eight producers and the optimized Apple Release join. Independent
+original XML/log/artifact/source/cleanup readback passes; main receipt SHA256:
+`a481e50621ba1ab7370a372979175154b39fbab57228afbee5a789ba778a5bb8`.
+
+Per Desktop host: 2,030 methods (2,027 pass; three established single-JVM LAN
+skips). Android: 763 methods per unit variant, 120 GitHub-test methods,
+27 API34 native / 3 optimized API35 native methods, and 12 actual process cases
+with 24 original native phases. iOS: 809 KMP Simulator / 42 Swift / 457 readiness
+methods pass. All 844 release and 73 worker controls pass. All 257 synthetic
+PNG files per Desktop host are retained and decoded; only explicitly recorded
+scoped original-image reviews are claimed, not manual inspection of every frame.
+
+#329 is resolved by exact locale-effect ownership, seven common regressions,
+actual EN/AR Activity relaunch journeys, protected merge and distinct main.
+The Android native storage/Home/process acceptance for #253 is integrated.
+The separate iOS keyboard-tutorial observer correction passes without longer
+waits, repeated input or weakened assertions; original native HID/service-startup
+causes in #267/#276 remain unresolved. Earlier failed runs remain failed.
+
+## Active Phase5 game-UI follow-up
+
+Four reproduced large-text layout defects are corrected in this focused branch:
+[Word Impostor voting](audits/2026-11-06-WORD-IMPOSTOR-LARGE-TEXT.md),
+[Ghamza initial/rematch reveal](audits/2026-11-06-GHAMZA-LARGE-TEXT-REVEAL.md),
+[Last Light initial hand](audits/2026-11-06-LASTLIGHT-FIRST-ACTION.md), and
+[Last Light Arabic exit title](audits/2026-11-06-LASTLIGHT-EXIT-TITLE.md).
+Full instructions, accessible descriptions, privacy, game rules and user font
+scaling remain. Existing before-scroll/whole-word assertions are strengthened.
+Scoped Word30 / Ghamza28 / combined Last Light204 module methods and Detekt
+pass; corrected EN/AR original images were inspected. These scoped results
+**do not yet qualify this whole follow-up**: fresh full PR checks/review,
+protected merge and distinct main remain required before acceptance.
+
+## Open acceptance and external prerequisites
+
+Of the twelve Issues at intake, #285/#308 are closed; ten remain open.
+The additional #329 is also closed. The
+[acceptance matrix](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md) maps each
+remaining requirement, including exact device scenarios; generic green CI
+cannot replace those criteria.
+
+- #182/#251/#252/#253/#259/#260 retain recorded native/physical accessibility,
+  cross-platform LAN, gameplay, recovery and energy requirements. Positive iOS
+  protected persistence also depends on #258.
+- #267/#276 retain the external [runner/platform boundary](https://github.com/actions/runner-images/issues/15252).
+  No supported deeper HID/keyboard-service correction is available; do not retry
+  unchanged probes or count a later passing run as causal resolution.
+- #258's held Complete candidate `c3406ec3` has six compiled iOS frontends, not
+  positive supported-volume/security qualification. Original strict **0 PASS /
+  6 FAIL**, supported-volume save/load/migration/recovery, applicable candidate
+  qualification/merge and physical lock/keybag acceptance remain unmet.
+- #230 still needs Store identity ownership, credentials/provisioning and
+  privacy/legal/release approvals. Store workflows stay disabled.
+
+Phase2 and #312's skills playbook are already complete; do not repeat them.
+Physical Phase4 remains owner-reserved and has not started here. No overall
+production, original input-cause, security, physical-device or Store completion
+is claimed.
+
+## Retained previous checkpoints — historical, not current certification
+
+
 ## Latest qualification and active correction
 
 PR328 remains draft/unmerged. Its full42177783654 iOS producer failed with

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
@@ -22,8 +23,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.localization.AppLanguage
@@ -157,6 +160,7 @@ class GameplayChromeTest {
         onNodeWithTag("game-card-0").assertDoesNotExist()
         assertEquals(0, exits, "Leave opens the guard, never exits directly")
         capture("$name-leave")
+        assertWholeExitTitle(language)
         onNodeWithTag("game-stay").bringIntoView().performClick()
         onNodeWithTag("game-reveal-hand").bringIntoView().assertIsEnabled()
         onNodeWithTag("game-card-0").assertDoesNotExist()
@@ -164,6 +168,21 @@ class GameplayChromeTest {
             runOnIdle { view = result }
             onAllNodes(hasTestTag("game-table-backdrop")).assertCountEquals(1)
             capture("$name-${result.phase}")
+        }
+    }
+
+    private fun ComposeUiTest.assertWholeExitTitle(language: AppLanguage) {
+        val title = if (language == AppLanguage.Arabic) "العودة إلى الصفحة الرئيسية؟" else "Return home?"
+        val layouts = mutableListOf<TextLayoutResult>()
+        onNodeWithText(title, useUnmergedTree = true).performSemanticsAction(SemanticsActions.GetTextLayoutResult) {
+            it(layouts)
+        }
+        val layout = layouts.single()
+        assertTrue(!layout.hasVisualOverflow, "Exit title must not clip or ellipsize")
+        assertEquals(title.length, layout.getLineEnd(layout.lineCount - 1), "Exit title must remain complete")
+        for (line in 0 until layout.lineCount - 1) {
+            val end = layout.getLineEnd(line, visibleEnd = true)
+            assertTrue(end == title.length || title[end].isWhitespace(), "Exit title splits a word: '$title' at $end")
         }
     }
 

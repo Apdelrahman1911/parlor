@@ -6,9 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.components.InPlaceBackOwner
@@ -19,6 +23,9 @@ import com.parlor.games.wordimpostor.domain.WordImpostorReducer
 import com.parlor.games.wordimpostor.domain.WordImpostorSettings
 import com.parlor.games.wordimpostor.domain.WordImpostorState
 import com.parlor.games.wordimpostor.domain.WordRole
+import com.parlor.games.wordimpostor.resources.Res
+import com.parlor.games.wordimpostor.resources.wi_phase_progress
+import com.parlor.games.wordimpostor.resources.wi_voting
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -58,7 +65,7 @@ class WordImpostorTableTest {
                 WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, true, 0, {}, {})
             }
         }
-        onNodeWithText("How to play").reachable().performClick()
+        onNodeWithContentDescription("How to play").reachable().performClick()
         onNodeWithText("Start in three steps").assertExists()
         onNodeWithText("Start in three steps", useUnmergedTree = true).assertFullText()
         onNodeWithText("Ordinary players share a secret word.", substring = true).assertDoesNotExist()
@@ -189,17 +196,28 @@ class WordImpostorTableTest {
         val choiceIds = state.hostOnly.choices.getValue(self)
         var choices = emptyList<String>()
         var word = ""
+        var phaseDescription = ""
         var epoch by mutableStateOf(0L)
         val back = InPlaceBackOwner()
         setContent {
             GameUiFrame(language, 320, 740, 2f, themeMode = themeMode, backOwner = back) {
                 choices = choiceIds.map { stringResource(WordContentResources.word(it)) }
                 word = stringResource(WordContentResources.word(wordId))
+                phaseDescription = stringResource(Res.string.wi_phase_progress, 4, stringResource(Res.string.wi_voting))
                 WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, host, true, epoch,
                     { state = reducer.apply(state, it) }, {})
             }
         }
         capturePublicGameFrame("voting-${language.tag}-${themeMode.name.lowercase()}-2.0")
+        // A usable choice, not only a heading or hint, must fit at 320dp/200%.
+        // No scroll, font cap or clipped text can satisfy this first-frame gate.
+        val firstCandidate = onNodeWithText(target.displayName)
+        firstCandidate.assertIsDisplayed().assertFullText()
+        val choice = firstCandidate.getUnclippedBoundsInRoot()
+        val viewport = onNodeWithTag("game-viewport").getUnclippedBoundsInRoot()
+        assertTrue(choice.top >= viewport.top && choice.bottom <= viewport.bottom &&
+            choice.left >= viewport.left && choice.right <= viewport.right && choice.bottom - choice.top >= 48.dp)
+        onNodeWithContentDescription(phaseDescription).assertExists()
         onNodeWithText(target.displayName).reachable().performClick()
         assertTrue(state.public.voted.isEmpty())
         runOnIdle { assertTrue(back.handleBack()) }

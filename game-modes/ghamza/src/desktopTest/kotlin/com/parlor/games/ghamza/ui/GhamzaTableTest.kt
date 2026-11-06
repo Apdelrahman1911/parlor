@@ -3,12 +3,17 @@ package com.parlor.games.ghamza.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.asBidiArgument
@@ -54,7 +59,7 @@ class GhamzaTableTest {
                 GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, false, true, 0, {}, {})
             }
         }
-        onNodeWithText("How to play").reachable().performClick()
+        onNodeWithContentDescription("How to play").reachable().performClick()
         onNodeWithText("Start in three steps").assertExists()
         onNodeWithText("Start in three steps", useUnmergedTree = true).assertFullText()
         onNodeWithText("Each round, one random player", substring = true).assertDoesNotExist()
@@ -105,6 +110,7 @@ class GhamzaTableTest {
         val reveal = if (arabic) "اكشف دوري" else "Reveal my role"
         val ready = if (arabic) "عرفت دوري · غطّيه" else "I know my role · cover it"
         onNodeWithText(role).assertDoesNotExist()
+        assertPrimaryControlInViewport(reveal)
         onNodeWithText(reveal).reachable().performClick()
         onNodeWithText(role).assertExists()
         runOnIdle { assertTrue(back.handleBack()) }
@@ -175,6 +181,19 @@ class GhamzaTableTest {
         assertEquals(GhamzaPhase.Reveal, state.phase)
         assertTrue(state.public.reports.values.all { it == 0 })
         capturePublicGameFrame("rematch-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
+        assertPrimaryControlInViewport(localized("Reveal my role", "اكشف دوري"))
         onNodeWithText(localized("Reveal my role", "اكشف دوري")).reachable().assertIsEnabled()
+    }
+
+    private fun ComposeUiTest.assertPrimaryControlInViewport(text: String) {
+        // The first reveal action must fit before scrolling on both initial
+        // roles and rematches; partial visibility is not an accessible target.
+        val button = onNodeWithText(text).assertIsDisplayed().assertIsEnabled()
+        onNodeWithText(text, useUnmergedTree = true).assertFullText()
+        val bounds = button.getUnclippedBoundsInRoot()
+        val viewport = onNodeWithTag("game-viewport").getUnclippedBoundsInRoot()
+        assertTrue(bounds.top >= viewport.top && bounds.bottom <= viewport.bottom &&
+            bounds.left >= viewport.left && bounds.right <= viewport.right && bounds.bottom - bounds.top >= 48.dp,
+            "Complete first role action must fit before scrolling: $bounds inside $viewport")
     }
 }
