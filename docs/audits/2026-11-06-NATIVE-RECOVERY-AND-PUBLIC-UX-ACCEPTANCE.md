@@ -1,5 +1,28 @@
 # Native recovery and public UX acceptance — November 6, 2026
 
+## Latest accepted result — protected merge and distinct main
+
+PR328 is normally protected-merged as `6028009f`, tree
+`70b4cbe78dde95c1ea4519f60dbbda36f79c133a`. Both fresh
+[PR42185129610](https://github.com/Apdelrahman1911/parlor/actions/runs/42185129610)
+and distinct [main42193749434](https://github.com/Apdelrahman1911/parlor/actions/runs/42193749434)
+pass all eight producers and the optimized Apple Release join. Main independent
+source/XML/artifact/cleanup receipt SHA256:
+`a481e50621ba1ab7370a372979175154b39fbab57228afbee5a789ba778a5bb8`.
+
+All original23 API34 native methods are retained in the current27-method suite;
+all27 pass, including all eight EN/AR Home journeys and seven actual encrypted
+storage methods. API35 Release3 and the separately documented12 process cases/
+24 original phases pass. Seven common locale-ownership regressions also pass.
+#329 is closed after complete acceptance. The257 PNGs per Desktop producer are
+retained/decoded; only the recorded representative original images, including
+Home and Last Light nameplates, were manually inspected.
+
+This does not close #253/#259's positive iOS persistence, physical accessibility,
+authenticated rejoin or subjective usability requirements. #258 and original
+iOS HID/keyboard-service causes remain open. Earlier failures and preparation
+statements below are retained as history, not the current qualification status.
+
 ## Remaining CI gaps, not new physical-device evidence
 
 The twelve-Issue audit identified two test/evidence gaps in #253 and #259.

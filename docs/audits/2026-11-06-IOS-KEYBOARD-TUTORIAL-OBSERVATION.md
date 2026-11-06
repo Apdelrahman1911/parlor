@@ -1,5 +1,23 @@
 # iOS keyboard-tutorial query correction — November 6, 2026
 
+## Latest accepted result — observer correction only
+
+PR328 is normally protected-merged as `6028009f`. Fresh
+[PR42185129610](https://github.com/Apdelrahman1911/parlor/actions/runs/42185129610)
+and distinct [main42193749434](https://github.com/Apdelrahman1911/parlor/actions/runs/42193749434)
+pass all42 Swift methods (original40 plus two coherent-selection controls),
+809 KMP Simulator methods and457 readiness methods, without native/readiness
+skips. All other required producers and the optimized Apple Release join pass.
+Complete independent main receipt SHA256:
+`a481e50621ba1ab7370a372979175154b39fbab57228afbee5a789ba778a5bb8`.
+
+The correction retains the existing deadlines, exact public values, native
+hittability and single input/action. It addresses the separately reproduced
+sequential tutorial-query observation boundary, **not** original cancelled HID
+delivery or keyboard-service startup delays. #267/#276 and upstream
+runner-images#15252 remain open. Failed42177783654 is still failed, not erased
+by this corrected run. Preparation statements below are historical checkpoints.
+
 ## Original failure and scope
 
 [PR328 run42177783654](https://github.com/Apdelrahman1911/parlor/actions/runs/42177783654)

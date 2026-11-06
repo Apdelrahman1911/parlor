@@ -1,5 +1,23 @@
 # Android saved-session deletion across process death
 
+## Latest accepted result — integrated into verified main
+
+The normal implementation is integrated through PR328 and protected merge
+`6028009f`, without its auxiliary preview workflow. Fresh full
+[PR42185129610](https://github.com/Apdelrahman1911/parlor/actions/runs/42185129610)
+and distinct [main42193749434](https://github.com/Apdelrahman1911/parlor/actions/runs/42193749434)
+pass all12 cases/24 original native phases and all other required producers/
+optimized Apple Release join. Independent actual-main process receipt SHA256:
+`4e6888c88487bfbc970b3a670dca472c1d675eae131eb92ed8b3b650df2925ab`.
+Complete main receipt: `a481e50621ba1ab7370a372979175154b39fbab57228afbee5a789ba778a5bb8`.
+
+Original logs attest distinct process nonces, explicit force-stop/PID absence,
+selected deletion and preserved unrelated encrypted storage. This is synthetic
+local/membership persistence acceptance, not authenticated multiplayer rejoin,
+in-game restoration, physical-device enforcement or positive iOS protection.
+Those #253/#258 gates remain open. Earlier failures and preparation checkpoints
+below are preserved; they are not newer-source qualification.
+
 ## Acceptance boundary — #253
 
 Activity recreation and reconstructing a storage adapter do not prove durable
