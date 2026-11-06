@@ -38,6 +38,35 @@ def paths(text: str, job: str) -> list[str]:
 
 
 class CurrentVerificationArtifactTest(unittest.TestCase):
+    def test_public_ux_render_default_is_collected_by_every_desktop_producer(self) -> None:
+        source = (workflow_contract.ROOT / "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/"
+                  "HomeCatalogVisualEvidenceTest.kt").read_text()
+        match = re.search(
+            r'System\.getProperty\("parlor\.ux\.screenshotDir"\)\s*'
+            r'\?: System\.getenv\("PARLOR_UI_SCREENSHOT_DIR"\)\s*\?: "([^"]+)"',
+            source,
+        )
+        self.assertIsNotNone(match, "Keep the reviewed public-fixture destination and local overrides")
+        directory = Path(match.group(1))
+        self.assertEqual(directory, Path("build/reports/tests/public-ux"))
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            screenshot = root / "composeApp" / directory / "home-ar-dark-2.0.png"
+            screenshot.parent.mkdir(parents=True)
+            screenshot.write_bytes(b"synthetic public selection fixture, not a rendered PNG")
+            for job in UPLOADS:
+                if not job.startswith("desktop-"):
+                    continue
+                selected = set()
+                for pattern in paths(workflow(), job):
+                    if pattern.startswith("!") or "${{" in pattern:
+                        continue
+                    for match in glob.glob(str(root / pattern), recursive=True):
+                        item = Path(match)
+                        selected.update(item.rglob("*") if item.is_dir() else [item])
+                with self.subTest(job=job):
+                    self.assertIn(screenshot, selected)
+
     def test_six_current_uploads_end_with_exact_historical_exclusions(self) -> None:
         for job in UPLOADS:
             with self.subTest(job=job):

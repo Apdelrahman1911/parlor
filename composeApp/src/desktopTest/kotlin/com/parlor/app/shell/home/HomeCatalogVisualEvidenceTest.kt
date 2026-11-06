@@ -92,11 +92,12 @@ class HomeCatalogVisualEvidenceTest {
                 },
             ).assertIsDisplayed()
         }
-        // Public fixtures only. Default reports are collected by the existing CI artifact
-        // glob; the environment override is inherited by Gradle's test worker.
+        // Public fixtures only. Stay below the existing **/build/reports/tests/
+        // artifact glob, but outside desktopTest so Gradle's HTML writer cannot
+        // replace the images. The environment override reaches the test worker.
         val directory = System.getProperty("parlor.ux.screenshotDir")
             ?: System.getenv("PARLOR_UI_SCREENSHOT_DIR")
-            ?: "build/reports/ux"
+            ?: "build/reports/tests/public-ux"
         if (!directory.isNullOrBlank()) {
             val screen = if (catalog) "home" else "setup"
             val output = File(directory, "$screen-${language.tag}-${theme.tag}-$fontScale.png")
