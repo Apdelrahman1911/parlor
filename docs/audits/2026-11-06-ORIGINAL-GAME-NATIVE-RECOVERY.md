@@ -1,11 +1,12 @@
-# Original-game native recovery acceptance follow-up
+# Original-game native recovery acceptance
 
 ## Scope and status
 
-**Prepared, not compiled/runtime-qualified or merged.** This focused #253 follow-up
-extends PR328's real Android Home journey to the other two originally reported
-games and to actual native deletion failure. It changes no shipping implementation,
-dependencies, workflow, waits or optimized Release checks.
+**Prepared, not compiled/runtime-qualified or merged.** Included in still-draft
+PR328, this focused #253 work extends its real Android Home journey to the other
+two originally reported games and to actual native deletion failure. It introduces
+no additional shipping implementation, dependency, workflow, wait or optimized
+Release change. Consolidation avoids a separate duplicate qualification cycle.
 
 ## Real fixtures and journeys
 
@@ -37,9 +38,9 @@ optimized Release remains3. These counts are requirements, not execution evidenc
 ## Qualification and remaining limits
 
 Require fresh compilation/static gates, all18 actual native method identities,
-the unchanged3 Release methods and full protected-PR qualification. Publish only
-after the underlying PR328 correction is independently accepted; review, normal
-protected merge and distinct main verification remain mandatory.
+the unchanged3 Release methods and full PR328 qualification. Source review,
+normal protected merge and distinct main verification remain mandatory. Failed
+earlier PR328 revisions are retained as failures, not acceptance evidence.
 
 Native accessibility export is not TalkBack speech/gesture testing. Activity
 relaunch and adapter readback are not OS process-death acceptance. These are

@@ -38,18 +38,20 @@ deletes only those records; it never clears application data or shared Keystore
 aliases. All payloads are synthetic. Envelope tests do not claim legal gameplay,
 actual OS process termination, screen-reader operation or physical key protection.
 
-Two further `AndroidResumeUiRuntimeTest` methods use the shipping `MainActivity`,
+Eight `AndroidResumeUiRuntimeTest` methods use the shipping `MainActivity`,
 unchanged Koin graph and actual native accessibility actions in English/Arabic.
-They seed two valid, recoverable Last Light games, cancel then confirm selected
-deletion, relaunch the Activity, and verify the surviving game, independent
-credential and language. The native tree is bounded and never logged; gameplay
-fixture names must not appear on Home. Each action is sent once, without input
-retries or fake UI routes. Only exclusively named fixture records are removed;
-an existing nonempty inventory fails the precondition instead of being cleared.
-This exercises an actual app/Compose/storage journey, **not OS process death,
-physical taps, TalkBack itself or all three games' legal resume journeys**.
-The API34 lane now expects twelve methods: the three existing navigation methods,
-seven storage methods and two native Home journeys. Release remains three.
+Six cover cancellation, selected deletion and Activity relaunch with legal
+Last Light, Mafia and Whodunit fixtures; two require actual native deletion-failure
+feedback and its polite live-region property. They verify the surviving game,
+independent credential and language. [Fixture and fault details](2026-11-06-ORIGINAL-GAME-NATIVE-RECOVERY.md)
+distinguish reducer-created state from the storage-only envelopes above.
+The native tree is bounded and never logged; gameplay fixture names must not
+appear on Home. Each action is sent once, without input retries or fake UI routes.
+Only exclusively named fixture records are removed; an existing nonempty
+inventory fails the precondition instead of being cleared. These are actual
+app/Compose/storage **Home deletion** journeys, not OS process death, complete
+in-game resume, physical taps or TalkBack execution. The API34 lane expects
+eighteen methods: navigation3, storage7 and Home8. Release remains three.
 
 ```bash
 ./gradlew productionAndroidNavigationRuntimeCheck \
@@ -94,7 +96,7 @@ hash-bound to the executed source and successful owned cleanup. Artifact
 `69ecdde5d351489259bb5d99c4f0ccd1e1b64377482d1fe3a30364d73e81a5ee`.
 Preview admission receipt:
 `f6f52fefaab482bec4ec0d4a9613a523bacbfd3b86e979869ba6b44d608c4d93`.
-Neither the two later native Home tests nor subsequent visual changes are
+Neither the later native Home tests nor subsequent visual changes are
 qualified by that earlier source. The preceding preview was cancelled for a
 known cleanup-CLI argument defect; it is not a successful run.
 
@@ -120,6 +122,20 @@ usability improvement, not a claim of complete redesign or physical acceptance.
 At preparation, eleven artifact-selection controls pass locally. Native compilation,
 API34 execution, retained-PNG inspection, full protected PR qualification, normal
 merge and distinct main verification are **pending**, tracked on #253/#259.
+
+Draft PR328 revision01 stopped at a native-test compilation error: Koin's
+`getKoin()` receiver requires `Application`/`ComponentCallbacks`, not the generic
+`Context` type. Revision02 corrected that receiver but stopped earlier at stale
+mechanical review metadata; its inventory had been generated before the source
+commit it must reference. Neither run qualifies native acceptance. Revision03
+consolidates the prepared eight Home methods and regenerates the inventory only
+after source/document commits, then checks it again on the final committed HEAD.
+No inventory gate, runtime assertion, timeout or action is weakened.
+
+Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
+themes) were inspected: complete requirements/Open remain inside the viewport.
+That scoped visual review can apply only while rendering inputs remain identical;
+the final source still needs its own successful tests and uploaded-image readback.
 
 Existing iOS native discard/path/error/backup-order controls are retained rather
 than duplicated. Positive protected iOS persistence is still gated by #258's

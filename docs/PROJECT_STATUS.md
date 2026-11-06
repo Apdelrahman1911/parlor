@@ -22,7 +22,8 @@ corrections are prepared separately for #253/#259. Actual earlier preview
 readback found a 200%-text catalog defect: first-game requirements/Open were
 offscreen. The new adaptive layout prioritizes those choices and strengthens
 320/390dp EN/AR assertions without shrinking text. These later changes and the
-two native Home journeys still require fresh full/protected/main qualification;
+eight native Home methods (six legal-game journeys and two actual deletion-error
+live-region checks) still require fresh full/protected/main qualification;
 preview success does not qualify them or complete the broad UX/device gates.
 
 Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
