@@ -51,7 +51,8 @@ Only exclusively named fixture records are removed; an existing nonempty
 inventory fails the precondition instead of being cleared. These are actual
 app/Compose/storage **Home deletion** journeys, not OS process death, complete
 in-game resume, physical taps or TalkBack execution. The API34 lane expects
-eighteen methods: navigation3, storage7 and Home8. Release remains three.
+twenty-three methods: navigation3, storage7, Home8 and five native
+label/action-owner controls. Release remains three.
 
 ```bash
 ./gradlew productionAndroidNavigationRuntimeCheck \
@@ -151,6 +152,34 @@ replaces the four expressions with `ORIGINAL_GAME_PLAYERS`; focused JDK21/wrappe
 and the unchanged policy. Source/docs are again committed before regenerating
 the inventory and checking the final commit. No inventory gate, lint rule,
 runtime assertion, timeout or action is weakened.
+
+Revision04 [42159600926](https://github.com/Apdelrahman1911/parlor/actions/runs/42159600926)
+passed Release3 and API34 navigation3/storage7, but all eight Home journeys
+failed **before their first Remove action**. No deletion or dialog action was
+sent. Source-bound failure receipt SHA256:
+`9bce376845601e5f0420d850ee34d5e32a23b135f89d6af6b798dbdd3af88517`.
+Both owned process cleanups passed; the failed API34 AVD was correctly retained.
+This is neither the old GPU failure nor evidence of a storage deletion defect.
+
+Review found a concrete adapter/Compose contract mismatch. The uploaded AAB's
+`META-INF/androidx.compose.ui_ui.version` identifies AndroidX UI **1.10.5**.
+Its published `SemanticsNode.emitFakeNodes` puts a merged button's description
+on a non-clickable child. `AndroidComposeViewAccessibilityDelegateCompat`
+omits that description from the clickable parent (lines704–714), while mapping
+`OnClick` only on the owner (lines790–805). The old test required an exact
+description **and** clickability on the same node. No original native tree was
+captured, so source evidence does not establish every transient window state.
+
+Revision05 resolves an exact, visible, enabled label to its nearest native
+click-action owner, then still requires one unique action and sends it once.
+It cannot select a sibling or climb through a disabled, hidden or foreign
+action. Five native node controls cover these boundaries. Fixed public-only
+logging records actual compound-node resolution; failure evidence contains
+only counts, never arbitrary labels or trees. There is no production UI change,
+retry, scrolling workaround, longer timeout or relaxed outcome assertion.
+Local strict-wrapper Detekt passes. A focused hosted native run must verify
+the correction before the next complete PR qualification; merge and distinct
+main verification remain pending.
 
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.

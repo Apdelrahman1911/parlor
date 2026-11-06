@@ -32,7 +32,9 @@ by fault repair, not an automatic retry hiding an unexpected action failure.
 
 Observation remains bounded; actions are sent once and native trees are never
 logged. The fixture does not clear app data, shared keys or other saves. Expected
-API34 roster: navigation3 + native storage7 + Home8 = **18 methods**. API35
+API34 roster: navigation3 + native storage7 + Home8 + label/action-owner5 =
+**23 methods**. The five controls cover the native observation adapter, not
+additional game journeys. API35
 optimized Release remains3. These counts are requirements, not execution evidence.
 
 ## Qualification and remaining limits

@@ -27,11 +27,14 @@ offscreen. The new adaptive layout prioritizes those choices and strengthens
 eight native Home methods (six legal-game journeys and two actual deletion-error
 live-region checks) still require fresh full/protected/main qualification;
 preview success does not qualify them or complete the broad UX/device gates.
-PR328 revision03 failed before native execution on four Detekt magic-number
-findings. Revision04 uses one named roster-size constant; both affected module
-Detekt tasks pass locally without suppressions. The same revision incorporates
-the prepared Last Light wrapped-nameplate insets and stronger EN/AR spacing
-assertions. Fresh rendering/native/full-PR/main acceptance remains required.
+PR328 revision04 passed Release3 and actual API34 navigation3/storage7, but
+Home8 failed at the first control lookup. The test incorrectly required a
+Compose button's native description and action on the same node. Revision05
+resolves the exact label's nearest unique action owner, with five additional
+native boundary controls; it retains single actions and all outcome assertions.
+Strict local Detekt passes; hosted native/full-PR/main acceptance is pending.
+Last Light's fresh EN/AR wrapped-nameplate images were also inspected: insets
+and complete names are retained. This scoped visual result is not native play.
 
 Phase2 remains complete. Original native HID/keyboard-service causes in #267/#276
 remain open/upstream. #258's reconciled held Complete candidate `c3406ec3` compiles
