@@ -243,10 +243,12 @@ separate concrete ownership defect. The prepared correction uses an exact
 per-effect acquisition and rewires a removed predecessor's restoration target
 only when its successor captured that predecessor's value. Older disposal
 cannot overwrite a live successor; independent platform changes are preserved.
-System mode also acquires the complete configured locale list. Restoring with
-`LocaleList.setDefault(list, index)` preserves both defaults and a nonzero
-original default index. No shared Resources object is mutated, no navigation
-content is re-keyed, and iOS/Desktop providers remain unchanged.
+System mode also acquires the complete configured locale list. Capture uses
+`LocaleList.getAdjustedDefault()`: the selected default first, with every
+remaining preferred locale retained. The public one-argument
+`LocaleList.setDefault(list)` restores that effective priority and JVM default.
+No shared Resources object is mutated, no navigation content is re-keyed, and
+iOS/Desktop providers remain unchanged.
 
 Seven common ownership tests pass with JDK21, the wrapper and strict dependency
 verification: same-Arabic overlap, reverse/middle disposal, later/captured
@@ -257,6 +259,24 @@ full protected PR/main qualification**. Other independent framework-reset risks
 are not ruled out by source reasoning. The existing23 native methods retain
 their exact actions, deadlines, cancellation/deletion and surviving-state
 assertions; no retry or weaker language lookup is added.
+
+The next preview's inventory passed, but its temporary harness had copied a
+pre-correction62-character checksum literal and stopped before native execution
+([42172369603](https://github.com/Apdelrahman1911/parlor/actions/runs/42172369603)).
+The actual instructions remained unchanged; the exact previously verified
+64-character digest was restored. Subsequent
+[42172856383](https://github.com/Apdelrahman1911/parlor/actions/runs/42172856383)
+then found an Android compilation error, not a failing native journey: the
+two-argument locale setter is `@hide` and absent from the public API36 SDK.
+The adapter now uses only the public adjusted-list getter and one-argument
+setter above. This preserves the effective selected locale/all preferences,
+not Android's inaccessible internal nonzero-index representation. Both original
+failures remain failures; neither executed or qualified the corrected app.
+The public-SDK module compilation and both focused Detekt tasks pass locally
+with JDK21/strict verification. A broader local test-APK preflight was killed
+by the host's kernel OOM killer (PID31177, November6 06:24:44 UTC), after the
+changed module compiled; it is not a successful application/test-APK build.
+Hosted native compilation and all23 methods remain required.
 
 Eight actual large-text Home renders from revision01 (EN/AR, 320/390dp, both
 themes) were inspected: complete requirements/Open remain inside the viewport.

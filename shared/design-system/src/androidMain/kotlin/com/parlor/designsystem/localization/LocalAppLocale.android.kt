@@ -35,10 +35,7 @@ internal actual fun PlatformAppLocale(
         languageTag?.let(Locale::forLanguageTag) ?: systemLocale
     }
     val requestedDefaults = remember(languageTag, requestedLocale, systemLocales) {
-        AndroidLocaleDefaults(
-            locale = requestedLocale,
-            locales = if (languageTag == null) systemLocales else LocaleList(requestedLocale),
-        )
+        if (languageTag == null) systemLocales else LocaleList(requestedLocale)
     }
     var appliedLanguageTag by remember {
         mutableStateOf<String?>(null)
@@ -73,17 +70,15 @@ internal actual fun PlatformAppLocale(
     }
 }
 
-private data class AndroidLocaleDefaults(val locale: Locale, val locales: LocaleList)
-
 // Only Compose's UI-thread effect acquire/release invokes these ports. The
 // registry itself performs no platform mutation when this file initializes.
 private val androidLocaleOverrides = ScopedLocaleOverrides(
-    read = { AndroidLocaleDefaults(Locale.getDefault(), LocaleList.getDefault()) },
-    write = { defaults: AndroidLocaleDefaults ->
-        val index = defaults.locales.indexOf(defaults.locale)
-        check(index >= 0) { "The default locale must belong to its captured list" }
-        // setDefault(list, index) updates BOTH Locale.getDefault() and the full
-        // ordered LocaleList, preserving an original nonzero default index.
-        LocaleList.setDefault(defaults.locales, index)
+    // Capture the effective priority: selected Locale first, all remaining
+    // preferences retained. The nonzero-index setter is a hidden system API,
+    // not available to applications; do not use reflection or discard locales.
+    read = { LocaleList.getAdjustedDefault() },
+    write = { defaults: LocaleList ->
+        // The public setter also restores Locale.getDefault() to the first item.
+        LocaleList.setDefault(defaults)
     },
 )
