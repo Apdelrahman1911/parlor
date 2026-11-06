@@ -216,7 +216,7 @@ class WordImpostorTableTest {
         val choice = firstCandidate.getUnclippedBoundsInRoot()
         val viewport = onNodeWithTag("game-viewport").getUnclippedBoundsInRoot()
         assertTrue(choice.top >= viewport.top && choice.bottom <= viewport.bottom &&
-            choice.left >= viewport.left && choice.right <= viewport.right && choice.height >= 48.dp)
+            choice.left >= viewport.left && choice.right <= viewport.right && choice.bottom - choice.top >= 48.dp)
         onNodeWithContentDescription(phaseDescription).assertExists()
         onNodeWithText(target.displayName).reachable().performClick()
         assertTrue(state.public.voted.isEmpty())
