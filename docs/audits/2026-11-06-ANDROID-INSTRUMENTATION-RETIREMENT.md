@@ -1,5 +1,11 @@
 # Android instrumentation retirement — November 6, 2026
 
+PR336 run42314073678 later fails the separate Arabic handled-rotation method
+before process acceptance starts. The retirement implementation below is
+preserved but not freshly native-qualified by that failed run. See the
+[locale resource-authority follow-up](2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md)
+for the additional shipping correction and its distinct evidence boundaries.
+
 ## Confirmed boundary and limits
 
 [Issue335](https://github.com/Apdelrahman1911/parlor/issues/335) tracks a

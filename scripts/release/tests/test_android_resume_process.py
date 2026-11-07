@@ -305,16 +305,25 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertIn("ui.awaitHeading(heading)", source)
         self.assertIn('verifyOrientation("en")', source)
         self.assertIn('verifyOrientation("ar")', source)
+        self.assertIn("verifyOrientation(null)", source)
         self.assertIn("settings.setLanguageOverride(previousLanguage)", source)
         self.assertIn("ORIENTATION_TIMEOUT_MILLIS = 10_000L", source)
         self.assertIn("ORIENTATION_INTERVAL_MILLIS = 100L", source)
+        self.assertEqual(source.count("assertLocaleAuthority(application, language)"), 2)
+        self.assertIn("assertEquals(expectedLanguage, application.resources.configuration.locales[0].language)", source)
+        self.assertIn("assertEquals(expectedLanguage, Locale.getDefault().language)", source)
+        self.assertIn("if (language == null) assertSame(platformResources, application.resources)", source)
+        self.assertIn("assertEquals(systemLocales, application.baseContext.resources.configuration.locales)", source)
         for forbidden in ("Locale.setDefault", "LocaleList.setDefault", "setContent(", "notifyActive", "recreate("):
             self.assertNotIn(forbidden, source)
 
     def test_process_receipt_binds_the_production_locale_owner_and_configuration_adapter(self):
         for path in (
             "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+            "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocaleAwareApplication.kt",
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocaleDefaults.kt",
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ScopedLocaleOverrides.kt",
+            "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
         ):
             self.assertIn(path, driver.SOURCE_PATHS)
             self.assertTrue((driver.ROOT / path).is_file())

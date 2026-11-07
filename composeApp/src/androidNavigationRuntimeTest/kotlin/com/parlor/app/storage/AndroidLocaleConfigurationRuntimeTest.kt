@@ -30,7 +30,9 @@ class AndroidLocaleConfigurationRuntimeTest : InstrumentationTestCase() {
 
     fun testArabicSettingsSurviveHandledOrientationChange() = verifyOrientation("ar")
 
-    private fun verifyOrientation(language: String) = runBlocking<Unit> {
+    fun testSystemSettingsSurviveHandledOrientationChange() = verifyOrientation(null)
+
+    private fun verifyOrientation(language: String?) = runBlocking<Unit> {
         val application = instrumentation.targetContext.applicationContext as Application
         check(application.packageName.endsWith(".debug"))
         val settings = application.getKoin().get<SettingsStore>()
@@ -40,6 +42,7 @@ class AndroidLocaleConfigurationRuntimeTest : InstrumentationTestCase() {
         try {
             settings.setLanguageOverride(language)
             settings.setReducedMotion(true)
+            val uiLanguage = language ?: application.baseContext.resources.configuration.locales[0].language
             val launched = instrumentation.startActivitySync(
                 Intent(Intent.ACTION_MAIN)
                     .setClassName(application.packageName, "com.parlor.app.MainActivity")
@@ -49,9 +52,13 @@ class AndroidLocaleConfigurationRuntimeTest : InstrumentationTestCase() {
             instrumentation.waitForIdleSync()
             val evidence = AndroidRecoveryFailureEvidence(instrumentation, launched, AndroidRecoveryPublicLabels())
             val ui = AndroidPublicRecoveryUi(instrumentation, evidence::capture)
-            ui.clickDescription(if (language == "ar") "افتح الإعدادات." else "Open settings.")
-            val heading = if (language == "ar") "الإعدادات" else "Settings"
+            ui.clickDescription(if (uiLanguage == "ar") "افتح الإعدادات." else "Open settings.")
+            val heading = if (uiLanguage == "ar") "الإعدادات" else "Settings"
             ui.awaitHeading(heading)
+            // Framework resets read the Application, not Compose's LocalContext.
+            // This must already be correct, before any configuration callback.
+            assertLocaleAuthority(application, language)
+            val systemLocales = application.baseContext.resources.configuration.locales
             val initial = orientation(launched)
             check(initial == Configuration.ORIENTATION_PORTRAIT || initial == Configuration.ORIENTATION_LANDSCAPE)
             val target = if (initial == Configuration.ORIENTATION_PORTRAIT) {
@@ -76,13 +83,15 @@ class AndroidLocaleConfigurationRuntimeTest : InstrumentationTestCase() {
             assertEquals(language, settings.languageOverride.first())
             try {
                 ui.awaitHeading(heading)
+                assertLocaleAuthority(application, language)
+                assertEquals(systemLocales, application.baseContext.resources.configuration.locales)
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (failure: IllegalStateException) {
                 val english = ui.headingPresentNow("Settings")
                 val arabic = ui.headingPresentNow("الإعدادات")
                 var processLanguageMatches = false
-                instrumentation.runOnMainSync { processLanguageMatches = Locale.getDefault().language == language }
+                instrumentation.runOnMainSync { processLanguageMatches = Locale.getDefault().language == uiLanguage }
                 throw AssertionError("Handled configuration: english=$english, arabic=$arabic, " +
                     "processLanguageMatches=$processLanguageMatches, activityDestroyed=${launched.isDestroyed}", failure)
             }
@@ -96,6 +105,16 @@ class AndroidLocaleConfigurationRuntimeTest : InstrumentationTestCase() {
                 settings.setLanguageOverride(previousLanguage)
                 settings.setReducedMotion(previousMotion)
             }
+        }
+    }
+
+    private fun assertLocaleAuthority(application: Application, language: String?) {
+        instrumentation.runOnMainSync {
+            val platformResources = application.baseContext.resources
+            val expectedLanguage = language ?: platformResources.configuration.locales[0].language
+            assertEquals(expectedLanguage, application.resources.configuration.locales[0].language)
+            assertEquals(expectedLanguage, Locale.getDefault().language)
+            if (language == null) assertSame(platformResources, application.resources)
         }
     }
 

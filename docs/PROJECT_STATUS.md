@@ -1,6 +1,23 @@
-# Project status — November 6, 2026
+# Project status — November 7, 2026
 
-## Current execution — Android instrumentation retirement correction
+## Current execution — recurring Android locale reset
+
+[PR336 run42314073678](https://github.com/Apdelrahman1911/parlor/actions/runs/42314073678)
+fails the actual Arabic handled-rotation method:32/33 API34 methods and3/3
+optimized API35 methods pass, but the same Activity renders English after
+rotation. Process-retirement acceptance does not start. Earlier passing Android
+samples do not establish that the callback-only #332 correction is permanent.
+
+The [application-resource authority correction](audits/2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md)
+supplies Android's callback-free process-locale resets with an exact-owner,
+locale-only configuration context. System/default-list restoration, no shared
+Resources mutation, one-rotation native assertions and privacy remain required.
+This authored correction and #335's preserved retirement work require fresh
+protected PR and distinct-main qualification. No issue closes or release hold
+lifts at this checkpoint. Issue332/335 and PR336 retain live terminal evidence;
+the following entries preserve their own earlier source/result boundaries.
+
+## Previous execution — Android instrumentation retirement correction
 
 PR334 passed complete source-specific protected qualification
 [42298070702](https://github.com/Apdelrahman1911/parlor/actions/runs/42298070702)

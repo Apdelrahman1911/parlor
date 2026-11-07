@@ -34,7 +34,10 @@ ANDROID = "{http://schemas.android.com/apk/res/android}"
 SOURCE_PATHS = (
     "composeApp/build.gradle.kts",
     "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+    "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocaleAwareApplication.kt",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocaleDefaults.kt",
     "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ScopedLocaleOverrides.kt",
+    "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
     "scripts/android/run_resume_process_acceptance.py",
     "scripts/android/resume_process_contract.py",
     "composeApp/src/androidNavigationRuntimeTest/kotlin/com/parlor/app/storage/AndroidResumeProcessPhases.kt",
