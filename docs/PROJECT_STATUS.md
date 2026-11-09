@@ -1,6 +1,45 @@
-# Project status — November 7, 2026
+# Project status — November 9, 2026
 
-## Current execution — recurring Android locale reset
+## Active solo issue-resolution goal
+
+The [ordered twelve-Issue queue](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md#november-9-execution-queue)
+records actionable work and deferred native/platform, security-volume, physical
+and owner-account prerequisites. Each issue follows understand/research,
+implement, verify; slow or repeatedly unsuccessful work moves to the end for a
+later evidence-based revisit. No subagents, unchanged probe retries, weakened
+acceptance, owner-reserved device work or release-hold changes are authorized.
+
+## Current execution — PID shell framing correction
+
+The November 7 focused [run42320315818](https://github.com/Apdelrahman1911/parlor/actions/runs/42320315818)
+is terminal **FAILURE**, not running. Original digest-verified XML matches all34
+API34 methods, including EN/AR/System handled rotation, with34 PASS/0 FAIL/0 SKIP.
+The application source is `ba00f075`, separate from workflow source `721448b5`.
+Process acceptance fails on the first case's post-launch PID observation; zero
+complete process cases are recorded. Owned output cleanup passes. This is scoped
+locale evidence, not full protected PR/main or physical acceptance.
+
+The [retained evidence and framing correction](audits/2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md#november-9-terminal-readback-and-pid-framing-correction)
+identify a reproducible producer/parser mismatch: normal newline-terminated
+`pidof` output plus the marker's leading newline produces an extra separator the
+strict parser rejects. The command now captures PID output and prints one exact
+separator while preserving the device exit status. The parser, absence checks,
+single actions, original deadlines and retirement requirements stay unchanged.
+Two real-shell regressions extend the focused controls to51 passing methods.
+The original failed PID bytes were not retained; the controlled reproduction is
+not a claim that those bytes or the older main's exit cause were captured.
+
+At the source-authoring checkpoint, PR336's earlier `21b22216` head has a failed
+required check. On November 9 the owner authorized committing and publishing the
+prepared corrections to that existing PR and continuing qualification without
+another approval question. Local verification is51 focused methods,879 release
+methods with one environment skip, and2,050 Desktop methods with three established
+LAN skips. These results are not clean-commit or native/protected acceptance.
+Fresh corrected-source process acceptance, complete protected PR qualification
+and distinct main remain required. No Issue closes here. #258 security, original
+iOS input causes, owner-reserved physical Phase4 and Store/account holds remain.
+
+## Previous execution — recurring Android locale reset
 
 [PR336 run42314073678](https://github.com/Apdelrahman1911/parlor/actions/runs/42314073678)
 fails the actual Arabic handled-rotation method:32/33 API34 methods and3/3

@@ -175,7 +175,7 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
                     raise RuntimeError("synthetic force-stop error")
                 return ""
             self.assertEqual(args[0], "shell")
-            self.assertTrue(args[1].startswith(f"pidof {APP}; result=$?; "))
+            self.assertEqual(args, contract.pid_observation_command(APP))
             if calls[-1] in ("prepare", "verify"):
                 boundary = "retire-" + calls[-1]
                 calls.append(boundary)

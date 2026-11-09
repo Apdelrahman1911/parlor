@@ -94,8 +94,8 @@ def live_pid(text: str) -> int:
 def pid_observation_command(application_id: str) -> tuple[str, str]:
     require(re.fullmatch(r"[a-z][a-z0-9_.]+\.debug", application_id) is not None,
             "Process observation is limited to the reviewed Debug package")
-    return ("shell", f"pidof {application_id}; result=$?; "
-            "printf '\\nPARLOR_PIDOF_EXIT=%s\\n' \"$result\"")
+    return ("shell", f"pids=$(pidof {application_id}); result=$?; "
+            "printf '%s\\nPARLOR_PIDOF_EXIT=%s\\n' \"$pids\" \"$result\"")
 
 
 def observed_pid(text: str) -> int | None:

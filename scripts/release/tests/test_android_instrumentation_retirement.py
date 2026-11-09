@@ -1,6 +1,9 @@
 """Controlled Android teardown schedules; not native-device or original-failure evidence."""
 from __future__ import annotations
 
+import shlex
+import subprocess
+import sys
 import unittest
 from unittest.mock import Mock, patch
 
@@ -9,13 +12,48 @@ from scripts.android import run_resume_process_acceptance as driver
 from scripts.release.tests.test_android_resume_process import APP, COMPONENT, FIXTURE, NEW, OLD, output
 
 
+@unittest.skipUnless(sys.platform == "linux", "Process acceptance uses a Linux-hosted shell")
+class AndroidPidObservationShellTest(unittest.TestCase):
+    def observe(self, stdout, exit_status):
+        arguments = contract.pid_observation_command(APP)
+        self.assertEqual(arguments[0], "shell")
+        script = ("pidof() { printf '%s' " + shlex.quote(stdout) + "; return " + str(exit_status)
+                  + "; }; " + arguments[1])
+        result = subprocess.run(["/bin/sh", "-c", script], check=True, capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.stderr, "")
+        return result.stdout
+
+    def test_shell_pid_output_and_status_round_trip_without_extra_separator(self):
+        for stdout in ("1234\n", "1234"):
+            with self.subTest(stdout=stdout):
+                observed = self.observe(stdout, 0)
+                self.assertEqual(observed, "1234\nPARLOR_PIDOF_EXIT=0\n")
+                self.assertEqual(contract.observed_pid(observed), 1234)
+        observed = self.observe("", 1)
+        self.assertEqual(observed, "\nPARLOR_PIDOF_EXIT=1\n")
+        self.assertIsNone(contract.observed_pid(observed))
+        contract.require_absent(observed)
+
+    def test_shell_failed_and_ambiguous_pid_queries_remain_fail_closed(self):
+        for stdout, exit_status in (("1234 5678\n", 0), ("1234\n5678\n", 0), ("", 0), ("1\n", 0),
+                                    ("2147483648\n", 0), ("1234\n", 1), ("", 127),
+                                    ("error: device offline\n", 1)):
+            with self.subTest(stdout=stdout, exit_status=exit_status):
+                observed = self.observe(stdout, exit_status)
+                with self.assertRaises(RuntimeError):
+                    contract.observed_pid(observed)
+                with self.assertRaises(RuntimeError):
+                    contract.require_absent(observed)
+
+
 class AndroidInstrumentationRetirementTest(unittest.TestCase):
     def test_public_pid_observation_preserves_absence_and_rejects_transport_or_ambiguous_output(self):
         self.assertIsNone(contract.observed_pid("\nPARLOR_PIDOF_EXIT=1\n"))
         self.assertEqual(contract.observed_pid("1234\nPARLOR_PIDOF_EXIT=0\n"), 1234)
         for text in ("", "1234", "PARLOR_PIDOF_EXIT=0", "error: device offline", "1\nPARLOR_PIDOF_EXIT=0",
                      "1234 5678\nPARLOR_PIDOF_EXIT=0", "1234\nPARLOR_PIDOF_EXIT=1", "PARLOR_PIDOF_EXIT=127",
-                     "private output\nPARLOR_PIDOF_EXIT=1", "2147483648\nPARLOR_PIDOF_EXIT=0"):
+                     "private output\nPARLOR_PIDOF_EXIT=1", "2147483648\nPARLOR_PIDOF_EXIT=0",
+                     "1234\n\nPARLOR_PIDOF_EXIT=0"):
             with self.subTest(text=text), self.assertRaises(RuntimeError):
                 contract.observed_pid(text)
         for package in ("me.parlor.android", APP + "; echo injected", APP + "\nother", "-option.debug"):
@@ -145,7 +183,7 @@ class AndroidInstrumentationRetirementTest(unittest.TestCase):
                     raise RuntimeError("Synthetic late finished-inst stop: pidof exit 1")
                 return str(state["pid"]) + "\n"
             self.assertEqual(args[0], "shell")
-            self.assertTrue(args[1].startswith(f"pidof {APP}; result=$?; "))
+            self.assertEqual(args, contract.pid_observation_command(APP))
             calls.append("observe")
             if state["racy_launch"]:
                 advance(0.2)

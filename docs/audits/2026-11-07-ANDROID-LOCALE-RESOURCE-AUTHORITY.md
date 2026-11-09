@@ -73,3 +73,55 @@ complete protected PR qualification, all twelve process cases/twenty-four phases
 and distinct main verification. Neither #332 nor #335 is closed by this report.
 Original iOS input causes, #258 supported-volume protection, physical Phase4 and
 Store/account gates remain separate. No physical or release acceptance is claimed.
+
+## November 9 terminal readback and PID framing correction
+
+The focused [run42320315818](https://github.com/Apdelrahman1911/parlor/actions/runs/42320315818)
+finished **FAILURE** on November 7. Its application checkout is `ba00f075`, tree
+`a006073bf6013f9ce0968970103f7cc524995a31`; workflow `721448b5` adds only the
+focused harness. Original XML matches the exact34-method source roster with
+**34 PASS / 0 FAIL / 0 SKIP**, including English, Arabic and System rotation.
+The21 process-source bindings match the application commit. Output ownership,
+artifact linkage and the owned cleanup receipt pass independent readback.
+
+The first process case's preparation completes, but the post-launch observation
+raises `Malformed or ambiguous public process observation`; the retained matrix
+contains zero complete cases. The original live PID bytes were not retained.
+This does not certify the12-case/24-phase retirement matrix or full PR/main.
+
+A local real `/bin/sh` control reproduces a definite command/protocol mismatch:
+`pidof` normally supplies a trailing newline, and the marker command adds a
+leading newline. Thus a live PID becomes `1234\n\nPARLOR_PIDOF_EXIT=0\n`, which
+the deliberately strict parser rejects. Capturing the PID output before one
+`printf` produces exactly `1234\nPARLOR_PIDOF_EXIT=0\n` while retaining the device
+query's status. Absence remains independently marked by status1; ambiguous PIDs,
+unexpected statuses and malformed observations still fail closed. No parser
+relaxation, extra action, retry or deadline change is introduced.
+
+The pinned [Android14 Toybox implementation](https://android.googlesource.com/platform/external/toybox/+/android-14.0.0_r1/toys/lsb/pidof.c)
+also explicitly appends a newline after successful PID output. This independently
+supports fixing the producer's framing rather than accepting malformed messages;
+it does not supply the missing original failed observation bytes.
+
+Two real-shell regression methods cover newline/no-newline live output, absence,
+multiple PIDs, invalid PIDs, unexpected status and malformed output. The new live
+round-trip fails against the original command and passes with the correction;
+all51 focused process/retirement controls then pass. This is a controlled shell
+reproduction, not captured native PID bytes or proof of the older main's cause.
+
+Retained original native artifact13553371928 SHA256:
+`2c7752e04c374a2136215576dbbb4a8f5a2d6af3091e8cd85c0b1520da00f0e8`.
+Cleanup artifact13553366995 SHA256:
+`1bd72aa15e450316868e517f758a7b3e895af322b7b6a05be782e67965807437`.
+Original XML SHA256:
+`467c3be226a3103eb6f4e4f6f2d950312193555a613cd946304bed37fc627b01`.
+Original job log SHA256:
+`a5d4c5d0caaaff64eacb712b9644231036462181753900476569d04585824a97`.
+
+At this source-authoring checkpoint, PR336's earlier `21b22216` head remains
+failed. On November 9 the owner authorized committing and publishing the prepared
+correction to the existing PR and continuing qualification without another
+approval question. No Issue closes or release hold lifts. Fresh corrected-source
+process acceptance and complete protected PR and distinct-main qualification
+remain required, separately from all physical, supported-volume security and
+Store/account requirements.
