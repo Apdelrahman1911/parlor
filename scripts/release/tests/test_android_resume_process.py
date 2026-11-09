@@ -136,6 +136,10 @@ class AndroidResumeProcessContractTest(unittest.TestCase):
     def test_same_process_or_mismatched_phases_are_not_process_death(self):
         prepared = contract.phase_result(output(), FIXTURE, "prepare")
         verified = contract.phase_result(output("verify", NEW), FIXTURE, "verify")
+        for phase in (prepared, verified):
+            phase["instrumentation_retirement"] = {
+                "result": "PASS", "pid": phase["pid"], "observations": 1, "elapsed_seconds": 0.1,
+            }
         result = contract.complete_case(FIXTURE, prepared, verified, 1234, "PARLOR_PIDOF_EXIT=1")
         self.assertTrue(result["explicit_force_stop_and_independent_absence"])
         self.assertFalse(result["physical_device_verified"])
@@ -160,13 +164,10 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
             if failure == method:
                 raise RuntimeError("synthetic phase failure")
             return contract.phase_result(output(method, OLD if method == "prepare" else NEW, fixture), fixture, method)
-        def command(*args):
+        def command(*args, **_kwargs):
             if args[:3] == ("shell", "am", "start"):
                 calls.append("launch")
                 return "Status: error\n" if failure == "launch" else "Status: ok\n"
-            if args[:2] == ("shell", "pidof"):
-                calls.append("pid")
-                return "" if failure == "pid" else "4321\n"
             if args[:3] == ("shell", "am", "force-stop"):
                 calls.append("force-stop")
                 self.assertEqual(args[3:], (APP,))
@@ -174,7 +175,16 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
                     raise RuntimeError("synthetic force-stop error")
                 return ""
             self.assertEqual(args[0], "shell")
-            self.assertTrue(args[1].startswith(f"pidof {APP}; result=$?; "))
+            self.assertEqual(args, contract.pid_observation_command(APP))
+            if calls[-1] in ("prepare", "verify"):
+                boundary = "retire-" + calls[-1]
+                calls.append(boundary)
+                if failure == boundary:
+                    raise RuntimeError("synthetic retirement observation failure")
+                return "PARLOR_PIDOF_EXIT=1\n"
+            if calls[-1] == "launch":
+                calls.append("pid")
+                return "PARLOR_PIDOF_EXIT=1\n" if failure == "pid" else "4321\nPARLOR_PIDOF_EXIT=0\n"
             calls.append("absent")
             return "4321\nPARLOR_PIDOF_EXIT=0" if failure == "absent" else "PARLOR_PIDOF_EXIT=1\n"
         if failure:
@@ -185,10 +195,11 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         return calls
 
     def test_actual_launch_force_stop_absence_and_distinct_phase_order(self):
-        self.assertEqual(self.exercise(), ["prepare", "launch", "pid", "force-stop", "absent", "verify"])
+        self.assertEqual(self.exercise(), ["prepare", "retire-prepare", "launch", "pid", "force-stop", "absent",
+                                           "verify", "retire-verify"])
 
     def test_each_boundary_failure_stops_without_replay_or_next_phase(self):
-        expected = ["prepare", "launch", "pid", "force-stop", "absent", "verify"]
+        expected = ["prepare", "retire-prepare", "launch", "pid", "force-stop", "absent", "verify", "retire-verify"]
         for index, failure in enumerate(expected):
             with self.subTest(failure=failure):
                 self.assertEqual(self.exercise(failure), expected[:index + 1])
@@ -294,16 +305,25 @@ class AndroidResumeProcessDriverTest(unittest.TestCase):
         self.assertIn("ui.awaitHeading(heading)", source)
         self.assertIn('verifyOrientation("en")', source)
         self.assertIn('verifyOrientation("ar")', source)
+        self.assertIn("verifyOrientation(null)", source)
         self.assertIn("settings.setLanguageOverride(previousLanguage)", source)
         self.assertIn("ORIENTATION_TIMEOUT_MILLIS = 10_000L", source)
         self.assertIn("ORIENTATION_INTERVAL_MILLIS = 100L", source)
+        self.assertEqual(source.count("assertLocaleAuthority(application, language)"), 2)
+        self.assertIn("assertEquals(expectedLanguage, application.resources.configuration.locales[0].language)", source)
+        self.assertIn("assertEquals(expectedLanguage, Locale.getDefault().language)", source)
+        self.assertIn("if (language == null) assertSame(platformResources, application.resources)", source)
+        self.assertIn("assertEquals(systemLocales, application.baseContext.resources.configuration.locales)", source)
         for forbidden in ("Locale.setDefault", "LocaleList.setDefault", "setContent(", "notifyActive", "recreate("):
             self.assertNotIn(forbidden, source)
 
     def test_process_receipt_binds_the_production_locale_owner_and_configuration_adapter(self):
         for path in (
             "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+            "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocaleAwareApplication.kt",
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocaleDefaults.kt",
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ScopedLocaleOverrides.kt",
+            "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
         ):
             self.assertIn(path, driver.SOURCE_PATHS)
             self.assertTrue((driver.ROOT / path).is_file())
@@ -376,6 +396,7 @@ class AndroidResumeProcessExecutionTest(unittest.TestCase):
                 path.write_bytes(path.name.encode())
             destination = root / "build/ci-evidence/process"
             phases, actions, lifecycle = [], [], []
+            live = {"pid": None}
             configuration = {"applications": {"android": {"debug_application_id": APP}},
                              "toolchains": {"android_navigation_device": {"api_level": 34}}}
             source = {"head": "1" * 40, "tree": "2" * 40, "files": {}}
@@ -392,12 +413,13 @@ class AndroidResumeProcessExecutionTest(unittest.TestCase):
                         return "Failure [INSTALL_FAILED_TEST_ONLY]"
                     return "Success"
                 if arguments[:3] == ("shell", "am", "start"):
+                    live["pid"] = 4321
                     return "Status: ok\n"
-                if arguments[:2] == ("shell", "pidof"):
-                    return "4321\n"
                 if arguments[:3] == ("shell", "am", "force-stop"):
+                    live["pid"] = None
                     return ""
-                return "PARLOR_PIDOF_EXIT=1\n"
+                return ("PARLOR_PIDOF_EXIT=1\n" if live["pid"] is None else
+                        f"{live['pid']}\nPARLOR_PIDOF_EXIT=0\n")
 
             def phase(fixture, method, component):
                 self.assertEqual(component, COMPONENT)

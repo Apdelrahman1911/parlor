@@ -1,5 +1,50 @@
 # Open-Issue CI acceptance audit — November 6, 2026
 
+## November 9 execution queue
+
+The live repository has **twelve open Issues**: ten from the original intake,
+plus #332 and #335. The older eleven-Issue count and latest-source descriptions
+below belong to their dated checkpoints, not this continuation. Actual main is
+`1e08bab4`; its automatic production run42307325714 failed. PR336 is still draft
+on `21b22216`. No newer full-main qualification or issue closure is inferred.
+
+The owner's active goal is solo issue resolution: understand the issue and its
+acceptance, research an appropriate supported solution, implement a focused
+change, and verify it. Work is ordered by available evidence and prerequisites,
+not by how easily an Issue can be closed. Slow or repeatedly unsuccessful work
+moves behind other actionable work; an external prerequisite is recorded as
+deferred rather than prompting another unchanged probe. Revisit deferred items
+after the actionable queue or when genuinely new evidence becomes available.
+Earlier successful work, completed phases and retained failed evidence are not
+replayed. The goal does not authorize weakening checks or lifting release holds.
+On November 9 the owner authorized committing and publishing the prepared
+corrections to existing PR336 and continuing qualification without another
+approval question. That approval does not replace native/protected evidence or
+the separate owner-reserved physical, security-volume and Store prerequisites.
+
+| Order | Issue | Current disposition and next acceptance |
+|---|---|---|
+| 1 | #335 — instrumentation retirement | Exact-PID retirement work is prepared. The newly reproduced shell-framing mismatch is corrected locally with failure-before/pass-after real-shell controls. All51 focused controls pass. Publication to existing PR336 is owner-authorized; require fresh12-case/24-phase native evidence, complete protected qualification, normal merge and independent main. |
+| 2 | #332 — handled-configuration locale | Application-resource authority correction is prepared. November7 focused original XML matches all34 API34 methods, zero failures/skips, including EN/AR/System rotation. Process acceptance fails independently at PID parsing. Preserve exact-owner/System/default-list behavior; qualify the corrected complete source together with #335. |
+| 3 | #253 — Resume removal | Shared implementation and prior Android native/process scope are verified, but the latest correction's process matrix is not. Finish that matrix; positive iOS persistence depends on #258. Native/physical EN/AR accessibility and relaunch acceptance remain owner-reserved. |
+| 4 | #251 — cross-game admission | Matching-game isolation is implemented and regression-tested. Remaining Android-host/iOS-peer and reverse-host admission/start/resume/rejoin matrix requires the owner-reserved real devices. Same-host socket fixtures do not close it. |
+| 5 | #259 — adaptive/public UX | Catalog and large-text corrections have prior scoped evidence. Complete current-source qualification and all six legal native/physical EN/AR journeys, 200% text, screen readers, insets, orientation, reduced motion and recovery. Do not add speculative layout changes without a remaining reproduction. |
+| 6 | #260 — game consistency/privacy | Recipient consistency/concealment corrections are implemented. All six games still require legal roster boundaries, both cross-platform host directions, concurrency/interruptions, own-only views, accessibility and extended-session device evidence. |
+| 7 | #182 — retained Host confirmation | Source correction, protected merge and independent-main acceptance are already complete. Only the explicitly retained physical TalkBack/VoiceOver stale/repeated-activation campaign remains. Do not reimplement the fixed callback ownership. |
+| 8 | #252 — lifecycle/recovery | Existing privacy separation and recovery policy stay intact. Real suspension/lock/Doze, both roles/host directions, timing and battery/thermal evidence are required before changing shared policy. Host process death still ends the room. |
+| 9 | #267 — original lost iOS tap | Defer the longstanding original native HID cancellation/diagnostic-neutrality boundary. Upstream runner-images15252 is still open; its maintainer acknowledged investigation without a published supported correction. No cancelled-touch activation, repeated input or unchanged probe. |
+| 10 | #276 — delayed native typing | Defer the original keyboard-service startup boundary. The latest upstream update remains November6; successful later cohorts do not establish permanent causality. Preserve original input/deadlines and all previously qualified app/observer corrections. |
+| 11 | #258 — Complete Protection | Keep existing candidate `c3406ec3` held. Reconcile only after an actually qualified final main; do not repeat its six successful frontend compilations. Positive supported-volume authenticated persistence and owner-reserved physical lock/keybag acceptance remain unmet. |
+| 12 | #230 — Store ownership/signing | Owner account/identity evidence, credentials/provisioning and legal/privacy/release approval are external prerequisites. Store candidate/promotion workflows remain disabled; no registration, signing or publication is authorized by this queue. |
+
+Current local checks are feedback, not clean-commit release qualification:
+51 focused PASS; release validation879 PASS/one established local procfs-capability
+skip; transport388 PASS/three established single-JVM LAN skips. No Issue is
+closed by this queue. #285/#308/#312 and completed Phase2 work are not repeated.
+The original12-case/24-phase Android matrix, all required platforms/optimized
+Release architectures, #258 security and owner physical/Store gates remain
+distinct. PR336 and any subsequent main must be evaluated on their own source.
+
 ## Scope and evidence rules
 
 All twelve Issues open at intake were reviewed, including their original

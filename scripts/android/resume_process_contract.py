@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 import re
 from uuid import UUID
 
@@ -10,6 +11,7 @@ GAMES = ("LastLight", "Mafia", "Whodunit")
 LANGUAGES = ("en", "ar")
 ENTRY_KINDS = ("Local", "Multiplayer")
 MAX_PHASE_OUTPUT = 256 * 1024
+MAX_RETIREMENT_OBSERVATIONS = 361  # At most one observation per quarter-second of the existing 90s phase.
 
 
 def require(condition: bool, message: str) -> None:
@@ -89,10 +91,43 @@ def live_pid(text: str) -> int:
     return int(value)
 
 
+def pid_observation_command(application_id: str) -> tuple[str, str]:
+    require(re.fullmatch(r"[a-z][a-z0-9_.]+\.debug", application_id) is not None,
+            "Process observation is limited to the reviewed Debug package")
+    return ("shell", f"pids=$(pidof {application_id}); result=$?; "
+            "printf '%s\\nPARLOR_PIDOF_EXIT=%s\\n' \"$pids\" \"$result\"")
+
+
+def observed_pid(text: str) -> int | None:
+    """Keep device pidof absence distinct from an adb transport/command failure."""
+    value = text.strip()
+    if value == "PARLOR_PIDOF_EXIT=1":
+        return None
+    match = re.fullmatch(r"([1-9][0-9]{0,9})\nPARLOR_PIDOF_EXIT=0", value)
+    require(match is not None, "Malformed or ambiguous public process observation")
+    return live_pid(match.group(1))
+
+
 def require_absent(text: str) -> None:
     # The device shell prints this code itself. An adb transport error must not
     # be mistaken for pidof's exit1; the host command must also exit0.
     require(text.strip() == "PARLOR_PIDOF_EXIT=1", "Force-stopped app is not independently absent")
+
+
+def require_retired_phase(phase: dict) -> None:
+    retirement = phase.get("instrumentation_retirement")
+    require(isinstance(retirement, dict)
+            and set(retirement) == {"result", "pid", "observations", "elapsed_seconds"},
+            "A JUnit result alone does not prove instrumentation process retirement")
+    require(retirement["result"] == "PASS" and type(retirement["pid"]) is int
+            and retirement["pid"] == phase["pid"],
+            "Retirement belongs to a different or incomplete native phase")
+    require(type(retirement["observations"]) is int
+            and 1 <= retirement["observations"] <= MAX_RETIREMENT_OBSERVATIONS,
+            "Missing or unbounded instrumentation retirement observations")
+    elapsed = retirement["elapsed_seconds"]
+    require(type(elapsed) in (int, float) and math.isfinite(elapsed) and 0 <= elapsed < 90,
+            "Invalid instrumentation retirement timing")
 
 
 def complete_case(fixture: Fixture, prepared: dict, verified: dict, stopped_pid: int, absent: str) -> dict:
@@ -104,6 +139,7 @@ def complete_case(fixture: Fixture, prepared: dict, verified: dict, stopped_pid:
                 and result["language"] == fixture.language and result["junit_methods"] == 1,
                 "Mismatched/nonpassing phase in process-boundary case")
         require(result["entry_kind"] == fixture.entry_kind, "Mixed entry kinds are not a process-boundary case")
+        require_retired_phase(result)
     require(prepared["process_nonce"] != verified["process_nonce"], "Same-process phases are not acceptance")
     return {"result": "PASS", "fixture": fixture.id, "game": fixture.game, "language": fixture.language,
             "entry_kind": fixture.entry_kind,

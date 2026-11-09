@@ -1,4 +1,84 @@
-# Project status — November 6, 2026
+# Project status — November 9, 2026
+
+## Active solo issue-resolution goal
+
+The [ordered twelve-Issue queue](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md#november-9-execution-queue)
+records actionable work and deferred native/platform, security-volume, physical
+and owner-account prerequisites. Each issue follows understand/research,
+implement, verify; slow or repeatedly unsuccessful work moves to the end for a
+later evidence-based revisit. No subagents, unchanged probe retries, weakened
+acceptance, owner-reserved device work or release-hold changes are authorized.
+
+## Current execution — PID shell framing correction
+
+The November 7 focused [run42320315818](https://github.com/Apdelrahman1911/parlor/actions/runs/42320315818)
+is terminal **FAILURE**, not running. Original digest-verified XML matches all34
+API34 methods, including EN/AR/System handled rotation, with34 PASS/0 FAIL/0 SKIP.
+The application source is `ba00f075`, separate from workflow source `721448b5`.
+Process acceptance fails on the first case's post-launch PID observation; zero
+complete process cases are recorded. Owned output cleanup passes. This is scoped
+locale evidence, not full protected PR/main or physical acceptance.
+
+The [retained evidence and framing correction](audits/2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md#november-9-terminal-readback-and-pid-framing-correction)
+identify a reproducible producer/parser mismatch: normal newline-terminated
+`pidof` output plus the marker's leading newline produces an extra separator the
+strict parser rejects. The command now captures PID output and prints one exact
+separator while preserving the device exit status. The parser, absence checks,
+single actions, original deadlines and retirement requirements stay unchanged.
+Two real-shell regressions extend the focused controls to51 passing methods.
+The original failed PID bytes were not retained; the controlled reproduction is
+not a claim that those bytes or the older main's exit cause were captured.
+
+At the source-authoring checkpoint, PR336's earlier `21b22216` head has a failed
+required check. On November 9 the owner authorized committing and publishing the
+prepared corrections to that existing PR and continuing qualification without
+another approval question. Local verification is51 focused methods,879 release
+methods with one environment skip, and2,050 Desktop methods with three established
+LAN skips. These results are not clean-commit or native/protected acceptance.
+Fresh corrected-source process acceptance, complete protected PR qualification
+and distinct main remain required. No Issue closes here. #258 security, original
+iOS input causes, owner-reserved physical Phase4 and Store/account holds remain.
+
+## Previous execution — recurring Android locale reset
+
+[PR336 run42314073678](https://github.com/Apdelrahman1911/parlor/actions/runs/42314073678)
+fails the actual Arabic handled-rotation method:32/33 API34 methods and3/3
+optimized API35 methods pass, but the same Activity renders English after
+rotation. Process-retirement acceptance does not start. Earlier passing Android
+samples do not establish that the callback-only #332 correction is permanent.
+
+The [application-resource authority correction](audits/2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md)
+supplies Android's callback-free process-locale resets with an exact-owner,
+locale-only configuration context. System/default-list restoration, no shared
+Resources mutation, one-rotation native assertions and privacy remain required.
+This authored correction and #335's preserved retirement work require fresh
+protected PR and distinct-main qualification. No issue closes or release hold
+lifts at this checkpoint. Issue332/335 and PR336 retain live terminal evidence;
+the following entries preserve their own earlier source/result boundaries.
+
+## Previous execution — Android instrumentation retirement correction
+
+PR334 passed complete source-specific protected qualification
+[42298070702](https://github.com/Apdelrahman1911/parlor/actions/runs/42298070702)
+and merged normally as `1e08bab4`. Distinct
+[main42307325714](https://github.com/Apdelrahman1911/parlor/actions/runs/42307325714)
+fails Android process acceptance after3 cases/7 original phases. The fourth
+preparation and normal launch status pass, but the next PID command exits1;
+its withheld output does not prove an app crash versus a transport failure.
+API34 33/33, optimized API35 3/3,819 KMP/47 Swift/457 readiness methods pass;
+these do not qualify the failed whole main.
+
+The [reviewed correction](audits/2026-11-06-ANDROID-INSTRUMENTATION-RETIREMENT.md)
+joins instrumentation PID retirement within the existing phase deadline before
+the next single operation. Android's result callback precedes its ordinary
+teardown; this confirms a driver gap, not the original uncaptured native cause.
+New [#335](https://github.com/Apdelrahman1911/parlor/issues/335) records evidence,
+regressions and pending fresh protected/main qualification. #332 remains open
+for its whole-main gate. Original #267/#276 platform causes, #258 supported-volume
+positive security and owner-reserved physical/Store requirements remain open.
+The twelve-Issue audit and already closed #285/#308/#312 work are not repeated.
+
+## Prior source-authoring checkpoint — retained, not current status
 
 ## Current qualification checkpoint — ARM64 runtime isolation prepared
 

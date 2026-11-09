@@ -1,6 +1,13 @@
 # Android locale ownership across handled configuration changes
 
-## Latest qualification — Android scope passes, whole main does not
+## Subsequent recurrence — callback-only correction is insufficient
+
+The original Arabic rotation method fails again in PR336 run42314073678.
+[Updated evidence and resource-authority correction](2026-11-07-ANDROID-LOCALE-RESOURCE-AUTHORITY.md)
+supersede any inference of a permanent fix from the passing samples below.
+#332 remains open; the retained historical outcomes are not relabeled.
+
+## Earlier qualification — Android scope passes, whole main does not
 
 PR333 passed all required producers and the optimized Apple Release join in
 [42253730217](https://github.com/Apdelrahman1911/parlor/actions/runs/42253730217)
