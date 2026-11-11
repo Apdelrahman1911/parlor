@@ -1,5 +1,34 @@
 # Open-Issue CI acceptance audit — November 6, 2026
 
+## November 11 execution queue
+
+The live repository has **thirteen open Issues**: the twelve listed in the
+November9 queue plus new [#338](https://github.com/Apdelrahman1911/parlor/issues/338).
+PR336 is normally protected-merged as `46fdc96d`, after full original-artifact
+PR42693043730 acceptance. Its distinct automatic main42704248797 is terminal
+**FAILURE**, not qualified: the macOS x64 wrapper download cannot resolve
+`services.gradle.org`, following cache `ENOTFOUND`; zero macOS test XML exists.
+All other eight original producers, both Apple joins and owned cleanup pass
+independent readback. No required-check success substitutes for this failed
+whole-main outcome. Original log/artifact hashes and limits are recorded in the
+[dated DNS evidence report](2026-11-11-MACOS-DNS-EVIDENCE.md).
+
+| Order | Issue | Current disposition and next acceptance |
+| --- | --- | --- |
+| 1 | #338 — missing macOS DNS evidence | Preserve the failed whole main. A bounded failure-only snapshot correction is prepared; failure-before and124 focused controls pass. No retries/network overrides or original-cause inference. Fresh protected PR and distinct-main acceptance remain pending. |
+| 2 | #335 — instrumentation retirement | Complete PR qualification and fresh main Android12-case/24-phase original native/retirement evidence pass. Keep OPEN because distinct whole main failed before unrelated macOS tests. Do not replay admitted evidence or reimplement the fixed driver. |
+| 3 | #332 — handled-configuration locale | Complete PR and fresh main34 API34/3 optimized API35 original methods pass, including EN/AR/System rotation and actual process recovery. Keep OPEN for the failed whole-main gate, not an evidenced new locale regression. |
+| Deferred | #253/#251/#259/#260/#182/#252 | Retain their separately documented supported-volume security, actual cross-platform/gameplay, native accessibility, lifecycle and owner-reserved physical acceptance. Scoped Android recovery is now stronger evidence for #253, not its iOS/physical closure. |
+| Deferred | #267/#276 | Upstream runner-images15252 has no newer supported correction at this readback. Do not repeat completed native probes, warm keyboards, replay input, activate cancelled touches or extend assertions. |
+| Held | #258/#230 | Held Complete candidate `c3406ec3`, supported-volume positive security/physical keybag evidence, Store identity/accounts/signing/provisioning and legal/privacy approvals remain unchanged. No Store workflow is enabled. |
+
+All thirteen remain OPEN. No new supported source correction for the deferred
+platform/device/security prerequisites is inferred from green CI. Work remains
+solo and owner-authorized for routine publication/normal protected merges; that
+does not authorize a release, security downgrade, physical campaign or unchanged
+workflow/native diagnostic rerun. The November9 source states below are retained
+as dated history, not current source certification.
+
 ## November 9 execution queue
 
 The live repository has **twelve open Issues**: ten from the original intake,

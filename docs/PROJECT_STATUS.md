@@ -1,15 +1,48 @@
-# Project status — November 9, 2026
+# Project status — November 11, 2026
 
 ## Active solo issue-resolution goal
 
-The [ordered twelve-Issue queue](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md#november-9-execution-queue)
+The [current thirteen-Issue queue](audits/2026-11-06-OPEN-ISSUE-CI-ACCEPTANCE.md#november-11-execution-queue)
 records actionable work and deferred native/platform, security-volume, physical
 and owner-account prerequisites. Each issue follows understand/research,
 implement, verify; slow or repeatedly unsuccessful work moves to the end for a
 later evidence-based revisit. No subagents, unchanged probe retries, weakened
 acceptance, owner-reserved device work or release-hold changes are authorized.
 
-## Current execution — PID shell framing correction
+## Current execution — merged Android correction; main DNS failure retained
+
+PR336's authored `2ffa5d6d` passes complete original-artifact qualification in
+[PR42693043730](https://github.com/Apdelrahman1911/parlor/actions/runs/42693043730),
+all nine producers and both Apple joins, before normal protected merge as
+`46fdc96d` on November9 at21:37:22UTC. The actual merge has the same qualified
+tree. No bypass, direct main push or rules change was used.
+
+Distinct automatic [main42704248797](https://github.com/Apdelrahman1911/parlor/actions/runs/42704248797)
+is terminal **FAILURE**, not pending or qualified. macOS x64 fails its first
+wrapper distribution download with `UnknownHostException: services.gradle.org`
+after cache restore also reports `ENOTFOUND`. That producer never starts Gradle
+or tests; its original artifact contains zero test XML. Original logs, ZIPs,
+run/job metadata and successful owned cleanup are retained. This establishes a
+name-resolution failure boundary, not its internal platform cause or an app bug.
+
+The other eight main producers independently pass source/artifact/XML/log/
+cleanup readback:34 API34/3 optimized API35 methods;12 actual Android process
+cases/24 original native phases with retirement receipts;828 KMP/47 Swift/457
+readiness methods;880 release/80 worker controls; and2,050 PASS/3 established
+LAN skips on each of three completed Desktop hosts. All257 uploaded synthetic
+PNGs per completed Desktop host decode; only22 prior manual observations are
+reused after exact-byte parity. These are scoped results, not whole-main,
+physical UX, original iOS input-cause or security acceptance. #332/#335 remain OPEN.
+
+[Issue338's failure-only evidence correction](audits/2026-11-11-MACOS-DNS-EVIDENCE.md)
+retains a bounded post-failure DNS snapshot on this standard macOS x64 lane.
+It makes no success-path/native-input changes, retries, DNS/hosts/proxy changes,
+wrapper/checksum changes or qualification substitutions. Its regression fails
+before correction; all124 focused controls pass after. Fresh protected PR and
+distinct-main qualification are still required; the original failed main stays
+failed. All security, supported-volume, physical Phase4 and Store holds remain.
+
+## Earlier November 9 checkpoint — PID shell framing correction
 
 The November 7 focused [run42320315818](https://github.com/Apdelrahman1911/parlor/actions/runs/42320315818)
 is terminal **FAILURE**, not running. Original digest-verified XML matches all34

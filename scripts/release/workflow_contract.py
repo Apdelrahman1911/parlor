@@ -208,6 +208,8 @@ def current_verification_artifact_paths(job: str) -> list[str]:
     if job == "desktop-android":
         custody.append(prefix + "-hosted-disk.json")
     custody.append(prefix + "-stop-*.json")
+    if job == "desktop-macos-x64":
+        custody.append(prefix + "-network.json")
     if job == "desktop-android":
         paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + reports + custody + [
             "**/build/reports/androidTests/managedDevice/",
@@ -378,6 +380,34 @@ def verify_hosted_linux_capacity(job: str) -> None:
     receipt = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-hosted-disk.json"
     if upload.count(receipt) != 1:
         fail("Real capacity measurements must be retained in the existing verification upload")
+
+
+def verify_macos_network_evidence(job: str) -> None:
+    name = "Collect failure-only macOS network evidence"
+    expected = """        if: failure() && steps.macos_x64_verification.outcome == 'failure'
+        timeout-minutes: 1
+        env:
+          PARLOR_FAILED_STEP_OUTCOME: ${{ steps.macos_x64_verification.outcome }}
+        run: python3 -B scripts/ci/macos_network_evidence.py"""
+    if validation_step(job, name).strip("\n") != expected:
+        fail("macOS DNS evidence must be bounded and strictly after the failed original step, without retries")
+    original = "Resolve and test the macOS x64 host-selected graphs"
+    expected_original = """        id: macos_x64_verification
+        shell: bash
+        run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"""
+    if validation_step(job, original).strip("\n") != expected_original:
+        fail("macOS DNS observation must retain the original strict single Gradle execution")
+    order = (original, name, "Stop Gradle after macos-x64", "Upload Desktop verification descriptors",
+             "Clean only attested verification outputs")
+    expected_steps = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies",
+                      "Claim fresh verification output ownership", "Require the macOS x64 host", *order,
+                      "Upload verification cleanup receipt", "Save dependencies from trusted main only"]
+    if re.findall(r"(?m)^      - name: (.*)$", job) != expected_steps:
+        fail("macOS DNS evidence must retain exact original gates/order, with no extra steps or retries")
+    upload = validation_step(job, order[-2])
+    receipt = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-network.json"
+    if upload.count(receipt) != 1:
+        fail("macOS DNS evidence must remain in the existing source/run/job-bound artifact")
 
 
 def verify_android_resume_process(job: str) -> None:
@@ -989,6 +1019,8 @@ def verify_verification_scopes(text: str) -> None:
             verify_windows_distribution_ownership(block)
         elif name == "desktop-android":
             verify_linux_process_probe(block)
+        elif name == "desktop-macos-x64":
+            verify_macos_network_evidence(block)
     ios = validation_job(text, "ios")
     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
         fail("verification scope may skip iOS only for separately guarded Windows, Linux or protection follow-ups")
