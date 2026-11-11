@@ -45,6 +45,8 @@ import com.parlor.games.wordimpostor.di.wordImpostorModule
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
+import com.parlor.networking.transport.HostedGameProtocol
+import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.TransportCapability
 import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
@@ -209,8 +211,14 @@ class RetainedNameConfirmationIdentityTest {
                 }
                 waitUntil(timeoutMillis = 5_000) { transport.joinStarted.isCompleted }
                 runOnIdle {
+                    val contract = checkNotNull(binding.multiplayerContract)
                     assertEquals(original, transport.displayName.get(), "${binding.definition.id}/$language")
                     assertEquals("ABCDEF", transport.roomCode.get(), "A stale confirmation cannot select another room")
+                    assertEquals(
+                        HostedGameProtocol(contract.gameId, contract.gameVersion),
+                        transport.gameProtocol.get(),
+                        "Selected game binding cannot be discarded",
+                    )
                     assertEquals(1, transport.joinCalls.get(), "Only explicit room-code confirmation may join")
                 }
             }
@@ -230,6 +238,7 @@ private class IdentityJoinTripwire(private val isHost: Boolean) : RoomTransport 
     val hostCalls = AtomicInteger()
     val displayName = AtomicReference<String>()
     val roomCode = AtomicReference<String>()
+    val gameProtocol = AtomicReference<HostedGameProtocol>()
     val joinStarted = CompletableDeferred<Unit>()
     val hostStarted = CompletableDeferred<Unit>()
     private val finishJoining = CompletableDeferred<Unit>()
@@ -243,10 +252,14 @@ private class IdentityJoinTripwire(private val isHost: Boolean) : RoomTransport 
         return Result.Failure(NetError.NotConnected)
     }
 
-    override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> {
+    override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> =
+        error("Peer confirmation must preserve the selected game binding")
+
+    override suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> {
         check(!isHost) { "Host confirmation must never join" }
-        roomCode.set(code)
-        this.displayName.set(displayName)
+        roomCode.set(config.code)
+        displayName.set(config.displayName)
+        gameProtocol.set(checkNotNull(config.expectedGameProtocol))
         joinCalls.incrementAndGet()
         joinStarted.complete(Unit)
         finishJoining.await()
