@@ -72,7 +72,7 @@ class GameplayResultDesignTest {
                 }
                 onNodeWithTag("game-fuse-result").performScrollTo()
                 val name = "result-design-${language.tag}-$scale-test-$attempt-out-$burnedOut"
-                val file = File("build/ui-snapshots/$name.png").apply { parentFile.mkdirs() }
+                val file = File("build/reports/tests/public-ux/$name.png").apply { parentFile.mkdirs() }
                 ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", file)
                 val tests = if (language == AppLanguage.Arabic) "اختُبر الفتيل $attempt من 6 مرات" else "Fuse tested $attempt of 6"
                 onNodeWithText(tests).bringIntoView()

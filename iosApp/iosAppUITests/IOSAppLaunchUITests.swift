@@ -223,13 +223,33 @@ final class IOSAppLaunchUITests: XCTestCase {
         let button = setupButton(app, prefix: prefix)
         for _ in 0..<8 {
             if button.waitForExistence(timeout: 1), button.isHittable {
-                try tapSettledControl(button)
+                try tapSettledControl(button, read: {
+                    try self.readPublicButtonSample(app, prefix: prefix)
+                })
                 return
             }
             app.swipeUp(velocity: .slow)
         }
         XCTFail("Public setup control is not reachable: " + prefix)
         throw NSError(domain: "KeyboardLayoutSetup", code: 1)
+    }
+
+    @MainActor
+    private func readPublicButtonSample(
+        _ app: XCUIApplication, prefix: String
+    ) throws -> (frame: CGRect, enabled: Bool) {
+        // Public setup only. Bulk snapshot capture avoids re-running a remote
+        // first-match traversal for each geometry sample. Selection is local,
+        // complete, unique and bounded; no snapshots or labels leave this read.
+        let root = try app.snapshot()
+        guard let sample = PublicButtonSnapshot.select(
+            from: root, children: { $0.children },
+            isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) },
+            geometry: { ($0.frame, $0.isEnabled) }
+        ) else {
+            throw NSError(domain: "PublicButtonSelection", code: 1)
+        }
+        return sample
     }
 
     @MainActor
@@ -262,22 +282,30 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSettledControl(_ control: XCUIElement) throws {
-        // Public setup only. Full snapshot() also faults in value, placeholder,
-        // identifier and window attributes that frame settlement never uses.
-        // Read only existence, one complete CGRect and enabled state. These
-        // are sequential observations, not an atomic accessibility snapshot;
-        // absence/disabled state breaks adjacency and native hittability is
-        // still required immediately before admitting the single ordinary tap.
-        // Keep the same exact-frame comparison and original ten-second budget.
+    private func tapSettledControl(
+        _ control: XCUIElement,
+        read: (() throws -> (frame: CGRect, enabled: Bool))? = nil
+    ) throws {
+        // One resolved public snapshot supplies frame and enabled together.
+        // Separate XCUIElement property reads each re-evaluate the remote query;
+        // an interrupted resolution can return false rather than native disabled
+        // state (original failure41180128325). Missing/error samples still break
+        // adjacency. Keep exact frames, native hittability, the ten-second
+        // deadline and the single ordinary tap; never admit stale cached state.
+        // Buttons supply fresh bulk app snapshots: in42261837661 two redundant
+        // remote first-match traversals spent the budget before native hittability
+        // could even resolve its target. Text controls keep their own snapshots.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let exists = control.exists
-            let frame = exists ? control.frame : nil
-            let enabled = exists && control.isEnabled
+            let sample = PublicControlSample(read: read ?? {
+                let snapshot = try control.snapshot()
+                return (snapshot.frame, snapshot.isEnabled)
+            })
+            let frame = sample.frame
+            let enabled = sample.enabled
             let stable = frames.observe(frame: frame, enabled: enabled)
             let hittable = stable ? control.isHittable : nil
             if stable && hittable != true { frames.reset() }
@@ -287,7 +315,8 @@ final class IOSAppLaunchUITests: XCTestCase {
                 samples.append("at=\(sampleStarted - started), " +
                     "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
                     "frame=\(String(describing: frame)), enabled=\(enabled), " +
-                    "stable=\(stable), hittable=\(String(describing: hittable))")
+                    "stable=\(stable), hittable=\(String(describing: hittable)), " +
+                    "snapshotErrorCode=\(String(describing: sample.errorCode))")
             }
             return stable && hittable == true
         }, object: nil)
@@ -326,17 +355,26 @@ final class IOSAppLaunchUITests: XCTestCase {
             let introduction = dismissKeyboardIntroduction(app)
             if cycle == 0 { field.typeText(input) }
             assertTextValue(field, in: app, equals: input, introduction: introduction)
-            let keyboardTop = fullKeyboardTop(app, keyboard: keyboard)
+            var frames = PublicKeyboardFrames()
+            var sample: PublicKeyboardGeometry?
+            var snapshotErrorCode: Int?
             let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                let gap = keyboardTop - action.frame.maxY
-                return keyboard.exists && keyboard.frame.height > 100 && field.isHittable
-                    && field.frame.minY >= 0
-                    && field.frame.maxY <= action.frame.minY && gap >= 0 && gap <= 32
+                do {
+                    sample = try self.readPublicKeyboardGeometry(app, actionPrefix: actionPrefix)
+                    snapshotErrorCode = nil
+                } catch {
+                    sample = nil
+                    snapshotErrorCode = (error as NSError).code
+                }
+                // Resolve geometry once per generation. No hit-point query for
+                // missing, invalid, moving, obscured or excessively spaced input.
+                return frames.observe(sample, hittable: { field.isHittable })
             }, object: nil)
             let result = XCTWaiter.wait(for: [settled], timeout: 10)
-            let gap = keyboardTop - action.frame.maxY
-            print("Keyboard geometry: gap=\(gap), inputBottom=\(field.frame.maxY), " +
-                  "actionTop=\(action.frame.minY), keyboardTop=\(keyboardTop)")
+            let gap = sample?.gap ?? .nan
+            print("Keyboard geometry: gap=\(gap), inputBottom=\(sample?.field.maxY ?? .nan), " +
+                  "actionTop=\(sample?.action.minY ?? .nan), keyboardTop=\(sample?.keyboardTop ?? .nan), " +
+                  "snapshotErrorCode=\(String(describing: snapshotErrorCode))")
             let screenshot = XCTAttachment(screenshot: app.screenshot())
             screenshot.name = "Public setup keyboard cycle \(cycle)"
             screenshot.lifetime = .keepAlways
@@ -355,6 +393,131 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 10), .completed,
                            "Done must hide the keyboard and restore the un-inset layout")
         }
+    }
+
+    @MainActor
+    func testArabicDisplayNameAndAsciiRoomCodeThroughNativeInput() throws {
+        // Synthetic public input only; never submit a code or start transport.
+        let copy = KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        )
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(ar)", "-AppleLocale", "ar_EG"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        // Actual Arabic scalars go through typeText and the existing exact
+        // value/geometry/Done/reopen assertions, not a semantics replacement.
+        try verifyKeyboardCycle(app, actionPrefix: copy.continueToCode, input: "أحمد نور")
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        try verifyKeyboardCycle(app, actionPrefix: copy.findRoom, input: "AAAAAA")
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public input must not request network access")
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
+    func testPostDoneNameAndRoomCodeEditsInEnglish() throws {
+        try verifyPostDoneInputs(language: "en", locale: "en_US", copy: KeyboardCopy(
+            openGame: "Open Whodunit and pick how you want to play.",
+            join: "Enter the host's room code to join their table.",
+            permission: "Continue and retry the real local-network operation.",
+            continueToCode: "Save your name and continue to enter a room code.",
+            findRoom: "Connect to the host using the entered room code."
+        ))
+    }
+
+    @MainActor
+    func testPostDoneNameAndRoomCodeEditsInArabic() throws {
+        try verifyPostDoneInputs(language: "ar", locale: "ar_EG", copy: KeyboardCopy(
+            openGame: "افتح من القاتل واختر طريقة اللعب.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            continueToCode: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        ))
+    }
+
+    @MainActor
+    private func verifyPostDoneInputs(language: String, locale: String, copy: KeyboardCopy) throws {
+        // New native edit coverage, not a replacement for the original typing
+        // and geometry journeys. Never submit a code or start a LAN operation.
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        try tapSetupButton(app, prefix: copy.openGame)
+        try tapSetupButton(app, prefix: copy.join)
+        try tapSetupButton(app, prefix: copy.permission)
+        verifyPostDoneField(app, actionPrefix: copy.continueToCode, isCode: false)
+        // Only this explicit Name Continue may advance to room-code entry.
+        try tapSetupButton(app, prefix: copy.continueToCode)
+        verifyPostDoneField(app, actionPrefix: copy.findRoom, isCode: true)
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Public edits must not request network access")
+    }
+
+    @MainActor
+    private func verifyPostDoneField(_ app: XCUIApplication, actionPrefix: String, isCode: Bool) {
+        let field = app.textViews.firstMatch
+        let action = setupButton(app, prefix: actionPrefix)
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.textViews.count, 1)
+        XCTAssertTrue(action.waitForExistence(timeout: 10))
+        XCTAssertFalse(action.isEnabled)
+        let initial = String(repeating: "A", count: isCode ? 4 : 5)
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let introduction = dismissKeyboardIntroduction(app)
+        field.typeText(initial)
+        assertTextValue(field, in: app, equals: initial, introduction: introduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        dismissPostDoneField(app, field: field, action: action, expected: initial)
+
+        // A tap can move the caret. Identical characters make these exact
+        // insert/delete expectations independent of its collapsed position;
+        // no arrow strings, forced selection, fallback, or repair input.
+        field.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        let reopenedIntroduction = dismissKeyboardIntroduction(app)
+        field.typeText("AA")
+        let inserted = initial + "AA"
+        assertTextValue(field, in: app, equals: inserted, introduction: reopenedIntroduction)
+        XCTAssertTrue(action.isEnabled)
+        field.typeText(XCUIKeyboardKey.delete.rawValue)
+        let deleted = String(inserted.dropLast())
+        assertTextValue(field, in: app, equals: deleted, introduction: reopenedIntroduction)
+        XCTAssertEqual(action.isEnabled, !isCode)
+        var expectedFinal = deleted
+        if isCode {
+            field.typeText("A")
+            expectedFinal += "A"
+            assertTextValue(field, in: app, equals: expectedFinal, introduction: reopenedIntroduction)
+            XCTAssertTrue(action.isEnabled)
+        }
+        dismissPostDoneField(app, field: field, action: action, expected: expectedFinal)
+        // The room-code action is deliberately never tapped.
+    }
+
+    @MainActor
+    private func dismissPostDoneField(
+        _ app: XCUIApplication, field: XCUIElement, action: XCUIElement, expected: String
+    ) {
+        field.typeText("\n")
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !app.keyboards.firstMatch.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed,
+                       "Done must dismiss the keyboard without submitting or changing the draft")
+        XCTAssertTrue(field.exists)
+        XCTAssertTrue(action.exists, "Done must retain the current public input screen")
+        assertTextValue(field, in: app, equals: expected)
     }
 
     @MainActor
@@ -421,35 +584,84 @@ final class IOSAppLaunchUITests: XCTestCase {
         dismissal: KeyboardIntroductionDismissal = KeyboardIntroductionDismissal()
     ) -> KeyboardIntroductionDismissal {
         guard !dismissal.hasDismissed else { return dismissal }
-        // The retained failing Arabic recording exposes this exact English
-        // Apple tutorial. Never tap a generic Continue or a Parlor action.
-        let tutorial = app.staticTexts[
-            "Speed up your typing by sliding your finger across the letters to compose a word."
-        ]
-        guard tutorial.exists else { return dismissal }
-        let button = app.buttons["Continue"]
-        guard button.exists else { return dismissal }
-        if dismissal.observe(tutorialExists: true, buttonFrame: button.frame,
-                             applicationFrame: app.frame, hittable: button.isHittable) {
+        // One coherent app snapshot replaces four remote presence/geometry queries.
+        // In 42177783654 those queries consumed the exact-value deadline before
+        // the tutorial tap or even the first field snapshot could complete.
+        // Keep the original deadline, native hittability and single ordinary tap.
+        guard let observation = try? readKeyboardIntroduction(app),
+              let frame = observation.targetFrame else { return dismissal }
+        let button = app.buttons.matching(NSPredicate(format: "label == %@", "Continue")).element
+        if dismissal.observe(tutorialExists: true, buttonFrame: frame,
+                             applicationFrame: observation.applicationFrame, hittable: button.isHittable) {
             button.tap()
         }
         return dismissal
     }
 
     @MainActor
+    private func readKeyboardIntroduction(_ app: XCUIApplication) throws -> KeyboardIntroductionSnapshot? {
+        // Public setup only. Snapshot objects and labels never leave this read
+        // or enter logs; an incomplete/ambiguous traversal cannot admit a tap.
+        let root = try app.snapshot()
+        var pending: [(any XCUIElementSnapshot, Int)] = [(root, 0)]
+        var tutorialCount = 0
+        var buttons: [(frame: CGRect, enabled: Bool)] = []
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if node.elementType == .staticText,
+               node.label == "Speed up your typing by sliding your finger across the letters to compose a word." {
+                tutorialCount += 1
+            }
+            if node.elementType == .button, node.label == "Continue" {
+                buttons.append((frame: node.frame, enabled: node.isEnabled))
+            }
+            for child in node.children { pending.append((child, depth + 1)) }
+        }
+        return KeyboardIntroductionSnapshot(applicationFrame: root.frame,
+                                            tutorialCount: tutorialCount, buttons: buttons)
+    }
+
+    @MainActor
     private func fullKeyboardTop(_ app: XCUIApplication, keyboard: XCUIElement) -> CGFloat {
         let keys = keyboard.frame
-        // XCUI's Keyboard frame excludes the native prediction row. Include
-        // its full-width sibling touching the keys, using geometry rather than
-        // reading prediction text or relying on an English accessibility label.
-        let frames: [CGRect] = app.otherElements.allElementsBoundByIndex.map { $0.frame }
-        let adjacentRows: [CGRect] = frames.filter { frame in
-            let aligned = abs(frame.minX - keys.minX) <= 1 && abs(frame.width - keys.width) <= 1
-            let touching = abs(frame.maxY - keys.minY) <= 1
-            let accessoryHeight = frame.height > 0 && frame.height < keys.height / 2
-            return aligned && touching && accessoryHeight
+        let surrounding = app.otherElements.allElementsBoundByIndex.map { $0.frame }
+        return PublicKeyboardSurface.top(keys: keys, surrounding: surrounding) ?? .nan
+    }
+
+    @MainActor
+    private func readPublicKeyboardGeometry(
+        _ app: XCUIApplication, actionPrefix: String
+    ) throws -> PublicKeyboardGeometry? {
+        // Only called on public Name/JoinCode setup, never private gameplay.
+        // Snapshot objects/labels are not retained in the geometry state or logs.
+        let root = try app.snapshot()
+        var pending: [(any XCUIElementSnapshot, Int)] = [(root, 0)]
+        var fieldFrames: [CGRect] = []
+        var actionFrames: [CGRect] = []
+        var keyFrames: [CGRect] = []
+        var surrounding: [CGRect] = []
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            switch node.elementType {
+            case .textView: fieldFrames.append(node.frame)
+            case .button:
+                if node.label.hasPrefix(actionPrefix) { actionFrames.append(node.frame) }
+            case .keyboard: keyFrames.append(node.frame)
+            case .other: surrounding.append(node.frame)
+            default: break
+            }
+            for child in node.children { pending.append((child, depth + 1)) }
         }
-        return adjacentRows.map { $0.minY }.min() ?? keys.minY
+        guard fieldFrames.count == 1, actionFrames.count == 1, keyFrames.count == 1,
+              let top = PublicKeyboardSurface.top(keys: keyFrames[0], surrounding: surrounding) else {
+            return nil
+        }
+        return PublicKeyboardGeometry(field: fieldFrames[0], action: actionFrames[0],
+                                      keys: keyFrames[0], keyboardTop: top)
     }
 }
 
@@ -489,6 +701,27 @@ final class PublicTextValueTests: XCTestCase {
 
 // Test-only frame state. Losing the control, enabled state or hittability must
 // break adjacency; a matching frame before an interruption cannot admit a tap.
+// A failed snapshot is unknown, never an enabled observation. Do not retain
+// XCUIElementSnapshot, labels, values, hierarchies or error descriptions here.
+private struct PublicControlSample {
+    let frame: CGRect?
+    let enabled: Bool
+    let errorCode: Int?
+
+    init(read: () throws -> (frame: CGRect, enabled: Bool)) {
+        do {
+            let resolved = try read()
+            frame = resolved.frame
+            enabled = resolved.enabled
+            errorCode = nil
+        } catch {
+            frame = nil
+            enabled = false
+            errorCode = (error as NSError).code
+        }
+    }
+}
+
 private struct PublicControlFrames {
     private var previous: CGRect?
 
@@ -511,6 +744,42 @@ private struct PublicControlFrames {
 
 final class PublicControlFramesTests: XCTestCase {
     private let resting = CGRect(x: 24, y: 279, width: 354, height: 101)
+
+    func testSampleResolvesFrameAndEnabledOnceFromTheSameGeneration() {
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            return (self.resting, reads == 1)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertTrue(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
+
+    func testSnapshotErrorBreaksAdjacencyAndCannotReuseLastEnabledFrame() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        var reads = 0
+        let sample = PublicControlSample(read: {
+            reads += 1
+            throw NSError(domain: "PublicControlSampleTest", code: 1001)
+        })
+        XCTAssertEqual(reads, 1)
+        XCTAssertNil(sample.frame)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertEqual(sample.errorCode, 1001)
+        XCTAssertFalse(frames.observe(frame: sample.frame, enabled: sample.enabled))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testDisabledSnapshotIsNotConfusedWithResolutionFailure() {
+        let sample = PublicControlSample(read: { (self.resting, false) })
+        XCTAssertEqual(sample.frame, resting)
+        XCTAssertFalse(sample.enabled)
+        XCTAssertNil(sample.errorCode)
+    }
 
     func testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes() {
         var frames = PublicControlFrames()
@@ -582,6 +851,137 @@ final class PublicControlFramesTests: XCTestCase {
     }
 }
 
+// Traverse only a single already-captured public snapshot. A partial tree,
+// duplicate match or absent control is unknown, never a usable cached frame.
+private enum PublicButtonSnapshot {
+    static func select<Node>(
+        from root: Node,
+        children: (Node) -> [Node],
+        isMatch: (Node) -> Bool,
+        geometry: (Node) -> (frame: CGRect, enabled: Bool)
+    ) -> (frame: CGRect, enabled: Bool)? {
+        var pending: [(Node, Int)] = [(root, 0)]
+        var selected: (frame: CGRect, enabled: Bool)?
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if isMatch(node) {
+                guard selected == nil else { return nil }
+                selected = geometry(node)
+            }
+            let descendants = children(node)
+            guard descendants.count <= 2048 - count - pending.count else { return nil }
+            for child in descendants { pending.append((child, depth + 1)) }
+        }
+        return selected
+    }
+}
+
+final class PublicButtonSnapshotTests: XCTestCase {
+    private struct Node {
+        var matches = false
+        var enabled = true
+        var frame = CGRect(x: 32, y: 466, width: 338, height: 52)
+        var children: [Node] = []
+    }
+
+    private func sample(_ root: Node) -> (frame: CGRect, enabled: Bool)? {
+        PublicButtonSnapshot.select(from: root, children: { $0.children },
+                                    isMatch: { $0.matches }, geometry: { ($0.frame, $0.enabled) })
+    }
+
+    func testUniqueControlUsesOneGenerationWithoutAnotherQuery() throws {
+        let target = Node(matches: true)
+        var reads = 0
+        let selected = try XCTUnwrap(PublicButtonSnapshot.select(
+            from: Node(children: [Node(), target]), children: { $0.children },
+            isMatch: { $0.matches }, geometry: { node in
+                reads += 1
+                return (node.frame, node.enabled)
+            }
+        ))
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(selected.frame, target.frame)
+        XCTAssertTrue(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: selected.enabled))
+    }
+
+    func testMissingAndDuplicateControlsCannotProvideAFrame() {
+        XCTAssertNil(sample(Node()))
+        XCTAssertNil(sample(Node(children: [Node(matches: true), Node(matches: true)])))
+        XCTAssertNil(sample(Node(matches: true, children: [Node(matches: true)])))
+    }
+
+    func testDisabledControlStillBreaksFrameAdjacency() throws {
+        let selected = try XCTUnwrap(sample(Node(matches: true, enabled: false)))
+        XCTAssertFalse(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: true))
+    }
+
+    func testOversizedTreeCannotAcceptAnEarlierMatch() {
+        let withinBudget = Node(children: Array(repeating: Node(), count: 2046) + [Node(matches: true)])
+        XCTAssertNotNil(sample(withinBudget))
+        let overBudget = Node(children: [Node(children: Array(repeating: Node(), count: 2047)),
+                                         Node(matches: true)])
+        XCTAssertNil(sample(overBudget))
+    }
+
+    func testExcessiveDepthCannotAcceptAnEarlierMatch() {
+        var chain = Node()
+        for _ in 0..<31 { chain = Node(children: [chain]) }
+        XCTAssertNotNil(sample(Node(children: [chain, Node(matches: true)])))
+        chain = Node(children: [chain])
+        XCTAssertNil(sample(Node(children: [chain, Node(matches: true)])))
+    }
+}
+
+// One resolved generation: never pair tutorial presence with another frame or
+// accept a generic/duplicate Continue. Geometry/hittability remain separately
+// mandatory in KeyboardIntroductionDismissal before the one ordinary tap.
+private struct KeyboardIntroductionSnapshot {
+    let applicationFrame: CGRect
+    let tutorialCount: Int
+    let buttons: [(frame: CGRect, enabled: Bool)]
+
+    var targetFrame: CGRect? {
+        guard tutorialCount == 1, buttons.count == 1, buttons[0].enabled else { return nil }
+        return buttons[0].frame
+    }
+}
+
+final class KeyboardIntroductionSnapshotTests: XCTestCase {
+    private let application = CGRect(x: 0, y: 0, width: 402, height: 874)
+    private let button = CGRect(x: 140, y: 800, width: 122, height: 44)
+
+    func testOnlyOneEnabledButtonWithOneTutorialIsAccepted() {
+        let sample = KeyboardIntroductionSnapshot(applicationFrame: application, tutorialCount: 1,
+                                                  buttons: [(frame: button, enabled: true)])
+        XCTAssertEqual(sample.targetFrame, button)
+        XCTAssertEqual(sample.applicationFrame, application)
+    }
+
+    func testMissingDuplicateOrDisabledTutorialTargetsCannotAdmitATap() {
+        for tutorials in [0, 1, 2] {
+            for buttons in [0, 1, 2] {
+                for enabled in [false, true] {
+                    let sample = KeyboardIntroductionSnapshot(applicationFrame: application,
+                        tutorialCount: tutorials,
+                        buttons: Array(repeating: (frame: button, enabled: enabled), count: buttons))
+                    if tutorials == 1 && buttons == 1 && enabled { continue }
+                    XCTAssertNil(sample.targetFrame)
+                }
+            }
+        }
+    }
+}
+
 // Test-only, per-keyboard-cycle budget for the identified Apple introduction.
 // Absence during the first check must not consume the later dismissal; once
 // admitted, no second tap is allowed even if UIKit briefly retains the modal.
@@ -649,5 +1049,189 @@ final class KeyboardIntroductionDismissalTests: XCTestCase {
                                              applicationFrame: application, hittable: true))
             XCTAssertFalse(dismissal.hasDismissed)
         }
+    }
+}
+
+// Geometry-only state for public setup. A transient AX sentinel must never
+// reach XCTest's hit-point calculation; unknown/moving samples cannot settle.
+private struct PublicKeyboardGeometry: Equatable {
+    let field: CGRect
+    let action: CGRect
+    let keys: CGRect
+    let keyboardTop: CGFloat
+
+    var gap: CGFloat { keyboardTop - action.maxY }
+
+    var isValid: Bool {
+        let frames = [field, action, keys]
+        guard frames.allSatisfy({ frame in
+            !frame.isNull && !frame.isInfinite && !frame.isEmpty
+                && frame.size.width > 0 && frame.size.height > 0
+                && [frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+                    frame.maxX, frame.maxY].allSatisfy({ $0.isFinite })
+        }) else { return false }
+        return keys.height > 100 && keyboardTop.isFinite
+            && keyboardTop >= 0 && keyboardTop <= keys.minY
+            && field.minY >= 0 && field.maxY <= action.minY
+            && gap >= 0 && gap <= 32
+    }
+}
+
+private struct PublicKeyboardFrames {
+    private var previous: PublicKeyboardGeometry?
+
+    mutating func observe(_ sample: PublicKeyboardGeometry?, hittable: () -> Bool) -> Bool {
+        guard let sample, sample.isValid else {
+            previous = nil
+            return false
+        }
+        let stable = previous == sample
+        previous = sample
+        guard stable else { return false }
+        guard hittable() else {
+            previous = nil
+            return false
+        }
+        return true
+    }
+}
+
+final class PublicKeyboardGeometryTests: XCTestCase {
+    private func sample(field: CGRect = CGRect(x: 24, y: 270, width: 354, height: 44),
+                        action: CGRect = CGRect(x: 24, y: 498, width: 354, height: 52),
+                        keys: CGRect = CGRect(x: 0, y: 583, width: 402, height: 233),
+                        top: CGFloat = 566) -> PublicKeyboardGeometry {
+        PublicKeyboardGeometry(field: field, action: action, keys: keys, keyboardTop: top)
+    }
+
+    func testHittabilityIsQueriedOnlyAfterTwoExactValidSamples() {
+        var frames = PublicKeyboardFrames()
+        var reads = 0
+        let hit = { reads += 1; return true }
+        XCTAssertFalse(frames.observe(sample(), hittable: hit))
+        XCTAssertEqual(reads, 0)
+        XCTAssertTrue(frames.observe(sample(), hittable: hit))
+        XCTAssertEqual(reads, 1)
+    }
+
+    func testInfiniteEmptyAndNegativeFramesNeverRequestAHitPoint() {
+        let invalid: [CGRect] = [.zero, .null, .infinite,
+            CGRect(x: CGFloat.infinity, y: CGFloat.infinity, width: 0, height: 0),
+            CGRect(x: CGFloat.nan, y: 270, width: 354, height: 44),
+            CGRect(x: 24, y: 270, width: -354, height: 44)]
+        for field in invalid {
+            var frames = PublicKeyboardFrames()
+            for _ in 0..<2 {
+                XCTAssertFalse(frames.observe(sample(field: field), hittable: {
+                    XCTFail("Invalid geometry must not query native hittability")
+                    return true
+                }))
+            }
+        }
+    }
+
+    func testMissingOrInvalidSampleBreaksAdjacency() {
+        for invalid in [nil, sample(field: .null)] {
+            var frames = PublicKeyboardFrames()
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertFalse(frames.observe(invalid, hittable: { true }))
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertTrue(frames.observe(sample(), hittable: { true }))
+        }
+    }
+
+    func testThirtyThreePointAndKeyboardSizedGapsRemainFailures() {
+        XCTAssertEqual(sample(top: 583).gap, 33)
+        XCTAssertFalse(sample(top: 583).isValid)
+        XCTAssertFalse(sample(action: CGRect(x: 24, y: 198, width: 354, height: 52)).isValid)
+        XCTAssertFalse(sample(top: 549).isValid)
+        XCTAssertTrue(sample(top: 550).isValid)
+        XCTAssertTrue(sample(top: 582).isValid)
+    }
+
+    func testFieldOutsideTheVisibleAreaOrBelowTheActionCannotSettle() {
+        XCTAssertFalse(sample(field: CGRect(x: 24, y: -1, width: 354, height: 44)).isValid)
+        XCTAssertFalse(sample(field: CGRect(x: 24, y: 480, width: 354, height: 44)).isValid)
+        XCTAssertFalse(sample(keys: CGRect(x: 0, y: 583, width: 402, height: 100)).isValid)
+        XCTAssertFalse(sample(top: CGFloat.nan).isValid)
+        XCTAssertFalse(sample(top: CGFloat.infinity).isValid)
+    }
+
+    func testSubpointFieldActionAndKeyboardMotionDoesNotSettle() {
+        for moved in [sample(field: sample().field.offsetBy(dx: 0, dy: 0.001)),
+                      sample(action: sample().action.offsetBy(dx: 0, dy: 0.001)),
+                      sample(keys: sample().keys.offsetBy(dx: 0, dy: 0.001)),
+                      sample(top: 566.001)] {
+            var frames = PublicKeyboardFrames()
+            XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+            XCTAssertFalse(frames.observe(moved, hittable: { true }))
+            XCTAssertTrue(frames.observe(moved, hittable: { true }))
+        }
+    }
+
+    func testNonhittableFieldRequiresTwoFreshSamples() {
+        var frames = PublicKeyboardFrames()
+        XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+        XCTAssertFalse(frames.observe(sample(), hittable: { false }))
+        XCTAssertFalse(frames.observe(sample(), hittable: { true }))
+        XCTAssertTrue(frames.observe(sample(), hittable: { true }))
+    }
+}
+
+// AX's Keyboard describes keys, not necessarily the native keyboard surface.
+// iOS26.2 exposes full-width background siblings above an ASCII key plane;
+// prediction rows may instead touch its top. Never use a device-specific offset.
+private enum PublicKeyboardSurface {
+    static func top(keys: CGRect, surrounding: [CGRect]) -> CGFloat? {
+        guard usable(keys) else { return nil }
+        let tops = surrounding.filter { frame in
+            guard usable(frame), abs(frame.minX - keys.minX) <= 1,
+                  abs(frame.width - keys.width) <= 1 else { return false }
+            let predictionRow = abs(frame.maxY - keys.minY) <= 1
+                && frame.height < keys.height / 2
+            // Bound to keyboard-sized surfaces, not the containing app/window.
+            let enclosingSurface = frame.contains(keys) && frame.minY < keys.minY
+                && frame.height < keys.height * 2
+            return predictionRow || enclosingSurface
+        }.map { $0.minY }
+        return tops.min() ?? keys.minY
+    }
+
+    private static func usable(_ frame: CGRect) -> Bool {
+        !frame.isNull && !frame.isInfinite && !frame.isEmpty
+            && frame.size.width > 0 && frame.size.height > 0
+            && [frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+                frame.maxX, frame.maxY].allSatisfy({ $0.isFinite })
+    }
+}
+
+final class PublicKeyboardSurfaceTests: XCTestCase {
+    private let keys = CGRect(x: 0, y: 583, width: 402, height: 233)
+
+    func testActualIos26AsciiBackgroundIsIncludedWithoutAnOffset() {
+        let backgrounds = [CGRect(x: 0, y: 566, width: 402, height: 308),
+                           CGRect(x: 0, y: 583, width: 402, height: 291)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds), 566)
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds)! - 550, 16)
+    }
+
+    func testPredictionRowAndBackgroundUseTheFullVisibleSurface() {
+        let backgrounds = [CGRect(x: 0, y: 566, width: 402, height: 308),
+                           CGRect(x: 0, y: 539, width: 402, height: 44)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: backgrounds), 539)
+    }
+
+    func testWholeWindowAndUnrelatedRowsCannotHideExcessiveSpacing() {
+        let unrelated = [CGRect(x: 0, y: 0, width: 402, height: 874),
+                         CGRect(x: 0, y: 442, width: 402, height: 48),
+                         CGRect(x: 24, y: 566, width: 354, height: 308)]
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: unrelated), 583)
+    }
+
+    func testInvalidFramesDoNotManufactureAKeyboardBoundary() {
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .null, surrounding: []))
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .infinite, surrounding: []))
+        XCTAssertNil(PublicKeyboardSurface.top(keys: .zero, surrounding: []))
+        XCTAssertEqual(PublicKeyboardSurface.top(keys: keys, surrounding: [.null, .infinite, .zero]), 583)
     }
 }

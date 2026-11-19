@@ -198,6 +198,7 @@ private fun WhodunitShellContent(
         WhodunitShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == WhodunitShellScreen.Setup &&
                     capabilities.supports(mode) &&
                     WhodunitPlayModePolicy.supportsLocalEntry(mode)
                 ) {
@@ -205,8 +206,8 @@ private fun WhodunitShellContent(
                     screen = WhodunitShellScreen.LocalCasePicker
                 }
             },
-            onHost = { screen = WhodunitShellScreen.HostPermission },
-            onJoin = { screen = WhodunitShellScreen.JoinPermission },
+            onHost = { if (screen == WhodunitShellScreen.Setup) screen = WhodunitShellScreen.HostPermission },
+            onJoin = { if (screen == WhodunitShellScreen.Setup) screen = WhodunitShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,
@@ -242,8 +243,10 @@ private fun WhodunitShellContent(
             isHost = true,
             initial = hostName,
             onConfirm = { name ->
-                hostName = name
-                screen = WhodunitShellScreen.HostCasePicker
+                if (screen == WhodunitShellScreen.HostName) {
+                    hostName = name
+                    screen = WhodunitShellScreen.HostCasePicker
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -306,8 +309,10 @@ private fun WhodunitShellContent(
             isHost = false,
             initial = peerName,
             onConfirm = { name ->
-                peerName = name
-                screen = WhodunitShellScreen.JoinPrompt
+                if (screen == WhodunitShellScreen.JoinName) {
+                    peerName = name
+                    screen = WhodunitShellScreen.JoinPrompt
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -315,8 +320,10 @@ private fun WhodunitShellContent(
 
         WhodunitShellScreen.JoinPrompt -> JoinPromptScreen(
             onConfirm = { code ->
-                pendingJoinCode = code
-                screen = WhodunitShellScreen.PeerLobby
+                if (screen == WhodunitShellScreen.JoinPrompt) {
+                    pendingJoinCode = code
+                    screen = WhodunitShellScreen.PeerLobby
+                }
             },
             onCancel = onExit,
             modifier = modifier,

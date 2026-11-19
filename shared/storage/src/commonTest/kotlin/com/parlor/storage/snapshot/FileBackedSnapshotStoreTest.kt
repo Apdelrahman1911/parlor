@@ -67,6 +67,24 @@ class FileBackedSnapshotStoreTest {
     }
 
     @Test
+    fun unavailable_protection_is_opaque_io_for_both_read_paths() = runTest {
+        val store = FileBackedSnapshotStore(
+            FailingFileSystem(SnapshotProtectionUnavailableException(IllegalStateException("private key path"))),
+            json,
+        )
+        assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.load(sessionId))
+        assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.loadMetadata(sessionId))
+    }
+
+    @Test
+    fun unavailable_protection_is_opaque_io_for_inventory_and_mutations() = runTest {
+        val store = FileBackedSnapshotStore(FailingFileSystem(SnapshotProtectionUnavailableException()), json)
+        assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.listUnfinished())
+        assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.save(validSnapshot()))
+        assertEquals(Result.Failure(DataError.IoError("snapshot_io")), store.delete(sessionId))
+    }
+
+    @Test
     fun protection_failure_is_reported_as_corrupted_without_crypto_detail() = runTest {
         val store = FileBackedSnapshotStore(
             fileSystem = FailingFileSystem(SnapshotProtectionException("secret key alias")),

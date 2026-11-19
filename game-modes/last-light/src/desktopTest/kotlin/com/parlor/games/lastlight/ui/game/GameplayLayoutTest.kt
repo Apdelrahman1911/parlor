@@ -116,11 +116,24 @@ class GameplayLayoutTest {
         }
         fun capture(phase: String) {
             val filename = "last-light-${language.tag}-${width.value.toInt()}x${height.value.toInt()}-$scale-$phase.png"
-            val file = File("build/ui-snapshots/$filename").apply { parentFile.mkdirs() }
+            val file = File("build/reports/tests/public-ux/$filename").apply { parentFile.mkdirs() }
             ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", file)
         }
 
         capture("concealed")
+        if (scale == 2f) {
+            // Check the complete shipping wrapper's initial viewport before
+            // bringIntoView can hide an excessively tall introductory layout.
+            val reveal = onNodeWithTag("game-reveal-hand").getUnclippedBoundsInRoot()
+            val viewport = onNodeWithTag(LAST_LIGHT_VIEWPORT).getUnclippedBoundsInRoot()
+            assertTrue(
+                reveal.top >= viewport.top && reveal.bottom <= viewport.bottom,
+                "Initial Reveal must be completely visible before scrolling: $reveal in $viewport",
+            )
+            assertTrue(reveal.bottom - reveal.top >= 56.dp)
+            val label = if (language == AppLanguage.Arabic) "أظهر أوراقك" else "Show hand"
+            onNodeWithText(label, useUnmergedTree = true).assertTextDoesNotOverflow(requireWholeWords = true)
+        }
         assertPrimaryControl("game-reveal-hand")
         onNodeWithTag("game-reveal-hand").performClick()
         for (index in 0..4) {

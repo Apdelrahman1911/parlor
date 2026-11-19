@@ -46,11 +46,15 @@ keytool -genkeypair \
   -noprompt
 
 cd "$repo_root"
+# AGP retains only uppercase ERROR lines in snapshot-start exceptions. INFO
+# exposes both emulator streams, including loader/PANIC diagnostics it omits.
 gradle_command=(./gradlew productionAndroidRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=release \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
+  --info \
   --stacktrace \
   --console=plain \
   "-Pandroid.injected.signing.store.file=$keystore" \
@@ -61,8 +65,11 @@ gradle_command=(./gradlew productionAndroidRuntimeCheck \
 if [[ "$(uname -s)" == Linux ]]; then
   # AGP's emulator exit request is not an exit guarantee. Retire only this
   # build's kernel-owned descendants, including helpers detached with setsid.
+  # A fresh ANDROID_AVD_HOME is retired only after that proof and a passing
+  # runtime. API35's completed writable images must not overlap API34's peak.
   python3 -B scripts/android/supervise_managed_device.py \
     --receipt build/ci-evidence/android-managed-device-supervision.json \
+    --isolated-avd \
     -- "${gradle_command[@]}"
 else
   # Preserve the existing non-Linux invocation; it makes no subreaper claim.
@@ -74,15 +81,18 @@ fi
 # without changing the optimized Release app or dropping its smoke tests.
 navigation_command=(./gradlew productionAndroidNavigationRuntimeCheck \
   -Pparlor.androidRuntimeTestVariant=debug \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
+  --info \
   --stacktrace \
   --console=plain)
 
 if [[ "$(uname -s)" == Linux ]]; then
   python3 -B scripts/android/supervise_managed_device.py \
     --receipt build/ci-evidence/android-navigation-device-supervision.json \
+    --isolated-avd \
     -- "${navigation_command[@]}"
 else
   "${navigation_command[@]}"

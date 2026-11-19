@@ -3,12 +3,12 @@ package com.parlor.games.whodunit.domain.rules
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.ModeId
+import com.parlor.core.text.DisplayNamePolicy
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.modes.ClassicVoteMode
 import com.parlor.games.whodunit.domain.modes.EliminationMode
-import com.parlor.networking.room.RoomInputPolicy
 
 /**
  * Authoritative, UI-independent Whodunit session rules.
@@ -33,7 +33,7 @@ object WhodunitRules {
         if (players.size !in supportedCounts) return false
         if (players.map { it.id }.toSet().size != players.size) return false
         if (players.any { it.seat < 0 }) return false
-        if (!RoomInputPolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
+        if (!DisplayNamePolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
             return false
         }
         if (players.withIndex().any { (seat, player) -> player.seat != seat }) return false

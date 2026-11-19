@@ -46,7 +46,12 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 
-/** Wire-ready public and player-private state captured from one domain revision. */
+/**
+ * Wire-ready public and player-private state captured from one domain revision.
+ * The producer must finish writing both buffers before returning them. The host
+ * copies their validated bytes before handing them to asynchronous peer outboxes;
+ * later serialization may reuse the producer's buffers, but must not race that copy.
+ */
 data class PlayerSnapshotPayload(
     val publicPayload: ByteArray,
     val privatePayload: ByteArray,
@@ -82,7 +87,7 @@ enum class HostSessionStartState {
 class HostAuthoritativeSessionCoordinator(
     private val room: LocalRoom,
     val protocol: SessionProtocol,
-    private val remotePlayers: Set<PlayerId>,
+    remotePlayers: Set<PlayerId>,
     private val scope: CoroutineScope,
     private val applyCommand: suspend (actor: PlayerId, payload: ByteArray) -> CommandApplication,
     private val snapshotFor: suspend (playerId: PlayerId) -> PlayerSnapshotPayload,
@@ -92,6 +97,10 @@ class HostAuthoritativeSessionCoordinator(
     private val startSendTimeoutMs: Long = DEFAULT_START_FRAME_SEND_TIMEOUT_MS,
     private val outboundSendTimeoutMs: Long = DEFAULT_OUTBOUND_SEND_TIMEOUT_MS,
 ) {
+    // Authorization, start barriers, and outbound lanes must use the same
+    // frozen seats even if the caller later reuses its mutable input set.
+    private val remotePlayerIds = remotePlayers.toSet()
+
     private sealed interface Work {
         data class Incoming(val message: PeerMessage) : Work
         data class Publish(val incrementRevision: Boolean) : Work
@@ -193,7 +202,7 @@ class HostAuthoritativeSessionCoordinator(
 
     private val coordinatorJob = SupervisorJob(scope.coroutineContext[Job])
     private val coordinatorScope = CoroutineScope(scope.coroutineContext + coordinatorJob)
-    private val outboundByPlayer = remotePlayers.associateWith { playerId ->
+    private val outboundByPlayer = remotePlayerIds.associateWith { playerId ->
         BoundedPeerOutbox(
             playerId = playerId,
             room = room,
@@ -210,7 +219,7 @@ class HostAuthoritativeSessionCoordinator(
 
         override suspend fun validate(): Boolean {
             if (!ready) return false
-            val players = room.members.value.filter { it.connected && it.playerId in remotePlayers }
+            val players = room.members.value.filter { it.connected && it.playerId in remotePlayerIds }
                 .map { it.playerId }.toSet()
             val replies = foregroundProbe.check(players) { id ->
                 mailbox.send(Work.ForegroundProbe(id))
@@ -315,7 +324,7 @@ class HostAuthoritativeSessionCoordinator(
             startId = startId,
             caseId = caseId,
             modeId = modeId,
-            players = players,
+            players = players.toList(),
             sessionNonce = sessionNonce,
             header = SessionEnvelopeHeader(
                 protocol = protocol.protocol,
@@ -501,7 +510,7 @@ class HostAuthoritativeSessionCoordinator(
             is PeerMessage.SnapshotRequest -> {
                 if (
                     canProcessGameTraffic() &&
-                    message.actor in remotePlayers &&
+                    message.actor in remotePlayerIds &&
                     message.validateFor(protocol) == ProtocolValidation.Valid
                 ) {
                     sendSnapshot(message.actor)
@@ -510,7 +519,7 @@ class HostAuthoritativeSessionCoordinator(
             is PeerMessage.SessionHeartbeat -> {
                 if (
                     canProcessGameTraffic() &&
-                    message.actor in remotePlayers &&
+                    message.actor in remotePlayerIds &&
                     message.validateFor(protocol) == ProtocolValidation.Valid
                 ) {
                     foregroundProbe.accept(message.actor, message.header.messageId, message.lastAppliedRevision)
@@ -655,7 +664,7 @@ class HostAuthoritativeSessionCoordinator(
             maxRetryMs = work.maxRetryMs,
             deadlineMs = work.deadlineMs,
             nextRetryMs = work.initialRetryMs,
-            awaiting = remotePlayers.toMutableSet(),
+            awaiting = remotePlayerIds.toMutableSet(),
         )
         startAttempt = attempt
 
@@ -674,7 +683,7 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processStartReady(message: PeerMessage.SessionStartReady) {
         if (
-            message.actor !in remotePlayers ||
+            message.actor !in remotePlayerIds ||
             message.validateFor(protocol) != ProtocolValidation.Valid
         ) {
             return
@@ -712,7 +721,7 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processStartCommitAck(message: PeerMessage.SessionStartCommitAck) {
         if (
-            message.actor !in remotePlayers ||
+            message.actor !in remotePlayerIds ||
             message.validateFor(protocol) != ProtocolValidation.Valid
         ) {
             return
@@ -811,7 +820,7 @@ class HostAuthoritativeSessionCoordinator(
         val completed = completedStart
         if (
             completed == null ||
-            work.playerId !in remotePlayers ||
+            work.playerId !in remotePlayerIds ||
             ended ||
             room.lifecycle.value != RoomLifecycleState.Active
         ) {
@@ -1002,7 +1011,7 @@ class HostAuthoritativeSessionCoordinator(
         attempt.sendJob?.cancel()
         attempt.phase = StartPhase.AwaitingCommitAck
         attempt.awaiting.clear()
-        attempt.awaiting += remotePlayers
+        attempt.awaiting += remotePlayerIds
         attempt.nextRetryMs = attempt.initialRetryMs
         scheduleStartDeadline(attempt, StartPhase.AwaitingCommitAck)
         completedStart = attempt.offer to attempt.commit
@@ -1096,7 +1105,7 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processOutcomeRequest(request: PeerMessage.CommandOutcomeRequest) {
         if (
-            request.actor !in remotePlayers ||
+            request.actor !in remotePlayerIds ||
             request.validateFor(protocol) != ProtocolValidation.Valid
         ) {
             return
@@ -1140,7 +1149,7 @@ class HostAuthoritativeSessionCoordinator(
             sendResult(actor, command.commandId, status, remember = false)
             return
         }
-        if (actor !in remotePlayers) {
+        if (actor !in remotePlayerIds) {
             sendResult(actor, command.commandId, CommandStatus.Unauthorized, remember = false)
             return
         }
@@ -1192,11 +1201,11 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun publishSnapshots(incrementRevision: Boolean) {
         if (incrementRevision) _revision.value += 1L
-        remotePlayers.forEach { playerId -> sendSnapshot(playerId) }
+        remotePlayerIds.forEach { playerId -> sendSnapshot(playerId) }
     }
 
     private suspend fun sendSnapshot(playerId: PlayerId) {
-        if (playerId !in remotePlayers) return
+        if (playerId !in remotePlayerIds) return
         val snapshot = snapshotFor(playerId)
         val message = HostMessage.PlayerSnapshot(
             header = nextHeader(),
@@ -1208,7 +1217,16 @@ class HostAuthoritativeSessionCoordinator(
         check(message.validateFor(protocol) == ProtocolValidation.Valid) {
             "Snapshot exceeds the protocol limit or has invalid metadata"
         }
-        outboundByPlayer[playerId]?.enqueue(message)
+        // Outboxes may serialize after the next recipient's snapshot callback
+        // runs. Own these bytes before that handoff: a reused producer buffer
+        // must never change a queued recipient's secret or revision contents.
+        // Validate first so an oversized callback cannot force an oversized copy.
+        outboundByPlayer[playerId]?.enqueue(
+            message.copy(
+                publicPayload = message.publicPayload.copyOf(),
+                privatePayload = message.privatePayload.copyOf(),
+            ),
+        )
     }
 
     private suspend fun sendResult(
@@ -1219,7 +1237,7 @@ class HostAuthoritativeSessionCoordinator(
         authoritativeRevision: Long = _revision.value,
         nextExpectedClientSequence: Long = nextClientSequence[actor] ?: 1L,
     ) {
-        if (actor !in remotePlayers) return
+        if (actor !in remotePlayerIds) return
         val result = HostMessage.CommandResult(
             header = nextHeader(),
             commandId = commandId,

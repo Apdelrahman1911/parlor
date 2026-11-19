@@ -53,7 +53,7 @@ class HomeCatalogRenderingTest {
         }
         onNodeWithText("One device").performScrollTo().performClick().assertIsSelected()
         onNodeWithText("No games for this setup").performScrollTo().assertExists()
-        onNodeWithText("All games").performScrollTo().performClick().assertIsSelected()
+        onNodeWithText("All").performScrollTo().performClick().assertIsSelected()
         onNodeWithText("No games for this setup").assertDoesNotExist()
         onNodeWithText("1 game").assertExists()
         runOnIdle { assertEquals(0, starts) }
@@ -84,11 +84,11 @@ class HomeCatalogRenderingTest {
         onNodeWithContentDescription(if (arabic) "افتح لعبة حرامية وظباط." else "Open the Mafia game.")
             .performScrollTo().assertIsDisplayed().performClick()
         runOnIdle { assertEquals(listOf(local.definition.id), selections) }
-        onNodeWithText(if (arabic) "اللعب مع القريبين" else "Nearby play")
+        onNodeWithText(if (arabic) "بالقرب منك" else "Nearby")
             .performScrollTo().performClick().assertIsSelected()
         onNodeWithText(if (arabic) "لعبتان (2)" else "2 games").assertExists()
         runOnIdle { assertEquals(listOf(local.definition.id), selections) }
-        onNodeWithText(if (arabic) "كل الألعاب" else "All games")
+        onNodeWithText(if (arabic) "الكل" else "All")
             .performScrollTo().performClick().assertIsSelected()
         onNodeWithText(if (arabic) "لعبتان (2)" else "2 games").assertExists()
         val nearbyLabel = if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices"

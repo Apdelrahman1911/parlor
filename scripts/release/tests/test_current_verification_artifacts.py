@@ -17,7 +17,8 @@ UPLOADS = {
     "desktop-linux-arm64": "Upload Desktop verification descriptors",
     "desktop-macos-x64": "Upload Desktop verification descriptors",
     "desktop-windows-x64": "Upload Desktop verification descriptors",
-    "ios": "Upload Apple runtime verification evidence",
+    "ios-kmp": "Upload Apple runtime verification evidence",
+    "ios": "Upload Apple Swift verification evidence",
     "ios-release-simulator": "Upload Apple release verification evidence",
     "ios-release-device": "Upload IosArm64 release verification evidence",
     "ios-release-x64": "Upload IosX64 release verification evidence",
@@ -38,6 +39,48 @@ def paths(text: str, job: str) -> list[str]:
 
 
 class CurrentVerificationArtifactTest(unittest.TestCase):
+    def test_synthetic_renderers_do_not_write_to_uncollected_legacy_destinations(self) -> None:
+        outdated = []
+        for module in ("composeApp", "shared/design-system", "game-modes"):
+            for source in (workflow_contract.ROOT / module).rglob("*.kt"):
+                if "desktopTest" not in source.parts:
+                    continue
+                text = source.read_text()
+                if "captureToImage" in text and any(
+                    path in text for path in ("build/reports/ux", "build/ui-snapshots")
+                ):
+                    outdated.append(str(source.relative_to(workflow_contract.ROOT)))
+        self.assertEqual(outdated, [], "Synthetic visual evidence must survive the reviewed CI upload")
+
+    def test_public_ux_render_default_is_collected_by_every_desktop_producer(self) -> None:
+        source = (workflow_contract.ROOT / "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/"
+                  "HomeCatalogVisualEvidenceTest.kt").read_text()
+        match = re.search(
+            r'System\.getProperty\("parlor\.ux\.screenshotDir"\)\s*'
+            r'\?: System\.getenv\("PARLOR_UI_SCREENSHOT_DIR"\)\s*\?: "([^"]+)"',
+            source,
+        )
+        self.assertIsNotNone(match, "Keep the reviewed public-fixture destination and local overrides")
+        directory = Path(match.group(1))
+        self.assertEqual(directory, Path("build/reports/tests/public-ux"))
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            screenshot = root / "composeApp" / directory / "home-ar-dark-2.0.png"
+            screenshot.parent.mkdir(parents=True)
+            screenshot.write_bytes(b"synthetic public selection fixture, not a rendered PNG")
+            for job in UPLOADS:
+                if not job.startswith("desktop-"):
+                    continue
+                selected = set()
+                for pattern in paths(workflow(), job):
+                    if pattern.startswith("!") or "${{" in pattern:
+                        continue
+                    for match in glob.glob(str(root / pattern), recursive=True):
+                        item = Path(match)
+                        selected.update(item.rglob("*") if item.is_dir() else [item])
+                with self.subTest(job=job):
+                    self.assertIn(screenshot, selected)
+
     def test_six_current_uploads_end_with_exact_historical_exclusions(self) -> None:
         for job in UPLOADS:
             with self.subTest(job=job):
@@ -130,6 +173,7 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
             "composeApp/build/outputs/androidTest-results/managedDevice/release/TEST-Device.xml",
             "composeApp/build/outputs/mapping/release/mapping.txt",
             "composeApp/build/outputs/bundle/release/Parlor.aab",
+            "composeApp/build/reports/lint-repository-inputs-123.json",
             "build/ci-evidence/ios-ui-tests.xcresult/Info.plist",
             "build/ci-evidence/ios-readiness-control-tests.log",
             "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/Contents/Info.plist",
@@ -147,6 +191,8 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
             for job in UPLOADS:
                 binding = f"parlor-verification-123-1-{job}"
                 receipts = [binding + suffix for suffix in ("-ownership.json", "-stop-desktop.json")]
+                if job == "desktop-android":
+                    receipts += [binding + "-hosted-disk.json"]
                 if job.startswith("ios"):
                     receipts += [binding + "-apple-aggregate-ownership.json"]
                 if job == "ios":
@@ -176,12 +222,12 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
                         self.assertIn(root / reports[2], selected)
                         self.assertIn(root / reports[3], selected)
                     if job == "desktop-android":
-                        self.assertTrue(all(root / name in selected for name in reports[:10]))
+                        self.assertTrue(all(root / name in selected for name in reports[:11]))
                     if job.startswith("ios"):
-                        self.assertIn(root / reports[10], selected)
+                        self.assertIn(root / reports[11], selected)
                     if job == "ios-release-simulator":
                         self.assertIn(root / reports[4], selected)
-                        self.assertIn(root / reports[12], selected)
+                        self.assertIn(root / reports[13], selected)
                     self.assertFalse(any(p.is_relative_to(root / "remediation-runs") or p.is_relative_to(root / "docs/archives") for p in selected))
 
     def test_diagnostics_cannot_acquire_normal_collection_policy(self) -> None:

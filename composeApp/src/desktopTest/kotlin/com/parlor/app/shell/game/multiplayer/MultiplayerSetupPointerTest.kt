@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsNodeInteraction
@@ -25,17 +26,33 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.app.shell.game.DominoGameShellBinding
+import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellBinding
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GhamzaGameShellBinding
+import com.parlor.app.shell.game.LastLightGameShellBinding
+import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.app.shell.game.WordImpostorGameShellBinding
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
+import com.parlor.content.repository.CaseRepository
+import com.parlor.content.repository.CaseUpdate
+import com.parlor.content.schema.CaseSummary
+import com.parlor.content.validation.PayloadValidator
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
+import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.dominoes.DominoDefinition
 import com.parlor.games.ghamza.GhamzaDefinition
+import com.parlor.games.lastlight.LastLightDefinition
+import com.parlor.games.mafia.MafiaDefinition
+import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.wordimpostor.WordImpostorDefinition
 import com.parlor.networking.room.DiscoveredRoom
 import com.parlor.networking.room.LocalRoom
@@ -45,6 +62,7 @@ import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.TransportCapability
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.Json
 import org.koin.compose.KoinApplication
 import org.koin.dsl.module
 import kotlin.test.Test
@@ -52,9 +70,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 
 /**
- * Real shared clickable/pointer-to-shell execution, not SemanticsActions.OnClick.
+ * Real shared clickable/pointer-to-shell execution; retained-callback regressions
+ * additionally invoke captured shipping SemanticsActions.OnClick callbacks.
  * The 50ms interval is Compose event time, not UIKit or physical-device evidence.
- * No observer, shipping seam, artificial callback or networking is introduced.
+ * No observer, shipping seam or networking is introduced.
  */
 @OptIn(ExperimentalTestApi::class)
 class MultiplayerSetupPointerTest {
@@ -79,6 +98,18 @@ class MultiplayerSetupPointerTest {
         SetupChoice.entries.forEach { verifyChoices(it, SetupGesture.RepeatedPress) }
 
     @Test
+    fun queued_opposite_setup_choice_cannot_replace_the_first_host_selection() =
+        verifyRetainedChoice(SetupChoice.Host, afterNameInput = false)
+
+    @Test
+    fun queued_opposite_setup_choice_cannot_replace_the_first_join_selection() =
+        verifyRetainedChoice(SetupChoice.Join, afterNameInput = false)
+
+    @Test
+    fun retained_setup_choices_cannot_change_the_route_or_erase_a_typed_name() =
+        SetupChoice.entries.forEach { verifyRetainedChoice(it, afterNameInput = true) }
+
+    @Test
     fun equal_recreated_launch_preserves_the_selected_destination_and_typed_name() {
         for (binding in bindings()) {
             for (language in AppLanguage.entries) {
@@ -87,9 +118,100 @@ class MultiplayerSetupPointerTest {
         }
     }
 
+    @Test
+    fun returning_from_an_untouched_host_name_then_joining_commits_the_single_full_input() {
+        for (binding in bindings()) {
+            for (language in AppLanguage.entries) {
+                verifyHostReturnThenPeerInput(binding, language, hostInput = null, peerInput = "Table Test")
+            }
+        }
+    }
+
+    @Test
+    fun a_new_peer_entry_does_not_reuse_the_previous_host_name() {
+        for (binding in bindings()) {
+            for (language in AppLanguage.entries) {
+                verifyHostReturnThenPeerInput(binding, language, hostInput = "Host Fixture", peerInput = "Table Test")
+            }
+        }
+    }
+
+    @Test
+    fun arabic_unicode_input_survives_return_and_equal_peer_launch_recreation() {
+        for (binding in bindings()) {
+            verifyHostReturnThenPeerInput(binding, AppLanguage.Arabic, hostInput = "مضيف تجريبي", peerInput = "أحمد")
+        }
+    }
+
     private fun verifyChoices(choice: SetupChoice, gesture: SetupGesture) {
         for (binding in bindings()) {
             for (language in AppLanguage.entries) verifyChoice(binding, language, choice, gesture)
+        }
+    }
+
+    /** Retained public semantics callbacks, not a reproduced UIKit event sequence. */
+    private fun verifyRetainedChoice(choice: SetupChoice, afterNameInput: Boolean) {
+        val allBindings = bindings() + listOf(
+            MafiaGameShellBinding(MafiaDefinition(Json)),
+            LastLightGameShellBinding(LastLightDefinition()),
+            WhodunitGameShellBinding(WhodunitDefinition(Json)),
+        )
+        for (binding in allBindings) {
+            for (language in AppLanguage.entries) runComposeUiTest {
+                val transport = SetupNetworkTripwire()
+                var exits = 0
+                setContent {
+                    KoinApplication(application = { modules(module {
+                        single<RoomTransport> { transport }
+                        single<CaseRepository> { SetupContentTripwire() }
+                        single { AppLifecycleCoordinator(transport).apply { notifyActive() } }
+                    }) }) {
+                        ProvideAppLanguage(language) {
+                            ParlorTheme(reducedMotion = true) {
+                                binding.Content(
+                                    GameShellLaunch.New(binding.definition.id), { exits++ }, GameShellBackRequest.Initial,
+                                )
+                            }
+                        }
+                    }
+                }
+                val copy = setupCopy(language)
+                val opposite = if (choice == SetupChoice.Host) SetupChoice.Join else SetupChoice.Host
+                val activate = onNodeWithContentDescription(copy.choice(choice)).performScrollTo()
+                    .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                val activateOpposite = onNodeWithContentDescription(copy.choice(opposite)).performScrollTo()
+                    .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                val activateLocal = if (binding.capabilities.supports(GameEntryMode.PassAndPlay)) {
+                    val description = if (language == AppLanguage.Arabic) {
+                        "ابدأ جلسة تمرير ولعب على هذا الجهاز."
+                    } else {
+                        "Start a pass-and-play session on this device."
+                    }
+                    onNodeWithContentDescription(description).performScrollTo()
+                        .fetchSemanticsNode().config[SemanticsActions.OnClick].action.let(::checkNotNull)
+                } else null
+                runOnUiThread {
+                    activate()
+                    if (!afterNameInput) activateOpposite()
+                }
+                assertNameDestination(copy, choice)
+                if (afterNameInput) {
+                    val input = if (language == AppLanguage.Arabic) "أحمد" else "Table Test"
+                    onNodeWithText(copy.nameField).performTextInput(input)
+                    runOnUiThread {
+                        activateOpposite()
+                        activateLocal?.invoke()
+                        activate()
+                    }
+                    onNodeWithText(copy.nameField).assertTextContains(input, substring = false)
+                    onNodeWithContentDescription(copy.confirm(choice)).assertIsEnabled()
+                    onNodeWithContentDescription(copy.confirm(opposite)).assertDoesNotExist()
+                }
+                runOnIdle {
+                    assertEquals(0, transport.operations)
+                    assertEquals(0, exits)
+                }
+            }
         }
     }
 
@@ -166,6 +288,71 @@ class MultiplayerSetupPointerTest {
             }
         }
 
+    /** Shared callback/state boundary only: Desktop text injection is not native IME delivery. */
+    private fun verifyHostReturnThenPeerInput(
+        binding: GameShellBinding,
+        language: AppLanguage,
+        hostInput: String?,
+        peerInput: String,
+    ) = runComposeUiTest {
+        val transport = SetupNetworkTripwire()
+        var visible by mutableStateOf(true)
+        var generation by mutableStateOf(0)
+        var exits = 0
+        setContent {
+            KoinApplication(application = { modules(module { single<RoomTransport> { transport } }) }) {
+                CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
+                    ProvideAppLanguage(language) {
+                        ParlorTheme(reducedMotion = true) {
+                            Box(Modifier.size(320.dp, 740.dp)) {
+                                if (visible) {
+                                    val launch = remember(generation) { GameShellLaunch.New(binding.definition.id) }
+                                    binding.Content(
+                                        launch,
+                                        {
+                                            exits++
+                                            visible = false
+                                        },
+                                        GameShellBackRequest.Initial,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        val copy = setupCopy(language)
+        onNodeWithContentDescription(copy.host).performScrollTo().send(SetupGesture.Press)
+        assertNameDestination(copy, SetupChoice.Host)
+        if (hostInput != null) {
+            onNodeWithText(copy.nameField).performTextInput(hostInput)
+            onNodeWithText(copy.nameField).assertTextContains(hostInput, substring = false)
+            onNodeWithContentDescription(copy.hostConfirm).assertIsEnabled()
+        }
+        val back = if (language == AppLanguage.Arabic) "العودة إلى الشاشة الرئيسية." else "Return to the home screen."
+        onNodeWithContentDescription(back).performScrollTo().send(SetupGesture.Press)
+        onNodeWithText(copy.nameField).assertDoesNotExist()
+        runOnIdle {
+            assertEquals(1, exits)
+            visible = true
+            generation++
+        }
+        onNodeWithContentDescription(copy.join).performScrollTo().send(SetupGesture.Press)
+        assertNameDestination(copy, SetupChoice.Join)
+        if (hostInput != null) onNodeWithText(hostInput).assertDoesNotExist()
+        onNodeWithText(copy.nameField).performTextInput(peerInput)
+        onNodeWithText(copy.nameField).assertTextContains(peerInput, substring = false)
+        onNodeWithContentDescription(copy.peerConfirm).assertIsEnabled()
+        runOnIdle { generation++ }
+        onNodeWithText(copy.nameField).assertTextContains(peerInput, substring = false)
+        onNodeWithContentDescription(copy.peerConfirm).assertIsEnabled()
+        runOnIdle {
+            assertEquals(1, exits)
+            assertEquals(0, transport.operations)
+        }
+    }
+
     private fun ComposeUiTest.assertNameDestination(copy: SetupCopy, choice: SetupChoice) {
         onNodeWithText(copy.nameField).assertExists()
         onNodeWithContentDescription(copy.confirm(choice)).assertIsNotEnabled()
@@ -195,6 +382,19 @@ class MultiplayerSetupPointerTest {
             }
         }
     }
+}
+
+/** Public mode/name selection must not fetch a case or enter gameplay. */
+private class SetupContentTripwire : CaseRepository {
+    override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, DataError> = unexpectedOperation()
+    override suspend fun <TPayload> loadCase(
+        id: CaseId, payloadValidator: PayloadValidator<TPayload>,
+    ): Result<ValidatedCase<TPayload>, DataError> = unexpectedOperation()
+    override fun observeCacheUpdates(): Flow<CaseUpdate> = unexpectedOperation()
+    override suspend fun <TPayload> refresh(
+        gameId: GameId, payloadValidator: PayloadValidator<TPayload>,
+    ): Result<Unit, DataError> = unexpectedOperation()
+    private fun unexpectedOperation(): Nothing = error("Public mode/name selection must not access case content")
 }
 
 private enum class SetupChoice { Host, Join }

@@ -143,6 +143,7 @@ class FileBackedSnapshotStore private constructor(
     private fun fileName(sessionId: SessionId) = "${sessionId.raw}$SUFFIX"
 
     private fun mapToDataError(t: Exception): DataError = when (t) {
+        is SnapshotProtectionUnavailableException -> DataError.IoError("snapshot_io")
         is SerializationException,
         is SnapshotProtectionException -> DataError.CorruptedData
         // Do not copy exception text into a domain error: platform exceptions
@@ -218,11 +219,12 @@ interface SnapshotFileSystem {
 }
 
 /**
- * Signals that protected snapshot bytes failed format or authenticity checks.
- * The store maps this to [DataError.CorruptedData] without exposing crypto or
- * filesystem details to the UI.
+ * Base failure for protected snapshots. Unless a platform reports unavailable
+ * protection using [SnapshotProtectionUnavailableException], this denotes a
+ * format/authenticity failure and maps to [DataError.CorruptedData]. Neither
+ * classification exposes crypto or filesystem details to the UI.
  */
-class SnapshotProtectionException(
+open class SnapshotProtectionException(
     message: String = "snapshot protection failed",
     cause: Throwable? = null,
 ) : Exception(message, cause)

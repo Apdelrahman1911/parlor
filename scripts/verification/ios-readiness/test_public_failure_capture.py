@@ -7,7 +7,9 @@ import sys
 def load_tests(loader, _tests, _pattern):
     folder = Path(__file__).resolve().parents[3] / 'scripts/verification/ios-input-boundaries'
     modules = {}
-    for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'test_pin02_capture'):
+    for name in ('pin01_copy', 'pin01_receipts', 'pin02_capture', 'pin03_catalog_copy',
+                 'pin04_original_host', 'public_attachments', 'review_frozen_result',
+                 'frozen_sources', 'test_pin02_capture'):
         path = folder / (name + '.py')
         key = name if name != 'test_pin02_capture' else '_parlor_public_capture_controls'
         module = sys.modules.get(key)

@@ -7,6 +7,7 @@ package com.parlor.app.storage
 
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.SnapshotProtectionUnavailableException
 import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
@@ -46,10 +47,8 @@ import platform.Foundation.NSNumber
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUserDomainMask
-import platform.Foundation.closeFile
 import platform.Foundation.create
 import platform.Foundation.fileHandleForReadingAtPath
-import platform.Foundation.readDataOfLength
 import platform.Foundation.writeToFile
 import platform.Security.SecRandomCopyBytes
 import platform.Security.errSecSuccess
@@ -71,9 +70,11 @@ internal class IosSnapshotFileSystem(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val snapshotKeyReader: () -> ByteArray? = keychain::readExisting,
     private val backupExcluder: (NSURL) -> Unit = ::excludeSnapshotFromBackup,
+    private val pathInspector: (String) -> Boolean = { path -> snapshotItemExists(fileManager, path) },
 ) : SnapshotFileSystem {
 
-    private val basePath: String by lazy {
+    /** Resolve the location without creating or qualifying the snapshots directory. */
+    private val snapshotDirectoryPath: String by lazy {
         memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
             error.value = null
@@ -86,7 +87,14 @@ internal class IosSnapshotFileSystem(
             ) ?: throw IllegalStateException("Application Support directory unavailable")
             val rootPath = root.path
                 ?: throw IllegalStateException("Application Support directory has no path")
-            val directory = "$rootPath/Parlor/snapshots"
+            "$rootPath/Parlor/snapshots"
+        }
+    }
+
+    private val basePath: String by lazy {
+        memScoped {
+            val directory = snapshotDirectoryPath
+            val error = alloc<ObjCObjectVar<NSError?>>()
             val protectionKey = NSFileProtectionKey
                 ?: throw IllegalStateException("iOS file-protection key unavailable")
             val completeProtection = NSFileProtectionComplete
@@ -143,7 +151,9 @@ internal class IosSnapshotFileSystem(
     override suspend fun delete(name: String) {
         withContext(dispatcher) {
             requireSafeSnapshotFileName(name)
-            val path = filePath(name)
+            // Discard neither reads secrets nor installs new data. Do not make
+            // removal depend on the protection that prevented Retry/Load.
+            val path = "$snapshotDirectoryPath/$name"
             deletePathIfPresent(path)
             deleteLegacy(name)
         }
@@ -157,7 +167,7 @@ internal class IosSnapshotFileSystem(
         // listUnfinished() runs on cold start, so upgrade old plaintext even
         // if the user does not open its resume tile. Migrate independently so
         // one damaged legacy record cannot hide every healthy saved game.
-        val legacyNames = if (fileManager.fileExistsAtPath(legacyBasePath)) {
+        val legacyNames = if (pathInspector(legacyBasePath)) {
             listDirectory(legacyBasePath)
                 .asSequence()
                 .filter(::isSafeSnapshotFileName)
@@ -174,7 +184,8 @@ internal class IosSnapshotFileSystem(
     private fun readProtectedOrMigrate(name: String): ByteArray? {
         excludeLegacyDirectoryFromBackup()
         val path = filePath(name)
-        if (!fileManager.fileExistsAtPath(path)) return migrateLegacy(name)
+        // Only confirmed absence permits legacy fallback; unavailable lookup is opaque IO.
+        if (!pathInspector(path)) return migrateLegacy(name)
 
         val protectedBytes = readBytes(path, MAX_PROTECTED_SNAPSHOT_BYTES)
         return when {
@@ -207,7 +218,7 @@ internal class IosSnapshotFileSystem(
      */
     private fun migrateLegacy(name: String): ByteArray? {
         val legacyPath = "$legacyBasePath/$name"
-        if (!fileManager.fileExistsAtPath(legacyPath)) return null
+        if (!pathInspector(legacyPath)) return null
         val plaintext = readBytes(legacyPath, MAX_PLAINTEXT_SNAPSHOT_BYTES)
         if (!plaintext.looksLikeLegacyJson()) throw SnapshotProtectionException()
         writeProtected(name, encrypt(name, plaintext))
@@ -222,7 +233,7 @@ internal class IosSnapshotFileSystem(
     private fun excludeLegacyDirectoryFromBackup() {
         // Reapply on every access: filesystem operations can recreate the
         // directory or reset its exclusion bit after this instance was made.
-        if (fileManager.fileExistsAtPath(legacyBasePath)) {
+        if (pathInspector(legacyBasePath)) {
             backupExcluder(NSURL.fileURLWithPath(legacyBasePath, isDirectory = true))
         }
     }
@@ -243,14 +254,7 @@ internal class IosSnapshotFileSystem(
         }
 
     private fun deletePathIfPresent(path: String) {
-        if (!fileManager.fileExistsAtPath(path)) return
-        memScoped {
-            val error = alloc<ObjCObjectVar<NSError?>>()
-            error.value = null
-            if (!fileManager.removeItemAtPath(path, error.ptr)) {
-                throw IllegalStateException("Couldn't delete snapshot")
-            }
-        }
+        removeSnapshotItemIfPresent(fileManager, path)
     }
 
     private fun encrypt(name: String, plaintext: ByteArray): ByteArray {
@@ -296,7 +300,7 @@ internal class IosSnapshotFileSystem(
             val receivedTag = protectedBytes.copyOfRange(ciphertextEnd, protectedBytes.size)
             if (ciphertext.size % AES_BLOCK_BYTES != 0) throw SnapshotProtectionException()
 
-            val keyMaterial = snapshotKeyReader() ?: throw SnapshotProtectionException()
+            val keyMaterial = readExistingSnapshotKey() ?: throw SnapshotProtectionException()
             val encryptionKey = keyMaterial.copyOfRange(0, AES_KEY_BYTES)
             val macKey = keyMaterial.copyOfRange(AES_KEY_BYTES, IosSnapshotKeychain.KEY_BYTES)
             return try {
@@ -328,6 +332,19 @@ internal class IosSnapshotFileSystem(
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
+    }
+
+    private fun readExistingSnapshotKey(): ByteArray? = try {
+        snapshotKeyReader()
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (failure: SnapshotProtectionException) {
+        // Invalid/missing key material remains distinct from a failed lookup.
+        throw failure
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+        // Keychain unavailability precedes authentication. It cannot prove
+        // that the retained ciphertext is corrupt or justify discarding it.
+        throw SnapshotProtectionUnavailableException(cause = failure)
     }
 
     private fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray =
@@ -426,13 +443,39 @@ internal fun readBoundedSnapshotBytes(path: String, maximumBytes: Int): ByteArra
     require(maximumBytes >= 0) { "Snapshot byte limit must be non-negative" }
     val handle = NSFileHandle.fileHandleForReadingAtPath(path)
         ?: throw IllegalStateException("Couldn't open protected snapshot")
-    val data = try {
-        handle.readDataOfLength(maximumBytes.toULong() + 1uL)
+    return readOwnedSnapshotHandle(handle, maximumBytes)
+}
+
+/** Takes exclusive ownership of an open handle, including on invalid input or read failure. */
+internal fun readOwnedSnapshotHandle(handle: NSFileHandle, maximumBytes: Int): ByteArray {
+    var closeSucceeded = false
+    val bytes = try {
+        require(maximumBytes >= 0) { "Snapshot byte limit must be non-negative" }
+        val data = memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            // Legacy readDataOfLength raises NSException on I/O errors; those
+            // do not become Kotlin exceptions at the Foundation boundary.
+            val result = handle.readDataUpToLength(maximumBytes.toULong() + 1uL, error.ptr)
+            if (error.value != null || result == null) {
+                throw IllegalStateException("Couldn't read protected snapshot")
+            }
+            result
+        }
+        if (data.length > maximumBytes.toULong()) throw SnapshotProtectionException()
+        data.toByteArray()
     } finally {
-        handle.closeFile()
+        // Do not replace a primary read/validation/cancellation failure with
+        // a cleanup error. Report close failure only after a successful read.
+        closeSucceeded = memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            val closed = handle.closeAndReturnError(error.ptr)
+            closed && error.value == null
+        }
     }
-    if (data.length > maximumBytes.toULong()) throw SnapshotProtectionException()
-    return data.toByteArray()
+    check(closeSucceeded) { "Couldn't close protected snapshot" }
+    return bytes
 }
 
 /** CommonCrypto wrapper that passes a null input pointer for an empty payload. */

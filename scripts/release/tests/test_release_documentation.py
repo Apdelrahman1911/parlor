@@ -20,10 +20,10 @@ class ReleaseDocumentationTest(unittest.TestCase):
             "desktop-linux-arm64",
             "desktop-macos-x64",
             "desktop-windows-x64",
-            "ios",
+            "ios-runtime",
             "ios-release",
         )
-        self.assertCountEqual(job_ids, (*full_job_ids, "ios-release-simulator", "ios-release-device", "ios-release-x64",
+        self.assertCountEqual(job_ids, (*full_job_ids, "ios-kmp", "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64",
                                        "ios-protection-probe", "darwin-host-capability"))
         names_by_id = dict(zip(job_ids, job_names))
 
@@ -32,12 +32,16 @@ class ReleaseDocumentationTest(unittest.TestCase):
         self.assertIsNotNone(section, "Protected branch instructions must remain documented")
         assert section is not None
         instructions = section.group(1)
-        self.assertIn("require all six mandatory full **Production verification** jobs", instructions)
+        self.assertIn("require all six mandatory **Production verification** check groups", instructions)
         required_names = re.findall(r"(?m)^  - `([^`]+)`", instructions)
         self.assertCountEqual(required_names, [names_by_id[job_id] for job_id in full_job_ids])
         self.assertIn("three isolated Release lanes", instructions)
         aggregate = jobs.split("  ios-release:\n", 1)[1].split("  ios-protection-probe:\n", 1)[0]
         self.assertIn("needs: [ios-release-simulator, ios-release-device, ios-release-x64]", aggregate)
+        self.assertIn("both ARM64 runtime lanes", instructions)
+        runtime = jobs.split("  ios-runtime:\n", 1)[1].split("  ios-release-simulator:\n", 1)[0]
+        self.assertIn("needs: [ios-kmp, ios]", runtime)
+        self.assertIn("scripts.ci.apple_runtime_gate aggregate", runtime)
         self.assertIn(
             f"The opt-in `{names_by_id['ios-protection-probe']}` is not a mandatory full check.",
             instructions,

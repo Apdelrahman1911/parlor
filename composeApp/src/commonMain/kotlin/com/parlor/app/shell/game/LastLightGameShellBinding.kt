@@ -185,14 +185,15 @@ private fun LastLightShellContent(
         LastLightShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == LastLightShellScreen.Setup &&
                     mode is PlayMode.PassAndPlay &&
                     capabilities.supports(mode)
                 ) {
                     screen = LastLightShellScreen.LocalGame
                 }
             },
-            onHost = { screen = LastLightShellScreen.HostPermission },
-            onJoin = { screen = LastLightShellScreen.JoinPermission },
+            onHost = { if (screen == LastLightShellScreen.Setup) screen = LastLightShellScreen.HostPermission },
+            onJoin = { if (screen == LastLightShellScreen.Setup) screen = LastLightShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,
@@ -216,8 +217,10 @@ private fun LastLightShellContent(
             isHost = true,
             initial = hostName,
             onConfirm = { name ->
-                hostName = name
-                screen = LastLightShellScreen.HostLobby
+                if (screen == LastLightShellScreen.HostName) {
+                    hostName = name
+                    screen = LastLightShellScreen.HostLobby
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -248,8 +251,10 @@ private fun LastLightShellContent(
             isHost = false,
             initial = peerName,
             onConfirm = { name ->
-                peerName = name
-                screen = LastLightShellScreen.JoinPrompt
+                if (screen == LastLightShellScreen.JoinName) {
+                    peerName = name
+                    screen = LastLightShellScreen.JoinPrompt
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -257,8 +262,10 @@ private fun LastLightShellContent(
 
         LastLightShellScreen.JoinPrompt -> JoinPromptScreen(
             onConfirm = { code ->
-                pendingJoinCode = code
-                screen = LastLightShellScreen.PeerLobby
+                if (screen == LastLightShellScreen.JoinPrompt) {
+                    pendingJoinCode = code
+                    screen = LastLightShellScreen.PeerLobby
+                }
             },
             onCancel = onExit,
             modifier = modifier,

@@ -62,7 +62,7 @@ def verify_install(apk: Path) -> None:
                 run([str(adb), "-P", str(adb_port), "start-server"], env=env)
                 server_started = True
                 process = subprocess.Popen([str(emulator), "-avd", name, "-port", str(emulator_port), "-no-window",
-                    "-no-audio", "-no-snapshot", "-no-boot-anim", "-gpu", "swiftshader_indirect", "-no-metrics"],
+                    "-no-audio", "-no-snapshot", "-no-boot-anim", "-gpu", "swiftshader", "-no-metrics"],
                     stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT, env=env)
                 deadline = time.monotonic() + 300
                 while True:

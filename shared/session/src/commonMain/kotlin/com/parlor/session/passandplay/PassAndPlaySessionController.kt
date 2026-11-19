@@ -68,7 +68,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
 
     private val _events = MutableSharedFlow<E>(extraBufferCapacity = 64)
     override val events: SharedFlow<E> = _events.asSharedFlow()
-    private var eventTail = CompletableDeferred<Unit>().also { it.complete(Unit) }
+    private var eventTail = EventEmissionCompletion().also { it.complete() }
 
     private val privateFlows: MutableMap<PlayerId, StateFlow<PrivateProjection<S>>> = mutableMapOf()
 
@@ -118,7 +118,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
             val turn = if (reduction.events.isEmpty()) {
                 null
             } else {
-                val completion = CompletableDeferred<Unit>()
+                val completion = EventEmissionCompletion()
                 OrderedEventEmissionTurn(
                     previous = eventTail,
                     completion = completion,
@@ -144,16 +144,39 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
 
 /** A commit-ordered event batch reserved while the canonical-state mutex is held. */
 internal class OrderedEventEmissionTurn<E>(
-    private val previous: CompletableDeferred<Unit>,
-    private val completion: CompletableDeferred<Unit>,
+    private val previous: EventEmissionCompletion,
+    private val completion: EventEmissionCompletion,
     private val events: List<E>,
 ) {
     suspend fun emitTo(emit: suspend (E) -> Unit) {
+        var predecessorFinished = false
         try {
             previous.await()
+            predecessorFinished = true
             events.forEach { event -> emit(event) }
         } finally {
-            completion.complete(Unit)
+            // Cancelling a waiting submit skips only its own events. Its
+            // successor must still wait for the earlier active emitter.
+            completion.complete(after = previous.takeUnless { predecessorFinished })
         }
+    }
+}
+
+/**
+ * A cancelled wait forwards its predecessor instead of prematurely releasing
+ * the order barrier. Follow skipped gates iteratively: no blocking cancellation,
+ * cleanup coroutine, recursive completion callbacks or new event queue.
+ * A normally finished emitter stores null, releasing prior gate references.
+ */
+internal class EventEmissionCompletion {
+    private val result = CompletableDeferred<EventEmissionCompletion?>()
+
+    suspend fun await() {
+        var gate: EventEmissionCompletion? = this
+        while (gate != null) gate = gate.result.await()
+    }
+
+    fun complete(after: EventEmissionCompletion? = null) {
+        result.complete(after)
     }
 }

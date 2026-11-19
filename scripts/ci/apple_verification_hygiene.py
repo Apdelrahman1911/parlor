@@ -29,6 +29,11 @@ WORKER_PATHS = (
     "sourcekitd.framework/Versions/A/XPCServices/SourceKitService.xpc/Contents/MacOS/SourceKitService",
     "Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/"
     "XCBBuildService.bundle/Contents/MacOS/XCBBuildService",
+    # Same Apple-signed Xcode 26.3 / 17C529 component on standard ARM64/Intel
+    # runners, independently inventoried in 41981135725. Exact task/lifetime/
+    # audit-token checks below still authorize every signal; no basename grant.
+    "Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/"
+    "SWBBuildService.bundle/Contents/MacOS/SWBBuildService",
     # Actual Xcode 26.3 / 17C529 component, independently inventoried in run
     # 40812954673. A basename is not an executable or process ownership grant.
     "Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Versions/A/Resources/DTServiceHub",

@@ -56,6 +56,7 @@ import dev.p2pkit.core.transfer.P2pFileOffer
 import dev.p2pkit.core.transfer.P2pFileTransfer
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,6 +74,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
@@ -780,11 +783,7 @@ class P2pKitRoomTransportLifecycleTest {
 
         messages.forEachIndexed { index, message ->
             val session = FakeP2pSession(peer("unadmitted-$index", "Unadmitted $index"))
-            kit.incomingSessionsFlow.emit(session)
-            yield()
-            session.incomingFlow.emit(
-                P2pMessage.Binary(codec.encode(message(PlayerId("forged-actor")))),
-            )
+            emitUnadmittedReliableStartAck(kit, session, message(PlayerId("forged-actor")))
 
             awaitCondition { session.state.value == ConnectionState.Closed }
             assertThat(session.admissionRejections())
@@ -795,6 +794,61 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(room.members.value).isEmpty()
         room.leave()
         assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun unadmitted_reliable_start_fixture_waits_for_the_actual_frame_collector() = runTest {
+        val hostScheduler = TestCoroutineScheduler()
+        val hostScope = CoroutineScope(SupervisorJob() + StandardTestDispatcher(hostScheduler))
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val session = FakeP2pSession(peer("unadmitted-pid", "Unadmitted"))
+        val room = HostP2pRoom(
+            kit = kit, roomCode = "ABCDEF", hostDisplayName = "Host",
+            hostPlayerId = PlayerId("host-pid"), maxRemotePlayers = 4,
+            scope = hostScope, codec = codec,
+        )
+        try {
+            val sent = async(start = CoroutineStart.UNDISPATCHED) {
+                emitUnadmittedReliableStartAck(
+                    kit, session,
+                    PeerMessage.SessionStartReady(testPeerHeartbeat().header, PlayerId("forged-actor"), "start-id-1234567"),
+                )
+            }
+            // Yielding the sender cannot run the independently paused host scheduler.
+            runCurrent()
+            assertThat(session.incomingFlow.subscriptionCount.value).isEqualTo(0)
+            assertThat(sent.isCompleted).isFalse()
+            hostScheduler.runCurrent()
+            runCurrent()
+            hostScheduler.runCurrent()
+            assertThat(sent.isCompleted).isTrue()
+            assertThat(session.admissionRejections()).containsExactly(AdmissionRejection.InvalidRequest)
+            // Execute the production rejection flush on the independent virtual
+            // clock; no sender retry or increased real-time assertion budget.
+            hostScheduler.advanceTimeBy(P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS)
+            hostScheduler.runCurrent()
+            assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+            assertThat(room.pendingAdmissions.value).isEmpty()
+            assertThat(room.members.value).isEmpty()
+        } finally {
+            hostScope.coroutineContext[Job]?.cancel()
+            // Cancelled room jobs still need their independently paused scheduler.
+            hostScheduler.runCurrent()
+            room.leave()
+        }
+    }
+
+    private suspend fun emitUnadmittedReliableStartAck(
+        kit: FakeP2pKit,
+        session: FakeP2pSession,
+        message: PeerMessage,
+    ) {
+        kit.incomingSessionsFlow.emit(session)
+        // Replay-zero fake frames are lost without a real subscriber. Yielding
+        // this sender does not establish readiness on the receiver's dispatcher.
+        withTimeout(2_000L) { session.incomingFlow.subscriptionCount.first { it == 1 } }
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(message)))
     }
 
     @Test

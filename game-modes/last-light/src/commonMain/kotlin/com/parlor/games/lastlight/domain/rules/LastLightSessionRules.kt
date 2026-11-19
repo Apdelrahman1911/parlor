@@ -1,5 +1,7 @@
 package com.parlor.games.lastlight.domain.rules
 
+import com.parlor.core.text.DisplayNamePolicy
+import com.parlor.core.text.DisplayTextScalars
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.lastlight.LastLightIds
@@ -29,28 +31,8 @@ object LastLightSessionRules {
     }
 
     fun isValidPlayerId(value: String): Boolean =
-        value.isNotBlank() && value.length <= LastLightRules.MAX_PLAYER_ID_LENGTH && value.hasSafeCharacters()
+        value.isNotBlank() && value.length <= LastLightRules.MAX_PLAYER_ID_LENGTH && DisplayTextScalars.containsOnlySafeScalars(value)
 
     fun isValidDisplayName(value: String): Boolean =
-        value == value.trim() && value.isNotEmpty() &&
-            value.length <= LastLightRules.MAX_DISPLAY_NAME_LENGTH && value.hasSafeCharacters()
-
-    private fun String.hasSafeCharacters(): Boolean {
-        var index = 0
-        while (index < length) {
-            val character = this[index]
-            when {
-                character.isISOControl() || character.category == CharCategory.FORMAT -> return false
-                character in '\uD800'..'\uDBFF' -> {
-                    if (getOrNull(index + 1)?.let { it in '\uDC00'..'\uDFFF' } != true) return false
-                    index += SURROGATE_PAIR_LENGTH
-                }
-                character in '\uDC00'..'\uDFFF' -> return false
-                else -> index++
-            }
-        }
-        return true
-    }
-
-    private const val SURROGATE_PAIR_LENGTH = 2
+        value == DisplayNamePolicy.normalizeDisplayName(value) && DisplayNamePolicy.isValidDisplayName(value)
 }

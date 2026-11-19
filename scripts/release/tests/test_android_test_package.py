@@ -200,6 +200,9 @@ class AndroidPublicTestPackageTest(unittest.TestCase):
                         smoke.verify_install(root / "test.apk")
                     self.assertIn("-no-window", start.call_args.args[0])
                     self.assertIn("5660", start.call_args.args[0])
+                    arguments = start.call_args.args[0]
+                    self.assertEqual(arguments.count("-gpu"), 1)
+                    self.assertEqual(arguments[arguments.index("-gpu") + 1], "swiftshader")
                 self.assertEqual(commands[-1], [str(sdk / "platform-tools/adb"), "-P", "5038", "kill-server"])
                 self.assertTrue(homes)
                 self.assertEqual(len(set(homes)), 1)

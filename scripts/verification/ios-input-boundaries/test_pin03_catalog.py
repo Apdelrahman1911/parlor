@@ -15,14 +15,21 @@ import pin01_receipts
 import pin02_capture
 import pin03_catalog_copy as catalog
 import run_pin03 as runner
+import frozen_sources
+import pin04_original_host as original
+import review_frozen_result as review
 
-ROOT = Path(__file__).resolve().parents[3]
 TOKEN = 'A541C4A1-1E33-4E19-9B7C-1A1B7F110132'
 SIMULATOR = 'B541C4A1-1E33-4E19-9B7C-1A1B7F110132'
 
 
 def actual():
-    source = {p: (ROOT / p).read_text() for p in catalog.MODIFIED}
+    # Full-file, hash-bound software fixtures are independent of new native
+    # test helpers in the live app. They are never native execution inputs.
+    source = {path: frozen_sources.load(
+        review.SOURCE if path == pin02_capture.DRIVER else original.FROZEN_SOURCE,
+        path, review.DRIVER_SHA256 if path == pin02_capture.DRIVER else original.FROZEN_INPUTS[path],
+    ).decode() for path in catalog.MODIFIED}
     return source, {p: hashlib.sha256(v.encode()).hexdigest() for p, v in source.items()}
 
 
@@ -35,6 +42,25 @@ def snapshot():
 
 
 class CopyControls(unittest.TestCase):
+    def test_catalog_control_sources_are_pinned_without_live_application_reads(self):
+        with patch.object(Path, 'read_text', side_effect=AssertionError('Live source read')):
+            sources, hashes = actual()
+        self.assertEqual(set(sources), set(catalog.MODIFIED))
+        self.assertEqual(hashes[pin02_capture.DRIVER], review.DRIVER_SHA256)
+        self.assertEqual({path: digest for path, digest in hashes.items() if path != pin02_capture.DRIVER},
+                         {path: digest for path, digest in original.FROZEN_INPUTS.items()
+                          if path != pin02_capture.DRIVER})
+
+    def test_new_launch_owner_cannot_expand_the_observed_catalog_plan(self):
+        sources, _ = actual()
+        changed = sources | {pin02_capture.DRIVER: sources[pin02_capture.DRIVER] +
+                             '\n        let app = XCUIApplication()\n'}
+        hashes = {path: hashlib.sha256(text.encode()).hexdigest() for path, text in changed.items()}
+        for arm in ('compose', 'native'):
+            with self.subTest(arm=arm), self.assertRaisesRegex(ValueError, 'four launch owners'):
+                catalog.render(changed, hashes, arm=arm)
+        self.assertEqual(actual()[0], sources)
+
     def test_failed_attachment_exports_select_exact_tests_not_failure_association(self):
         english = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish()'
         arabic = 'IOSAppLaunchUITests/testAdditionalGamesExposeOnlyMultiplayerSetupInArabic()'

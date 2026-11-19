@@ -163,14 +163,15 @@ private fun MafiaShellContent(
         MafiaShellScreen.Setup -> PlayModePickerScreen(
             onModeSelected = { mode ->
                 if (
+                    screen == MafiaShellScreen.Setup &&
                     mode is PlayMode.PassAndPlay &&
                     capabilities.supports(mode)
                 ) {
                     screen = MafiaShellScreen.LocalGame
                 }
             },
-            onHost = { screen = MafiaShellScreen.HostPermission },
-            onJoin = { screen = MafiaShellScreen.JoinPermission },
+            onHost = { if (screen == MafiaShellScreen.Setup) screen = MafiaShellScreen.HostPermission },
+            onJoin = { if (screen == MafiaShellScreen.Setup) screen = MafiaShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
             supportedPlayerCounts = supportedPlayerCounts,
@@ -194,8 +195,10 @@ private fun MafiaShellContent(
             isHost = true,
             initial = hostName,
             onConfirm = { name ->
-                hostName = name
-                screen = MafiaShellScreen.HostLobby
+                if (screen == MafiaShellScreen.HostName) {
+                    hostName = name
+                    screen = MafiaShellScreen.HostLobby
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -226,8 +229,10 @@ private fun MafiaShellContent(
             isHost = false,
             initial = peerName,
             onConfirm = { name ->
-                peerName = name
-                screen = MafiaShellScreen.JoinPrompt
+                if (screen == MafiaShellScreen.JoinName) {
+                    peerName = name
+                    screen = MafiaShellScreen.JoinPrompt
+                }
             },
             onBack = onExit,
             modifier = modifier,
@@ -235,8 +240,10 @@ private fun MafiaShellContent(
 
         MafiaShellScreen.JoinPrompt -> JoinPromptScreen(
             onConfirm = { code ->
-                pendingJoinCode = code
-                screen = MafiaShellScreen.PeerLobby
+                if (screen == MafiaShellScreen.JoinPrompt) {
+                    pendingJoinCode = code
+                    screen = MafiaShellScreen.PeerLobby
+                }
             },
             onCancel = onExit,
             modifier = modifier,

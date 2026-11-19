@@ -104,6 +104,7 @@ tasks.named("desktopTest") {
             include("**/*.kt", "**/*.kts")
         },
         rootProject.file("gradle.properties"),
+        rootProject.file("scripts/ci/android_lint_repository.py"),
         rootProject.file("config/android-lint-accepted-warnings.txt"),
         rootProject.fileTree(".") {
             include("**/build.gradle.kts")

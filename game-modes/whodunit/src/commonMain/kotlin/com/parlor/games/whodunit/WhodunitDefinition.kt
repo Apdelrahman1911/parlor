@@ -42,14 +42,15 @@ class WhodunitDefinition(
     override val supportedPlayerCounts: IntRange = 4..8
 
     override fun createInitialState(config: SessionConfig): WhodunitState {
-        require(WhodunitRules.isValidRoster(config.modeId, config.players)) {
+        val players = config.players.toList()
+        require(WhodunitRules.isValidRoster(config.modeId, players)) {
             "Invalid Whodunit roster for mode '${config.modeId.raw}'"
         }
         return WhodunitState(
             public = WhodunitPublic(
                 caseId = CaseId(config.caseId.raw),
                 modeId = config.modeId,
-                playersAtTable = config.players,
+                playersAtTable = players,
             ),
             privatePerPlayer = emptyMap(),
             hostOnly = WhodunitHostOnly(
@@ -60,7 +61,7 @@ class WhodunitDefinition(
                 redHerringTargets = emptyList(),
             ),
             phase = WhodunitPhase.Setup,
-            players = config.players,
+            players = players,
         )
     }
 

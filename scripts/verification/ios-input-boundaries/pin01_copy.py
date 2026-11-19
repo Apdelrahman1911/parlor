@@ -17,6 +17,29 @@ def once(text, old, new):
     return text.replace(old, new)
 
 
+def setup_callbacks(text):
+    """Require one complete known callback shape; never guess or mix revisions."""
+    known = []
+    for guarded in (False, True):
+        plan = []
+        for action, control, phase in (('onHost', 1, 'HostPermission'), ('onJoin', 2, 'JoinPermission')):
+            assignment = f'step = ShellStep.{phase}'
+            observe = f'com.parlor.app.inputcopy.PIN01Observation.callback({control}); '
+            if guarded:
+                body = f'if (step == ShellStep.Setup) {assignment}'
+                recorded = f'if (step == ShellStep.Setup) {{ {observe}{assignment} }}'
+            else:
+                body, recorded = assignment, observe + assignment
+            plan.append((f'{action} = {{ {body} }}', f'{action} = {{ {recorded} }}'))
+        known.append(plan)
+    plans = [plan for plan in known if all(text.count(old) == 1 for old, _ in plan)]
+    if len(plans) != 1 or any(
+        sum(text.count(plan[index][0]) for plan in known) != 1 for index in (0, 1)
+    ):
+        raise RuntimeError('PIN01 callback revision missing, mixed or ambiguous')
+    return plans[0]
+
+
 def render(sources, expected_sha256, *, native_observer):
     """Return modified/additional bytes only after every source/anchor validates.
 
@@ -43,9 +66,7 @@ def render(sources, expected_sha256, *, native_observer):
         '        ShellStep.Setup -> 0\n        ShellStep.HostPermission -> 1\n        ShellStep.JoinPermission -> 2\n'
         '        ShellStep.HostName -> 3\n        ShellStep.JoinName -> 4\n        else -> 5\n    })\n'
         '    val settings = gate::openAppSettings.takeIf { gate.canOpenNetworkSettings }')
-    for action, control, phase in (('onHost', 1, 'HostPermission'), ('onJoin', 2, 'JoinPermission')):
-        old = f'{action} = {{ step = ShellStep.{phase} }}'
-        new = f'{action} = {{ com.parlor.app.inputcopy.PIN01Observation.callback({control}); step = ShellStep.{phase} }}'
+    for old, new in setup_callbacks(text):
         text = once(text, old, new)
     output[SHELL] = text
     text = once(output[MAIN], '        startKoinOnce()',

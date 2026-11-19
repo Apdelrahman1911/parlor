@@ -255,7 +255,19 @@ class ProductionUiAccessibilityContractTest {
         }
         assertFalse(android.contains("updateConfiguration"))
         assertFalse(android.contains("@Suppress(\"DEPRECATION\")"))
-        assertTrue(android.indexOf("Locale.setDefault") > android.indexOf("DisposableEffect("))
+        assertContains(android, "androidLocaleOverrides.acquire(requestedDefaults)")
+        assertContains(android, "DisposableEffect(applicationContext, languageTag, requestedDefaults)")
+        assertContains(android, "applicationContext.registerComponentCallbacks(callbacks)")
+        assertContains(android, "override fun onConfigurationChanged(newConfig: Configuration)")
+        assertContains(android, "defaults = defaultLocales(languageTag, newConfig.locales)")
+        assertContains(android, "platformDefaults = newConfig.locales")
+        assertContains(android, "onDispose {\n            try {\n" +
+            "                applicationContext.unregisterComponentCallbacks(callbacks)\n" +
+            "            } finally {\n                try {\n                    releaseLocale()\n" +
+            "                } finally {\n                    releaseResources?.invoke()")
+        assertContains(android, "read = { LocaleList.getAdjustedDefault() }")
+        assertContains(android, "LocaleList.setDefault(defaults)")
+        assertTrue(android.indexOf("LocaleList.setDefault") > android.indexOf("DisposableEffect("))
         assertContains(ios, "val overrideOwner = remember {")
         assertContains(ios, "IosLanguageOverrideOwner(")
         assertContains(ios, "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)")
@@ -265,6 +277,31 @@ class ProductionUiAccessibilityContractTest {
         assertContains(iosOwner, "domain[APPLE_LANGUAGES_KEY] == listOf(installed)")
         assertFalse(iosOwner.contains("arrayForKey("), "Do not promote a resolved OS fallback to owned state")
         assertTrue(desktop.indexOf("Locale.setDefault") > desktop.indexOf("DisposableEffect("))
+    }
+
+    @Test
+    fun android_framework_locale_authority_uses_owned_configuration_resources() {
+        val prefix = "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/"
+        val owner = read(prefix + "LocaleAwareApplication.kt")
+        val adapter = read(prefix + "LocalAppLocale.android.kt")
+        val application = read("composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt")
+
+        assertContains(application, "class ParlorApplication : LocaleAwareApplication()")
+        assertContains(owner, "override fun getResources(): Resources = localizedContext?.resources ?: super.getResources()")
+        assertContains(owner, "@Volatile\n    private var localizedContext: Context? = null")
+        assertContains(owner, "ScopedLocaleOverrides<Context?>")
+        assertContains(owner, "baseContext.createConfigurationContext(")
+        assertContains(owner, "Configuration().apply { setLocale(Locale.forLanguageTag(tag)) }")
+        assertContains(owner, "resourceOverrides.acquire(context)")
+        assertContains(owner, "check(Looper.myLooper() == Looper.getMainLooper())")
+        assertFalse(owner.contains("updateConfiguration"))
+        assertFalse(owner.contains("Locale.getDefault"), "The reset source must not depend on already-reset defaults")
+        assertFalse(owner.contains("Configuration(baseContext.resources.configuration)"), "Only locale is overridden")
+        assertContains(adapter, "(applicationContext as? LocaleAwareApplication)?.acquireLocaleResources(languageTag)")
+        assertContains(adapter, "val ordered = orderedLocaleDefaults(")
+        assertContains(adapter, "if (languageTag == null) return platformDefaults")
+        assertContains(adapter, "LocaleList.forLanguageTags(ordered.joinToString(\",\") { it.toLanguageTag() })")
+        assertContains(adapter, "platformDefaults = List(platformDefaults.size()) { platformDefaults[it] }")
     }
 
     @Test

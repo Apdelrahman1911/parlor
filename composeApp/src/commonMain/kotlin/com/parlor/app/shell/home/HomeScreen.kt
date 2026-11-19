@@ -238,25 +238,23 @@ private fun HomeTopBar() {
 
 @Composable
 private fun HomeLead() {
-    // Keep game discovery ahead of decorative copy without shrinking accessible text.
-    val showIntroduction = LocalDensity.current.fontScale < HOME_COMPACT_INTRODUCTION_FONT_SCALE
+    // Marketing copy must not push the first game's actual choices below the
+    // viewport at large text. Keep the stable lazy-item key for restoration;
+    // the catalogue section below supplies the meaningful accessible heading.
+    if (LocalDensity.current.fontScale >= HOME_COMPACT_INTRODUCTION_FONT_SCALE) return
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-        if (showIntroduction) {
-            EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
-        }
+        EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
         Text(
             text = stringResource(Res.string.home_title),
             style = ParlorTheme.typography.displayMedium,
             color = ParlorTheme.colors.textPrimary,
             modifier = Modifier.semantics { heading() },
         )
-        if (showIntroduction) {
-            Text(
-                text = stringResource(Res.string.home_subtitle),
-                style = ParlorTheme.typography.bodyMedium,
-                color = ParlorTheme.colors.textSecondary,
-            )
-        }
+        Text(
+            text = stringResource(Res.string.home_subtitle),
+            style = ParlorTheme.typography.bodyMedium,
+            color = ParlorTheme.colors.textSecondary,
+        )
     }
 }
 
@@ -270,7 +268,7 @@ private fun SectionHeading(label: String, detail: String) {
         EyebrowLabel(
             text = label,
             accent = false,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).semantics { heading() },
         )
         Text(
             text = detail,
@@ -438,6 +436,7 @@ private fun GameHeroCard(
     supportsLocal: Boolean,
     onOpen: () -> Unit,
 ) {
+    val largeText = LocalDensity.current.fontScale >= HOME_COMPACT_INTRODUCTION_FONT_SCALE
     ParlorAccentScope(presentation.accent) {
         ParlorCard(
             modifier = Modifier
@@ -446,55 +445,15 @@ private fun GameHeroCard(
                 .semantics { contentDescription = presentation.openContentDescription }
                 .clickable(role = Role.Button, onClick = onOpen),
             cornerRadius = ParlorTheme.radii.elevated,
-            contentPadding = ParlorTheme.spacing.l,
+            contentPadding = if (largeText) ParlorTheme.spacing.m else ParlorTheme.spacing.l,
             hero = true,
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    CatalogArtworkBadge(presentation.artwork)
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
-                    ) {
-                        if (presentation.kicker != presentation.title) {
-                            EyebrowLabel(text = presentation.kicker)
-                        }
-                        Text(
-                            text = presentation.title,
-                            style = ParlorTheme.typography.headingLarge,
-                            color = ParlorTheme.colors.textPrimary,
-                            modifier = Modifier.semantics { heading() },
-                        )
-                    }
+            Column(verticalArrangement = Arrangement.spacedBy(if (largeText) ParlorTheme.spacing.s else ParlorTheme.spacing.m)) {
+                CatalogCardHeading(presentation, largeText)
+                if (!largeText) {
+                    CatalogTagline(presentation.tagline)
                 }
-                Text(
-                    text = presentation.tagline,
-                    style = ParlorTheme.typography.bodyMedium,
-                    color = ParlorTheme.colors.textSecondary,
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
-                ) {
-                    MetaPill(
-                        text = playerRangeLabel(supportedPlayerCounts),
-                        modifier = Modifier.weight(1f),
-                    )
-                    MetaPill(
-                        text = stringResource(
-                            when {
-                                supportsLan && supportsLocal -> Res.string.home_local_lan_meta
-                                supportsLan -> Res.string.catalog_nearby_only_meta
-                                else -> Res.string.home_local_meta
-                            },
-                        ),
-                        modifier = Modifier.weight(1f),
-                    )
-                }
+                CatalogMetadata(supportedPlayerCounts, supportsLan, supportsLocal, largeText)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -508,7 +467,81 @@ private fun GameHeroCard(
                     )
                     DirectionalArrow(accent = true)
                 }
+                if (largeText) {
+                    // Keep setup requirements and the primary action ahead of
+                    // extended copy; retain the complete description below.
+                    CatalogTagline(presentation.tagline)
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun CatalogCardHeading(presentation: GameCatalogPresentation, largeText: Boolean) {
+    if (largeText) {
+        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+            CatalogArtworkBadge(presentation.artwork, Modifier.size(ParlorTheme.spacing.xxl))
+            CatalogGameTitle(presentation.title)
+        }
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CatalogArtworkBadge(presentation.artwork)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+            ) {
+                if (presentation.kicker != presentation.title) EyebrowLabel(text = presentation.kicker)
+                CatalogGameTitle(presentation.title)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CatalogGameTitle(title: String) {
+    Text(
+        text = title,
+        style = ParlorTheme.typography.headingLarge,
+        color = ParlorTheme.colors.textPrimary,
+        modifier = Modifier.fillMaxWidth().semantics { heading() },
+    )
+}
+
+@Composable
+private fun CatalogTagline(text: String) {
+    Text(text = text, style = ParlorTheme.typography.bodyMedium, color = ParlorTheme.colors.textSecondary)
+}
+
+@Composable
+private fun CatalogMetadata(playerCounts: IntRange, supportsLan: Boolean, supportsLocal: Boolean, largeText: Boolean) {
+    val players = playerRangeLabel(playerCounts)
+    val modes = stringResource(when {
+        supportsLan && supportsLocal -> Res.string.home_local_lan_meta
+        supportsLan -> Res.string.catalog_nearby_only_meta
+        else -> Res.string.home_local_meta
+    })
+    if (largeText) {
+        // Full-width labels avoid tall, narrow pills at 200% text. Nothing is
+        // ellipsized or shrunk: player counts and device requirements stay legible.
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        ) {
+            MetaPill(players, Modifier.fillMaxWidth())
+            MetaPill(modes, Modifier.fillMaxWidth())
+        }
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        ) {
+            MetaPill(players, Modifier.weight(1f))
+            MetaPill(modes, Modifier.weight(1f))
         }
     }
 }

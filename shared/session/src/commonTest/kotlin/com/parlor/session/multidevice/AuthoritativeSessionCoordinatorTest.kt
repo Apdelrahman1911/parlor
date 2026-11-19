@@ -14,6 +14,7 @@ import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
+import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
@@ -64,6 +65,130 @@ class AuthoritativeSessionCoordinatorTest {
         gameId = GameId("fixture-game"),
         gameVersion = 1,
     )
+
+    @Test
+    fun `host owns its authorized peers when caller removes a seat`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val callerPeers = mutableSetOf(peerId)
+        var applied = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = callerPeers,
+            scope = this,
+            applyCommand = { _, _ ->
+                applied += 1
+                CommandApplication.Applied
+            },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        try {
+            callerPeers.clear()
+            room.receive(command(id = COMMAND_ONE, clientSequence = 1L, expectedRevision = 0L))
+            advanceUntilIdle()
+
+            assertEquals(1, applied)
+            assertEquals(1L, coordinator.revision.value)
+            assertEquals(
+                listOf(CommandStatus.Applied),
+                room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status },
+            )
+            assertTrue(room.sent.any { it.target == SendTarget.Direct(peerId) &&
+                it.message is HostMessage.PlayerSnapshot })
+        } finally {
+            coordinator.close()
+        }
+    }
+
+    @Test
+    fun `host ignores caller additions to its authorized peer set`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val callerPeers = mutableSetOf(peerId)
+        val addedPeer = PlayerId("peer-two")
+        val appliedActors = mutableListOf<PlayerId>()
+        val projectedPlayers = mutableListOf<PlayerId>()
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = callerPeers,
+            scope = this,
+            applyCommand = { actor, _ ->
+                appliedActors += actor
+                CommandApplication.Applied
+            },
+            snapshotFor = { recipient ->
+                projectedPlayers += recipient
+                PlayerSnapshotPayload(byteArrayOf(), byteArrayOf())
+            },
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        try {
+            callerPeers += addedPeer
+            room.receive(command(id = COMMAND_ONE, clientSequence = 1L, expectedRevision = 0L)
+                .copy(actor = addedPeer))
+            advanceUntilIdle()
+            coordinator.publishState(incrementRevision = false)
+            advanceUntilIdle()
+
+            assertTrue(appliedActors.isEmpty())
+            assertEquals(0L, coordinator.revision.value)
+            assertEquals(listOf(peerId), projectedPlayers)
+            assertTrue(room.sent.none { it.target == SendTarget.Direct(addedPeer) })
+        } finally {
+            coordinator.close()
+        }
+    }
+
+    @Test
+    fun `host owns start roster across caller mutation and offer retries`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val callerPlayers = mutableListOf(
+            Player(PlayerId("host"), "Host", 0),
+            Player(peerId, "Peer", 1),
+        )
+        val expectedPlayers = callerPlayers.toList()
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0L,
+        )
+        val starting = async {
+            coordinator.startSession(
+                caseId = "case",
+                modeId = "classic",
+                players = callerPlayers,
+                sessionNonce = 1L,
+                initialRetryMs = 100L,
+                maxRetryMs = 100L,
+                deadlineMs = 5_000L,
+            )
+        }
+        try {
+            runCurrent()
+            assertEquals(1, room.sent.count { it.message is HostMessage.SessionStarting })
+            callerPlayers[1] = Player(PlayerId("peer-two"), "Replacement", 1)
+            callerPlayers.removeAt(0)
+            advanceTimeBy(101L)
+            runCurrent()
+
+            val offers = room.sent.mapNotNull { it.message as? HostMessage.SessionStarting }
+            assertEquals(2, offers.size)
+            assertTrue(offers.all { it.players == expectedPlayers })
+            assertTrue(offers.all { it.validateFor(protocol) == ProtocolValidation.Valid })
+            assertEquals(1, offers.map { it.startId }.distinct().size)
+        } finally {
+            starting.cancel()
+            coordinator.close()
+            starting.join()
+        }
+    }
 
     @Test
     fun `host close waits for inbound collector cancellation cleanup`() = runTest {
