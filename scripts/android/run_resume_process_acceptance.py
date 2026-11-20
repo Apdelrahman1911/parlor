@@ -207,7 +207,7 @@ def owned_emulator(sdk: Path, avd: Path, output: Path, policy: dict):
 def preflight(output: Path) -> tuple[Path, Path, dict, dict]:
     contract.require(os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "Linux"
                      and os.environ.get("RUNNER_ENVIRONMENT") == "github-hosted"
-                     and os.environ.get("GITHUB_REPOSITORY") == "Apdelrahman1911/parlor",
+                     and os.environ.get("GITHUB_REPOSITORY") == "parlor-game/parlor",
                      "Process acceptance uses disposable hosted Parlor Linux runners only")
     sdk = Path(os.environ.get("ANDROID_HOME") or os.environ["ANDROID_SDK_ROOT"])
     avd = Path(os.environ["ANDROID_AVD_HOME"])

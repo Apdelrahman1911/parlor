@@ -27,7 +27,7 @@ IOS_SHA = "2" * 64
 def source_record(commit: str = CANDIDATE, tree: str = TREE) -> dict:
     return {
         "schema_version": 1,
-        "repository": {"full_name": "Apdelrahman1911/parlor", "id": "123"},
+        "repository": {"full_name": "parlor-game/parlor", "id": "123"},
         "source": {"commit_sha": commit, "tree_sha": tree},
         "version": {"marketing_version": "1.0.0", "android_version_code": 1, "ios_build_number": "1"},
         "applications": {"android_application_id": "me.parlor.android", "ios_bundle_id": "me.parlor.ios"},
@@ -50,12 +50,12 @@ def artifact(platform: str, commit: str = CANDIDATE) -> dict:
         "github_artifact": {
             "id": "456",
             "name": f"parlor-candidate-{commit}-{platform}-attempt-1",
-            "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/1/artifacts/456",
+            "url": "https://github.com/parlor-game/parlor/actions/runs/1/artifacts/456",
             "archive_sha256": "4" * 64,
         },
         "attestation": {
             "id": f"attestation-{platform}",
-            "url": "https://github.com/Apdelrahman1911/parlor/attestations/1",
+            "url": "https://github.com/parlor-game/parlor/attestations/1",
         },
         "validation": {"passed": True},
     }
@@ -318,7 +318,7 @@ class CandidateManifestTest(unittest.TestCase):
         with mock.patch.object(release_tool, "list_run_artifacts", return_value=inventory):
             with self.assertRaises(release_tool.ReleaseError):
                 release_tool.assert_artifact_prefix_absent(
-                    "Apdelrahman1911/parlor",
+                    "parlor-game/parlor",
                     "99",
                     "token",
                     f"parlor-candidate-{CANDIDATE}-android-attempt-",
@@ -329,7 +329,7 @@ class CandidateManifestTest(unittest.TestCase):
         with mock.patch.object(release_tool, "list_run_artifacts", return_value=inventory):
             with self.assertRaises(release_tool.ReleaseError):
                 release_tool.assert_artifact_prefix_absent(
-                    "Apdelrahman1911/parlor",
+                    "parlor-game/parlor",
                     "99",
                     "token",
                     f"parlor-candidate-{CANDIDATE}-ios-attempt-",
@@ -343,7 +343,7 @@ class CandidateManifestTest(unittest.TestCase):
             "github_request",
             side_effect=[json.dumps(first).encode(), json.dumps(second).encode()],
         ) as request:
-            artifacts = release_tool.list_run_artifacts("Apdelrahman1911/parlor", "99", "token")
+            artifacts = release_tool.list_run_artifacts("parlor-game/parlor", "99", "token")
         self.assertEqual(len(artifacts), 101)
         self.assertIn("page=2", request.call_args_list[1].args[0])
 
@@ -361,9 +361,9 @@ class CandidateManifestTest(unittest.TestCase):
         ):
             with self.assertRaises(release_tool.ReleaseError):
                 release_tool.assert_candidate_claim_exclusive(
-                    "Apdelrahman1911/parlor", "123", "99", source_record(), "token"
+                    "parlor-game/parlor", "123", "99", source_record(), "token"
                 )
-        trusted.assert_called_once_with("Apdelrahman1911/parlor", "123", 88, "token")
+        trusted.assert_called_once_with("parlor-game/parlor", "123", 88, "token")
 
     def test_same_run_claim_allows_a_safe_rerun(self) -> None:
         inventory = [
@@ -378,7 +378,7 @@ class CandidateManifestTest(unittest.TestCase):
             mock.patch.object(release_tool, "candidate_run_is_trusted") as trusted,
         ):
             release_tool.assert_candidate_claim_exclusive(
-                "Apdelrahman1911/parlor", "123", "99", source_record(), "token"
+                "parlor-game/parlor", "123", "99", source_record(), "token"
             )
         trusted.assert_not_called()
 
@@ -395,7 +395,7 @@ class CandidateManifestTest(unittest.TestCase):
             mock.patch.object(release_tool, "candidate_run_is_trusted", return_value=False),
         ):
             release_tool.assert_candidate_claim_exclusive(
-                "Apdelrahman1911/parlor", "123", "99", source_record(), "token"
+                "parlor-game/parlor", "123", "99", source_record(), "token"
             )
 
     def test_binary_checkpoint_recovers_exact_bytes(self) -> None:
@@ -433,7 +433,7 @@ class CandidateManifestTest(unittest.TestCase):
                 mock.patch.object(release_tool, "github_api_request", return_value=Response(archive_payload)),
             ):
                 release_tool.download_binary_artifact(
-                    "Apdelrahman1911/parlor", "99", "token", descriptor, output
+                    "parlor-game/parlor", "99", "token", descriptor, output
                 )
             self.assertEqual(output.read_bytes(), binary)
 
@@ -449,14 +449,14 @@ class WorkflowRunRecordTest(unittest.TestCase):
             "head_branch": "testing",
             "head_sha": "c" * 40,
             "path": ".github/workflows/testing-external-promotion.yml",
-            "head_repository": {"id": 123, "full_name": "Apdelrahman1911/parlor"},
+            "head_repository": {"id": 123, "full_name": "parlor-game/parlor"},
         }
         value.update(overrides)
         return json.dumps(value).encode()
 
     def record(self) -> dict:
         return release_tool.workflow_run_record(
-            "Apdelrahman1911/parlor",
+            "parlor-game/parlor",
             "123",
             "456",
             "2",
@@ -471,7 +471,7 @@ class WorkflowRunRecordTest(unittest.TestCase):
         self.assertEqual(result["head_sha"], "c" * 40)
         self.assertEqual(result["workflow_run_attempt"], 2)
         request.assert_called_once_with(
-            "https://api.github.com/repos/Apdelrahman1911/parlor/actions/runs/456/attempts/2",
+            "https://api.github.com/repos/parlor-game/parlor/actions/runs/456/attempts/2",
             "token",
         )
 
@@ -502,7 +502,7 @@ class WorkflowRunRecordTest(unittest.TestCase):
         with mock.patch.object(release_tool, "github_request", return_value=trusted):
             self.assertTrue(
                 release_tool.candidate_run_is_trusted(
-                    "Apdelrahman1911/parlor", "123", 88, "token"
+                    "parlor-game/parlor", "123", 88, "token"
                 )
             )
         untrusted = self.run_payload(
@@ -513,7 +513,7 @@ class WorkflowRunRecordTest(unittest.TestCase):
         with mock.patch.object(release_tool, "github_request", return_value=untrusted):
             self.assertFalse(
                 release_tool.candidate_run_is_trusted(
-                    "Apdelrahman1911/parlor", "123", 88, "token"
+                    "parlor-game/parlor", "123", 88, "token"
                 )
             )
 
@@ -571,14 +571,14 @@ class GitTreeVerificationTest(unittest.TestCase):
 
     def test_exact_candidate_commit_is_accepted(self) -> None:
         self.assertEqual(
-            release_tool.verify_source(self.candidate_manifest(), "Apdelrahman1911/parlor", "123"),
+            release_tool.verify_source(self.candidate_manifest(), "parlor-game/parlor", "123"),
             "exact-commit",
         )
 
     def test_shared_history_equal_tree_rebase_or_merge_is_accepted(self) -> None:
         self.git("commit", "--allow-empty", "-q", "-m", "protected merge metadata")
         self.assertEqual(
-            release_tool.verify_source(self.candidate_manifest(), "Apdelrahman1911/parlor", "123"),
+            release_tool.verify_source(self.candidate_manifest(), "parlor-game/parlor", "123"),
             "shared-history-equal-tree",
         )
 
@@ -587,7 +587,7 @@ class GitTreeVerificationTest(unittest.TestCase):
         self.git("add", "file.txt")
         self.git("commit", "-q", "-m", "changed")
         with self.assertRaises(release_tool.ReleaseError):
-            release_tool.verify_source(self.candidate_manifest(), "Apdelrahman1911/parlor", "123")
+            release_tool.verify_source(self.candidate_manifest(), "parlor-game/parlor", "123")
 
     def test_unrelated_same_tree_is_rejected(self) -> None:
         self.git("checkout", "--orphan", "unrelated")
@@ -597,7 +597,7 @@ class GitTreeVerificationTest(unittest.TestCase):
         self.git("commit", "-q", "-m", "copied files")
         self.assertEqual(self.git("rev-parse", "HEAD^{tree}"), self.tree)
         with self.assertRaises(release_tool.ReleaseError):
-            release_tool.verify_source(self.candidate_manifest(), "Apdelrahman1911/parlor", "123")
+            release_tool.verify_source(self.candidate_manifest(), "parlor-game/parlor", "123")
 
 
 if __name__ == "__main__":

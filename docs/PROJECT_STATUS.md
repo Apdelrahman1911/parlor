@@ -27,6 +27,10 @@ creation or Swift tests. The eight other producers and Apple Release aggregate
 passed. The Release wrapper recorded 47m38s in two build scripts and 0.807s
 in SwiftCompile. Issue #342 records the retained failure and scoped evidence.
 
+Parlor transferred to [parlor-game/parlor](https://github.com/parlor-game/parlor).
+PR #343 also updates exact repository checks for new CI evidence and releases.
+Historical run links and frozen receipts retain their original source identity.
+
 The next Phase 1 measurement enables the documented Kotlin/Native compiler
 logging on the ARM64 Release wrapper only. Compare native phase times alongside
 the original Xcode timing summary. Keep existing optimized binaries, test
