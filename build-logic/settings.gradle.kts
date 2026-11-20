@@ -1,5 +1,17 @@
 @file:Suppress("UnstableApiUsage")
 
+pluginManagement {
+    repositories {
+        // Resolve Kotlin DSL's Kotlin dependencies at their upstream repository.
+        mavenCentral {
+            content {
+                includeGroup("org.jetbrains.kotlin")
+            }
+        }
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "build-logic"
 
 dependencyResolutionManagement {
