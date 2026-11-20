@@ -57,7 +57,7 @@ class ProductionVerificationWorkflowContractTest {
             assertEquals(1, Regex(Regex.escape(attribute)).findAll(code).count())
         }
         assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
-        assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
+        assertEquals(1, Regex("\\.tap\\(\\)").findAll(code).count())
         assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
         assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
@@ -68,16 +68,35 @@ class ProductionVerificationWorkflowContractTest {
             "let enabled = sample.enabled",
             "snapshotErrorCode=",
             "let stable = frames.observe(frame: frame, enabled: enabled)",
-            "let hittable = stable ? control.isHittable : nil",
-            "if stable && hittable != true { frames.reset() }",
+            "let hittable = stable && refresh == nil ? control.isHittable : nil",
+            "if stable && refresh == nil && hittable != true { frames.reset() }",
             "XCTWaiter.wait(for: [settled], timeout: 10)",
             "if samples.count < 12",
-            "if result != .completed",
-            "guard result == .completed else",
+            "if !ready",
+            "guard ready else",
             """throw NSError(domain: "PublicControlSettlement", code: 1)""",
             "screenshot.lifetime = .keepAlways",
         ).forEach { assertContains(code, it) }
-        assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
+        assertTrue(code.indexOf("guard ready else") < code.indexOf("target.tap()"))
+        assertTrue(code.indexOf("XCTWaiter.wait(for: [settled]") < code.indexOf("if ready, let refresh, let read {"))
+        val refreshed = code.substringAfter("if ready, let refresh, let read {")
+            .substringBefore("if !ready {")
+        listOf(
+            "let remaining = 10 - (ProcessInfo.processInfo.systemUptime - started)",
+            "guard frames.observe(frame: sample.frame, enabled: sample.enabled) else { return false }",
+            "let inTime = ProcessInfo.processInfo.systemUptime - started < 10",
+            "guard canTap, unchanged, inTime else {",
+            "frames.reset()",
+            "ready = XCTWaiter.wait(for: [hittable], timeout: remaining) == .completed",
+        ).forEach { assertContains(refreshed, it) }
+        val hit = refreshed.indexOf("let canTap = candidate.isHittable")
+        val resample = refreshed.indexOf("let current = PublicControlSample(read: read)")
+        val checkedFrame = refreshed.indexOf("let unchanged = frames.observe(frame: current.frame, enabled: current.enabled)")
+        val target = refreshed.indexOf("target = candidate")
+        assertTrue(refreshed.indexOf("let candidate = refresh()") in 0 until hit)
+        assertTrue(hit in 0 until resample && resample < checkedFrame && checkedFrame < target)
+        assertContains(swift, "try tapSetupButton(app, prefix: copy.peerContinue, refreshAfterSettlement: true)")
+
         listOf("control.exists", "control.frame", "control.isEnabled", ".label", ".value", ".placeholderValue", ".identifier",
             ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
             "press(forDuration", "swipe").forEach { assertFalse(it in code) }
@@ -112,8 +131,9 @@ class ProductionVerificationWorkflowContractTest {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val setup = swift.substringAfter("private func tapSetupButton(")
             .substringBefore("private func readPublicButtonSample(")
-        assertContains(setup, "try tapSettledControl(button, read: {")
-        assertContains(setup, "try self.readPublicButtonSample(app, prefix: prefix)")
+        assertContains(setup, "try tapSettledControl(")
+        assertContains(setup, "read: { try self.readPublicButtonSample(app, prefix: prefix) }")
+        assertContains(setup, "refresh: refreshAfterSettlement ? { self.setupButton(app, prefix: prefix) } : nil")
         val capture = swift.substringAfter("private func readPublicButtonSample(")
             .substringBefore("private func tapPublicSetupTransition(")
         assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(capture).count())
