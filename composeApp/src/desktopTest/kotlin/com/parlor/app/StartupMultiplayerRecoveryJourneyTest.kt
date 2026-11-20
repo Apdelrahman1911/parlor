@@ -11,7 +11,11 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.hasScrollToIndexAction
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -34,8 +38,15 @@ import com.parlor.app.shell.game.GameShellMultiplayerContract
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.core.result.Result
 import com.parlor.core.result.DataError
+import com.parlor.core.result.EmptyOk
+import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
+import com.parlor.core.versioning.SemVer
+import com.parlor.engine.snapshot.GameSnapshot
+import com.parlor.engine.state.Player
 import com.parlor.engine.testing.fakes.RoundRobinAnnounceGame
+import com.parlor.engine.testing.fakes.RrPhase
+import com.parlor.engine.testing.fakes.RrState
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
@@ -66,10 +77,85 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 /** Actual App navigation with an explicitly non-shipping binding; no LAN/authentication claim. */
 @OptIn(ExperimentalTestApi::class)
 class StartupMultiplayerRecoveryJourneyTest {
+    @Test
+    fun same_frame_settings_and_games_actions_do_not_acknowledge_a_storage_staging_boundary() {
+        for (language in listOf("en", "ar")) {
+            StartupJourneyFixture(language = language).use { fixture ->
+                fixture.transport.result.set(Result.Success(null))
+                runComposeUiTest {
+                    installApp(fixture)
+                    waitUntil(timeoutMillis = 5_000) { fixture.transport.completedMetadataRequests.get() == 1 }
+                    waitForIdle()
+                    // Native performAction acknowledges delivery, not a Compose frame.
+                    // Both public tabs already exist on Home. Invoke their actual
+                    // callbacks in one UI turn to make the missing boundary deterministic.
+                    val settings = checkNotNull(onNodeWithContentDescription(fixture.settingsDescription)
+                        .fetchSemanticsNode().config[SemanticsActions.OnClick].action)
+                    val games = checkNotNull(onNodeWithContentDescription(fixture.gamesDescription)
+                        .fetchSemanticsNode().config[SemanticsActions.OnClick].action)
+                    runOnIdle {
+                        assertTrue(settings())
+                        fixture.stageRecovery()
+                        assertTrue(games())
+                    }
+                    waitForIdle()
+                    onNode(fixture.settingsHeading).assertDoesNotExist()
+                    onNodeWithContentDescription(fixture.localDiscardDescription).assertDoesNotExist()
+                    assertEquals(1, fixture.snapshots.inventoryRequests.get(), "No intermediate route was composed")
+                    assertEquals(1, fixture.transport.completedMetadataRequests.get())
+                    assertTrue(fixture.rendered.isEmpty())
+                    // A committed Settings visit changes the effect key. This is
+                    // an explicit control, not a retry of a failed acceptance action.
+                    onNodeWithContentDescription(fixture.settingsDescription).performClick()
+                    onNode(fixture.settingsHeading).assertExists()
+                    onNodeWithContentDescription(fixture.gamesDescription).performClick()
+                    assertStagedRecovery(fixture)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun settings_heading_before_external_staging_refreshes_local_and_multiplayer_recovery_in_both_languages() {
+        for (language in listOf("en", "ar")) {
+            StartupJourneyFixture(language = language).use { fixture ->
+                fixture.transport.result.set(Result.Success(null))
+                runComposeUiTest {
+                    installApp(fixture)
+                    waitUntil(timeoutMillis = 5_000) { fixture.transport.completedMetadataRequests.get() == 1 }
+                    onNode(fixture.settingsHeading).assertDoesNotExist()
+                    onNodeWithContentDescription(fixture.settingsDescription).performClick()
+                    // A tab caption also says Settings; only the destination's
+                    // public heading proves the intermediate screen has committed.
+                    onNode(fixture.settingsHeading).assertExists()
+                    runOnIdle { fixture.stageRecovery() }
+                    onNodeWithContentDescription(fixture.gamesDescription).performClick()
+                    assertStagedRecovery(fixture)
+                }
+            }
+        }
+    }
+
+    private fun ComposeUiTest.assertStagedRecovery(fixture: StartupJourneyFixture) {
+        waitUntil(timeoutMillis = 5_000) { fixture.transport.completedMetadataRequests.get() == 2 }
+        waitForIdle()
+        onNode(fixture.settingsHeading).assertDoesNotExist()
+        onNodeWithContentDescription(fixture.localDiscardDescription).assertExists()
+        onNode(hasScrollToIndexAction()).performScrollToIndex(4)
+        onNodeWithContentDescription(fixture.multiplayerDescription).assertExists()
+        assertEquals(2, fixture.snapshots.inventoryRequests.get())
+        assertTrue(fixture.rendered.isEmpty(), "The explicit Settings decision prevents automatic recovery routing")
+        assertEquals(0, fixture.transport.lanOperations.get())
+        runOnIdle { assertEquals(Result.Success(fixture.stagedSnapshot), runBlocking {
+            fixture.snapshots.load(fixture.stagedSnapshot.sessionId)
+        }) }
+    }
+
     @Test
     fun background_and_inactive_startups_wait_for_active_before_lookup_and_routing() {
         for (initial in listOf(AppVisibility.Background, AppVisibility.Inactive)) {
@@ -207,6 +293,7 @@ class StartupMultiplayerRecoveryJourneyTest {
 private class StartupJourneyFixture(
     visibility: AppVisibility = AppVisibility.Active,
     delayMetadata: Boolean = false,
+    language: String = "en",
 ) : AutoCloseable {
     val rendered = CopyOnWriteArrayList<GameShellLaunch>()
     val binding = StartupJourneyBinding(rendered)
@@ -214,7 +301,34 @@ private class StartupJourneyFixture(
     val summary = ResumableSessionInfo(binding.definition.id, 1, "Fixture Player", Long.MAX_VALUE, selection)
     val transport = StartupJourneyTransport(summary, delayMetadata)
     val snapshots = StartupJourneySnapshotStore()
-    val settings = InMemorySettingsStore(initialLanguageOverride = "en", initialReducedMotion = true)
+    val settings = InMemorySettingsStore(initialLanguageOverride = language, initialReducedMotion = true)
+    val settingsDescription = if (language == "ar") "افتح الإعدادات." else "Open settings."
+    val gamesDescription = if (language == "ar") "افتح مكتبة الألعاب." else "Open the game library."
+    val multiplayerDescription = if (language == "ar") {
+        "العودة إلى اللعبة الجماعية السابقة."
+    } else {
+        "Rejoin the previous multiplayer game."
+    }
+    val settingsHeading = hasText(if (language == "ar") "الإعدادات" else "Settings") and
+        SemanticsMatcher.expectValue(SemanticsProperties.Heading, Unit)
+    val localDiscardDescription = if (language == "ar") {
+        "حذف: استئناف لعبة Fixture game المحلية، وهي اللعبة المحفوظة 1 من 1."
+    } else {
+        "Remove: Resume Fixture game local game, saved game 1 of 1."
+    }
+    val stagedSnapshot = RrState(
+        RrPhase.Announcing(0), listOf(Player(PlayerId("fixture-seat"), "Fixture Player", 0)), emptyList(),
+    ).let { state ->
+        GameSnapshot(
+            SessionId("staged-home-fixture"), binding.definition.id, SemVer(1, 0, 0),
+            Instant.fromEpochMilliseconds(0), state.phase.id, binding.definition.snapshotCodec().encode(state),
+        )
+    }
+
+    fun stageRecovery() {
+        runBlocking { assertEquals(EmptyOk, snapshots.save(stagedSnapshot)) }
+        transport.result.set(Result.Success(summary))
+    }
     val gate = StartupMultiplayerRecoveryGate()
     val lifecycle = AppLifecycleCoordinator(transport).apply {
         when (visibility) {

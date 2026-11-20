@@ -9,7 +9,7 @@ from scripts.ci import hosted_linux_capacity as c
 
 Usage=namedtuple('Usage', 'total used free')
 ENV=dict(GITHUB_ACTIONS='true',RUNNER_ENVIRONMENT='github-hosted',RUNNER_OS='Linux',
-         RUNNER_ARCH='X64',ImageOS='ubuntu24',GITHUB_REPOSITORY='Apdelrahman1911/parlor',
+         RUNNER_ARCH='X64',ImageOS='ubuntu24',GITHUB_REPOSITORY='parlor-game/parlor',
          GITHUB_JOB='desktop-android',GITHUB_RUN_ID='41580234749',GITHUB_RUN_ATTEMPT='1')
 
 

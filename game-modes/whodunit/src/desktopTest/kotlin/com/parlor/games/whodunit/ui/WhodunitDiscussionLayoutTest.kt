@@ -64,7 +64,7 @@ class WhodunitDiscussionLayoutTest {
         }
         val timer = if (arabic) "النقاش. المتبقي 0:42 من 1:00." else "DISCUSSION. 0:42 remaining of 1:00."
         onNodeWithContentDescription(timer).performScrollTo().assertIsDisplayed()
-        val output = File("build/reports/ux/whodunit-discussion-${language.tag}-2x.png")
+        val output = File("build/reports/tests/public-ux/whodunit-discussion-${language.tag}-2x.png")
         output.parentFile.mkdirs()
         ImageIO.write(onNodeWithTag("discussion-evidence").captureToImage().toAwtImage(), "png", output)
         onNodeWithText(if (arabic) "الجولة 1  ·  دليل" else "ROUND 1  ·  CLUE").performScrollTo().assertIsDisplayed()

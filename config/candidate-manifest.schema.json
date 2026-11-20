@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Apdelrahman1911/parlor/blob/main/config/candidate-manifest.schema.json",
+  "$id": "https://github.com/parlor-game/parlor/blob/main/config/candidate-manifest.schema.json",
   "title": "Parlor immutable Store candidate manifest",
   "type": "object",
   "additionalProperties": false,
@@ -108,7 +108,7 @@
           "properties": {
             "id": { "type": "string", "pattern": "^[1-9][0-9]*$" },
             "name": { "type": "string", "minLength": 1 },
-            "url": { "type": "string", "pattern": "^https://github\\.com/Apdelrahman1911/parlor/actions/runs/[1-9][0-9]*/artifacts/[1-9][0-9]*$" },
+            "url": { "type": "string", "pattern": "^https://github\\.com/parlor-game/parlor/actions/runs/[1-9][0-9]*/artifacts/[1-9][0-9]*$" },
             "archive_sha256": { "$ref": "#/$defs/sha256" }
           }
         },
@@ -118,7 +118,7 @@
           "required": ["id", "url"],
           "properties": {
             "id": { "type": "string", "minLength": 1 },
-            "url": { "type": "string", "pattern": "^https://github\\.com/Apdelrahman1911/parlor/attestations/" }
+            "url": { "type": "string", "pattern": "^https://github\\.com/parlor-game/parlor/attestations/" }
           }
         }
       }

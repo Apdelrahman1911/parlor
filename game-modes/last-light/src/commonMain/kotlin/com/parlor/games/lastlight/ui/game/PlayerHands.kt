@@ -176,13 +176,18 @@ private fun SeatNameplate(name: String, player: PlayerView, active: Boolean, lar
         else -> LastLightColors.Paper
     }
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().testTag("game-player-nameplate-${player.id}"),
         color = if (active) LastLightColors.Citron else LastLightColors.Surface,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, if (active) LastLightColors.Citron else LastLightColors.Divider),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            // Wrapped Arabic/English labels need space inside the rounded edge,
+            // not just an unellipsized paragraph. Keep ordinary table density.
+            modifier = Modifier.padding(
+                horizontal = if (largeText) 12.dp else 6.dp,
+                vertical = if (largeText) 6.dp else 2.dp,
+            ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {

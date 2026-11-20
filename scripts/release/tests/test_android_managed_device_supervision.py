@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import signal
+import shutil
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
@@ -19,6 +20,8 @@ from scripts.android import supervise_managed_device as supervision
 
 DETACHED_CHILD = r"""
 import os, pathlib, signal, sys
+if 'ANDROID_AVD_HOME' in os.environ:
+    (pathlib.Path(os.environ['ANDROID_AVD_HOME']) / 'synthetic-avd').write_bytes(b'public fixture')
 read_fd, write_fd = os.pipe()
 if os.fork():
     os.close(write_fd)
@@ -127,10 +130,10 @@ class AndroidManagedDeviceSupervisionTest(unittest.TestCase):
                     completed = subprocess.run(
                         [sys.executable, "-I", "-B", "-c", FIXTURE_GUARDIAN, str(guardian_receipt),
                          sys.executable, "-I", "-B", str(ROOT / "scripts/android/supervise_managed_device.py"),
-                         "--receipt", str(receipt), "--", sys.executable, "-I", "-B", "-c",
+                         "--receipt", str(receipt), "--isolated-avd", "--", sys.executable, "-I", "-B", "-c",
                          DETACHED_CHILD, str(runtime_exit), str(marker)],
                         stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                        timeout=40, check=False,
+                        timeout=40, check=False, env=dict(os.environ, TMPDIR=str(self.base)),
                     )
                     try:
                         self.assertEqual(json.loads(guardian_receipt.read_text()), {"result": "PASS", "rescue_reaped": 0})
@@ -142,6 +145,15 @@ class AndroidManagedDeviceSupervisionTest(unittest.TestCase):
                         self.assertEqual(evidence["cleanup"]["remaining"], [])
                         self.assertGreaterEqual(evidence["cleanup"]["term_signals"], 1)
                         self.assertGreaterEqual(evidence["cleanup"]["reaped"], 1)
+                        avd = evidence["avd_home"]
+                        self.assertEqual(Path(avd['path']).parent, self.base)
+                        if runtime_exit == 0:
+                            self.assertEqual(avd['result'], 'PASS')
+                            self.assertTrue(avd['absent'])
+                            self.assertFalse(Path(avd['path']).exists())
+                        else:
+                            self.assertEqual(avd['result'], 'RETAINED')
+                            self.assertEqual((Path(avd['path']) / 'synthetic-avd').read_bytes(), b'public fixture')
                         self.assertIsNone(unrelated.poll(), "preexisting non-descendant was terminated")
                     except Exception:
                         # Retain bounded failure evidence in the test log before
@@ -195,6 +207,81 @@ class AndroidManagedDeviceSupervisionTest(unittest.TestCase):
                     sent.assert_called_once_with(91, signal.SIGTERM)
                 else:
                     sent.assert_not_called()
+
+    def test_private_avd_retirement_counts_allocated_bytes_and_never_follows_links(self):
+        root = self.base / 'fresh-avd'; root.mkdir(mode=0o700)
+        data = root / 'sparse-image'
+        with data.open('wb') as output:
+            output.seek(1024 * 1024)
+            output.write(b'x')
+        unrelated = self.base / 'unrelated-sdk-or-evidence'; unrelated.mkdir()
+        (unrelated / 'keep').write_text('retained')
+        (root / 'link-to-sdk').symlink_to(unrelated, target_is_directory=True)
+        logical_size = data.stat().st_size
+        receipt = supervision.retire_avd_home(root, root.lstat())
+        self.assertEqual(receipt['result'], 'PASS')
+        self.assertLess(receipt['allocated_bytes_before'], logical_size)
+        self.assertFalse(root.exists())
+        self.assertEqual((unrelated / 'keep').read_text(), 'retained')
+
+    def test_avd_identity_redirection_mounts_entry_bounds_and_delete_failures_refuse(self):
+        for failure in ('symlink', 'permissions', 'identity', 'mount', 'entries', 'delete'):
+            with self.subTest(failure=failure):
+                root = self.base / failure; root.mkdir(mode=0o700)
+                identity = root.lstat()
+                (root / 'data').write_text('keep')
+                if failure == 'symlink':
+                    moved = root.with_name(failure + '-original'); root.rename(moved)
+                    root.symlink_to(moved, target_is_directory=True)
+                if failure == 'permissions': root.chmod(0o755)
+                if failure == 'identity': identity = self.base.lstat()
+                with patch.object(Path, 'is_mount', return_value=failure == 'mount'), \
+                        patch.object(supervision, 'MAX_AVD_ENTRIES', 0 if failure == 'entries' else 100_000), \
+                        patch.object(supervision.shutil, 'rmtree', wraps=shutil.rmtree) as delete:
+                    delete.avoids_symlink_attacks = True
+                    if failure == 'delete': delete.side_effect = OSError('synthetic failure')
+                    with self.assertRaises((RuntimeError, OSError)):
+                        supervision.retire_avd_home(root, identity)
+                    if failure != 'delete': delete.assert_not_called()
+                self.assertEqual((root / 'data').read_text(), 'keep')
+
+    def test_failed_or_unretired_runtime_never_deletes_its_private_avd(self):
+        for runtime, cleanup in ((23, 'PASS'), (0, 'FAIL'), (23, 'FAIL')):
+            with self.subTest(runtime=runtime, cleanup=cleanup):
+                root = self.base / f'avd-{runtime}-{cleanup}'; root.mkdir(mode=0o700)
+                old_home = self.base / 'user-avds'
+                child = Mock(returncode=runtime); child.poll.return_value = runtime
+                with patch.object(supervision, 'owned_children', return_value=[]), \
+                        patch.object(supervision, 'enable_subreaper'), \
+                        patch.object(supervision, 'create_avd_home', return_value=(root, root.lstat())), \
+                        patch.object(supervision.subprocess, 'Popen', return_value=child) as launch, \
+                        patch.object(supervision, 'retire_owned_children', return_value={'result': cleanup}), \
+                        patch.object(supervision, 'retire_avd_home') as delete, \
+                        patch.dict(os.environ, ANDROID_AVD_HOME=str(old_home)), redirect_stdout(io.StringIO()):
+                    status = supervision.supervise(['fake-gradle'], self.base / f'private-{runtime}-{cleanup}.json',
+                                                   isolate_avd=True)
+                    self.assertNotEqual(status, 0)
+                    self.assertEqual(launch.call_args.kwargs['env']['ANDROID_AVD_HOME'], str(root))
+                    self.assertEqual(os.environ['ANDROID_AVD_HOME'], str(old_home))
+                    delete.assert_not_called()
+
+    def test_avd_retirement_failure_invalidates_an_otherwise_successful_runtime(self):
+        root = self.base / 'retained-avd'; root.mkdir(mode=0o700)
+        child = Mock(returncode=0); child.poll.return_value = 0
+        receipt = self.base / 'retirement-failed.json'
+        with patch.object(supervision, 'owned_children', return_value=[]), \
+                patch.object(supervision, 'enable_subreaper'), \
+                patch.object(supervision, 'create_avd_home', return_value=(root, root.lstat())), \
+                patch.object(supervision.subprocess, 'Popen', return_value=child), \
+                patch.object(supervision, 'retire_owned_children', return_value={'result': 'PASS'}), \
+                patch.object(supervision, 'retire_avd_home', side_effect=OSError('synthetic error')), \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(supervision.supervise(['fake-gradle'], receipt, isolate_avd=True), 1)
+        evidence = json.loads(receipt.read_text())
+        self.assertEqual(evidence['result'], 'FAIL')
+        self.assertEqual(evidence['runtime_exit_code'], 0)
+        self.assertEqual(evidence['avd_home']['result'], 'RETAINED')
+        self.assertEqual(evidence['errors'][0]['code'], 'AVD_RETIREMENT_FAILED')
 
     def retirement(self, *, graceful: bool, stuck: bool = False):
         live, zombies, signals, clock = {123}, [], [], [0.0]

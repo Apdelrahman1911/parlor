@@ -62,7 +62,9 @@ VERIFICATION_JOBS = {
     "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
     "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
     "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
-    "ios": "iOS simulator runtime and Swift host",
+    "ios-kmp": "KMP iOS simulator runtime (arm64)",
+    "ios": "iOS Swift host acceptance (arm64)",
+    "ios-runtime": "iOS simulator runtime and Swift host",
     "ios-release-simulator": "iOS Release simulator and Swift wrapper",
     "ios-release-device": "iOS Release device arm64",
     "ios-release-x64": "iOS Release simulator x64",
@@ -206,6 +208,8 @@ def current_verification_artifact_paths(job: str) -> list[str]:
     if job == "desktop-android":
         custody.append(prefix + "-hosted-disk.json")
     custody.append(prefix + "-stop-*.json")
+    if job == "desktop-macos-x64":
+        custody.append(prefix + "-network.json")
     if job == "desktop-android":
         paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + reports + custody + [
             "**/build/reports/androidTests/managedDevice/",
@@ -217,7 +221,7 @@ def current_verification_artifact_paths(job: str) -> list[str]:
         ]
     elif job in {"desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64"}:
         paths = reports + custody
-    elif job == "ios":
+    elif job in {"ios-kmp", "ios"}:
         paths = ["build/ci-evidence/"] + reports + custody + [
             prefix + "-apple-*-ownership.json", prefix + "-apple-ui-simulator-*.json"]
     elif job == "ios-release-simulator":
@@ -238,7 +242,8 @@ def verify_current_verification_artifacts(text: str) -> None:
         "desktop-linux-arm64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
         "desktop-macos-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
         "desktop-windows-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
-        "ios": ("Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        "ios-kmp": ("Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        "ios": ("Upload Apple Swift verification evidence", "ios-swift-verification"),
         "ios-release-simulator": ("Upload Apple release verification evidence", "ios-release-verification"),
         "ios-release-device": ("Upload IosArm64 release verification evidence", "ios-release-device-verification"),
         "ios-release-x64": ("Upload IosX64 release verification evidence", "ios-release-x64-verification"),
@@ -356,7 +361,7 @@ def verify_windows_checkout(text: str) -> None:
         fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
 
 
-HOSTED_CAPACITY_SCRIPT_SHA256 = 'ae73036a1e587ceebef5e5bca35d1839d5032829b665c09f6e5175dcf2fd5169'
+HOSTED_CAPACITY_SCRIPT_SHA256 = '2e5264048a5eba7165e98543440124bc3a706d93f3a9ab40c7b4c26888d681fa'
 
 
 def verify_hosted_linux_capacity(job: str) -> None:
@@ -377,9 +382,64 @@ def verify_hosted_linux_capacity(job: str) -> None:
         fail("Real capacity measurements must be retained in the existing verification upload")
 
 
+def verify_macos_network_evidence(job: str) -> None:
+    name = "Collect failure-only macOS network evidence"
+    expected = """        if: failure() && steps.macos_x64_verification.outcome == 'failure'
+        timeout-minutes: 1
+        env:
+          PARLOR_FAILED_STEP_OUTCOME: ${{ steps.macos_x64_verification.outcome }}
+        run: python3 -B scripts/ci/macos_network_evidence.py"""
+    if validation_step(job, name).strip("\n") != expected:
+        fail("macOS DNS evidence must be bounded and strictly after the failed original step, without retries")
+    original = "Resolve and test the macOS x64 host-selected graphs"
+    expected_original = """        id: macos_x64_verification
+        shell: bash
+        run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"""
+    if validation_step(job, original).strip("\n") != expected_original:
+        fail("macOS DNS observation must retain the original strict single Gradle execution")
+    order = (original, name, "Stop Gradle after macos-x64", "Upload Desktop verification descriptors",
+             "Clean only attested verification outputs")
+    expected_steps = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies",
+                      "Claim fresh verification output ownership", "Require the macOS x64 host", *order,
+                      "Upload verification cleanup receipt", "Save dependencies from trusted main only"]
+    if re.findall(r"(?m)^      - name: (.*)$", job) != expected_steps:
+        fail("macOS DNS evidence must retain exact original gates/order, with no extra steps or retries")
+    upload = validation_step(job, order[-2])
+    receipt = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-network.json"
+    if upload.count(receipt) != 1:
+        fail("macOS DNS evidence must remain in the existing source/run/job-bound artifact")
+
+
+def verify_android_resume_process(job: str) -> None:
+    """Normal PR/main acceptance reuses APKs; no shortened qualification path."""
+    name = "Verify Android saved-session removal across process restart"
+    expected = '''        if: ''' + FULL_VERIFICATION_SCOPE + '''
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/android/supervise_managed_device.py \\
+            --receipt build/ci-evidence/android-process-device-supervision.json \\
+            --isolated-avd -- \\
+            python3 -B -m scripts.android.run_resume_process_acceptance \\
+              --output build/ci-evidence/android-process-acceptance
+'''
+    if validation_step(job, name).strip("\n") != expected.strip("\n"):
+        fail("Android process acceptance requires the exact full-only owned runtime and retained receipts")
+    order = ("Run release Android managed-device smoke tests", "Stop Gradle after managed-device", name,
+             "Inspect unsigned Android release artifact and merged manifest",
+             "Upload verification reports, mappings, and unsigned AAB", "Clean only attested verification outputs")
+    positions = [job.index("- name: " + step + "\n") for step in order]
+    if positions != sorted(positions):
+        fail("Android process acceptance must reuse built APKs after managed runtime and before evidence upload")
+    upload = validation_step(job, order[-2])
+    if upload.count("            build/ci-evidence/\n") != 1:
+        fail("Android process acceptance logs and both runtime/cleanup receipts must remain uploaded")
+
+
 def verify_linux_process_probe(job: str) -> None:
     """Closed probe/managed-cleanup paths; full qualification keeps its complete gates."""
     verify_hosted_linux_capacity(job)
+    verify_android_resume_process(job)
     full = ("Install pinned Android SDK packages", "Record exact source and require a clean checkout",
             "Run common, desktop, Android, static-analysis, and release gates",
             "Run release Android managed-device smoke tests", "Inspect unsigned Android release artifact and merged manifest")
@@ -392,7 +452,7 @@ def verify_linux_process_probe(job: str) -> None:
     admission = "Validate Android cleanup source and controls"
     prerequisite = "Install Linux process-probe emulator package"
     expected = ["Check out source", "Set up JDK 21", "Reclaim unused standard Linux runner toolchains", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
-                full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
+                full[0], full[1], full[2], final[0], full[3], final[1], "Verify Android saved-session removal across process restart", full[4], *final[2:], *probe[1:]]
     if (re.findall(r"(?m)^      - name: (.*)$", job) != expected + ["Save dependencies from trusted main only"] or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [
@@ -476,7 +536,7 @@ def verify_verification_jdk(job: str) -> None:
 
 
 def verify_split_apple_scopes(text: str) -> None:
-    """Two independent full jobs retain every gate and exactly their own cycles."""
+    """Isolated ARM64 runtime/Swift and Release jobs retain all owned cycles."""
     runtime_run = "Run all KMP iOS simulator runtime tests"
     release_run = "Run complete Apple static analysis"
     shared_start = ["Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
@@ -489,18 +549,19 @@ def verify_split_apple_scopes(text: str) -> None:
                     "Verify process-probe cleanup and uploaded custody", "Upload process-probe cleanup receipt"]
     prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
     for job_id, cycle, run, upload, artifact_name in (
-        ("ios", "apple-ui", runtime_run, "Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        ("ios-kmp", None, runtime_run, "Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        ("ios", "apple-ui", None, "Upload Apple Swift verification evidence", "ios-swift-verification"),
         ("ios-release-simulator", "apple-wrapper", release_run, "Upload Apple release verification evidence", "ios-release-verification"),
     ):
         job = validation_job(text, job_id)
         header = job.split("\n    steps:\n", 1)[0]
-        if (re.findall(r"(?m)^    runs-on: (.*)$", header) != ["macos-15" if job_id == "ios" else FREE_APPLE_RELEASE_RUNNER] or
+        if (re.findall(r"(?m)^    runs-on: (.*)$", header) != [FREE_APPLE_RELEASE_RUNNER if job_id == "ios-release-simulator" else "macos-15"] or
                 re.search(r"(?m)^    (needs|strategy):", header) or
                 re.findall(r"(?m)^      DEVELOPER_DIR: (.*)$", header) != ["/Applications/Xcode_26.3.app/Contents/Developer"]):
             fail("verification scope Apple jobs require independent pinned macOS runners, not a dependency or matrix")
-        if job_id == "ios-release-simulator" and (
+        if job_id != "ios" and (
                 re.findall(r"(?m)^    if: (.*)$", header) != [FULL_VERIFICATION_SCOPE] or
-                re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["180"] or "permissions:" in header):
+                re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["180" if job_id == "ios-release-simulator" else "120"] or "permissions:" in header):
             fail("verification scope Apple release job must be full-only, bounded and inherit read-only contents permission")
         verify_verification_jdk(job)
         checkout = validation_step(job, "Check out source")
@@ -514,16 +575,20 @@ def verify_split_apple_scopes(text: str) -> None:
         finish = f"Stop Gradle after {cycle} and retire owned Apple resources"
         run_name = ("Launch Swift host and Compose root on iOS Simulator" if job_id == "ios" else
                     "Build unsigned Swift Release wrapper")
-        full_steps = shared_start + [run, "Stop Gradle after apple-aggregate and retire owned Apple resources",
-                                    "Validate iOS plist and privacy manifest", f"Claim {cycle} native resource ownership"]
+        full_steps = (shared_start + [run, "Stop Gradle after apple-aggregate and retire owned Apple resources"]
+                      if run else [shared_start[0], shared_start[2]])
+        full_steps += ["Validate iOS plist and privacy manifest"]
+        if cycle:
+            full_steps += [f"Claim {cycle} native resource ownership"]
         if job_id == "ios":
             full_steps += ["Verify effective Debug and Release application identities"]
-        full_steps += [run_name, finish]
+        if cycle:
+            full_steps += [run_name, finish]
         if job_id == "ios-release-simulator":
             full_steps += ["Inspect complete unsigned iOS Release package"]
         full_steps += [upload] + shared_end
-        if job_id == "ios-release-simulator":
-            full_steps += ["Publish qualified Apple lane identity"]
+        full_steps += ["Publish qualified Apple lane identity" if job_id == "ios-release-simulator" else
+                       "Publish qualified Apple runtime lane identity"]
         expected_steps = (native_steps if job_id == "ios" else ["Check out source", "Set up JDK 21"]) + full_steps
         expected_steps.insert(expected_steps.index("Set up JDK 21") + 1, "Restore reviewed Gradle dependencies")
         expected_steps += ["Save dependencies from trusted main only"]
@@ -533,14 +598,15 @@ def verify_split_apple_scopes(text: str) -> None:
             required = FULL_VERIFICATION_SCOPE
             if name.startswith("Stop Gradle after ") or name in [upload] + shared_end:
                 required = FULL_VERIFICATION_FINALIZER
-            elif name == "Publish qualified Apple lane identity":
+            elif name in {"Publish qualified Apple lane identity", "Publish qualified Apple runtime lane identity"}:
                 required = "success() && (" + FULL_VERIFICATION_SCOPE + ")"
             elif name == "Inspect complete unsigned iOS Release package":
                 required = ("success() && steps.apple_wrapper_run.outcome == 'success' && "
                             "steps.apple_wrapper_finish.outcome == 'success' && (" + FULL_VERIFICATION_SCOPE + ")")
             if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
                 fail("verification scope must retain full Apple gates/finalizers and skip them only in focused modes")
-        for current, current_run in (("apple-aggregate", run), (cycle, run_name)):
+        cycles = ([ ("apple-aggregate", run) ] if run else []) + ([ (cycle, run_name) ] if cycle else [])
+        for current, current_run in cycles:
             stem = current.replace("-", "_")
             for suffix, name in (("prepare", f"Claim {current} native resource ownership"), ("run", current_run),
                                  ("finish", f"Stop Gradle after {current} and retire owned Apple resources")):
@@ -567,7 +633,7 @@ def verify_split_apple_scopes(text: str) -> None:
                     block.split("        run: |\n", 1)[-1].rstrip() != script):
                 fail("verification scope Apple output ownership and cleanup must invoke only the guarded common helper")
         if cleanup.count("PARLOR_APPLE_CYCLE_OUTCOMES: >-\n") != 1:
-            fail("verification scope Apple cleanup requires exact two-cycle outcome bindings")
+            fail("verification scope Apple cleanup requires exact assigned-cycle outcome bindings")
         outcomes_text = cleanup.split("PARLOR_APPLE_CYCLE_OUTCOMES: >-\n", 1)[1].split(
             "\n          PARLOR_VERIFICATION_UPLOAD_OUTCOME:", 1)[0]
         def unique_pairs(pairs: list[tuple[str, object]]) -> dict:
@@ -582,7 +648,7 @@ def verify_split_apple_scopes(text: str) -> None:
         expected_outcomes = {
             current: {phase: "${{ steps." + current.replace("-", "_") + "_" + phase + ".outcome }}"
                       for phase in ("prepare", "run", "finish")}
-            for current in ("apple-aggregate", cycle)
+            for current, _ in cycles
         }
         if outcomes != expected_outcomes or re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", cleanup) != [
                 ("PARLOR_VERIFICATION_PREPARE_OUTCOME", "${{ steps.verification_ownership.outcome }}"),
@@ -590,7 +656,7 @@ def verify_split_apple_scopes(text: str) -> None:
                 ("PARLOR_VERIFICATION_UPLOAD_OUTCOME", "${{ steps.verification_artifact.outcome }}"),
                 ("PARLOR_VERIFICATION_ARTIFACT_ID", "${{ steps.verification_artifact.outputs.artifact-id }}"),
                 ("PARLOR_VERIFICATION_ARTIFACT_DIGEST", "${{ steps.verification_artifact.outputs.artifact-digest }}")]:
-            fail("verification scope Apple cleanup requires only its own two cycles and uploaded custody")
+            fail("verification scope Apple cleanup requires only its assigned cycles and uploaded custody")
         evidence = validation_step(job, upload)
         paths = current_verification_artifact_paths(job_id)
         if (re.findall(r"(?m)^        id: (.*)$", evidence) != ["verification_artifact"] or
@@ -782,11 +848,82 @@ def verify_apple_release_fanout(text: str) -> None:
         fail("verification scope Release join evidence must upload only after successful qualification")
 
 
+def verify_apple_runtime_isolation(text: str) -> None:
+    """The old required check cannot pass with either ARM64 runtime omitted."""
+    fields = ("source_sha", "source_tree", "evidence_id", "evidence_sha256", "cleanup_sha256", "architecture")
+    for name in ("ios-kmp", "ios"):
+        job = validation_job(text, name)
+        outputs = job.split("    outputs:\n", 1)[-1].split("    env:\n", 1)[0]
+        expected = "".join("      " + field + ": ${{ steps.runtime_lane.outputs." + field + " }}\n" for field in fields)
+        if outputs != expected:
+            fail("verification scope runtime lanes need exact current source/artifact/ARM64 outputs")
+        step = validation_step(job, "Publish qualified Apple runtime lane identity")
+        if step.strip() != ("if: success() && (" + FULL_VERIFICATION_SCOPE + ")\n"
+                            "        id: runtime_lane\n        shell: bash\n"
+                            "        run: /usr/bin/python3 -B -m scripts.ci.apple_runtime_gate lane"):
+            fail("verification scope runtime outputs require the guarded same-source native cleanup helper")
+    gate = validation_job(text, "ios-runtime")
+    header, steps = gate.split("    steps:\n", 1)
+    if re.findall(r"(?m)^    ([a-z-]+): (.*)$", header) != [
+            ("if", FULL_VERIFICATION_FINALIZER), ("name", "iOS simulator runtime and Swift host"),
+            ("needs", "[ios-kmp, ios]"), ("runs-on", "ubuntu-24.04"), ("timeout-minutes", "5")]:
+        fail("verification scope runtime join requires both mandatory ARM64 lanes on a free runner")
+    if re.findall(r"(?m)^      - name: (.*)$", steps) != [
+            "Check out source", "Require ARM64 KMP runtime and the complete Swift suite",
+            "Upload aggregate Apple runtime qualification"]:
+        fail("verification scope runtime join cannot add or omit producers or qualification")
+    expected_checkout = '''uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false'''
+    if validation_step(gate, "Check out source").strip() != expected_checkout:
+        fail("verification scope runtime join needs the credential-free exact triggering checkout")
+    expected_join = '''shell: bash
+        env:
+          PARLOR_APPLE_RUNTIME_NEEDS: ${{ toJSON(needs) }}
+        run: python3 -B -m scripts.ci.apple_runtime_gate aggregate'''
+    if validation_step(gate, "Require ARM64 KMP runtime and the complete Swift suite").strip() != expected_join:
+        fail("verification scope runtime join must validate both actual mandatory producer results")
+    expected_upload = '''uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-runtime-gate-verification
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-apple-runtime-${{ github.run_id }}-${{ github.run_attempt }}.json'''
+    if validation_step(gate, "Upload aggregate Apple runtime qualification").strip() != expected_upload:
+        fail("verification scope runtime join must retain its exact successful source/run-bound receipt")
+    launch = validation_step(validation_job(text, "ios"), "Launch Swift host and Compose root on iOS Simulator")
+    expected_launch = r'''if: ''' + FULL_VERIFICATION_SCOPE + r'''
+        id: apple_ui_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Never run settings/destructive fixtures in an existing simulator profile.
+          simulator_udid="$(/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)"
+          test ! -e build/ci-evidence/ios-ui-tests.xcresult
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$simulator_udid" \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
+            -destination-timeout 120 \
+            -derivedDataPath build/xcode-derived-data \
+            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+            test | tee build/ci-evidence/xcode-ui-test.log'''
+    if launch.strip() != expected_launch:
+        fail("verification scope runtime isolation must retain the exact complete original Swift command")
+
+
 def verify_free_ci_dependency_cache(text: str) -> None:
     """GitHub-owned dependency cache; only protected main pushes can write."""
     lanes = ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-             "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64")
-    key = "parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}"
+             "ios-kmp", "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64")
+    prefix = ("parlor-deps-v2-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-"
+              "${{ hashFiles('gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}-")
+    key = prefix + "${{ hashFiles('**/*.gradle.kts') }}"
     expected = ('        if: ' + FULL_VERIFICATION_SCOPE + '\n'
                 '        id: dependency_cache\n'
                 '        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
@@ -794,7 +931,9 @@ def verify_free_ci_dependency_cache(text: str) -> None:
                 '          path: |\n'
                 '            ~/.gradle/caches/modules-2\n'
                 '            ~/.gradle/wrapper/dists\n'
-                '          key: ' + key)
+                '          key: ' + key + '\n'
+                '          restore-keys: |\n'
+                '            ' + prefix)
     save = ("        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'\n"
             '        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
             '        with:\n'
@@ -867,6 +1006,7 @@ def verify_verification_scopes(text: str) -> None:
     expected = list(VERIFICATION_JOBS)
     if jobs != expected:
         fail("verification scope contract requires all full lanes, the required Release join, and one focused protection probe")
+    verify_apple_runtime_isolation(text)
     for name, display in VERIFICATION_JOBS.items():
         if re.findall(r"(?m)^    name: (.*)$", validation_job(text, name)) != [display]:
             fail("verification scope requires the exact reviewed job/check identities")
@@ -883,6 +1023,8 @@ def verify_verification_scopes(text: str) -> None:
             verify_windows_distribution_ownership(block)
         elif name == "desktop-android":
             verify_linux_process_probe(block)
+        elif name == "desktop-macos-x64":
+            verify_macos_network_evidence(block)
     ios = validation_job(text, "ios")
     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
         fail("verification scope may skip iOS only for separately guarded Windows, Linux or protection follow-ups")
@@ -1013,7 +1155,8 @@ def verify_validation(text: str) -> None:
     desktop_android_job = text.split(desktop_android_marker, 1)[1].split(next_job_marker, 1)[0]
     if "fetch-depth: 0" not in desktop_android_job:
         fail("validation workflow review-inventory gate requires full Git history")
-    runtime = validation_job(text, "ios")
+    runtime = validation_job(text, "ios-kmp")
+    swift = validation_job(text, "ios")
     release = validation_job(text, "ios-release-simulator")
     native_controls = validation_step(runtime, "Run all KMP iOS simulator runtime tests")
     temporary_scope = '''          (
@@ -1063,9 +1206,27 @@ def verify_validation(text: str) -> None:
             fail("Apple validation duplicates the Linux common/desktop/Android test aggregate")
     app_launch_marker = "- name: Launch Swift host and Compose root on iOS Simulator"
     swift_release_marker = "- name: Build unsigned Swift Release wrapper"
-    if app_launch_marker not in runtime or swift_release_marker not in release:
+    if app_launch_marker not in swift or swift_release_marker not in release:
         fail("validation workflow does not run the iOS app-launch UI test")
-    app_launch_step = validation_step(runtime, "Launch Swift host and Compose root on iOS Simulator")
+    wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
+    if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
+        fail("validation workflow lacks the Swift Release build timing summary")
+    profile_input = """      profile_release_native:
+        description: Capture detailed Kotlin/Native phases for the simulator Release wrapper
+        type: boolean
+        default: false"""
+    profile_scope = ("          PARLOR_PROFILE_RELEASE_NATIVE: ${{ github.event_name == 'workflow_dispatch' "
+                     "&& inputs.verification_scope == 'full' && inputs.profile_release_native == true }}")
+    native_timing = ('            export GRADLE_OPTS="$GRADLE_OPTS '
+                     '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
+                     '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
+    profile_block = ('          if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then\n' + native_timing +
+                     "\n          fi\n          xcodebuild")
+    if (profile_input + "\n" not in text.split("\nconcurrency:", 1)[0] or profile_scope not in wrapper.splitlines() or
+            profile_block not in wrapper or text.count("parlor.profileIosReleaseLink=true") != 1 or
+            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2):
+        fail("validation workflow must limit native Release compiler timing to explicit full dispatch")
+    app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",
         "-scheme iosApp",
@@ -1078,7 +1239,7 @@ def verify_validation(text: str) -> None:
     for token in required_app_launch_contract:
         if token not in app_launch_step:
             fail(f"validation workflow iOS app-launch test lacks {token!r}")
-    verify_owned_ios_app_launch(runtime)
+    verify_owned_ios_app_launch(swift)
     for step, command in (
         ("Inspect unsigned Android release artifact and merged manifest",
          'python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json'),
@@ -1126,11 +1287,16 @@ def verify_validation(text: str) -> None:
           test "$(cut -d. -f1 build/ci-evidence/iphoneos-sdk.txt)" -ge "$(jq -r .toolchains.apple.minimum_ios_sdk_major config/release-policy.json)"
           git rev-parse HEAD | tee build/ci-evidence/commit.txt
           test -z "$(git status --porcelain)"'''
-    for job in (runtime, release):
+    for job in (runtime, swift, release):
+        expected_source = (source_script if job == release else source_script.replace(
+            "          mkdir -p build/ci-evidence\n",
+            "          mkdir -p build/ci-evidence\n"
+            "          uname -m | tee build/ci-evidence/architecture.txt\n"
+            '          test "$(cat build/ci-evidence/architecture.txt)" = arm64\n'))
         source = validation_step(job, "Record Xcode toolchain and exact source")
         if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", source) != [
                 ("if", FULL_VERIFICATION_SCOPE), ("shell", "bash"), ("run", "|")] or
-                source.split("        run: |\n", 1)[-1].rstrip() != source_script):
+                source.split("        run: |\n", 1)[-1].rstrip() != expected_source):
             fail("validation workflow requires exact independent Apple source/toolchain guards")
 
 
@@ -1632,6 +1798,8 @@ def verify_android_runtime_script() -> None:
     for token in required:
         if token not in script:
             fail(f"Android managed-device runner is missing {token!r}")
+    if script.count("    --isolated-avd \\\n") != 2:
+        fail("Both Linux managed-device invocations must isolate and retire their own completed AVD data")
     for production_secret in (
         "PARLOR_ANDROID_KEYSTORE_PATH",
         "PARLOR_ANDROID_KEYSTORE_PASSWORD",

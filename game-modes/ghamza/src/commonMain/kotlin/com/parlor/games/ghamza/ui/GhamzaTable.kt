@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -60,6 +62,9 @@ import com.parlor.games.ghamza.resources.gh_guest_hint
 import com.parlor.games.ghamza.resources.gh_help
 import com.parlor.games.ghamza.resources.gh_hide
 import com.parlor.games.ghamza.resources.gh_leave
+import com.parlor.games.ghamza.resources.gh_leave_compact
+import com.parlor.games.ghamza.resources.gh_help_compact
+import com.parlor.games.ghamza.resources.gh_close_help_compact
 import com.parlor.games.ghamza.resources.gh_loser
 import com.parlor.games.ghamza.resources.gh_match_complete
 import com.parlor.games.ghamza.resources.gh_next_lives
@@ -93,15 +98,21 @@ fun GhamzaTable(
 ) {
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
     var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
+    val compact = LocalDensity.current.fontScale >= 1.5f
+    val leaveDescription = stringResource(Res.string.gh_leave)
+    val helpDescription = stringResource(if (help) Res.string.gh_close_help else Res.string.gh_help)
     InPlaceBackHandler(help) { help = false }
     GhamzaFrame(modifier, "${state.phase.id}:${state.public.token}:$help") {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text(stringResource(Res.string.gh_leave), color = GhamzaMint)
+            TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)
+                .semantics { contentDescription = leaveDescription }) {
+                Text(if (compact) stringResource(Res.string.gh_leave_compact) else leaveDescription, color = GhamzaMint)
             }
-            TextButton(onClick = { help = !help }, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text(stringResource(if (help) Res.string.gh_close_help else Res.string.gh_help), color = GhamzaMint)
+            TextButton(onClick = { help = !help }, modifier = Modifier.heightIn(min = 48.dp)
+                .semantics { contentDescription = helpDescription }) {
+                Text(if (compact) stringResource(if (help) Res.string.gh_close_help_compact else Res.string.gh_help_compact)
+                    else helpDescription, color = GhamzaMint)
             }
         }
         GhamzaBody(stringResource(Res.string.gh_round, state.public.round, state.public.settings.rounds))
@@ -135,9 +146,11 @@ private fun GhamzaRoleCard(
     onAction: (GhamzaAction) -> Unit,
 ) {
     var revealed by remember(state.public.token, privacyEpoch, state.phase) { mutableStateOf(false) }
+    val compact = LocalDensity.current.fontScale >= 1.5f
     InPlaceBackHandler(revealed) { revealed = false }
-    Column(Modifier.fillMaxWidth().background(GhamzaInk.copy(alpha = .7f), RoundedCornerShape(28.dp)).padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(Modifier.fillMaxWidth().background(GhamzaInk.copy(alpha = .7f), RoundedCornerShape(28.dp))
+        .padding(if (compact) 16.dp else 24.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         if (readiness) GhamzaEye(revealed)
         if (!revealed) {
             GhamzaTitle(stringResource(Res.string.gh_reveal_title))

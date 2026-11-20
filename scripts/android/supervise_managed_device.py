@@ -14,14 +14,65 @@ import json
 import os
 from pathlib import Path
 import signal
+import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 import time
 
 TERM_SECONDS = 10.0
 KILL_SECONDS = 5.0
 POLL_SECONDS = 0.05
 MAX_CHILDREN = 4096
+MAX_AVD_ENTRIES = 100_000
+
+
+def create_avd_home() -> tuple[Path, os.stat_result]:
+    """Allocate, never adopt, a private namespace for this one AGP invocation.
+
+    AGP 8.13.2 resolves gradleAvdLocation beneath ANDROID_AVD_HOME. SDK images,
+    user preferences, debug keys, Gradle caches, reports and APKs stay untouched.
+    """
+    root = Path(tempfile.mkdtemp(prefix="parlor-managed-avd-")).resolve(strict=True)
+    identity = root.lstat()
+    if identity.st_uid != os.getuid() or stat.S_IMODE(identity.st_mode) != 0o700:
+        raise RuntimeError("PRIVATE_AVD_HOME_REQUIRED")
+    return root, identity
+
+
+def retire_avd_home(root: Path, identity: os.stat_result) -> dict:
+    """Call only after the build succeeds and ECHILD proves all descendants gone."""
+    current = root.lstat()
+    if (root.is_symlink() or root.resolve(strict=True) != root or root.is_mount() or
+            (current.st_dev, current.st_ino, current.st_uid) !=
+            (identity.st_dev, identity.st_ino, identity.st_uid) or
+            not stat.S_ISDIR(current.st_mode) or stat.S_IMODE(current.st_mode) != 0o700 or
+            not shutil.rmtree.avoids_symlink_attacks):
+        raise RuntimeError("AVD_HOME_IDENTITY_CHANGED")
+    entries = 0
+    allocated = current.st_blocks * 512
+    def unreadable(error: OSError) -> None:
+        raise error
+    # Preflight the whole private tree. Never traverse a link or another mount;
+    # report allocated blocks, not the much larger sparse image logical sizes.
+    for parent, directories, files in os.walk(root, followlinks=False, onerror=unreadable):
+        for name in directories + files:
+            path = Path(parent) / name
+            item = path.lstat()
+            entries += 1
+            if entries > MAX_AVD_ENTRIES or item.st_dev != identity.st_dev or path.is_mount():
+                raise RuntimeError("AVD_HOME_MOUNT_OR_ENTRY_BOUND")
+            allocated += item.st_blocks * 512
+    before = shutil.disk_usage(root.parent)
+    shutil.rmtree(root)
+    if root.exists() or root.is_symlink():
+        raise RuntimeError("AVD_HOME_RETIREMENT_FAILED")
+    after = shutil.disk_usage(root.parent)
+    return {"result": "PASS", "absent": True, "entries": entries,
+            "allocated_bytes_before": allocated, "free_bytes_before": before.free,
+            "free_bytes_after": after.free, "reclaimed_bytes": after.free - before.free,
+            "filesystem_total_bytes": after.total}
 
 
 def enable_subreaper() -> None:
@@ -136,16 +187,18 @@ def retire_owned_children(*, term_seconds: float = TERM_SECONDS,
     return receipt
 
 
-def supervise(command: list[str], receipt_path: Path) -> int:
+def supervise(command: list[str], receipt_path: Path, *, isolate_avd: bool = False) -> int:
     receipt = {"schema": 1, "runtime_exit_code": None, "interrupted_signal": None,
                "cleanup": {"result": "NOT_STARTED"}, "result": "FAIL", "errors": [],
                "scope": "Only direct/adopted descendants of this Linux build supervisor; "
-                        "not preexisting services, other jobs, global emulator absence, or AVD deletion"}
+                        "not preexisting services, other jobs or global emulator absence. "
+                        "Optional AVD deletion is limited to this fresh private namespace after success."}
     # Refuse to replace another run's evidence before starting any work.
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     with receipt_path.open("x", encoding="utf-8") as output:
         started = False
         process = None
+        avd = None
         previous = {}
 
         def interrupted(number, _frame) -> None:
@@ -163,7 +216,13 @@ def supervise(command: list[str], receipt_path: Path) -> int:
             enable_subreaper()
             started = True
             if receipt["interrupted_signal"] is None:
-                process = subprocess.Popen(command, start_new_session=True)
+                environment = {}
+                if isolate_avd:
+                    avd = create_avd_home()
+                    receipt["avd_home"] = {"path": str(avd[0]), "result": "RETAINED",
+                                           "reason": "Awaiting successful runtime and descendant retirement"}
+                    environment["env"] = dict(os.environ, ANDROID_AVD_HOME=str(avd[0]))
+                process = subprocess.Popen(command, start_new_session=True, **environment)
                 while process.poll() is None and receipt["interrupted_signal"] is None:
                     time.sleep(POLL_SECONDS)
                 receipt["runtime_exit_code"] = process.returncode
@@ -184,6 +243,13 @@ def supervise(command: list[str], receipt_path: Path) -> int:
             else:
                 status = 0 if (runtime == 0 and receipt["cleanup"]["result"] == "PASS" and
                                not receipt["errors"]) else 1
+            if avd is not None and status == 0:
+                try:
+                    receipt["avd_home"] = dict(path=str(avd[0]), **retire_avd_home(*avd))
+                except (OSError, RuntimeError) as error:
+                    status = 1
+                    receipt["errors"].append({"code": "AVD_RETIREMENT_FAILED",
+                                               "error": type(error).__name__})
             receipt["exit_code"] = status
             receipt["result"] = "PASS" if status == 0 else "FAIL"
             encoded = json.dumps(receipt, sort_keys=True) + "\n"
@@ -206,13 +272,15 @@ def supervise(command: list[str], receipt_path: Path) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument("--isolated-avd", action="store_true",
+                        help="Use and retire only a fresh private AVD home after a successful build")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     command = args.command[1:] if args.command[:1] == ["--"] else args.command
     if not command:
         parser.error("a command is required after --")
     try:
-        return supervise(command, args.receipt)
+        return supervise(command, args.receipt, isolate_avd=args.isolated_avd)
     except OSError as error:
         print(json.dumps({"result": "FAIL", "error": type(error).__name__,
                           "errno": error.errno}), file=sys.stderr)

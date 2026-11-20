@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -112,6 +113,8 @@ require(androidRuntimeTestVariant in setOf("debug", "release")) {
     "parlor.androidRuntimeTestVariant must be debug or release"
 }
 
+val profileIosReleaseLink = providers.gradleProperty("parlor.profileIosReleaseLink").orNull == "true"
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -127,6 +130,9 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = false
+            if (profileIosReleaseLink && iosTarget.name == "iosSimulatorArm64" && buildType == NativeBuildType.RELEASE) {
+                freeCompilerArgs += "-Xprofile-phases"
+            }
         }
     }
 
@@ -186,14 +192,20 @@ kotlin {
             )
         }
         androidInstrumentedTest.dependencies {
-            // InstrumentationTestCase is supplied by the platform's
-            // android.test.runner shared library. Compile against the matching
-            // SDK stub without adding a Maven dependency to the test APK.
+            // InstrumentationTestCase and the runner's public argument API are
+            // supplied by the platform's android.test.runner shared library.
+            // Compile against both matching SDK stubs; neither is packaged in
+            // the application/test APK or added as a Maven dependency.
             compileOnly(
                 files(
                     androidComponents.sdkComponents.sdkDirectory.map { sdkDirectory ->
-                        sdkDirectory.file(
-                            "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.base.jar",
+                        listOf(
+                            sdkDirectory.file(
+                                "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.base.jar",
+                            ),
+                            sdkDirectory.file(
+                                "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.runner.jar",
+                            ),
                         )
                     },
                 ),

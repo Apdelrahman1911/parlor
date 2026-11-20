@@ -57,27 +57,46 @@ class ProductionVerificationWorkflowContractTest {
             assertEquals(1, Regex(Regex.escape(attribute)).findAll(code).count())
         }
         assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
-        assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
+        assertEquals(1, Regex("\\.tap\\(\\)").findAll(code).count())
         assertEquals(1, Regex("\\bprint\\s*\\(").findAll(code).count())
         assertContains(code, """print("Public control settlement: " + samples.joined(separator: "; "))""")
         listOf(
-            "let sample = PublicControlSample(read: {",
+            "let sample = PublicControlSample(read: read ?? {",
             "let snapshot = try control.snapshot()",
             "return (snapshot.frame, snapshot.isEnabled)",
             "let frame = sample.frame",
             "let enabled = sample.enabled",
             "snapshotErrorCode=",
             "let stable = frames.observe(frame: frame, enabled: enabled)",
-            "let hittable = stable ? control.isHittable : nil",
-            "if stable && hittable != true { frames.reset() }",
+            "let hittable = stable && refresh == nil ? control.isHittable : nil",
+            "if stable && refresh == nil && hittable != true { frames.reset() }",
             "XCTWaiter.wait(for: [settled], timeout: 10)",
             "if samples.count < 12",
-            "if result != .completed",
-            "guard result == .completed else",
+            "if !ready",
+            "guard ready else",
             """throw NSError(domain: "PublicControlSettlement", code: 1)""",
             "screenshot.lifetime = .keepAlways",
         ).forEach { assertContains(code, it) }
-        assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
+        assertTrue(code.indexOf("guard ready else") < code.indexOf("target.tap()"))
+        assertTrue(code.indexOf("XCTWaiter.wait(for: [settled]") < code.indexOf("if ready, let refresh, let read {"))
+        val refreshed = code.substringAfter("if ready, let refresh, let read {")
+            .substringBefore("if !ready {")
+        listOf(
+            "let remaining = 10 - (ProcessInfo.processInfo.systemUptime - started)",
+            "guard frames.observe(frame: sample.frame, enabled: sample.enabled) else { return false }",
+            "let inTime = ProcessInfo.processInfo.systemUptime - started < 10",
+            "guard canTap, unchanged, inTime else {",
+            "frames.reset()",
+            "ready = XCTWaiter.wait(for: [hittable], timeout: remaining) == .completed",
+        ).forEach { assertContains(refreshed, it) }
+        val hit = refreshed.indexOf("let canTap = candidate.isHittable")
+        val resample = refreshed.indexOf("let current = PublicControlSample(read: read)")
+        val checkedFrame = refreshed.indexOf("let unchanged = frames.observe(frame: current.frame, enabled: current.enabled)")
+        val target = refreshed.indexOf("target = candidate")
+        assertTrue(refreshed.indexOf("let candidate = refresh()") in 0 until hit)
+        assertTrue(hit in 0 until resample && resample < checkedFrame && checkedFrame < target)
+        assertContains(swift, "try tapSetupButton(app, prefix: copy.peerContinue, refreshAfterSettlement: true)")
+
         listOf("control.exists", "control.frame", "control.isEnabled", ".label", ".value", ".placeholderValue", ".identifier",
             ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
             "press(forDuration", "swipe").forEach { assertFalse(it in code) }
@@ -104,6 +123,42 @@ class ProductionVerificationWorkflowContractTest {
             "testDisabledControlBreaksFrameAdjacency",
             "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
             "testHittabilityInterruptionRequiresTwoFreshFrames",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_button_geometry_uses_a_unique_bounded_bulk_snapshot_without_remote_reselection() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val setup = swift.substringAfter("private func tapSetupButton(")
+            .substringBefore("private func readPublicButtonSample(")
+        assertContains(setup, "try tapSettledControl(")
+        assertContains(setup, "read: { try self.readPublicButtonSample(app, prefix: prefix) }")
+        assertContains(setup, "refresh: refreshAfterSettlement ? { self.setupButton(app, prefix: prefix) } : nil")
+        val capture = swift.substringAfter("private func readPublicButtonSample(")
+            .substringBefore("private func tapPublicSetupTransition(")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(capture).count())
+        listOf("PublicButtonSnapshot.select(", "children: { $0.children }",
+            "isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) }",
+            "geometry: { ($0.frame, $0.isEnabled) }", "return sample",
+            """throw NSError(domain: "PublicButtonSelection", code: 1)""",
+        ).forEach { assertContains(capture, it) }
+        listOf(".firstMatch", ".matching(", ".isHittable", ".tap()", ".typeText(",
+            "print(", ".value", ".identifier", ".debugDescription",
+        ).forEach { assertFalse(it in capture) }
+        val selection = swift.substringAfter("private enum PublicButtonSnapshot {")
+            .substringBefore("final class PublicButtonSnapshotTests")
+        listOf("count <= 2048", "depth <= 32", "guard selected == nil else { return nil }",
+            "selected = geometry(node)", "descendants.count <= 2048 - count - pending.count",
+            "return selected",
+        ).forEach { assertContains(selection, it) }
+        listOf("XCUIElement", "print(", ".tap()", ".typeText(", ".snapshot()",
+            "sleep(", ".label", ".value",
+        ).forEach { assertFalse(it in selection) }
+        listOf("testUniqueControlUsesOneGenerationWithoutAnotherQuery",
+            "testMissingAndDuplicateControlsCannotProvideAFrame",
+            "testDisabledControlStillBreaksFrameAdjacency",
+            "testOversizedTreeCannotAcceptAnEarlierMatch",
+            "testExcessiveDepthCannotAcceptAnEarlierMatch",
         ).forEach { assertContains(swift, "func $it()") }
     }
 
@@ -141,7 +196,7 @@ class ProductionVerificationWorkflowContractTest {
     fun public_ios_exact_value_observer_handles_only_the_identified_late_keyboard_tutorial() {
         val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
         val observer = swift.substringAfter("private func assertTextValue(")
-            .substringBefore("private func fullKeyboardTop(")
+            .substringBefore("private func readKeyboardIntroduction(")
         val code = observer.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
         listOf(
             "if let introduction", "dismissKeyboardIntroduction(app, dismissal: introduction)",
@@ -150,9 +205,10 @@ class ProductionVerificationWorkflowContractTest {
             "return exact",
             "XCTWaiter.wait(for: [committed], timeout: 10)",
             "XCTAssertEqual(field.value as? String, expected",
-            "guard !dismissal.hasDismissed", "guard tutorial.exists", "guard button.exists",
-            "Speed up your typing by sliding your finger across the letters to compose a word.",
-            "app.buttons[\"Continue\"]", "buttonFrame: button.frame", "hittable: button.isHittable",
+            "guard !dismissal.hasDismissed", "try? readKeyboardIntroduction(app)",
+            "let frame = observation.targetFrame", "buttonFrame: frame",
+            "applicationFrame: observation.applicationFrame", "hittable: button.isHittable",
+            "app.buttons.matching(NSPredicate(format: \"label == %@\", \"Continue\")).element",
         ).forEach { assertContains(code, it) }
         assertEquals(1, Regex(Regex.escape("button.tap()")).findAll(code).count())
         listOf(".typeText", "sleep(", "press(forDuration", "while ", "app.debugDescription",
@@ -166,6 +222,34 @@ class ProductionVerificationWorkflowContractTest {
             "testGenericContinueWithoutIdentifiedTutorialNeverAdmitsATap",
             "testNonhittableIntroductionDoesNotConsumeTheSingleDismissal",
             "testMissingInvalidOffscreenOrUpperScreenButtonCannotBeDismissed",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun public_ios_keyboard_tutorial_is_one_bounded_snapshot_without_repeated_remote_properties() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val capture = swift.substringAfter("private func readKeyboardIntroduction(")
+            .substringBefore("private func fullKeyboardTop(")
+        val code = capture.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        assertEquals(1, Regex(Regex.escape("app.snapshot()")).findAll(code).count())
+        listOf("count <= 2048", "depth <= 32", "tutorialCount += 1",
+            "node.elementType == .staticText", "node.elementType == .button",
+            "Speed up your typing by sliding your finger across the letters to compose a word.",
+            "node.label == \"Continue\"", "frame: node.frame, enabled: node.isEnabled",
+            "applicationFrame: root.frame", "for child in node.children",
+        ).forEach { assertContains(code, it) }
+        listOf(".exists", "app.frame", "app.buttons", "app.staticTexts", "print(",
+            ".value", ".debugDescription", "sleep(", ".tap()", ".typeText(").forEach {
+            assertFalse(it in code)
+        }
+        val dismissal = swift.substringAfter("private func dismissKeyboardIntroduction(")
+            .substringBefore("private func readKeyboardIntroduction(")
+        listOf("tutorial.exists", "button.exists", "button.frame", "app.frame").forEach {
+            assertFalse(it in dismissal)
+        }
+        assertContains(swift, "tutorialCount == 1, buttons.count == 1, buttons[0].enabled")
+        listOf("testOnlyOneEnabledButtonWithOneTutorialIsAccepted",
+            "testMissingDuplicateOrDisabledTutorialTargetsCannotAdmitATap",
         ).forEach { assertContains(swift, "func $it()") }
     }
 
@@ -539,7 +623,8 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtimeJob = workflow.substringAfter("\n  ios-kmp:\n").substringBefore("\n  ios:\n")
+        val swiftJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         val releaseJob = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         assertContains(
             releaseJob.substringBefore("\n    steps:\n"),
@@ -647,8 +732,8 @@ class ProductionVerificationWorkflowContractTest {
 
         val appLaunchMarker = "- name: Launch Swift host and Compose root on iOS Simulator"
         val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
-        assertContains(runtimeJob, appLaunchMarker)
-        val appLaunchStep = runtimeJob
+        assertContains(swiftJob, appLaunchMarker)
+        val appLaunchStep = swiftJob
             .substringAfter(appLaunchMarker)
             .substringBefore("\n      - name:")
         listOf(
@@ -669,7 +754,7 @@ class ProductionVerificationWorkflowContractTest {
             )
         }
         assertFalse("xcrun simctl list devices available --json" in appLaunchStep)
-        assertOwnedAppleUiLifecycle(runtimeJob, appLaunchMarker)
+        assertOwnedAppleUiLifecycle(swiftJob, appLaunchMarker)
         listOf(
             "com.apple.product-type.bundle.ui-testing",
             "IOSAppLaunchUITests.swift in Sources",
@@ -770,12 +855,14 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtime = workflow.substringAfter("\n  ios-kmp:\n").substringBefore("\n  ios:\n")
+        val swift = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         val release = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
-        listOf(runtime to listOf("apple-aggregate", "apple-ui"), release to listOf("apple-aggregate", "apple-wrapper"))
+        listOf(runtime to listOf("apple-aggregate"), swift to listOf("apple-ui"),
+            release to listOf("apple-aggregate", "apple-wrapper"))
             .forEach { (job, cycles) ->
                 val header = job.substringBefore("\n    steps:")
-                assertContains(header, if (job == runtime) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
+                assertContains(header, if (job != release) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
                 assertContains(header, "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer")
                 assertFalse("needs:" in header || "strategy:" in header)
                 listOf(
@@ -800,6 +887,20 @@ class ProductionVerificationWorkflowContractTest {
                 assertContains(cleanup, "steps.verification_artifact.outputs.artifact-digest")
             }
         assertContains(runtime, "name: ios-runtime-verification")
+        assertContains(swift, "name: ios-swift-verification")
+        assertFalse("productionIosSimulatorRuntimeTests" in swift)
+        assertFalse("create-simulator apple-ui" in runtime)
+        listOf(runtime, swift).forEach { job ->
+            assertContains(job, "test \"\$(cat build/ci-evidence/architecture.txt)\" = arm64")
+            assertContains(job, "scripts.ci.apple_runtime_gate lane")
+        }
+        val join = workflow.substringAfter("\n  ios-runtime:\n").substringBefore("\n  ios-release-simulator:\n")
+        assertContains(join, "name: iOS simulator runtime and Swift host")
+        assertContains(join, "needs: [ios-kmp, ios]")
+        assertContains(join, "if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')")
+        assertContains(join, "PARLOR_APPLE_RUNTIME_NEEDS: \${{ toJSON(needs) }}")
+        assertContains(join, "scripts.ci.apple_runtime_gate aggregate")
+        assertContains(join, "if-no-files-found: error")
         assertContains(runtime, "**/build/test-results/**/*.xml")
         assertContains(release, "name: ios-release-verification")
         assertContains(release, "**/build/reports/detekt/")
@@ -813,7 +914,7 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         assertEquals(
             listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+                "ios-kmp", "ios", "ios-runtime", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
                 "darwin-host-capability"),
             Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
                 .map { it.groupValues[1] }.toList(),
@@ -850,7 +951,7 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(3, Regex("(?m)^      - name:").findAll(capability).count())
         listOf("./gradlew", "build/", "RUNNER_TRACKING_ID:", "self-hosted", "macos-latest", "|| true",
             "continue-on-error", "github.token", "secrets.").forEach { assertFalse(it in capability) }
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n")
         assertContains(runtime.substringBefore("\n    steps:"), "inputs.verification_scope != 'darwin-host-capability'")
     }
 
@@ -858,7 +959,7 @@ class ProductionVerificationWorkflowContractTest {
     fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
         val jobs = listOf(
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+            "ios-kmp", "ios", "ios-runtime", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
         )
         val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
         fun assertJobBoundaries(checkoutText: String) {
@@ -870,7 +971,7 @@ class ProductionVerificationWorkflowContractTest {
             )
             assertEquals(
                 "    name: ios",
-                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n"),
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-runtime:\n"),
             )
             assertEquals(
                 "    name: ios-release-simulator",

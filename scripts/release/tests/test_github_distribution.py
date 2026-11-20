@@ -16,7 +16,7 @@ import zipfile
 from scripts.release import github_distribution as dist
 
 SOURCE = {"commit": "a" * 40, "tree": "b" * 40, "dirty": False}
-ACCEPTANCE = {"source": SOURCE["commit"], "reference": "https://github.com/Apdelrahman1911/parlor/issues/1"}
+ACCEPTANCE = {"source": SOURCE["commit"], "reference": "https://github.com/parlor-game/parlor/issues/1"}
 PIN = "c" * 64
 
 

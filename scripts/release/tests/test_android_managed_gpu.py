@@ -19,6 +19,16 @@ NAVIGATION = "productionAndroidNavigationRuntimeCheck"
 
 
 class AndroidManagedGpuTest(unittest.TestCase):
+    def test_both_runtime_lanes_must_keep_private_avd_capacity_policy(self) -> None:
+        from unittest.mock import patch
+        from scripts.release import workflow_contract as contract
+        original = (ROOT / SCRIPT).read_text()
+        for source in (original.replace('    --isolated-avd \\\n', '', 1),
+                       original.replace('    --isolated-avd \\\n', '')):
+            with patch.object(Path, 'read_text', return_value=source), self.assertRaises(RuntimeError):
+                contract.verify_android_runtime_script()
+        contract.verify_android_runtime_script()
+
     def run_wrapper(self, failed_task: str = "") -> tuple[int, list[list[str]]]:
         with TemporaryDirectory(prefix="parlor-gpu-shell-control-") as temporary:
             root = Path(temporary)
@@ -47,8 +57,8 @@ class AndroidManagedGpuTest(unittest.TestCase):
                 assert sys.argv[4] in (
                     'build/ci-evidence/android-managed-device-supervision.json',
                     'build/ci-evidence/android-navigation-device-supervision.json')
-                assert sys.argv[5:7] == ['--', './gradlew']
-                sys.exit(subprocess.run(sys.argv[6:]).returncode)
+                assert sys.argv[5:8] == ['--isolated-avd', '--', './gradlew']
+                sys.exit(subprocess.run(sys.argv[7:]).returncode)
                 '''))
             supervisor.chmod(0o700)
             for name, content in (

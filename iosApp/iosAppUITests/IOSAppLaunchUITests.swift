@@ -143,7 +143,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             name.typeText("Table Test")
             assertTextValue(name, in: app, equals: "Table Test", introduction: introduction)
             name.typeText("\n")
-            try tapSetupButton(app, prefix: copy.peerContinue)
+            try tapSetupButton(app, prefix: copy.peerContinue, refreshAfterSettlement: true)
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
             XCTAssertEqual(app.textViews.count, 1)
             XCTAssertTrue(setupButton(app, prefix: copy.findRoom).waitForExistence(timeout: 10))
@@ -219,17 +219,41 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSetupButton(_ app: XCUIApplication, prefix: String) throws {
+    private func tapSetupButton(
+        _ app: XCUIApplication, prefix: String, refreshAfterSettlement: Bool = false
+    ) throws {
         let button = setupButton(app, prefix: prefix)
         for _ in 0..<8 {
             if button.waitForExistence(timeout: 1), button.isHittable {
-                try tapSettledControl(button)
+                try tapSettledControl(
+                    button,
+                    read: { try self.readPublicButtonSample(app, prefix: prefix) },
+                    refresh: refreshAfterSettlement ? { self.setupButton(app, prefix: prefix) } : nil
+                )
                 return
             }
             app.swipeUp(velocity: .slow)
         }
         XCTFail("Public setup control is not reachable: " + prefix)
         throw NSError(domain: "KeyboardLayoutSetup", code: 1)
+    }
+
+    @MainActor
+    private func readPublicButtonSample(
+        _ app: XCUIApplication, prefix: String
+    ) throws -> (frame: CGRect, enabled: Bool) {
+        // Public setup only. Bulk snapshot capture avoids re-running a remote
+        // first-match traversal for each geometry sample. Selection is local,
+        // complete, unique and bounded; no snapshots or labels leave this read.
+        let root = try app.snapshot()
+        guard let sample = PublicButtonSnapshot.select(
+            from: root, children: { $0.children },
+            isMatch: { $0.elementType == .button && $0.label.hasPrefix(prefix) },
+            geometry: { ($0.frame, $0.isEnabled) }
+        ) else {
+            throw NSError(domain: "PublicButtonSelection", code: 1)
+        }
+        return sample
     }
 
     @MainActor
@@ -262,27 +286,34 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSettledControl(_ control: XCUIElement) throws {
+    private func tapSettledControl(
+        _ control: XCUIElement,
+        read: (() throws -> (frame: CGRect, enabled: Bool))? = nil,
+        refresh: (() -> XCUIElement)? = nil
+    ) throws {
         // One resolved public snapshot supplies frame and enabled together.
         // Separate XCUIElement property reads each re-evaluate the remote query;
         // an interrupted resolution can return false rather than native disabled
         // state (original failure41180128325). Missing/error samples still break
         // adjacency. Keep exact frames, native hittability, the ten-second
         // deadline and the single ordinary tap; never admit stale cached state.
+        // Buttons supply fresh bulk app snapshots: in42261837661 two redundant
+        // remote first-match traversals spent the budget before native hittability
+        // could even resolve its target. Text controls keep their own snapshots.
         var frames = PublicControlFrames()
         var samples: [String] = []
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let sample = PublicControlSample(read: {
+            let sample = PublicControlSample(read: read ?? {
                 let snapshot = try control.snapshot()
                 return (snapshot.frame, snapshot.isEnabled)
             })
             let frame = sample.frame
             let enabled = sample.enabled
             let stable = frames.observe(frame: frame, enabled: enabled)
-            let hittable = stable ? control.isHittable : nil
-            if stable && hittable != true { frames.reset() }
+            let hittable = stable && refresh == nil ? control.isHittable : nil
+            if stable && refresh == nil && hittable != true { frames.reset() }
             if samples.count < 12 {
                 // Geometry/status/timing only: never retain labels, typed
                 // values, arbitrary hierarchies or private player information.
@@ -292,22 +323,51 @@ final class IOSAppLaunchUITests: XCTestCase {
                     "stable=\(stable), hittable=\(String(describing: hittable)), " +
                     "snapshotErrorCode=\(String(describing: sample.errorCode))")
             }
-            return stable && hittable == true
+            return stable && (refresh != nil || hittable == true)
         }, object: nil)
         let result = XCTWaiter.wait(for: [settled], timeout: 10)
-        if result != .completed {
+        var target = control
+        var ready = result == .completed
+        if ready, let refresh, let read {
+            // After keyboard dismissal, resolve a new native query outside the
+            // geometry waiter. A false hit result still breaks frame adjacency.
+            let remaining = 10 - (ProcessInfo.processInfo.systemUptime - started)
+            ready = false
+            if remaining > 0 {
+                let hittable = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    let sample = PublicControlSample(read: read)
+                    guard frames.observe(frame: sample.frame, enabled: sample.enabled) else { return false }
+                    let candidate = refresh()
+                    let canTap = candidate.isHittable
+                    let current = PublicControlSample(read: read)
+                    let unchanged = frames.observe(frame: current.frame, enabled: current.enabled)
+                    let inTime = ProcessInfo.processInfo.systemUptime - started < 10
+                    if samples.count < 12 {
+                        samples.append("freshHit=\(canTap), frameUnchanged=\(unchanged), inTime=\(inTime)")
+                    }
+                    guard canTap, unchanged, inTime else {
+                        frames.reset()
+                        return false
+                    }
+                    target = candidate
+                    return true
+                }, object: nil)
+                ready = XCTWaiter.wait(for: [hittable], timeout: remaining) == .completed
+            }
+        }
+        if !ready {
             print("Public control settlement: " + samples.joined(separator: "; "))
             let screenshot = XCTAttachment(screenshot: XCUIApplication().screenshot())
             screenshot.name = "Failed public control settlement before tap"
             screenshot.lifetime = .keepAlways
             add(screenshot)
         }
-        XCTAssertEqual(result, .completed,
+        XCTAssertTrue(ready,
                        "Public setup control must stop scrolling before it is tapped")
-        guard result == .completed else {
+        guard ready else {
             throw NSError(domain: "PublicControlSettlement", code: 1)
         }
-        control.tap()
+        target.tap()
     }
 
     @MainActor
@@ -558,19 +618,43 @@ final class IOSAppLaunchUITests: XCTestCase {
         dismissal: KeyboardIntroductionDismissal = KeyboardIntroductionDismissal()
     ) -> KeyboardIntroductionDismissal {
         guard !dismissal.hasDismissed else { return dismissal }
-        // The retained failing Arabic recording exposes this exact English
-        // Apple tutorial. Never tap a generic Continue or a Parlor action.
-        let tutorial = app.staticTexts[
-            "Speed up your typing by sliding your finger across the letters to compose a word."
-        ]
-        guard tutorial.exists else { return dismissal }
-        let button = app.buttons["Continue"]
-        guard button.exists else { return dismissal }
-        if dismissal.observe(tutorialExists: true, buttonFrame: button.frame,
-                             applicationFrame: app.frame, hittable: button.isHittable) {
+        // One coherent app snapshot replaces four remote presence/geometry queries.
+        // In 42177783654 those queries consumed the exact-value deadline before
+        // the tutorial tap or even the first field snapshot could complete.
+        // Keep the original deadline, native hittability and single ordinary tap.
+        guard let observation = try? readKeyboardIntroduction(app),
+              let frame = observation.targetFrame else { return dismissal }
+        let button = app.buttons.matching(NSPredicate(format: "label == %@", "Continue")).element
+        if dismissal.observe(tutorialExists: true, buttonFrame: frame,
+                             applicationFrame: observation.applicationFrame, hittable: button.isHittable) {
             button.tap()
         }
         return dismissal
+    }
+
+    @MainActor
+    private func readKeyboardIntroduction(_ app: XCUIApplication) throws -> KeyboardIntroductionSnapshot? {
+        // Public setup only. Snapshot objects and labels never leave this read
+        // or enter logs; an incomplete/ambiguous traversal cannot admit a tap.
+        let root = try app.snapshot()
+        var pending: [(any XCUIElementSnapshot, Int)] = [(root, 0)]
+        var tutorialCount = 0
+        var buttons: [(frame: CGRect, enabled: Bool)] = []
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if node.elementType == .staticText,
+               node.label == "Speed up your typing by sliding your finger across the letters to compose a word." {
+                tutorialCount += 1
+            }
+            if node.elementType == .button, node.label == "Continue" {
+                buttons.append((frame: node.frame, enabled: node.isEnabled))
+            }
+            for child in node.children { pending.append((child, depth + 1)) }
+        }
+        return KeyboardIntroductionSnapshot(applicationFrame: root.frame,
+                                            tutorialCount: tutorialCount, buttons: buttons)
     }
 
     @MainActor
@@ -798,6 +882,137 @@ final class PublicControlFramesTests: XCTestCase {
         frames.reset()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+}
+
+// Traverse only a single already-captured public snapshot. A partial tree,
+// duplicate match or absent control is unknown, never a usable cached frame.
+private enum PublicButtonSnapshot {
+    static func select<Node>(
+        from root: Node,
+        children: (Node) -> [Node],
+        isMatch: (Node) -> Bool,
+        geometry: (Node) -> (frame: CGRect, enabled: Bool)
+    ) -> (frame: CGRect, enabled: Bool)? {
+        var pending: [(Node, Int)] = [(root, 0)]
+        var selected: (frame: CGRect, enabled: Bool)?
+        var count = 0
+        while let (node, depth) = pending.popLast() {
+            count += 1
+            guard count <= 2048, depth <= 32 else { return nil }
+            if isMatch(node) {
+                guard selected == nil else { return nil }
+                selected = geometry(node)
+            }
+            let descendants = children(node)
+            guard descendants.count <= 2048 - count - pending.count else { return nil }
+            for child in descendants { pending.append((child, depth + 1)) }
+        }
+        return selected
+    }
+}
+
+final class PublicButtonSnapshotTests: XCTestCase {
+    private struct Node {
+        var matches = false
+        var enabled = true
+        var frame = CGRect(x: 32, y: 466, width: 338, height: 52)
+        var children: [Node] = []
+    }
+
+    private func sample(_ root: Node) -> (frame: CGRect, enabled: Bool)? {
+        PublicButtonSnapshot.select(from: root, children: { $0.children },
+                                    isMatch: { $0.matches }, geometry: { ($0.frame, $0.enabled) })
+    }
+
+    func testUniqueControlUsesOneGenerationWithoutAnotherQuery() throws {
+        let target = Node(matches: true)
+        var reads = 0
+        let selected = try XCTUnwrap(PublicButtonSnapshot.select(
+            from: Node(children: [Node(), target]), children: { $0.children },
+            isMatch: { $0.matches }, geometry: { node in
+                reads += 1
+                return (node.frame, node.enabled)
+            }
+        ))
+        XCTAssertEqual(reads, 1)
+        XCTAssertEqual(selected.frame, target.frame)
+        XCTAssertTrue(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: selected.enabled))
+    }
+
+    func testMissingAndDuplicateControlsCannotProvideAFrame() {
+        XCTAssertNil(sample(Node()))
+        XCTAssertNil(sample(Node(children: [Node(matches: true), Node(matches: true)])))
+        XCTAssertNil(sample(Node(matches: true, children: [Node(matches: true)])))
+    }
+
+    func testDisabledControlStillBreaksFrameAdjacency() throws {
+        let selected = try XCTUnwrap(sample(Node(matches: true, enabled: false)))
+        XCTAssertFalse(selected.enabled)
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: selected.enabled))
+        XCTAssertFalse(frames.observe(frame: selected.frame, enabled: true))
+        XCTAssertTrue(frames.observe(frame: selected.frame, enabled: true))
+    }
+
+    func testOversizedTreeCannotAcceptAnEarlierMatch() {
+        let withinBudget = Node(children: Array(repeating: Node(), count: 2046) + [Node(matches: true)])
+        XCTAssertNotNil(sample(withinBudget))
+        let overBudget = Node(children: [Node(children: Array(repeating: Node(), count: 2047)),
+                                         Node(matches: true)])
+        XCTAssertNil(sample(overBudget))
+    }
+
+    func testExcessiveDepthCannotAcceptAnEarlierMatch() {
+        var chain = Node()
+        for _ in 0..<31 { chain = Node(children: [chain]) }
+        XCTAssertNotNil(sample(Node(children: [chain, Node(matches: true)])))
+        chain = Node(children: [chain])
+        XCTAssertNil(sample(Node(children: [chain, Node(matches: true)])))
+    }
+}
+
+// One resolved generation: never pair tutorial presence with another frame or
+// accept a generic/duplicate Continue. Geometry/hittability remain separately
+// mandatory in KeyboardIntroductionDismissal before the one ordinary tap.
+private struct KeyboardIntroductionSnapshot {
+    let applicationFrame: CGRect
+    let tutorialCount: Int
+    let buttons: [(frame: CGRect, enabled: Bool)]
+
+    var targetFrame: CGRect? {
+        guard tutorialCount == 1, buttons.count == 1, buttons[0].enabled else { return nil }
+        return buttons[0].frame
+    }
+}
+
+final class KeyboardIntroductionSnapshotTests: XCTestCase {
+    private let application = CGRect(x: 0, y: 0, width: 402, height: 874)
+    private let button = CGRect(x: 140, y: 800, width: 122, height: 44)
+
+    func testOnlyOneEnabledButtonWithOneTutorialIsAccepted() {
+        let sample = KeyboardIntroductionSnapshot(applicationFrame: application, tutorialCount: 1,
+                                                  buttons: [(frame: button, enabled: true)])
+        XCTAssertEqual(sample.targetFrame, button)
+        XCTAssertEqual(sample.applicationFrame, application)
+    }
+
+    func testMissingDuplicateOrDisabledTutorialTargetsCannotAdmitATap() {
+        for tutorials in [0, 1, 2] {
+            for buttons in [0, 1, 2] {
+                for enabled in [false, true] {
+                    let sample = KeyboardIntroductionSnapshot(applicationFrame: application,
+                        tutorialCount: tutorials,
+                        buttons: Array(repeating: (frame: button, enabled: enabled), count: buttons))
+                    if tutorials == 1 && buttons == 1 && enabled { continue }
+                    XCTAssertNil(sample.targetFrame)
+                }
+            }
+        }
     }
 }
 

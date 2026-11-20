@@ -215,7 +215,9 @@ private fun LatestClaim(
         )
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             if (claim == null) {
-                if (roomyArtwork) Text(
+                // At large text, keep the full opening instruction and first action
+                // in view instead of spending that space on a decorative heading.
+                if (roomyArtwork && !largeText) Text(
                     text = stringResource(Res.string.game_open_round),
                     style = MaterialTheme.typography.headlineSmall,
                     color = LastLightColors.Paper,

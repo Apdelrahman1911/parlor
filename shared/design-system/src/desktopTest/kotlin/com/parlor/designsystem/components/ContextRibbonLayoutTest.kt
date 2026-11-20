@@ -47,7 +47,7 @@ class ContextRibbonLayoutTest {
         val detailBounds = onNodeWithText(detail, useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
         assertTrue(labelBounds.width >= 200f, "Status must not be squeezed into half a phone-width column")
         assertTrue(detailBounds.top >= labelBounds.bottom, "Instruction should follow, not compete for label width")
-        val output = File("build/reports/ux/context-ribbon-$direction-2x.png")
+        val output = File("build/reports/tests/public-ux/context-ribbon-$direction-2x.png")
         check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
         Image.makeFromBitmap(onRoot().captureToImage().asSkiaBitmap()).use { image ->
             checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }

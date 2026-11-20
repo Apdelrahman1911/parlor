@@ -73,7 +73,7 @@ class FuseCylinderTest {
         onNodeWithTag("second-cylinder").assertContentDescriptionEquals(
             if (arabic) "اختُبر الفتيل 2 من 6 مرات. احتراق." else "Fuse tested 2 of 6. Burnout.",
         )
-        val file = File("build/ui-snapshots/fuse-cylinder-${language.tag}.png").apply { parentFile.mkdirs() }
+        val file = File("build/reports/tests/public-ux/fuse-cylinder-${language.tag}.png").apply { parentFile.mkdirs() }
         ImageIO.write(onNodeWithTag(LAST_LIGHT_VIEWPORT).captureToImage().toAwtImage(), "png", file)
     }
 }

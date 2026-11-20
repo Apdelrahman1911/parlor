@@ -21,13 +21,14 @@ remain separate evidence.
 | iOS simulator runtime tests | `./gradlew productionIosSimulatorRuntimeTests` on Apple Silicon macOS | Every KMP module's executable `iosSimulatorArm64Test` task runs; new KMP modules join automatically. This is runtime-test evidence for the simulator only, not physical-device evidence. |
 | iOS app launch UI test | The `xcodebuild test` command in `IOS_SETUP.md` | The real SwiftUI wrapper launches on an iOS Simulator, instantiates the exported Kotlin controller, renders the Compose home screen, remains foreground, and presents no alert during the observation window. This is simulator launch evidence, not Local Network permission evidence. |
 | Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, `lintRelease`, and the allowlist-enforcing `verifyReleaseLintWarnings` task all pass. |
-| Android device runtime | `scripts/android/run_release_managed_device_smoke.sh` | Both lanes are mandatory: black-box launch/settings-I/O/multicast checks on the R8-shrunk Release (API 35), then internal navigator assertions on Debug (API 34, below `List.removeLast` availability). Separate test source sets avoid retaining test-only APIs in the Store binary; no R8 keep-rule or optimization relaxation is used. Each Linux lane records its own descendant cleanup receipt. |
+| Android device runtime | `scripts/android/run_release_managed_device_smoke.sh` | Both lanes are mandatory: black-box launch/settings-I/O/multicast checks on the R8-shrunk Release (API 35), then internal navigator, native recovery-storage and EN/AR Home discard assertions on Debug (API 34, below `List.removeLast` availability). Debug requires 27 methods: navigation3, native label/action-owner5, reveal-decision4, storage7 and Home8; Release retains3. Native storage uses real Keystore/files/preferences with isolated synthetic records, including deletion, migration, authentication, sibling preservation and reconstructed adapters. Home uses the shipping Activity and accessibility actions with legal Last Light/Mafia/Whodunit fixtures, selected deletion after Activity relaunch and actual deletion-failure/polite-live-region checks. No UI or store is replaced. This is not process-death, physical screen-reader, complete in-game resume or lock acceptance. Separate test source sets avoid retaining test-only APIs in the Store binary; no R8 keep-rule or optimization relaxation is used. Each Linux lane records its own descendant cleanup receipt. |
+| Android saved-session process boundary | `python3 -B -m scripts.android.run_resume_process_acceptance --output build/ci-evidence/android-process-acceptance`, inside the existing isolated hosted supervisor after APK build | Twelve actual Last Light/Mafia/Whodunit × EN/AR × local/multiplayer Home cancel/remove cases, each with separate native prepare/verify invocations, real app launch, forced process termination, independent PID absence and a new process nonce. Exact decoded sibling state, unrelated credential, preferences and selected-entry absence must survive. Synthetic membership storage does not prove authenticated admission/rejoin; this is not physical memory-pressure, iOS lock/keybag or TalkBack acceptance. All24 original JUnit outcomes, source/APK/log hashes and owned cleanup are required. |
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Apple type-aware static analysis passes and Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains separate macOS jobs. |
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
 | Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
-| Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and the complete Apple analysis/three-architecture Release fan-out, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
+| Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and the complete Apple analysis/three-architecture Release fan-out, all with strict dependency verification | All six mandatory check groups and their nine build/test producers, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
 | GitHub distribution packaging | `.github/workflows/github-distribution.yml`, rehearsal | Android Release APK, macOS arm64/x64 DMGs, Windows x64 MSI and Linux x64 DEB; installed-image/native-graphics/crypto probes, notices, checksums and source-bound attestations. Unsigned rehearsal output is not publishable. |
 | Public GitHub testing | `.github/workflows/github-test-release.yml` | Explicit build/publish dispatches; five native packages, isolated non-debuggable Android `.test` APK with disposable key and normal-install emulator smoke, exact-source six-job verification, closed test manifest and attestations. Public prereleases only, never Latest or signed-production acceptance. |
 
@@ -43,6 +44,14 @@ is prohibited in ordinary CI and release builds.
 Automated evidence is attributable only when the command starts and finishes
 at the same recorded commit and `git status --short` is empty. A later code or
 repository-contract change invalidates that receipt and requires a new run.
+
+The Linux managed-device supervisor gives each runtime invocation a fresh
+`ANDROID_AVD_HOME`. After a passing runtime and verified descendant retirement,
+it removes only that owned AVD data before the next lane and records actual
+allocated/free bytes. Failed runs retain their AVD; test reports and all build
+artifacts remain subject to the existing upload-before-output-cleanup policy.
+This avoids overlapping API35/API34 writable images without shrinking devices,
+skipping tests, changing the GPU mode, or removing SDK/dependency caches.
 
 ## External gates
 
@@ -68,13 +77,13 @@ unit test.
 
 ## CI policy
 
-`.github/workflows/production-verification.yml` configures 11 job definitions:
+`.github/workflows/production-verification.yml` configures 13 job definitions:
 eight mandatory producers, the required Release join, and two opt-in diagnostics
 (`ios-protection-probe` and `darwin-host-capability`). The six full check identities
 below include the join; its three Release producers also must qualify. Neither
 diagnostic replaces full verification. The Darwin capability matrix expands to
 both standard macOS hosts only for its explicit focused dispatch.
-The six full jobs are:
+The six required check groups cover these full producers and joins:
 
 - Linux x64: strict dependency verification, the root `productionCheck` and
   `allTests` aggregates, Android debug/release unit tests, repository-wide
@@ -88,11 +97,20 @@ The six full jobs are:
 - Windows x64: the real host-selected Desktop graph, tests, Kotlin Native
   distribution download, and Android resource processing through Windows
   `aapt2`.
-- macOS arm64 runtime (`ios`): pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
-  every KMP `iosSimulatorArm64Test` through the dedicated
-  `productionIosSimulatorRuntimeTests` aggregate, plist/privacy-manifest and
-  effective Debug/Release identity validation, and an XCTest launch of the
-  Debug SwiftUI/Compose app on its own fresh iOS Simulator.
+- macOS arm64 KMP runtime (`ios-kmp`): pinned Xcode `26.3` build `17C529`,
+  SDK/source validation, every KMP `iosSimulatorArm64Test` through the dedicated
+  `productionIosSimulatorRuntimeTests` aggregate, and complete native-readiness
+  controls. The job owns only `apple-aggregate`.
+- macOS arm64 Swift runtime (`ios`): an independent free runner, the identical
+  pinned toolchain/source guards, plist/privacy and effective Debug/Release
+  identity checks, and the **complete original** Debug SwiftUI/Compose XCTest
+  suite on its own fresh Simulator. The job owns only `apple-ui`; focused native
+  diagnostic modes retain their existing job identity and separate guards.
+- The Linux `ios-runtime` join retains the protected check name **iOS simulator
+  runtime and Swift host**. Both ARM64 producers, their current-source artifact
+  identity and successful native/output cleanup are required. Failed, skipped,
+  cancelled, missing, stale or non-ARM64 outputs fail closed. Passing Intel UI
+  evidence never substitutes for this ARM64 gate.
 - Apple Release: three independent standard free macOS checkouts with identical
   pinned Xcode/SDK-floor guards. `ios-release-simulator` runs complete
   `productionAppleStaticAnalysis`, plist/privacy validation and the unsigned
@@ -103,13 +121,16 @@ The six full jobs are:
   check name and rejects any unsuccessful, skipped, cancelled, missing-custody
   or differing-source lane. The local `productionAppleCheck` stays unchanged.
 
-The runtime job is independent of all Release workers. Five concurrent macOS
-jobs (three Release, runtime and desktop x64) fit GitHub Free's documented limit;
-other account workflows can still cause queueing. No parallel LTO links share
-one JVM. Runtime evidence is `ios-runtime-verification`; simulator Release
-package evidence is `ios-release-verification`, with additional distinct device,
-Intel-simulator and join records. Every build lane retains its own source/run/job
-ownership and cleanup receipts. `ios` owns `apple-aggregate`/`apple-ui`;
+Both runtime jobs are independent of all Release workers. Six standard macOS
+producers (three Release, two runtime and Desktop x64) share GitHub Free's
+five concurrent macOS slots; one may queue. Other account workflows can cause
+additional queueing. This does not require paid capacity or guarantee a speedup.
+No parallel LTO links share one JVM. KMP evidence is `ios-runtime-verification`,
+Swift evidence is `ios-swift-verification`, and their join retains
+`ios-runtime-gate-verification`. Simulator Release package evidence remains
+`ios-release-verification`, with distinct device, Intel-simulator and Release-join
+records. Every lane keeps source/run/job ownership and cleanup receipts.
+`ios-kmp` owns `apple-aggregate`; `ios` owns `apple-ui`;
 `ios-release-simulator` owns `apple-aggregate`/`apple-wrapper`; each link-only lane
 owns `apple-aggregate`. Every cycle immediately stops Gradle and retires owned
 resources. Successful upload custody precedes output deletion; only then can
@@ -130,7 +151,7 @@ relabeled as a passed strict protection observation or application readiness.
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.
 Every full job prints the checked-out SHA and fails if the checkout is dirty.
-All six mandatory checks, their three Release workers and build-lane cleanup must succeed against one frozen source in the
+All six mandatory checks, all nine build/test producers and both fail-closed joins must succeed against one frozen source in the
 same full dispatch; focused or historical passes cannot fill a missing full job.
 
 The workflow has read-only repository permission and receives no signing or

@@ -104,7 +104,7 @@ def main():
     args = parser.parse_args()
     if platform.system() != 'Darwin' or platform.machine() != 'arm64' or \
             os.environ.get('GITHUB_ACTIONS') != 'true' or os.environ.get('RUNNER_ENVIRONMENT') != 'github-hosted' or \
-            os.environ.get('GITHUB_REPOSITORY') != 'Apdelrahman1911/parlor' or \
+            os.environ.get('GITHUB_REPOSITORY') != 'parlor-game/parlor' or \
             os.environ.get('GITHUB_REF') != BRANCH or os.environ.get('GITHUB_JOB') != 'ios' or \
             os.environ.get('GITHUB_EVENT_NAME') != 'push':
         raise RuntimeError('Explicit standard hosted inventory branch only')
