@@ -1,5 +1,28 @@
 # Free-hosted hybrid CI experiment
 
+## November 20 benchmark decision
+
+Both dispatches used commit `00ee5a4`. The
+[ARM64 run](https://github.com/Apdelrahman1911/parlor/actions/runs/44469388194)
+passed in 45m27s. The
+[hybrid run](https://github.com/Apdelrahman1911/parlor/actions/runs/44573236432)
+finished in 56m54s. Its Swift lane still ran on ARM64 and one of 47 tests
+failed waiting for the full Arabic setup field value. Track this input failure
+under [#276](https://github.com/Apdelrahman1911/parlor/issues/276). The
+observations do not establish native cause or an effect of the runner selector.
+
+The x64 Release jobs passed in 44m53s on ARM64 and 52m39s on Intel. The all-
+architecture Release aggregate passed in both profiles. Keep the automatic
+ARM64 profile and remove the experimental hybrid selector from the candidate.
+The original explicit whole-Intel profile remains available. The historical
+protocol below describes the experiment as it was run.
+
+The [automatic PR run](https://github.com/Apdelrahman1911/parlor/actions/runs/44461690421)
+passed in 64m19s. Its original wrapper artifact confirms the Xcode timing
+summary is retained. The two build scripts together took 2,809.056 seconds,
+including Gradle framework embedding. Swift compilation took 0.618 seconds.
+Investigate the native build critical path before changing the job layout.
+
 ## November 19 Phase 1 baseline
 
 These samples come from the Production verification workflow and its Actions

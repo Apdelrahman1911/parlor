@@ -1,4 +1,4 @@
-# Project status — November 19, 2026
+# Project status — November 20, 2026
 
 ## Active execution plan
 
@@ -13,12 +13,12 @@ finish times. GitHub reports all nine producers and both joins passed on
 `7affb37c`; independent artifact-by-artifact qualification for that run is
 pending. See the [baseline and benchmark procedure](audits/2026-10-29-FREE-HYBRID-CI.md#november-19-phase-1-baseline).
 
-[PR #291](https://github.com/Apdelrahman1911/parlor/pull/291) is the bounded
-first experiment. It retains ARM64 as the automatic default, with a dispatch
-option for Intel on the x64 Release lane only. The Release wrapper includes
-Xcode's build timing summary in the retained log. Compare sequential full runs
-on the same source with recorded cache and runner conditions before choosing a
-default. The architecture phase starts after Phase 1 acceptance.
+[PR #291](https://github.com/Apdelrahman1911/parlor/pull/291) retains Xcode
+Release timing after the matched runner experiment. The ARM64 dispatch passed
+in 45m27s. Hybrid finished in 56m54s with a Swift input test failure, and its
+optimized x64 link job was slower. Keep the ARM64 default. The next performance
+investigation targets the Gradle/Kotlin Release build, which accounts for most of
+the wrapper time. The architecture phase starts after Phase 1 acceptance.
 
 Mafia [PR #341](https://github.com/Apdelrahman1911/parlor/pull/341) remains draft.
 Its prior full run ended with eight successful producers and a pre-test Swift
