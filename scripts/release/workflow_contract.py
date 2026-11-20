@@ -1221,11 +1221,14 @@ def verify_validation(text: str) -> None:
     native_timing = ('            export GRADLE_OPTS="$GRADLE_OPTS '
                      '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
                      '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
+    gc_timing = ('            export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }'
+                 '-Xlog:gc:file=$PWD/build/ci-evidence/ios-release-gc-%p.log'
+                 ':uptime,level,tags:filecount=1,filesize=1m"')
     profile_block = ('          if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then\n' + native_timing +
-                     "\n          fi\n          xcodebuild")
+                     "\n" + gc_timing + "\n          fi\n          xcodebuild")
     if (profile_input + "\n" not in text.split("\nconcurrency:", 1)[0] or profile_scope not in wrapper.splitlines() or
             profile_block not in wrapper or text.count("parlor.profileIosReleaseLink=true") != 1 or
-            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2):
+            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2 or text.count("ios-release-gc-%p.log") != 1):
         fail("validation workflow must limit native Release compiler timing to explicit full dispatch")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (

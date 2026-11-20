@@ -1365,6 +1365,7 @@ jobs:
           set -euo pipefail
           if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then
             export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
+            export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }-Xlog:gc:file=$PWD/build/ci-evidence/ios-release-gc-%p.log:uptime,level,tags:filecount=1,filesize=1m"
           fi
           xcodebuild \
             -showBuildTimingSummary \
