@@ -1,9 +1,0 @@
-# Android managed attempt 01 — independent evidence reconciliation
-
-Reviewer: `/root/mafia_cont`. Full reads: `receipt.json` 1–105, `input-manifest.json` 1–43, `adb-server.log` 1. Complete bytes and all eight input identities reconcile; the runner matches its frozen cycle01 snapshot, not the subsequently advanced cycle02 helper. Detailed hashes: `evidence/android-managed-reconciliation-mafia-cont-01.json`.
-
-**Raw attempt FAIL; Android application runtime verification BLOCKED.** At 2026-09-05 13:06:48 UTC, the owned foreground ADB server rejected `-L tcp:127.0.0.1:52894` with “listening on specified hostname currently unsupported.” The helper recorded PID 36540/start identity and exit −6. This is an audit-launcher/ADB bootstrap failure, not a production application exception, failed instrumentation assertion, or device regression. Gradle, emulator, application tests, APK output and test-key creation were not reached. The generic receipt signing/runtime strings do not establish that those steps executed.
-
-**Cleanup receipt PASS.** All six finalization stages report PASS; no owned process or unattributed holder remains, the two cache-link pointers were unlinked without deleting global targets, and the temporary root is removed (also independently absent on this read). No generated module output existed. Gradle stop is correctly not required because no Gradle process was launched. Reviewer issued no process/native/device command; process absence rests on the source-reviewed helper receipt and root's completed-cycle announcement, not an additional process scan.
-
-This adds no executed test count and no confirmed application finding. A corrected launcher attempt must produce its own source-bound receipt, retained instrumentation cases/artifact hashes and cleanup evidence before Android runtime can be marked PASS. It cannot replace Linux/x86_64 CI, real-device LAN, or real signing/Store validation.
