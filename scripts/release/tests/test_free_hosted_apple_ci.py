@@ -162,8 +162,10 @@ class FreeHostedCIContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Swift Release build timing summary"):
             contract.verify_validation(changed)
 
-    def test_release_wrapper_requires_native_compiler_timing(self):
-        for option in ("arguments.log.level=warning", "profileIosReleaseLink=true"):
+    def test_release_wrapper_limits_native_compiler_timing_to_manual_dispatch(self):
+        for option in ("arguments.log.level=warning", "profileIosReleaseLink=true",
+                       "inputs.profile_release_native == true", "type: boolean\n        default: false",
+                       'if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then'):
             changed = self.workflow.replace(option, option + "-disabled", 1)
             self.assertNotEqual(changed, self.workflow)
             with self.subTest(option=option), self.assertRaisesRegex(RuntimeError, "native Release compiler timing"):

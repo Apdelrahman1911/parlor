@@ -23,6 +23,10 @@ on:
         type: choice
         default: arm64
         options: [arm64, intel]
+      profile_release_native:
+        description: Capture detailed Kotlin/Native phases for the simulator Release wrapper
+        type: boolean
+        default: false
       native_selection:
         description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)
         type: choice
@@ -1348,9 +1352,13 @@ jobs:
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_wrapper_run
         shell: bash
+        env:
+          PARLOR_PROFILE_RELEASE_NATIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'full' && inputs.profile_release_native == true }}
         run: |
           set -euo pipefail
-          export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
+          if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then
+            export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
+          fi
           xcodebuild \
             -showBuildTimingSummary \
             -project iosApp/iosApp.xcodeproj \
