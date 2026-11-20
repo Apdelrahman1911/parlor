@@ -1337,6 +1337,7 @@ jobs:
         run: |
           set -euo pipefail
           xcodebuild \
+            -showBuildTimingSummary \
             -project iosApp/iosApp.xcodeproj \
             -scheme iosApp \
             -configuration Release \

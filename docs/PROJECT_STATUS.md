@@ -1,4 +1,29 @@
-# Project status — November 11, 2026
+# Project status — November 20, 2026
+
+## Active execution plan
+
+[Issue #342](https://github.com/Apdelrahman1911/parlor/issues/342) tracks the five
+phases in order: CI performance, KMP architecture, outstanding issues, branch
+consolidation, and production UI/UX. Phase 1 is active. The entries below this
+section retain evidence from the preceding issue-resolution work.
+
+The latest two successful `main` workflows took 68m50s and 65m45s from run
+creation to the last job's completion. Optimized Apple Release determined both
+finish times. GitHub reports all nine producers and both joins passed on
+`7affb37c`; independent artifact-by-artifact qualification for that run is
+pending. See the [baseline and benchmark procedure](audits/2026-10-29-FREE-HYBRID-CI.md#november-19-phase-1-baseline).
+
+[PR #291](https://github.com/Apdelrahman1911/parlor/pull/291) retains Xcode
+Release timing after the matched runner experiment. The ARM64 dispatch passed
+in 45m27s. Hybrid finished in 56m54s with a Swift input test failure, and its
+optimized x64 link job was slower. Keep the ARM64 default. The next performance
+investigation targets the Gradle/Kotlin Release build, which accounts for most of
+the wrapper time. The architecture phase starts after Phase 1 acceptance.
+
+Mafia [PR #341](https://github.com/Apdelrahman1911/parlor/pull/341) remains draft.
+Its prior full run ended with eight successful producers and a pre-test Swift
+Simulator inventory timeout. Phase 3 owns its current-base qualification. The
+existing iOS input, physical-device, protection, signing and Store gates apply.
 
 ## Active solo issue-resolution goal
 

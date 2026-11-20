@@ -1204,6 +1204,9 @@ def verify_validation(text: str) -> None:
     swift_release_marker = "- name: Build unsigned Swift Release wrapper"
     if app_launch_marker not in swift or swift_release_marker not in release:
         fail("validation workflow does not run the iOS app-launch UI test")
+    wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
+    if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
+        fail("validation workflow lacks the Swift Release build timing summary")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",
