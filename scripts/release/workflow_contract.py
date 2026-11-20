@@ -361,7 +361,7 @@ def verify_windows_checkout(text: str) -> None:
         fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
 
 
-HOSTED_CAPACITY_SCRIPT_SHA256 = 'ae73036a1e587ceebef5e5bca35d1839d5032829b665c09f6e5175dcf2fd5169'
+HOSTED_CAPACITY_SCRIPT_SHA256 = '2e5264048a5eba7165e98543440124bc3a706d93f3a9ab40c7b4c26888d681fa'
 
 
 def verify_hosted_linux_capacity(job: str) -> None:
@@ -921,7 +921,9 @@ def verify_free_ci_dependency_cache(text: str) -> None:
     """GitHub-owned dependency cache; only protected main pushes can write."""
     lanes = ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
              "ios-kmp", "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64")
-    key = "parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}"
+    prefix = ("parlor-deps-v2-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-"
+              "${{ hashFiles('gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}-")
+    key = prefix + "${{ hashFiles('**/*.gradle.kts') }}"
     expected = ('        if: ' + FULL_VERIFICATION_SCOPE + '\n'
                 '        id: dependency_cache\n'
                 '        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
@@ -929,7 +931,9 @@ def verify_free_ci_dependency_cache(text: str) -> None:
                 '          path: |\n'
                 '            ~/.gradle/caches/modules-2\n'
                 '            ~/.gradle/wrapper/dists\n'
-                '          key: ' + key)
+                '          key: ' + key + '\n'
+                '          restore-keys: |\n'
+                '            ' + prefix)
     save = ("        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'\n"
             '        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0\n'
             '        with:\n'
@@ -1204,6 +1208,15 @@ def verify_validation(text: str) -> None:
     swift_release_marker = "- name: Build unsigned Swift Release wrapper"
     if app_launch_marker not in swift or swift_release_marker not in release:
         fail("validation workflow does not run the iOS app-launch UI test")
+    wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
+    if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
+        fail("validation workflow lacks the Swift Release build timing summary")
+    native_timing = ('          export GRADLE_OPTS="$GRADLE_OPTS '
+                     '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
+                     '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
+    if wrapper.splitlines().count(native_timing) != 1 or not (
+            native_timing + "\n          xcodebuild" in wrapper):
+        fail("validation workflow lacks native Release compiler timing before the Xcode build")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",

@@ -28,7 +28,7 @@ from scripts.ci import verification_hygiene as hygiene
 
 SCOPE = "linux-process-probe"
 ANDROID_CLEANUP_SCOPE = "android-cleanup-only"
-REPOSITORY, BRANCH = "Apdelrahman1911/parlor", "fix/local-readiness-2026-09-07"
+REPOSITORY, BRANCH = "parlor-game/parlor", "fix/local-readiness-2026-09-07"
 WORKFLOW = ".github/workflows/production-verification.yml"
 EXE_READER = "sudo-proc-exe-v2"
 CONTROL_MODES = ((1, "unprivileged"), (0, "unprivileged"), (0, EXE_READER))

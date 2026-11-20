@@ -1,4 +1,60 @@
-# Project status — November 11, 2026
+# Project status — November 20, 2026
+
+## Active execution plan
+
+[Issue #342](https://github.com/Apdelrahman1911/parlor/issues/342) tracks the five
+phases in order: CI performance, KMP architecture, outstanding issues, branch
+consolidation, and production UI/UX. Phase 1 is active. The entries below this
+section retain evidence from the preceding issue-resolution work.
+
+The latest two successful `main` workflows took 68m50s and 65m45s from run
+creation to the last job's completion. Optimized Apple Release determined both
+finish times. GitHub reports all nine producers and both joins passed on
+`7affb37c`; independent artifact-by-artifact qualification for that run is
+pending. See the [baseline and benchmark procedure](audits/2026-10-29-FREE-HYBRID-CI.md#november-19-phase-1-baseline).
+
+[PR #291](https://github.com/Apdelrahman1911/parlor/pull/291) retains Xcode
+Release timing after the matched runner experiment. The ARM64 dispatch passed
+in 45m27s. Hybrid finished in 56m54s with a Swift input test failure, and its
+optimized x64 link job was slower. Keep the ARM64 default. The next performance
+investigation targets the Gradle/Kotlin Release build, which accounts for most of
+the wrapper time. The architecture phase starts after Phase 1 acceptance.
+
+The timing-only PR merged as `3ca41cd`. Its
+[post-merge workflow](https://github.com/Apdelrahman1911/parlor/actions/runs/44658002775)
+failed at the original Swift simulator inventory deadline, before simulator
+creation or Swift tests. The eight other producers and Apple Release aggregate
+passed. The Release wrapper recorded 47m38s in two build scripts and 0.807s
+in SwiftCompile. Issue #342 records the retained failure and scoped evidence.
+
+Parlor transferred to [parlor-game/parlor](https://github.com/parlor-game/parlor).
+PR #343 also updates exact repository checks for new CI evidence and releases.
+Historical run links and frozen receipts retain their original source identity.
+
+The next Phase 1 measurement enables the documented Kotlin/Native compiler
+logging on the ARM64 Release wrapper only. Compare native phase times alongside
+the original Xcode timing summary. Keep existing optimized binaries, test
+commands, and gates. The change is measurement instrumentation and needs a
+hosted run to verify that the pinned compiler emits the phase timings.
+
+PR #343 merged as `ab989d1`. Its [distinct main workflow](https://github.com/parlor-game/parlor/actions/runs/44690241068)
+passed. Native profiling measured 27m57s for static-initializer call removal.
+The matched unsigned simulator [CMS](https://github.com/parlor-game/parlor/actions/runs/44709185201)
+and [PMCS](https://github.com/parlor-game/parlor/actions/runs/44716538115)
+runs passed all gates, with 50m47s and 56m02s workflow elapsed respectively.
+Keep shipping CMS. A single pair does not establish a compiler speedup or
+evaluate app responsiveness.
+
+The next CI change preserves a cache family for dependency files across
+Gradle script-only changes. Its fallback requires the same runner OS and
+architecture, toolchain pins, version catalog, wrapper and strict dependency
+verification metadata. The first run in the new cache namespace starts cold.
+Require evidence of a later same-family fallback before quantifying savings.
+
+Mafia [PR #341](https://github.com/Apdelrahman1911/parlor/pull/341) remains draft.
+Its prior full run ended with eight successful producers and a pre-test Swift
+Simulator inventory timeout. Phase 3 owns its current-base qualification. The
+existing iOS input, physical-device, protection, signing and Store gates apply.
 
 ## Active solo issue-resolution goal
 

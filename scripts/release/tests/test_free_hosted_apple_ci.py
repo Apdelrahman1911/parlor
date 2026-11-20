@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -155,10 +156,31 @@ class FreeHostedCIContractTest(unittest.TestCase):
                 with self.subTest(job=job_id, mutation=new), self.assertRaisesRegex(RuntimeError, "exact binary inspection"):
                     contract.verify_validation(changed)
 
+    def test_release_wrapper_requires_build_timing_summary(self):
+        changed = self.workflow.replace("-showBuildTimingSummary", "-quiet", 1)
+        self.assertNotEqual(changed, self.workflow)
+        with self.assertRaisesRegex(RuntimeError, "Swift Release build timing summary"):
+            contract.verify_validation(changed)
+
+    def test_release_wrapper_requires_native_compiler_timing(self):
+        for option in ("arguments.log.level=warning", "profileIosReleaseLink=true"):
+            changed = self.workflow.replace(option, option + "-disabled", 1)
+            self.assertNotEqual(changed, self.workflow)
+            with self.subTest(option=option), self.assertRaisesRegex(RuntimeError, "native Release compiler timing"):
+                contract.verify_validation(changed)
+
     def test_release_runners_cannot_use_paid_or_arbitrary_labels(self):
         for label in ("macos-15-large", "macos-15-xlarge", "self-hosted", "${{ inputs.apple_release_runner }}"):
             changed = self.workflow.replace(contract.FREE_APPLE_RELEASE_RUNNER, label, 1)
             with self.subTest(label=label), self.assertRaises(RuntimeError):
+                contract.verify_validation(changed)
+
+    def test_cache_fallback_requires_the_same_platform_toolchain_and_dependency_pins(self):
+        prefix, = set(re.findall(r"(?m)^            (parlor-deps-v2-.*)$", self.workflow))
+        for token in ("runner.arch", "kotlin2.4.10", "gradle/verification-metadata.xml", "gradle/libs.versions.toml"):
+            self.assertIn(token, prefix)
+            changed = self.workflow.replace("            " + prefix, "            " + prefix.replace(token, ""), 1)
+            with self.subTest(token=token), self.assertRaisesRegex(RuntimeError, "dependency-only cache"):
                 contract.verify_validation(changed)
 
     def test_caches_cannot_write_on_prs_or_restore_reports_builds_or_secrets(self):

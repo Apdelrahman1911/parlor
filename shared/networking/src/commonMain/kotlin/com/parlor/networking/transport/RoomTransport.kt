@@ -39,7 +39,11 @@ interface RoomTransport {
     suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError>
 
     suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> =
-        join(config.code, config.displayName)
+        if (config.expectedGameProtocol != null) {
+            Result.Failure(NetError.IncompatibleProtocol)
+        } else {
+            join(config.code, config.displayName)
+        }
 
     /** Non-secret metadata for an encrypted resumable membership, if present. */
     suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> =
@@ -179,7 +183,8 @@ data class JoinConfig(
     /**
      * Selected game binding, checked against authenticated admission metadata
      * before confirming membership. Null is reserved for game-agnostic callers;
-     * shipping game join flows must supply this. This is not a wire field.
+     * shipping game join flows must supply this. Transports without binding
+     * support must reject before opening a room. This is not a wire field.
      */
     val expectedGameProtocol: HostedGameProtocol? = null,
 )

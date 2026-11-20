@@ -15,7 +15,7 @@ from scripts.release import workflow_contract as contract
 
 ENVIRONMENT = dict(
     GITHUB_ACTIONS="true", RUNNER_ENVIRONMENT="github-hosted", RUNNER_OS="macOS",
-    RUNNER_ARCH="X64", GITHUB_REPOSITORY="Apdelrahman1911/parlor",
+    RUNNER_ARCH="X64", GITHUB_REPOSITORY="parlor-game/parlor",
     GITHUB_JOB="desktop-macos-x64", GITHUB_RUN_ID="42704248797", GITHUB_RUN_ATTEMPT="1",
     PARLOR_FAILED_STEP_OUTCOME="failure",
 )

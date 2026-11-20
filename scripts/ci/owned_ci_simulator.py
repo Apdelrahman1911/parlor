@@ -6,6 +6,7 @@ synthetic backend; importing this module does not contact CoreSimulator.
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import time
@@ -16,6 +17,44 @@ from scripts.ci.verification_hygiene import timestamp, write_new
 UUID = re.compile(r"[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}")
 MAX_DEVICES = 256
 MAX_RECORD = 1024 * 1024
+
+
+def inventory_timeout_observation() -> dict:
+    """Observe Simulator service state after timeout without restarting it."""
+    commands = {
+        "core_simulator": ("/bin/launchctl", "print",
+                           f"gui/{os.getuid()}/com.apple.CoreSimulator.CoreSimulatorService"),
+        "disk_image_service": ("/bin/launchctl", "print", "system/com.apple.simdiskimaged"),
+        "recent_service_errors": (
+            "/usr/bin/log", "show", "--last", "3m", "--style", "compact",
+            "--predicate", '(process == "CoreSimulatorService" OR process == "simdiskimaged" OR '
+            'process == "launchd") AND (eventMessage CONTAINS[c] "simdiskimaged" OR '
+            'eventMessage CONTAINS[c] "CoreSimulator" OR eventMessage CONTAINS[c] "jetsam")',
+        ),
+    }
+    observations = {}
+    for name, command in commands.items():
+        try:
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                    text=True, errors="replace", timeout=5, check=False)
+        except (OSError, subprocess.TimeoutExpired) as error:
+            observations[name] = {"error": type(error).__name__}
+            continue
+        observation = {"exit_code": result.returncode}
+        if len(result.stdout) > MAX_RECORD:
+            observation["error"] = "oversized"
+        elif result.returncode == 0 and name == "recent_service_errors":
+            observation["matching_lines"] = {
+                term: sum(term in line.lower() for line in result.stdout.splitlines())
+                for term in ("simdiskimaged", "coresimulator", "jetsam")
+            }
+        elif result.returncode == 0:
+            observation["fields"] = dict(re.findall(
+                r"(?m)^\s*(state|pid|runs|last exit code) = ([a-z]+(?: [a-z]+)?|-?\d+)\s*$",
+                result.stdout
+            ))
+        observations[name] = observation
+    return observations
 
 
 def read_record(path: Path) -> dict:
@@ -85,7 +124,18 @@ def create(prefix: Path, claim: dict, backend) -> str:
     plan_path, result_path = paths(prefix)
     if any(path.exists() or path.is_symlink() for path in (*paths(prefix), adoption_path(prefix))):
         raise RuntimeError("Simulator creation cannot reuse a historical journal")
-    inventory = devices(backend.inventory())
+    try:
+        inventory = devices(backend.inventory())
+    except subprocess.TimeoutExpired:
+        try:
+            write_new(Path(str(prefix) + "-simulator-inventory-timeout.json"), {
+                "task": claim["task"], "cycle": claim["cycle"], "observed_at": timestamp(),
+                "stage": "initial-inventory-after-timeout", "observations": inventory_timeout_observation(),
+            })
+        except OSError:
+            # Optional evidence must not replace the original failure.
+            pass
+        raise
     # Preserve the previous runtime/device-type selection, not its user profile.
     template = next((item for item in inventory if item.get("isAvailable") is True and
                      str(item.get("name", "")).startswith("iPhone") and

@@ -18,7 +18,7 @@ import sys
 from scripts.ci.darwin_worker_identity import DarwinWorkerBackend
 
 SCOPE = "darwin-host-capability"
-REPOSITORY = "Apdelrahman1911/parlor"
+REPOSITORY = "parlor-game/parlor"
 MARKER = re.compile(r"github_[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}")
 
 
