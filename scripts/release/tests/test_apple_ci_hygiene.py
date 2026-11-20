@@ -7,6 +7,7 @@ import json
 import os
 import re
 import struct
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -759,6 +760,31 @@ class SimulatorOwnershipTest(unittest.TestCase):
 
     def cleanup(self):
         return sim.cleanup(self.prefix, self.claim, self.backend, sleep=lambda _: None)
+
+    def test_initial_inventory_timeout_records_evidence_and_preserves_failure(self):
+        self.backend.inventory = Mock(side_effect=subprocess.TimeoutExpired("simctl", 90))
+        with patch.object(sim, "inventory_timeout_observation", return_value={"core_simulator": {"exit_code": 0}}):
+            with self.assertRaises(subprocess.TimeoutExpired):
+                self.create()
+        path = Path(str(self.prefix) + "-simulator-inventory-timeout.json")
+        receipt = json.loads(path.read_text())
+        self.assertEqual(receipt["task"], TASK)
+        self.assertEqual(receipt["stage"], "initial-inventory-after-timeout")
+        self.assertEqual(self.backend.calls, [])
+        self.assertEqual(self.cleanup()["result"], "NOT_CREATED")
+
+    def test_timeout_observations_retain_only_allowlisted_fields_and_counts(self):
+        with patch.object(sim.subprocess, "run", side_effect=[
+            subprocess.CompletedProcess([], 0, "state = running\npid = 123\nsecret = private\n"),
+            subprocess.TimeoutExpired("launchctl", 5),
+            subprocess.CompletedProcess([], 0, "simdiskimaged jetsam private\n"),
+        ]) as run:
+            observation = sim.inventory_timeout_observation()
+        self.assertEqual(observation["core_simulator"]["fields"], {"state": "running", "pid": "123"})
+        self.assertEqual(observation["disk_image_service"], {"error": "TimeoutExpired"})
+        self.assertEqual(observation["recent_service_errors"]["matching_lines"]["jetsam"], 1)
+        self.assertNotIn("private", json.dumps(observation))
+        self.assertTrue(all(call.kwargs["timeout"] == 5 for call in run.call_args_list))
 
     def test_fresh_device_reuses_only_type_runtime_not_profile_and_cleans_exact_uuid(self):
         self.assertEqual(self.create(), CREATED)
