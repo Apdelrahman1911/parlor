@@ -37,6 +37,20 @@ the original Xcode timing summary. Keep existing optimized binaries, test
 commands, and gates. The change is measurement instrumentation and needs a
 hosted run to verify that the pinned compiler emits the phase timings.
 
+PR #343 merged as `ab989d1`. Its [distinct main workflow](https://github.com/parlor-game/parlor/actions/runs/44690241068)
+passed. Native profiling measured 27m57s for static-initializer call removal.
+The matched unsigned simulator [CMS](https://github.com/parlor-game/parlor/actions/runs/44709185201)
+and [PMCS](https://github.com/parlor-game/parlor/actions/runs/44716538115)
+runs passed all gates, with 50m47s and 56m02s workflow elapsed respectively.
+Keep shipping CMS. A single pair does not establish a compiler speedup or
+evaluate app responsiveness.
+
+The next CI change preserves a cache family for dependency files across
+Gradle script-only changes. Its fallback requires the same runner OS and
+architecture, toolchain pins, version catalog, wrapper and strict dependency
+verification metadata. The first run in the new cache namespace starts cold.
+Require evidence of a later same-family fallback before quantifying savings.
+
 Mafia [PR #341](https://github.com/Apdelrahman1911/parlor/pull/341) remains draft.
 Its prior full run ended with eight successful producers and a pre-test Swift
 Simulator inventory timeout. Phase 3 owns its current-base qualification. The
