@@ -2,6 +2,7 @@ package com.parlor.games.mafia.ui.flow.multidevice
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,18 +18,24 @@ internal fun MafiaPrivateAcknowledgement(
     onAcknowledged: () -> Unit,
     content: @Composable (onHidden: () -> Unit) -> Unit,
 ) {
-    var revealed by remember(player.id) { mutableStateOf(false) }
-    InPlaceBackHandler(revealed) { revealed = false }
-    if (revealed) {
+    var activeReveal by remember(player.id) { mutableStateOf<Any?>(null) }
+    DisposableEffect(player.id) {
+        onDispose { activeReveal = null }
+    }
+    val reveal = activeReveal
+    InPlaceBackHandler(reveal != null) { activeReveal = null }
+    if (reveal != null) {
         content {
-            revealed = false
-            onAcknowledged()
+            if (activeReveal === reveal) {
+                activeReveal = null
+                onAcknowledged()
+            }
         }
     } else {
         MafiaRoleRevealGateScreen(
             playerName = player.displayName,
             eyebrow = player.displayName,
-            onRevealed = { revealed = true },
+            onRevealed = { activeReveal = Any() },
             modifier = Modifier.fillMaxSize(),
         )
     }
