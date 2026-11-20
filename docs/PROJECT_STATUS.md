@@ -20,6 +20,23 @@ optimized x64 link job was slower. Keep the ARM64 default. The next performance
 investigation targets the Gradle/Kotlin Release build, which accounts for most of
 the wrapper time. The architecture phase starts after Phase 1 acceptance.
 
+The timing-only PR merged as `3ca41cd`. Its
+[post-merge workflow](https://github.com/Apdelrahman1911/parlor/actions/runs/44658002775)
+failed at the original Swift simulator inventory deadline, before simulator
+creation or Swift tests. The eight other producers and Apple Release aggregate
+passed. The Release wrapper recorded 47m38s in two build scripts and 0.807s
+in SwiftCompile. Issue #342 records the retained failure and scoped evidence.
+
+Parlor transferred to [parlor-game/parlor](https://github.com/parlor-game/parlor).
+PR #343 also updates exact repository checks for new CI evidence and releases.
+Historical run links and frozen receipts retain their original source identity.
+
+The next Phase 1 measurement enables the documented Kotlin/Native compiler
+logging on the ARM64 Release wrapper only. Compare native phase times alongside
+the original Xcode timing summary. Keep existing optimized binaries, test
+commands, and gates. The change is measurement instrumentation and needs a
+hosted run to verify that the pinned compiler emits the phase timings.
+
 Mafia [PR #341](https://github.com/Apdelrahman1911/parlor/pull/341) remains draft.
 Its prior full run ended with eight successful producers and a pre-test Swift
 Simulator inventory timeout. Phase 3 owns its current-base qualification. The

@@ -28,7 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REPOSITORY = "Apdelrahman1911/parlor"
+REPOSITORY = "parlor-game/parlor"
 BRANCH = "fix/local-readiness-2026-09-07"
 WORKFLOW = ".github/workflows/production-verification.yml"
 CAMPAIGN = "remediation-runs/2026-09-08-continuation"

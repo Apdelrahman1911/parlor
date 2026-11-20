@@ -29,7 +29,7 @@ TASK_KEYS = ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_JOB')
 def runner_task(env):
     required = {'GITHUB_ACTIONS':'true', 'RUNNER_ENVIRONMENT':'github-hosted',
                 'RUNNER_OS':'Linux', 'RUNNER_ARCH':'X64', 'ImageOS':'ubuntu24',
-                'GITHUB_REPOSITORY':'Apdelrahman1911/parlor', 'GITHUB_JOB':'desktop-android'}
+                'GITHUB_REPOSITORY':'parlor-game/parlor', 'GITHUB_JOB':'desktop-android'}
     if any(env.get(k) != v for k,v in required.items()):
         raise RuntimeError('Capacity cleanup is restricted to the standard hosted Ubuntu24 full-verification lane')
     task = {k:env.get(k, '') for k in TASK_KEYS}

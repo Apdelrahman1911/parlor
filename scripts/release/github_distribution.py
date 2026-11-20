@@ -26,7 +26,7 @@ from scripts.release import release_tool
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "build/github-distribution"
-REPOSITORY = "Apdelrahman1911/parlor"
+REPOSITORY = "parlor-game/parlor"
 WORKFLOW = ".github/workflows/github-distribution.yml"
 PLATFORMS = {"android": "apk", "macos-arm64": "dmg", "macos-x64": "dmg", "windows-x64": "msi", "linux-x64": "deb"}
 MAX_FILE = 1024 * 1024 * 1024
@@ -377,7 +377,7 @@ def validate_descriptor(value: dict, directory: Path, expected_source: dict, exp
 
 
 def valid_acceptance_reference(value: str) -> bool:
-    return isinstance(value, str) and re.fullmatch(r"https://github\.com/Apdelrahman1911/parlor/issues/[1-9][0-9]*(?:#issuecomment-[0-9]+)?", value) is not None
+    return isinstance(value, str) and re.fullmatch(r"https://github\.com/parlor-game/parlor/issues/[1-9][0-9]*(?:#issuecomment-[0-9]+)?", value) is not None
 
 
 def require_environment(api: GitHub, name: str) -> None:

@@ -361,7 +361,7 @@ def verify_windows_checkout(text: str) -> None:
         fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
 
 
-HOSTED_CAPACITY_SCRIPT_SHA256 = 'ae73036a1e587ceebef5e5bca35d1839d5032829b665c09f6e5175dcf2fd5169'
+HOSTED_CAPACITY_SCRIPT_SHA256 = '2e5264048a5eba7165e98543440124bc3a706d93f3a9ab40c7b4c26888d681fa'
 
 
 def verify_hosted_linux_capacity(job: str) -> None:
@@ -1207,6 +1207,12 @@ def verify_validation(text: str) -> None:
     wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
     if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
         fail("validation workflow lacks the Swift Release build timing summary")
+    native_timing = ('          export GRADLE_OPTS="$GRADLE_OPTS '
+                     '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
+                     '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
+    if wrapper.splitlines().count(native_timing) != 1 or not (
+            native_timing + "\n          xcodebuild" in wrapper):
+        fail("validation workflow lacks native Release compiler timing before the Xcode build")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",

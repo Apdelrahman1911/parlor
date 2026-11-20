@@ -1336,6 +1336,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
           xcodebuild \
             -showBuildTimingSummary \
             -project iosApp/iosApp.xcodeproj \
