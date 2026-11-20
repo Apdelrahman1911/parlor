@@ -161,6 +161,12 @@ class FreeHostedCIContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Swift Release build timing summary"):
             contract.verify_validation(changed)
 
+    def test_release_wrapper_requires_native_compiler_timing(self):
+        changed = self.workflow.replace("arguments.log.level=warning", "arguments.log.level=info", 1)
+        self.assertNotEqual(changed, self.workflow)
+        with self.assertRaisesRegex(RuntimeError, "native Release compiler timing"):
+            contract.verify_validation(changed)
+
     def test_release_runners_cannot_use_paid_or_arbitrary_labels(self):
         for label in ("macos-15-large", "macos-15-xlarge", "self-hosted", "${{ inputs.apple_release_runner }}"):
             changed = self.workflow.replace(contract.FREE_APPLE_RELEASE_RUNNER, label, 1)
