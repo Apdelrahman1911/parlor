@@ -1208,7 +1208,8 @@ def verify_validation(text: str) -> None:
     if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
         fail("validation workflow lacks the Swift Release build timing summary")
     native_timing = ('          export GRADLE_OPTS="$GRADLE_OPTS '
-                     '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning"')
+                     '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
+                     '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
     if wrapper.splitlines().count(native_timing) != 1 or not (
             native_timing + "\n          xcodebuild" in wrapper):
         fail("validation workflow lacks native Release compiler timing before the Xcode build")

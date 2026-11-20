@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -112,6 +113,8 @@ require(androidRuntimeTestVariant in setOf("debug", "release")) {
     "parlor.androidRuntimeTestVariant must be debug or release"
 }
 
+val profileIosReleaseLink = providers.gradleProperty("parlor.profileIosReleaseLink").orNull == "true"
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -127,6 +130,9 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = false
+            if (profileIosReleaseLink && iosTarget.name == "iosSimulatorArm64" && buildType == NativeBuildType.RELEASE) {
+                freeCompilerArgs += "-Xprofile-phases"
+            }
         }
     }
 
