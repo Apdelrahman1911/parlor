@@ -174,6 +174,18 @@ class FreeHostedCIContractTest(unittest.TestCase):
             with self.subTest(label=label), self.assertRaises(RuntimeError):
                 contract.verify_validation(changed)
 
+    def test_pmcs_benchmark_cannot_run_automatically_or_outside_the_wrapper(self):
+        for original, replacement in (
+            ("        type: boolean\n        default: false", "        type: boolean\n        default: true"),
+            ("inputs.benchmark_release_pmcs == true", "true"),
+            ("inputs.apple_release_runner == 'arm64' && inputs.benchmark_release_pmcs", "inputs.benchmark_release_pmcs"),
+            ('if [[ "$PARLOR_BENCHMARK_RELEASE_PMCS" == true ]]; then', "if true; then"),
+            ("kotlin.native.binary.gc=pmcs", "kotlin.native.binary.gc=noop"),
+        ):
+            self.assertIn(original, self.workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "isolate the PMCS benchmark"):
+                contract.verify_validation(self.workflow.replace(original, replacement, 1))
+
     def test_caches_cannot_write_on_prs_or_restore_reports_builds_or_secrets(self):
         for old, new in (("if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'", "if: always()"),
                          ("~/.gradle/caches/modules-2", "~/.gradle/caches"), ("~/.gradle/wrapper/dists", "~/.konan"),

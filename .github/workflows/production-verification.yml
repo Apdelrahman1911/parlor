@@ -23,6 +23,10 @@ on:
         type: choice
         default: arm64
         options: [arm64, intel]
+      benchmark_release_pmcs:
+        description: Compare PMCS with default CMS on the unsigned simulator Release wrapper only
+        type: boolean
+        default: false
       native_selection:
         description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)
         type: choice
@@ -1334,8 +1338,14 @@ jobs:
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_wrapper_run
         shell: bash
+        env:
+          PARLOR_BENCHMARK_RELEASE_PMCS: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'full' && inputs.apple_release_runner == 'arm64' && inputs.benchmark_release_pmcs == true }}
         run: |
           set -euo pipefail
+          if [[ "$PARLOR_BENCHMARK_RELEASE_PMCS" == true ]]; then
+            export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.native.binary.gc=pmcs"
+            printf '%s\n' pmcs-benchmark > build/ci-evidence/release-wrapper-gc-profile.txt
+          fi
           export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
           xcodebuild \
             -showBuildTimingSummary \

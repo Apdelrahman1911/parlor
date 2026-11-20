@@ -1205,6 +1205,21 @@ def verify_validation(text: str) -> None:
     if app_launch_marker not in swift or swift_release_marker not in release:
         fail("validation workflow does not run the iOS app-launch UI test")
     wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
+    pmcs_input = """      benchmark_release_pmcs:
+        description: Compare PMCS with default CMS on the unsigned simulator Release wrapper only
+        type: boolean
+        default: false"""
+    pmcs_scope = ("          PARLOR_BENCHMARK_RELEASE_PMCS: ${{ github.event_name == 'workflow_dispatch' "
+                  "&& inputs.verification_scope == 'full' && inputs.apple_release_runner == 'arm64' "
+                  "&& inputs.benchmark_release_pmcs == true }}")
+    pmcs_command = '            export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.native.binary.gc=pmcs"'
+    pmcs_block = ('          if [[ "$PARLOR_BENCHMARK_RELEASE_PMCS" == true ]]; then\n' + pmcs_command +
+                  "\n            printf '%s\\n' pmcs-benchmark > build/ci-evidence/release-wrapper-gc-profile.txt\n"
+                  '          fi')
+    if (pmcs_input not in text.split("\nconcurrency:", 1)[0] or pmcs_scope not in wrapper.splitlines() or
+            pmcs_block not in wrapper or text.count("kotlin.native.binary.gc=pmcs") != 1 or
+            text.count("PARLOR_BENCHMARK_RELEASE_PMCS") != 2):
+        fail("validation workflow must isolate the PMCS benchmark to its explicit ARM64 wrapper dispatch")
     if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
         fail("validation workflow lacks the Swift Release build timing summary")
     native_timing = ('          export GRADLE_OPTS="$GRADLE_OPTS '
