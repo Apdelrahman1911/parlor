@@ -23,7 +23,7 @@ EXPECTED = {
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
-INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+INPUT_INVESTIGATION_SHA256 = "c28af012df60dc989d9b5ae0e22c1b2b85b977d33c6d7a4877068eadec8cd3de"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -529,9 +529,10 @@ def verify_linux_process_probe(job: str) -> None:
 def verify_verification_jdk(job: str) -> None:
     java = validation_step(job, "Set up JDK 21")
     if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", java) != [
-            ("uses", "actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0"), ("with", "")] or
+            ("uses", "actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0"), ("with", "")] or
             re.findall(r"(?m)^          ([a-z-]+): (.*)$", java) != [
-                ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false")]):
+                ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false"),
+                ("problem-matcher", "true")]):
         fail("verification scope Apple jobs require pinned JDK 21 for builds and mandatory Gradle stops")
 
 

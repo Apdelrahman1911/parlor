@@ -69,11 +69,12 @@ jobs:
           python3 scripts/release/release_tool.py assert-store-identity-approved --platform both
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Install pinned Android SDK packages
         timeout-minutes: 11
@@ -325,11 +326,12 @@ jobs:
 
       - name: Set up JDK 21
         if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Reject a reused Google Play version before compiling or signing
         if: ${{ inputs.publish && steps.android_state_recovery.outputs.recovered != 'true' }}
@@ -822,11 +824,12 @@ jobs:
 
       - name: Set up JDK 21
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Run Apple tests, static analysis, and release linkage
         if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
