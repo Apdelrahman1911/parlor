@@ -249,16 +249,21 @@ private fun RoleAssignmentSegment(
         )
         return
     }
-    PrivateRoleCardScreen(
-        playerName = self.displayName,
-        role = priv.role,
-        team = priv.team,
-        knownTeammateNames = priv.knownTeammates.mapNotNull { id -> displayNameOf(state, id) },
+    MafiaPrivateAcknowledgement(
+        player = self,
         onAcknowledged = {
             scope.launch { session.submit(MafiaAction.AcknowledgeRoleViewed(self.id)) }
         },
-        modifier = Modifier.fillMaxSize(),
-    )
+    ) { onHidden ->
+        PrivateRoleCardScreen(
+            playerName = self.displayName,
+            role = priv.role,
+            team = priv.team,
+            knownTeammateNames = priv.knownTeammates.mapNotNull { id -> displayNameOf(state, id) },
+            onAcknowledged = onHidden,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }
 
 // =============================================================================== Night ==
@@ -294,15 +299,20 @@ private fun NightSegment(
     // Detective who already inspected this night: show the private result first.
     val detectiveResult = priv.pendingDetectiveResult
     if (detectiveResult != null && !priv.detectiveResultAcknowledged) {
-        DetectiveResultScreen(
-            detectiveName = self.displayName,
-            inspectedName = displayNameOf(state, detectiveResult.target) ?: detectiveResult.target.raw,
-            seesAs = detectiveResult.seesAs,
+        MafiaPrivateAcknowledgement(
+            player = self,
             onAcknowledged = {
                 scope.launch { session.submit(MafiaAction.AcknowledgeDetectiveResult(self.id)) }
             },
-            modifier = Modifier.fillMaxSize(),
-        )
+        ) { onHidden ->
+            DetectiveResultScreen(
+                detectiveName = self.displayName,
+                inspectedName = displayNameOf(state, detectiveResult.target) ?: detectiveResult.target.raw,
+                seesAs = detectiveResult.seesAs,
+                onAcknowledged = onHidden,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
         return
     }
 

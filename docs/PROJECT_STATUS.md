@@ -2,10 +2,17 @@
 
 ## Active execution plan
 
-[Issue #342](https://github.com/Apdelrahman1911/parlor/issues/342) tracks the five
-phases in order: CI performance, KMP architecture, outstanding issues, branch
-consolidation, and production UI/UX. Phase 1 is active. The entries below this
-section retain evidence from the preceding issue-resolution work.
+[Issue #342](https://github.com/parlor-game/parlor/issues/342) tracks the work.
+CI performance and issue resolution now proceed concurrently. Verify compatible
+changes in one full integration run after focused local checks. Keep separate
+commits and reserve subsequent full runs for protected integration. The
+architecture, branch and UI/UX objectives remain tracked.
+
+The current batch carries the Mafia concealment fix from draft PR #341 and
+makes detailed Kotlin/Native phase profiling an explicit full manual dispatch
+option. Ordinary builds still capture Xcode timing and run the complete
+optimized Release wrapper. Issue #338 was closed using original PR and distinct
+main evidence, without a new CI run.
 
 The latest two successful `main` workflows took 68m50s and 65m45s from run
 creation to the last job's completion. Optimized Apple Release determined both
@@ -18,7 +25,7 @@ Release timing after the matched runner experiment. The ARM64 dispatch passed
 in 45m27s. Hybrid finished in 56m54s with a Swift input test failure, and its
 optimized x64 link job was slower. Keep the ARM64 default. The next performance
 investigation targets the Gradle/Kotlin Release build, which accounts for most of
-the wrapper time. The architecture phase starts after Phase 1 acceptance.
+the wrapper time. The architecture work is tracked separately from this measurement.
 
 The timing-only PR merged as `3ca41cd`. Its
 [post-merge workflow](https://github.com/Apdelrahman1911/parlor/actions/runs/44658002775)

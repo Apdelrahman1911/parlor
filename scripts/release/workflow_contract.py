@@ -1211,12 +1211,21 @@ def verify_validation(text: str) -> None:
     wrapper = validation_step(release, "Build unsigned Swift Release wrapper")
     if not re.search(r"(?m)^            -showBuildTimingSummary \\$", wrapper):
         fail("validation workflow lacks the Swift Release build timing summary")
-    native_timing = ('          export GRADLE_OPTS="$GRADLE_OPTS '
+    profile_input = """      profile_release_native:
+        description: Capture detailed Kotlin/Native phases for the simulator Release wrapper
+        type: boolean
+        default: false"""
+    profile_scope = ("          PARLOR_PROFILE_RELEASE_NATIVE: ${{ github.event_name == 'workflow_dispatch' "
+                     "&& inputs.verification_scope == 'full' && inputs.profile_release_native == true }}")
+    native_timing = ('            export GRADLE_OPTS="$GRADLE_OPTS '
                      '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
                      '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
-    if wrapper.splitlines().count(native_timing) != 1 or not (
-            native_timing + "\n          xcodebuild" in wrapper):
-        fail("validation workflow lacks native Release compiler timing before the Xcode build")
+    profile_block = ('          if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then\n' + native_timing +
+                     "\n          fi\n          xcodebuild")
+    if (profile_input + "\n" not in text.split("\nconcurrency:", 1)[0] or profile_scope not in wrapper.splitlines() or
+            profile_block not in wrapper or text.count("parlor.profileIosReleaseLink=true") != 1 or
+            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2):
+        fail("validation workflow must limit native Release compiler timing to explicit full dispatch")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",

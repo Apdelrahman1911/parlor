@@ -143,7 +143,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             name.typeText("Table Test")
             assertTextValue(name, in: app, equals: "Table Test", introduction: introduction)
             name.typeText("\n")
-            try tapSetupButton(app, prefix: copy.peerContinue)
+            try tapSetupButton(app, prefix: copy.peerContinue, refreshAfterSettlement: true)
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
             XCTAssertEqual(app.textViews.count, 1)
             XCTAssertTrue(setupButton(app, prefix: copy.findRoom).waitForExistence(timeout: 10))
@@ -219,13 +219,17 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSetupButton(_ app: XCUIApplication, prefix: String) throws {
+    private func tapSetupButton(
+        _ app: XCUIApplication, prefix: String, refreshAfterSettlement: Bool = false
+    ) throws {
         let button = setupButton(app, prefix: prefix)
         for _ in 0..<8 {
             if button.waitForExistence(timeout: 1), button.isHittable {
-                try tapSettledControl(button, read: {
-                    try self.readPublicButtonSample(app, prefix: prefix)
-                })
+                try tapSettledControl(
+                    button,
+                    read: { try self.readPublicButtonSample(app, prefix: prefix) },
+                    refresh: refreshAfterSettlement ? { self.setupButton(app, prefix: prefix) } : nil
+                )
                 return
             }
             app.swipeUp(velocity: .slow)
@@ -284,7 +288,8 @@ final class IOSAppLaunchUITests: XCTestCase {
     @MainActor
     private func tapSettledControl(
         _ control: XCUIElement,
-        read: (() throws -> (frame: CGRect, enabled: Bool))? = nil
+        read: (() throws -> (frame: CGRect, enabled: Bool))? = nil,
+        refresh: (() -> XCUIElement)? = nil
     ) throws {
         // One resolved public snapshot supplies frame and enabled together.
         // Separate XCUIElement property reads each re-evaluate the remote query;
@@ -307,8 +312,8 @@ final class IOSAppLaunchUITests: XCTestCase {
             let frame = sample.frame
             let enabled = sample.enabled
             let stable = frames.observe(frame: frame, enabled: enabled)
-            let hittable = stable ? control.isHittable : nil
-            if stable && hittable != true { frames.reset() }
+            let hittable = stable && refresh == nil ? control.isHittable : nil
+            if stable && refresh == nil && hittable != true { frames.reset() }
             if samples.count < 12 {
                 // Geometry/status/timing only: never retain labels, typed
                 // values, arbitrary hierarchies or private player information.
@@ -318,22 +323,51 @@ final class IOSAppLaunchUITests: XCTestCase {
                     "stable=\(stable), hittable=\(String(describing: hittable)), " +
                     "snapshotErrorCode=\(String(describing: sample.errorCode))")
             }
-            return stable && hittable == true
+            return stable && (refresh != nil || hittable == true)
         }, object: nil)
         let result = XCTWaiter.wait(for: [settled], timeout: 10)
-        if result != .completed {
+        var target = control
+        var ready = result == .completed
+        if ready, let refresh, let read {
+            // After keyboard dismissal, resolve a new native query outside the
+            // geometry waiter. A false hit result still breaks frame adjacency.
+            let remaining = 10 - (ProcessInfo.processInfo.systemUptime - started)
+            ready = false
+            if remaining > 0 {
+                let hittable = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    let sample = PublicControlSample(read: read)
+                    guard frames.observe(frame: sample.frame, enabled: sample.enabled) else { return false }
+                    let candidate = refresh()
+                    let canTap = candidate.isHittable
+                    let current = PublicControlSample(read: read)
+                    let unchanged = frames.observe(frame: current.frame, enabled: current.enabled)
+                    let inTime = ProcessInfo.processInfo.systemUptime - started < 10
+                    if samples.count < 12 {
+                        samples.append("freshHit=\(canTap), frameUnchanged=\(unchanged), inTime=\(inTime)")
+                    }
+                    guard canTap, unchanged, inTime else {
+                        frames.reset()
+                        return false
+                    }
+                    target = candidate
+                    return true
+                }, object: nil)
+                ready = XCTWaiter.wait(for: [hittable], timeout: remaining) == .completed
+            }
+        }
+        if !ready {
             print("Public control settlement: " + samples.joined(separator: "; "))
             let screenshot = XCTAttachment(screenshot: XCUIApplication().screenshot())
             screenshot.name = "Failed public control settlement before tap"
             screenshot.lifetime = .keepAlways
             add(screenshot)
         }
-        XCTAssertEqual(result, .completed,
+        XCTAssertTrue(ready,
                        "Public setup control must stop scrolling before it is tapped")
-        guard result == .completed else {
+        guard ready else {
             throw NSError(domain: "PublicControlSettlement", code: 1)
         }
-        control.tap()
+        target.tap()
     }
 
     @MainActor
