@@ -90,6 +90,52 @@ final class IOSAppLaunchUITests: XCTestCase {
         ))
     }
 
+    @MainActor
+    func testOriginalGamesExposeLocalAndNearbySetupInEnglish() throws {
+        try verifyLocalAndNearbySetup(
+            language: "en", locale: "en_US",
+            games: ["Open Whodunit", "Open the Mafia game", "Open Last Light"],
+            actions: [
+                "Open a room and show a code your friends can join.",
+                "Enter the host's room code to join their table.",
+                "Start a pass-and-play session on this device."
+            ]
+        )
+    }
+
+    @MainActor
+    func testOriginalGamesExposeLocalAndNearbySetupInArabic() throws {
+        try verifyLocalAndNearbySetup(
+            language: "ar", locale: "ar_EG",
+            games: ["افتح من القاتل", "افتح لعبة حرامية وظباط", "افتح الضوء الأخير"],
+            actions: [
+                "افتح غرفة وأظهر الرمز لأصدقائك للانضمام.",
+                "أدخل رمز المضيف للدخول إلى طاولته.",
+                "ابدأ جلسة تمرير ولعب على هذا الجهاز."
+            ]
+        )
+    }
+
+    @MainActor
+    private func verifyLocalAndNearbySetup(
+        language: String, locale: String, games: [String], actions: [String]
+    ) throws {
+        for game in games {
+            let app = XCUIApplication()
+            app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+            app.launch()
+            defer { app.terminate() }
+            XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+            try tapSetupButton(app, prefix: game)
+            for action in actions {
+                let control = setupButton(app, prefix: action)
+                XCTAssertTrue(control.waitForExistence(timeout: 10), "\(game): missing \(action)")
+                XCTAssertTrue(control.isEnabled, "\(game): disabled \(action)")
+            }
+            XCTAssertFalse(app.alerts.firstMatch.exists, "Opening setup must not request network access")
+        }
+    }
+
     private struct MultiplayerSetupCopy {
         let games: [String]
         let host: String
