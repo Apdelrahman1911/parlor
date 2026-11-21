@@ -10,6 +10,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasAnyAncestor
@@ -60,8 +62,20 @@ class HomeCatalogVisualEvidenceTest {
         }
     }
 
+    @Test
+    fun six_game_setup_pickers_expose_supported_actions_at_compact_large_text() {
+        for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) {
+            for (theme in listOf(ThemeMode.Light, ThemeMode.Dark)) {
+                for (gameIndex in 0..5) {
+                    renderScreen(language, theme, 2f, catalog = false, width = 320, setupGameIndex = gameIndex)
+                }
+            }
+        }
+    }
+
     private fun renderScreen(
         language: AppLanguage, theme: ThemeMode, fontScale: Float, catalog: Boolean, width: Int = 390,
+        setupGameIndex: Int? = null,
     ) = runComposeUiTest {
         val games = listOf(
             WhodunitGameShellBinding(WhodunitDefinition(Json.Default)),
@@ -71,6 +85,7 @@ class HomeCatalogVisualEvidenceTest {
             GhamzaGameShellBinding(GhamzaDefinition()),
             WordImpostorGameShellBinding(WordImpostorDefinition()),
         )
+        val setupGame = games[setupGameIndex ?: 0]
         setContent {
             CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
                 ProvideAppLanguage(language) {
@@ -81,9 +96,9 @@ class HomeCatalogVisualEvidenceTest {
                             } else {
                                 PlayModePickerScreen(
                                     onModeSelected = {}, onHost = {}, onJoin = {}, onBack = {},
-                                    capabilities = games.first().capabilities,
-                                    supportedPlayerCounts = games.first().multiplayerContract
-                                        ?.supportedPlayerCounts ?: games.first().definition.supportedPlayerCounts,
+                                    capabilities = setupGame.capabilities,
+                                    supportedPlayerCounts = setupGame.multiplayerContract
+                                        ?.supportedPlayerCounts ?: setupGame.definition.supportedPlayerCounts,
                                 )
                             }
                         }
@@ -95,6 +110,9 @@ class HomeCatalogVisualEvidenceTest {
         if (catalog && fontScale == 2f) {
             assertFirstGameChoicesVisible(language)
         }
+        if (setupGameIndex != null) {
+            assertSetupActions(language, supportsPassAndPlay = setupGameIndex < 3)
+        }
         // Public fixtures only. Stay below the existing **/build/reports/tests/
         // artifact glob, but outside desktopTest so Gradle's HTML writer cannot
         // replace the images. The environment override reaches the test worker.
@@ -102,7 +120,11 @@ class HomeCatalogVisualEvidenceTest {
             ?: System.getenv("PARLOR_UI_SCREENSHOT_DIR")
             ?: "build/reports/tests/public-ux"
         if (!directory.isNullOrBlank()) {
-            val screen = if (catalog) "home" else "setup"
+            val screen = when {
+                catalog -> "home"
+                setupGameIndex != null -> "setup-${setupGame.definition.id.raw}"
+                else -> "setup"
+            }
             val sizeSuffix = if (width == 390) "" else "-${width}dp"
             val output = File(directory, "$screen-${language.tag}-${theme.tag}-$fontScale$sizeSuffix.png")
             check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
@@ -110,6 +132,24 @@ class HomeCatalogVisualEvidenceTest {
                 checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }
             }
         }
+    }
+
+    private fun ComposeUiTest.assertSetupActions(language: AppLanguage, supportsPassAndPlay: Boolean) {
+        val arabic = language == AppLanguage.Arabic
+        val host = if (arabic) "افتح غرفة وأظهر الرمز لأصدقائك للانضمام."
+            else "Open a room and show a code your friends can join."
+        val join = if (arabic) "أدخل رمز المضيف للدخول إلى طاولته."
+            else "Enter the host's room code to join their table."
+        val local = if (arabic) "ابدأ جلسة تمرير ولعب على هذا الجهاز."
+            else "Start a pass-and-play session on this device."
+        onNodeWithContentDescription(host).performScrollTo().assertIsDisplayed().assertIsEnabled()
+        onNodeWithContentDescription(join).performScrollTo().assertIsDisplayed().assertIsEnabled()
+        if (supportsPassAndPlay) {
+            onNodeWithContentDescription(local).performScrollTo().assertIsDisplayed().assertIsEnabled()
+        } else {
+            onNodeWithContentDescription(local).assertDoesNotExist()
+        }
+        onNodeWithContentDescription(host).performScrollTo()
     }
 
     private fun ComposeUiTest.assertFirstGameChoicesVisible(language: AppLanguage) {
