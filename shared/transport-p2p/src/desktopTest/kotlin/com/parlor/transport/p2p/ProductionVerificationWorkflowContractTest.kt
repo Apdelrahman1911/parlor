@@ -520,7 +520,7 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         val expectedPins = listOf(
             "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
-            "actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0",
+            "actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0",
             "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2",
         )
         expectedPins.forEach { assertContains(workflow, it) }

@@ -164,6 +164,7 @@ class FreeHostedCIContractTest(unittest.TestCase):
 
     def test_release_wrapper_limits_native_compiler_timing_to_manual_dispatch(self):
         for option in ("arguments.log.level=warning", "profileIosReleaseLink=true",
+                       "ios-release-gc-%p.log", "filecount=1,filesize=1m",
                        "inputs.profile_release_native == true", "type: boolean\n        default: false",
                        'if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then'):
             changed = self.workflow.replace(option, option + "-disabled", 1)

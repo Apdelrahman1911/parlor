@@ -88,11 +88,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Reclaim unused standard Linux runner toolchains
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -352,11 +353,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -460,11 +462,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -603,11 +606,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -740,11 +744,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -951,11 +956,12 @@ jobs:
         run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       # These opt-in modes are evidence-only. They never replace the six-job full gate.
       # Preflight and execution are separate dispatches so a different reviewer can
@@ -1266,11 +1272,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -1358,6 +1365,7 @@ jobs:
           set -euo pipefail
           if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then
             export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning -Dorg.gradle.project.parlor.profileIosReleaseLink=true"
+            export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }-Xlog:gc:file=$PWD/build/ci-evidence/ios-release-gc-%p.log:uptime,level,tags:filecount=1,filesize=1m"
           fi
           xcodebuild \
             -showBuildTimingSummary \
@@ -1485,11 +1493,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -1649,11 +1658,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -1837,11 +1847,12 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
           check-latest: false
+          problem-matcher: true
 
       - name: Run independently approved strict protection diagnostic
         id: protection_probe

@@ -690,6 +690,7 @@ class WorkflowContractTest(unittest.TestCase):
                 ("Check out source", "persist-credentials: false", "persist-credentials: true"),
                 ("Check out source", "persist-credentials: false", "persist-credentials: false\n          ref: main"),
                 ("Set up JDK 21", 'java-version: "21"', 'java-version: "17"'),
+                ("Set up JDK 21", "problem-matcher: true", "problem-matcher: false"),
                 ("Claim fresh verification output ownership", '"verification_hygiene.py", "prepare"', '"verification_hygiene.py", "cleanup"'),
                 ("Claim fresh verification output ownership", "runpy.run_path(", "# runpy.run_path("),
                 ("Clean only attested verification outputs", '"verification_hygiene.py", "cleanup"', '"verification_hygiene.py", "stop", "apple-ui"'),

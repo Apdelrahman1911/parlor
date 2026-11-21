@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.onAllNodesWithText
@@ -109,12 +110,24 @@ class MafiaPrivateAcknowledgementTest {
             onNodeWithText(reveal).performScrollTo().performClick()
         }
         onAllNodesWithText(privateText, useUnmergedTree = true).assertCountEquals(privateNodeCount)
-        onNodeWithText(hide).performScrollTo().performClick()
+        val retainedHide = checkNotNull(
+            onNodeWithText(hide).performScrollTo().fetchSemanticsNode().config[SemanticsActions.OnClick].action,
+        )
+        runOnIdle {
+            assertTrue(retainedHide())
+            retainedHide()
+        }
         onAllNodesWithText(privateText, useUnmergedTree = true).assertCountEquals(0)
         runOnIdle {
             assertEquals(listOf(expected), session.submitted)
             assertFalse(session.outcome.isCompleted)
             assertEquals(state, session.privateStateFor(self).value.state)
+        }
+        onNodeWithText(reveal).performScrollTo().performClick()
+        runOnIdle { retainedHide() }
+        onAllNodesWithText(privateText, useUnmergedTree = true).assertCountEquals(privateNodeCount)
+        runOnIdle {
+            assertEquals(listOf(expected), session.submitted)
             mounted = false
             session.outcome.complete(Result.Failure(SubmitError.SessionSuspended))
         }

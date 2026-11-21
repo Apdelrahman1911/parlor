@@ -23,7 +23,7 @@ EXPECTED = {
 }
 # Exact reviewed evidence-only workflow. Adding it never widens the generic
 # security contract: changed privileges, runners, triggers or uploads fail closed.
-INPUT_INVESTIGATION_SHA256 = "c5b316d9ad127e36ef430dacd4c93e5811d52ed6529087f687b8ef34b69c97cc"
+INPUT_INVESTIGATION_SHA256 = "c28af012df60dc989d9b5ae0e22c1b2b85b977d33c6d7a4877068eadec8cd3de"
 STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FREE_APPLE_RELEASE_RUNNER = "${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}"
@@ -529,9 +529,10 @@ def verify_linux_process_probe(job: str) -> None:
 def verify_verification_jdk(job: str) -> None:
     java = validation_step(job, "Set up JDK 21")
     if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", java) != [
-            ("uses", "actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0"), ("with", "")] or
+            ("uses", "actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0"), ("with", "")] or
             re.findall(r"(?m)^          ([a-z-]+): (.*)$", java) != [
-                ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false")]):
+                ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false"),
+                ("problem-matcher", "true")]):
         fail("verification scope Apple jobs require pinned JDK 21 for builds and mandatory Gradle stops")
 
 
@@ -1220,11 +1221,14 @@ def verify_validation(text: str) -> None:
     native_timing = ('            export GRADLE_OPTS="$GRADLE_OPTS '
                      '-Dorg.gradle.project.kotlin.internal.compiler.arguments.log.level=warning '
                      '-Dorg.gradle.project.parlor.profileIosReleaseLink=true"')
+    gc_timing = ('            export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }'
+                 '-Xlog:gc:file=$PWD/build/ci-evidence/ios-release-gc-%p.log'
+                 ':uptime,level,tags:filecount=1,filesize=1m"')
     profile_block = ('          if [[ "$PARLOR_PROFILE_RELEASE_NATIVE" == true ]]; then\n' + native_timing +
-                     "\n          fi\n          xcodebuild")
+                     "\n" + gc_timing + "\n          fi\n          xcodebuild")
     if (profile_input + "\n" not in text.split("\nconcurrency:", 1)[0] or profile_scope not in wrapper.splitlines() or
             profile_block not in wrapper or text.count("parlor.profileIosReleaseLink=true") != 1 or
-            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2):
+            text.count("PARLOR_PROFILE_RELEASE_NATIVE") != 2 or text.count("ios-release-gc-%p.log") != 1):
         fail("validation workflow must limit native Release compiler timing to explicit full dispatch")
     app_launch_step = validation_step(swift, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
